@@ -12,3 +12,9 @@
   # <form>
   # <page>
   # <section>
+  # <submission>
+
+== Details ==
+  # form
+    * attribute
+    * example
