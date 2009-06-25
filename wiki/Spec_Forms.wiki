@@ -1,15 +1,14 @@
-# Specification of planisphere forms
+#summary Planisphere Forms Specification
 
-= Introduction =
+== Introduction ==
 
-  * *<form>*
-  * *<page>*
-  * *<section>*
+  * *form*
+  * *page*
+  * *section*
 
 
-= Details =
+== Tags ==
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  # <form>
+  # <page>
+  # <section>
