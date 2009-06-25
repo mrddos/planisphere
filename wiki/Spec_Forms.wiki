@@ -1,4 +1,4 @@
-#Specification of planisphere forms
+# Specification of planisphere forms
 
 = Introduction =
 
