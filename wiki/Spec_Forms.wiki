@@ -16,5 +16,5 @@
 
 == Details ==
   # form
-    * attribute
-    * example
+   * attribute
+   * example
