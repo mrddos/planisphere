@@ -27,3 +27,9 @@ The admin user drag and drop widgets on to the panel.
     # And a page would be created at the same, its name would be "page1". 
     # And a section would be create at the same time, and its name would be "section1", the size would take place 80% the page.
   # Drag and drop the widgets on to the sections.
+    # Some supported controls can be added on to the panel.
+    # You can adjust the position of the widgets, and modity their styles.
+    # Add submission fields for each control that user can input.
+  # Add more sections onto the page.
+    # Drag and drop a new section onto the page, and adjust its size.
+    # Choose users and user groups for this section.
