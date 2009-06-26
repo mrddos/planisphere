@@ -33,3 +33,10 @@ The admin user drag and drop widgets on to the panel.
   # Add more sections onto the page.
     # Drag and drop a new section onto the page, and adjust its size.
     # Choose users and user groups for this section.
+  # Add a page
+    # Add a page, and an empty page would be shown, and you can add section on it.
+  
+== Rule ==
+  # A form can contain one page or more.
+  # A Page must have a section at least.
+  # A section is associated with users or user-groups.
