@@ -8,5 +8,7 @@ Add your content here.
 == Problem details ==
 
   # AG_E_PARSER_BAD_TYPE
+{{{
 UIElement e= (UIElement)System.Windows.Markup.XamlReader.Load(xaml);
+}}}
 This would throw AG_E_PARSER_BAD_TYPE error, if the project settings is lack of some Reference (Assemblies).
