@@ -24,8 +24,8 @@ Add your content here.
 == dnd ==
 The admin user drag and drop widgets on to the panel.
   # Create a form
-    # And a page would be created at the same, its name would be "page1". 
-    # And a section would be create at the same time, and its name would be "section1", the size would take place 80% the page.
+    # A page would be created at the same time, its name is "page1". 
+    # A section would be created at the same time, and its name is "section1", the size will take place 80% in the page.
   # Drag and drop the widgets on to the sections.
     # Some supported controls can be added on to the panel.
     # You can adjust the position of the widgets, and modity their styles.
@@ -35,8 +35,11 @@ The admin user drag and drop widgets on to the panel.
     # Choose users and user groups for this section.
   # Add a page
     # Add a page, and an empty page would be shown, and you can add section on it.
+    # You should select the previous page from the pages created.
+    # You can set the condition that the previous page turn to the current one (you added now).
+    # ...
   
 == Rule ==
   # A form can contain one page or more.
-  # A Page must have a section at least.
+  # A Page must contain one section at least.
   # A section is associated with users or user-groups.
