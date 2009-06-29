@@ -16,7 +16,7 @@
 
 
 == Details ==
-  # tag <text>
+  # tag text
     * format as an attribute
       # string (default)
       # number
@@ -27,15 +27,18 @@
       # `[\s]*`
       # `[abc]?`
 
-  # tag <bool>
+  # tag bool
     * value
       # 1 or 0, true or false, True or False, TRUE or FALSE.
     * examples
       # <bool>True</bool>
 
+  # tag time
+    * value
+    * examples
 
 
-  # <submission>
+  # tag submission
     * Types
     * Examples
       # Vacation for example
