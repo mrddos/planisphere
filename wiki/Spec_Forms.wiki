@@ -17,13 +17,12 @@
 
 == Details ==
   # <text>
-   * format as an attribute
-    # string (default)
-    # number
-    # alpha
-    # regex
-    # ...
-   * examples for regex
-    # `[\s]*`
-    #
-    #
+    * format as an attribute
+      # string (default)
+      # number
+      # alpha
+      # regex
+      # ...
+    * examples for regex
+      # `[\s]*`
+      # `[abc]?`
