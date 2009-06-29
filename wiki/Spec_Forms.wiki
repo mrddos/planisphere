@@ -32,4 +32,18 @@
       # 1 or 0, true or false, True or False, TRUE or FALSE.
     * examples
       # <bool>True</bool>
+
+
+
+  # <submission>
+    * Types
+    * Examples
+      # Vacation for example
+{{{
+<submission>
+  <date name='from'></date>
+  <date name='to'></date>
+  <text name='reason'>reason</text>
+</submission>
+}}}
     
