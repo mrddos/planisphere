@@ -21,9 +21,9 @@
     # string (default)
     # number
     # alpha
-    # regex:[\s]*
+    # regex
     # ...
    * examples for regex
-    # regex:[\s]*
+    # `[\s]*`
     #
     #
