@@ -2,17 +2,13 @@
 
 == Introduction ==
 
-  * *form*
-  * *page*
-  * *section*
-
 
 == Tags ==
 
-  # <submission>
-  # <text>
-  # <bool>
-  # <time>
+  # tag submission
+  # tag text
+  # tag bool
+  # tag time
 
 
 == Details ==
@@ -49,4 +45,7 @@
   <text name='reason'>reason</text>
 </submission>
 }}}
-    
+
+== Development ==
+  * 1
+  * 2
