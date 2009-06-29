@@ -11,7 +11,7 @@
 
   # <submission>
   # <text>
-  # <boolean>
+  # <bool>
   # <time>
 
 
@@ -26,3 +26,10 @@
     * examples for regex
       # `[\s]*`
       # `[abc]?`
+
+  # <bool>
+    * value
+      # 1 or 0, true or false, True or False, TRUE or FALSE.
+    * examples
+      # <bool>True</bool>
+    
