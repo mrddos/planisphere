@@ -16,7 +16,7 @@
 
 
 == Details ==
-  # <text>
+  # tag <text>
     * format as an attribute
       # string (default)
       # number
@@ -27,7 +27,7 @@
       # `[\s]*`
       # `[abc]?`
 
-  # <bool>
+  # tag <bool>
     * value
       # 1 or 0, true or false, True or False, TRUE or FALSE.
     * examples
