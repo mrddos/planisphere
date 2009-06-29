@@ -9,12 +9,18 @@
 
 == Tags ==
 
-  # <form>
-  # <page>
-  # <section>
   # <submission>
+  # <text>
+  # <boolean>
+  # <time>
+
 
 == Details ==
-  # form
-   * attribute
+  # <text>
+   * format as an attribute
+    # string (default)
+    # number
+    # alpha
+    # regex:[\s]*
+    # ...
    * example
