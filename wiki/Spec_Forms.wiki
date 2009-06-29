@@ -23,4 +23,7 @@
     # alpha
     # regex:[\s]*
     # ...
-   * example
+   * examples for regex
+    # regex:[\s]*
+    #
+    #
