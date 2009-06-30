@@ -32,3 +32,5 @@ Add your content here.
     </cross-domain-access>
 </access-policy>
 }}}
+  * HttpWebRequest
+  * Ferry.Silverlight
