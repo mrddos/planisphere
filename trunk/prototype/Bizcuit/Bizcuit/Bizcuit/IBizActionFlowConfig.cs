@@ -9,6 +9,6 @@ namespace Bizcuit.Common
 	{
 
 
-
+		IBizActionFlowDigest AddActionFlowDigest();
 	}
 }

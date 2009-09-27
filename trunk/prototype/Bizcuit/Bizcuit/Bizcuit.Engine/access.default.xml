@@ -2,7 +2,7 @@
 <!-- A default access config xml file -->
 <actionflows>
 	<!-- A default login form render action -->
-	<actionflow name="access.default.login.form">
+	<actionflow name="access.default.login.form" entry="LoginFormAction">
 		<actions>
 			<action name="LoginFormAction" class="Bizcuit.Engine.Access.LoginFormAction">
 			</action>
@@ -10,7 +10,7 @@
 	</actionflow>
 	
 	<!-- A default Login action -->
-	<actionflow name="access.default.login">
+	<actionflow name="access.default.login" entry="LoginAction">
 		<actions>
 			<action name="LoginAction" class="Bizcuit.Engine.Access.LoginAction">
 				<action.next condition="success" next="HelloFormAction">
@@ -44,18 +44,17 @@
 
 			<!-- A default register personal info form render action(Page 2) -->
 			<action name="RegisterPersonalInfoFormAction" class="Bizcuit.Engine.Access.RegisterPersonalInfoFormAction" interruptable="true">
-				<action.next condition="submit" next="RegisterSuccessFormAction">
+				<action.next condition="submit" next="RegisterPendingFormAction">
 				</action.next>
-				<action.next condition="cancel" next="RegisterCancelQueryFormAction">
+				<action.next condition="cancel" next="LoginFormAction">
 				</action.next>
-			</action>
-
-			<!-- A default register failed form render action(Failed Page) -->
-			<action name="RegisterFailedFormAction" class="Bizcuit.Engine.Access.RegisterFailedFormAction" interruptable="true">
 			</action>
 
 			<!-- A default register success form render action(Final Success Page) -->
-			<action name="RegisterSuccessFormAction" class="Bizcuit.Engine.Access.RegisterSuccessFormAction" interruptable="true">
+			<action name="RegisterPendingFormAction" class="Bizcuit.Engine.Access.RegisterPendingFormAction" interruptable="true">
+			</action>
+
+			<action name="LoginFormAction" class="Bizcuit.Engine.Access.LoginFormAction">
 			</action>
 			
 		</actions>

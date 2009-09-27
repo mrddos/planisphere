@@ -11,11 +11,23 @@ namespace Bizcuit.Engine
 	public class BizActionFlowConfig : IBizActionFlowConfig
 	{
 
-		private Dictionary<string, 
+
+		private Dictionary<string, BizActionFlowDigest> dict = new Dictionary<string, BizActionFlowDigest>();
+
+
+
+
+
+		IBizActionFlowDigest IBizActionFlowConfig.AddActionFlowDigest()
+		{
+			IBizActionFlowDigest digest = new BizActionFlowDigest();
+			return digest;
+		}
+
 
 		// TODO: Create a Config file Parser later.
 		// Y: BizActionFlowConfig现在内部聚合一个Parser
-		public static IBizActionFlowConfig Load(string fileName)
+		public static IBizActionFlowConfig Load(string fileName, IBizActionFlowConfig config)
 		{
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(fileName);
@@ -29,7 +41,7 @@ namespace Bizcuit.Engine
 				{
 					if (node.Name == "actionflow")	// TODO: 提取字符串到一个Common的模块中
 					{
-						ParseActionFlowNode(node);
+						ParseActionFlowNode(node, config);
 					}
 					else if (node.Name == "global.action")
 					{
@@ -40,9 +52,10 @@ namespace Bizcuit.Engine
 			return null;
 		}
 
-		private static void ParseActionFlowNode(XmlNode node)
+		private static void ParseActionFlowNode(XmlNode node, IBizActionFlowConfig config)
 		{
 			Console.WriteLine("ParseActionFlowNode");
+			IBizActionFlowDigest digest = config.AddActionFlowDigest();
 			foreach (XmlAttribute attr in node.Attributes)
 			{
 				Console.WriteLine(attr.Name + ":" + attr.Value);
@@ -55,40 +68,68 @@ namespace Bizcuit.Engine
 				{
 					if (child.Name == "actions")
 					{
-						ParseActionsNode(child);
+						ParseActionsNode(child, digest);
 					}
 				}
 			}
 
 		}
 
-		private static void ParseActionsNode(XmlNode actionsNode)
+		private static void ParseActionsNode(XmlNode actionsNode, IBizActionFlowDigest digest)
 		{
 			foreach (XmlNode node in actionsNode.ChildNodes)
 			{
 				if (node.NodeType == XmlNodeType.Element && node.Name == "action")
 				{
-					ParseActionNode(node);
+					ParseActionNode(node, digest);
 				}
 			}
 		}
 
 
-		private static void ParseActionNode(XmlNode actionNode)
+		private static void ParseActionNode(XmlNode actionNode, IBizActionFlowDigest digest)
 		{
 			// 主要获取name和class属性值，保存到Config对象中。
+			string actionName = null;
+			string actionClass = null;
 			foreach (XmlAttribute attr in actionNode.Attributes)
 			{
 				if (attr.Name == "name")
 				{
-					Console.Write(attr.Value + ": ");
+					actionName = attr.Value;
 				}
 				else if (attr.Name == "class")
 				{
-					Console.WriteLine(attr.Value);
+					actionClass = attr.Value;
 				}
 			}
+			if (actionName == null)
+				return;	// TODO: 抛出Engine的ConfigParserException异常。需要定义一套异常。
+			IBizActionDigest actionDigest = digest.AddActionDigest(actionName);
+
+
 			// 获取action.next Tag的信息
+			foreach (XmlNode nextNode in actionNode.ChildNodes)
+			{
+				if (nextNode.Name == "action.next")
+				{
+					string nextActionName = null;
+					string condition = null;
+					foreach (XmlAttribute attr in nextNode.Attributes)
+					{
+						if (attr.Name == "next")
+						{
+							nextActionName = attr.Value;
+						}
+						else if (attr.Name == "condition")
+						{
+							condition = attr.Value;
+						}
+					}
+					actionDigest.SetNextActionOnCondition(condition, nextActionName);
+				}
+			}
+
 		}
 
 		

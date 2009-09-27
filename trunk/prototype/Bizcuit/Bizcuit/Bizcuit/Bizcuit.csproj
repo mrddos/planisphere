@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Build-debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -47,9 +47,11 @@
   <ItemGroup>
     <Compile Include="IBizAction.cs" />
     <Compile Include="IBizActionConfig.cs" />
+    <Compile Include="IBizActionDigest.cs" />
     <Compile Include="IBizActionFlow.cs" />
     <Compile Include="IBizActionFlowConfig.cs" />
     <Compile Include="IBizActionFlowContainer.cs" />
+    <Compile Include="IBizActionFlowDigest.cs" />
     <Compile Include="IBizActionNode.cs" />
     <Compile Include="IBizCommand.cs" />
     <Compile Include="IBizCondition.cs" />

@@ -5,10 +5,8 @@ using System.Text;
 
 namespace Bizcuit.Common
 {
-	public interface IBizActionConfig
+	public interface IBizActionFlowDigest
 	{
-
-
-		
+		IBizActionDigest AddActionDigest(string actionName);
 	}
 }

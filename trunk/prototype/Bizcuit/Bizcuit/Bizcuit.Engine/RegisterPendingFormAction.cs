@@ -2,22 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml;
 using Bizcuit.Common;
 
 namespace Bizcuit.Engine
 {
-	class BizActionConfig : IBizActionConfig
+	public class RegisterPendingFormAction : IBizRenderAction
 	{
+		#region IBizAction Members
 
-
-
-		public static IBizActionConfig Load(string fileName)
+		public void Perform()
 		{
-			return null;
+			throw new NotImplementedException();
 		}
 
-
-
+		#endregion
 	}
 }

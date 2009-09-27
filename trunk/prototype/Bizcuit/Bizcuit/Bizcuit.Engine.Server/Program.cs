@@ -10,8 +10,9 @@ namespace Bizcuit.Engine.Server
 	{
 		static void Main(string[] args)
 		{
-
-			IBizActionFlowConfig config = BizActionFlowConfig.Load("access.default.xml");
+			IBizActionFlowConfig config = new BizActionFlowConfig();
+			
+			config = BizActionFlowConfig.Load("config/access.default.xml", config);
 
 		}
 	}
