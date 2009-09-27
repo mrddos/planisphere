@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<!-- A default access config xml file -->
+<actionflows>
+	<!-- A default login form render action -->
+	<actionflow name="access.default.login.form">
+		<actions>
+			<action name="LoginFormAction" class="Bizcuit.Engine.Access.LoginFormAction">
+			</action>
+		</actions>
+	</actionflow>
+	
+	<!-- A default Login action -->
+	<actionflow name="access.default.login">
+		<actions>
+			<action name="LoginAction" class="Bizcuit.Engine.Access.LoginAction">
+				<action.next condition="success" next="HelloFormAction">
+				<!--access.default.login.HelloFormAction used-->
+				</action.next>
+				<action.next condition="failed" next="LoginFailedFormAction">
+				</action.next>
+			</action>
+
+			<action name="HelloFormAction" class="Bizcuit.Engine.Access.HelloFormAction"></action>
+		</actions>
+	</actionflow>
+
+	<!-- A default register form render action(Page 1) -->
+	<actionflow name="access.default.register.form">
+		<actions>
+			<action name="RegisterFormAction" class="Bizcuit.Engine.Access.RegisterFormAction">
+			</action>
+		</actions>
+	</actionflow>
+
+	<!-- A default register action -->
+	<actionflow name="access.default.register">
+		<actions>
+			<action name="RegisterAction" class="Bizcuit.Engine.Access.RegisterAction">
+				<action.next condition="success" next="RegisterPersonalInfoFormAction">
+				</action.next>
+				<action.next condition="failed" next="RegisterFailedFormAction">
+				</action.next>
+			</action>
+
+			<!-- A default register personal info form render action(Page 2) -->
+			<action name="RegisterPersonalInfoFormAction" class="Bizcuit.Engine.Access.RegisterPersonalInfoFormAction" interruptable="true">
+				<action.next condition="submit" next="RegisterSuccessFormAction">
+				</action.next>
+				<action.next condition="cancel" next="RegisterCancelQueryFormAction">
+				</action.next>
+			</action>
+
+			<!-- A default register failed form render action(Failed Page) -->
+			<action name="RegisterFailedFormAction" class="Bizcuit.Engine.Access.RegisterFailedFormAction" interruptable="true">
+			</action>
+
+			<!-- A default register success form render action(Final Success Page) -->
+			<action name="RegisterSuccessFormAction" class="Bizcuit.Engine.Access.RegisterSuccessFormAction" interruptable="true">
+			</action>
+			
+		</actions>
+	</actionflow>
+
+
+	<global.action name="global.HelloFormAction" class="Bizcuit.Engine.Access.HelloFormAction">
+	</global.action>
+</actionflows>

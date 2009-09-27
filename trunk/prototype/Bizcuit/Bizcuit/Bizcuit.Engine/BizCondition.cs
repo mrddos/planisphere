@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Bizcuit.Common
+namespace Bizcuit.Engine
 {
-	public interface IBizAction
+	class BizCondition
 	{
-
-
-		void Perform();
 	}
 }

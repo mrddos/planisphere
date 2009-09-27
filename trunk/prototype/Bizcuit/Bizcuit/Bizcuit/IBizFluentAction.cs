@@ -5,10 +5,7 @@ using System.Text;
 
 namespace Bizcuit.Common
 {
-	public interface IBizAction
+	public interface IBizFluentAction : IBizAction
 	{
-
-
-		void Perform();
 	}
 }
