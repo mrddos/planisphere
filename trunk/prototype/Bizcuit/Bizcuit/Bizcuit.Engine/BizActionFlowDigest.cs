@@ -67,7 +67,7 @@ namespace Bizcuit.Engine
 			}
 
 			#endregion
-		}
+		} // BizActionDigest end
 
 
 
