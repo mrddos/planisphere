@@ -30,6 +30,10 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Bizcuit.Engine;
+using Bizcuit.Engine.Server;
+using System.Text;
+using Bizcuit.Common;
 
 namespace com.sampullara
 {
@@ -121,6 +125,11 @@ namespace com.sampullara
 		{
 			// The number of requests handled by this persistent connection
 			numRequests++;
+			
+			// We should use this, instead of socket...Healer
+			//HttpListener listener = new HttpListener();
+			
+			
 			// Here is where we ensure that we are not overloaded
 			if (threads > 500)
 			{
@@ -229,6 +238,39 @@ namespace com.sampullara
 			{
 				// Replace the forward slashes with back-slashes to make a file name
 				string filename = url.Replace('/', '\\');
+				
+				// Add by Healer.kx
+				if (url.StartsWith("/bizcuit/"))
+				{
+					if (url.StartsWith("/bizcuit/actions/"))
+					{
+						// Goes for bizcuit actions.
+						int p = url.IndexOf('?', 17);
+						if (p > 0)
+						{
+							string actionCommand = url.Substring(17, p - 17);
+
+							// TODO: use action command to call actions
+							// TODO: 
+							
+
+							IBizActionRequest req = new BizActionRequest();
+							IBizActionResponse resp = new BizActionResponse();
+
+							req.ActionCommnad = actionCommand;
+							HttpServer.GetActionEngine().ProcessAction(req, resp);
+
+							string content = resp.Content;
+							
+							byte[] bs = Encoding.Default.GetBytes(content);
+							ns.Write(bs, 0, bs.Length);
+
+							return;
+						}
+
+					}
+				}
+				
 				// Construct a filename from the doc root and the filename
 				FileInfo file = new FileInfo(docRootFile + filename);
 				// Make sure they aren't trying in funny business by checking that the
@@ -321,6 +363,13 @@ namespace com.sampullara
 		private int port;
 		private string docRoot;
 
+		private static BizActionEngine actionEngine = new BizActionEngine();
+
+		public static BizActionEngine GetActionEngine()
+		{
+			return actionEngine;
+		}
+
 		// ============================================================
 		// Constructor
 
@@ -328,6 +377,11 @@ namespace com.sampullara
 		{
 			this.docRoot = docRoot;
 			this.port = port;
+
+			// Added by Healer.kx
+			
+			actionEngine.Initialize();
+
 		}
 
 		// ============================================================

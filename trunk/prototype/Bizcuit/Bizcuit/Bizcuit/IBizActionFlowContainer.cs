@@ -27,7 +27,7 @@ namespace Bizcuit.Common
 		void Activate();
 
 		void SetActionFlow(IBizActionFlow actionFlow);
-
-		void Execute();
+		void SetActionFlowDigest(IBizActionFlowDigest digest);
+		void Execute(IBizActionRequest request, IBizActionResponse response);
 	}
 }

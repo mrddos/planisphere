@@ -8,5 +8,9 @@ namespace Bizcuit.Common
 	public interface IBizActionFlowDigest
 	{
 		IBizActionDigest AddActionDigest(string actionName);
+
+		IBizActionFlow CreateActionFlow();
+
+		IBizActionFlowConfig GetConfig();
 	}
 }

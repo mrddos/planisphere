@@ -10,12 +10,14 @@ namespace Bizcuit.Engine
 	{
 		private IBizActionFlow actionFlow = null;
 
+		private IBizActionFlowDigest digest = null;
+
 		private IBizActionFlowConfig config = null;
 
 		private BizActionFlowContainerStatus status = BizActionFlowContainerStatus.Unready;
 
 
-
+		// 实际上，给个Digest对象就足够了。
 		public void ApplyConfig(IBizActionFlowConfig config)
 		{
 			this.config = config;
@@ -39,8 +41,14 @@ namespace Bizcuit.Engine
 			this.actionFlow = actionFlow;
 		}
 
-		public void Execute()
+		public void SetActionFlowDigest(IBizActionFlowDigest digest)
 		{
+			this.digest = digest;
+		}
+
+		public void Execute(IBizActionRequest request, IBizActionResponse response)
+		{
+
 		}
 
 	}

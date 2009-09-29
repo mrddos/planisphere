@@ -53,6 +53,8 @@
     <Compile Include="IBizActionFlowContainer.cs" />
     <Compile Include="IBizActionFlowDigest.cs" />
     <Compile Include="IBizActionNode.cs" />
+    <Compile Include="IBizActionRequest.cs" />
+    <Compile Include="IBizActionResponse.cs" />
     <Compile Include="IBizCommand.cs" />
     <Compile Include="IBizCondition.cs" />
     <Compile Include="IBizFluentAction.cs" />

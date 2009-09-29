@@ -6,15 +6,18 @@ using Bizcuit.Common;
 
 namespace Bizcuit.Engine
 {
-	class BizActionEngine
+	public class BizActionEngine
 	{
+		private BizActionFlowDirectory actionFlowDir = new BizActionFlowDirectory();
 
-
+		private IBizActionFlowConfig config = new BizActionFlowConfig();
 
 		public void Initialize()
 		{
 			//TODO: Fill the BizActionFlowDirectory
 			// ./login => {login, }
+
+			BizActionFlowConfig.Load("config/access.default.xml", config);
 		}
 
 		//<actionflow name="login">
@@ -25,27 +28,31 @@ namespace Bizcuit.Engine
 		//
 		//</actionflow>
 		//
-		public void ProcessAction(object /*TODO: Add class HttpRequest*/Request, object /*TODO: Add class HttpResponse*/Response)
+		public void ProcessAction(IBizActionRequest request, IBizActionResponse response)
 		{
 
-			BizActionFlowDirectory actionFlowDir = new BizActionFlowDirectory();
+			string actionFlowName = actionFlowDir.GetActionFlowDigest(request);
+			IBizActionFlowDigest digest = config.GetActionFlowDigest(actionFlowName);
 
-
-			BizActionFlowDigest digest = actionFlowDir.GetActionFlowDigest(Request);
-
+			// TODO: Create a new ActionFlow, or get from the session?
 			IBizActionFlow actionFlow = digest.CreateActionFlow();
 
-			Run(actionFlow, digest.GetConfig());
+			Run(actionFlow, digest.GetConfig(), request, response);
 		}
 
 
-		public void Run(IBizActionFlow actionFlow, IBizActionFlowConfig config)
+		public void Run(IBizActionFlow actionFlow, IBizActionFlowConfig config, IBizActionRequest request, IBizActionResponse response)
 		{
 			IBizActionFlowContainer actionFlowContainer = new BizActionFlowContainer();
 			actionFlowContainer.SetActionFlow(actionFlow);
-			actionFlowContainer.ApplyConfig(config);
+			actionFlowContainer.ApplyConfig(config);	// TODO, 换成ApplyDigest更好.
 
-			actionFlowContainer.Execute();
+
+			string actionFlowName = actionFlowDir.GetActionFlowDigest(request);
+			actionFlowContainer.SetActionFlowDigest(config.GetActionFlowDigest(actionFlowName));
+
+			// ApplyConfig and SetActionFlowDigest seem to be so same... ...
+			actionFlowContainer.Execute(request, response);
 		}
 	}
 }

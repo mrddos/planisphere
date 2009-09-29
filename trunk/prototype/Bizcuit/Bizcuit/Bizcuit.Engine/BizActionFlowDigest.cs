@@ -11,6 +11,11 @@ namespace Bizcuit.Engine
 		private string actionFlowName = null;
 
 
+		public BizActionFlowDigest(string actionFlowName)
+		{
+			this.actionFlowName = actionFlowName;
+		}
+
 		public string ActionFlowName
 		{
 			get { return actionFlowName; }
@@ -18,15 +23,9 @@ namespace Bizcuit.Engine
 
 
 
-		internal IBizActionFlow CreateActionFlow()
-		{
-			throw new NotImplementedException();
-		}
 
-		internal IBizActionFlowConfig GetConfig()
-		{
-			throw new NotImplementedException();
-		}
+
+
 
 
 
@@ -83,7 +82,15 @@ namespace Bizcuit.Engine
 		}
 
 
+		IBizActionFlow IBizActionFlowDigest.CreateActionFlow()
+		{
+			throw new NotImplementedException();
+		}
 
+		IBizActionFlowConfig IBizActionFlowDigest.GetConfig()
+		{
+			throw new NotImplementedException();
+		}
 		#endregion
 	}
 }

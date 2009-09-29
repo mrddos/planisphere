@@ -13,7 +13,7 @@ namespace Bizcuit.Engine.Server
 		{
 			IBizActionFlowConfig config = new BizActionFlowConfig();
 			
-			config = BizActionFlowConfig.Load("config/access.default.xml", config);
+			BizActionFlowConfig.Load("config/access.default.xml", config);
 
 			ListConfig(config);
 

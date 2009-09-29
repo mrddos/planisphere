@@ -12,22 +12,28 @@ namespace Bizcuit.Engine
 	{
 
 
-		private Dictionary<string, BizActionFlowDigest> dict = new Dictionary<string, BizActionFlowDigest>();
+		private Dictionary<string, IBizActionFlowDigest> dict = new Dictionary<string, IBizActionFlowDigest>();
 
 
 
 
 
-		IBizActionFlowDigest IBizActionFlowConfig.AddActionFlowDigest()
+		IBizActionFlowDigest IBizActionFlowConfig.AddActionFlowDigest(string actionFlowName)
 		{
-			IBizActionFlowDigest digest = new BizActionFlowDigest();
+			IBizActionFlowDigest digest = new BizActionFlowDigest(actionFlowName);
+			dict.Add(actionFlowName, digest);
 			return digest;
+		}
+
+		IBizActionFlowDigest IBizActionFlowConfig.GetActionFlowDigest(string actionFlowName)
+		{
+			return dict[actionFlowName];
 		}
 
 
 		// TODO: Create a Config file Parser later.
 		// Y: BizActionFlowConfig现在内部聚合一个Parser
-		public static IBizActionFlowConfig Load(string fileName, IBizActionFlowConfig config)
+		public static void Load(string fileName, IBizActionFlowConfig config)
 		{
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load(fileName);
@@ -49,30 +55,33 @@ namespace Bizcuit.Engine
 					}
 				}
 			}
-			return null;
 		}
 
 		private static void ParseActionFlowNode(XmlNode node, IBizActionFlowConfig config)
 		{
 			Console.WriteLine("ParseActionFlowNode");
-			IBizActionFlowDigest digest = config.AddActionFlowDigest();
+			IBizActionFlowDigest digest = null;
 			foreach (XmlAttribute attr in node.Attributes)
 			{
-				Console.WriteLine(attr.Name + ":" + attr.Value);
-			}
-
-			XmlNodeList children = node.ChildNodes;
-			foreach (XmlNode child in children)
-			{
-				if (child.NodeType == XmlNodeType.Element)
+				if (attr.Name == "name")
 				{
-					if (child.Name == "actions")
+					digest = config.AddActionFlowDigest(attr.Value);
+				}
+			}
+			if (digest != null)
+			{
+				XmlNodeList children = node.ChildNodes;
+				foreach (XmlNode child in children)
+				{
+					if (child.NodeType == XmlNodeType.Element)
 					{
-						ParseActionsNode(child, digest);
+						if (child.Name == "actions")
+						{
+							ParseActionsNode(child, digest);
+						}
 					}
 				}
 			}
-
 		}
 
 		private static void ParseActionsNode(XmlNode actionsNode, IBizActionFlowDigest digest)

@@ -8,17 +8,26 @@ namespace Bizcuit.Engine
 {
 	class BizActionFlowDirectory
 	{
-		private Dictionary<string, BizActionFlowDigest> actionFlowDict = new Dictionary<string, BizActionFlowDigest>();
+		private Dictionary<string, string> actionFlowDict = new Dictionary<string, string>();
 
 
 
-
-
-
-
-		public BizActionFlowDigest GetActionFlowDigest(object Request)
+		public BizActionFlowDirectory()
 		{
-			return actionFlowDict[Request.ToString()];
+			// TODO: Add a command => ActionFlow using C# code for test.
+			// TODO: Complete the config part.
+			
+
+			// Later, some url should be check permission?
+			// 
+			actionFlowDict.Add("login", "access.default.login.form");
+		}
+
+
+		// TODO: Add default and wrong action command handler.
+		public string GetActionFlowDigest(IBizActionRequest request)
+		{
+			return actionFlowDict[request.ActionCommnad];
 		}
 	}
 }

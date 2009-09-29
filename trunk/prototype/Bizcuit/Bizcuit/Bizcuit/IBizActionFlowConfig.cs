@@ -9,6 +9,8 @@ namespace Bizcuit.Common
 	{
 
 
-		IBizActionFlowDigest AddActionFlowDigest();
+		IBizActionFlowDigest AddActionFlowDigest(string actionFlowName);
+
+		IBizActionFlowDigest GetActionFlowDigest(string actionFlowName);
 	}
 }

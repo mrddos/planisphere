@@ -55,6 +55,8 @@
     <Compile Include="BizActionFlowDigest.cs" />
     <Compile Include="BizActionFlowDirectory.cs" />
     <Compile Include="BizActionNode.cs" />
+    <Compile Include="BizActionRequest.cs" />
+    <Compile Include="BizActionResponse.cs" />
     <Compile Include="BizCondition.cs" />
     <Compile Include="HelloFormAction.cs" />
     <Compile Include="LoginAction.cs" />
