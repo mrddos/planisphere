@@ -19,6 +19,7 @@ namespace Bizcuit.Common
 	{
 
 		void ApplyConfig(IBizActionFlowConfig config);
+		void ApplyDigest(IBizActionFlowDigest digest);
 
 
 		BizActionFlowContainerStatus Status { get; }

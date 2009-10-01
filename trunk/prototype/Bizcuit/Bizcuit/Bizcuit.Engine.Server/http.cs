@@ -252,20 +252,24 @@ namespace com.sampullara
 
 							// TODO: use action command to call actions
 							// TODO: 
-							
 
-							IBizActionRequest req = new BizActionRequest();
-							IBizActionResponse resp = new BizActionResponse();
+							if (HttpServer.GetActionEngine().CanProcess(actionCommand))
+							{
+								IBizActionRequest req = new BizActionRequest();
+								IBizActionResponse resp = new BizActionResponse();
 
-							req.ActionCommnad = actionCommand;
-							HttpServer.GetActionEngine().ProcessAction(req, resp);
+								req.ActionCommnad = actionCommand;
+								HttpServer.GetActionEngine().ProcessAction(req, resp);
 
-							string content = resp.Content;
-							
-							byte[] bs = Encoding.Default.GetBytes(content);
-							ns.Write(bs, 0, bs.Length);
+								string content = resp.Content;
 
-							return;
+								byte[] bs = Encoding.Default.GetBytes(content);
+								ns.Write(bs, 0, bs.Length);
+
+								return;
+
+							}
+
 						}
 
 					}

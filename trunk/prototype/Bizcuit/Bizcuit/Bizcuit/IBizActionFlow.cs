@@ -9,5 +9,7 @@ namespace Bizcuit.Common
 	{
 
 		string Id { get; }
+
+		void Run(IBizActionRequest request, IBizActionResponse response);
 	}
 }

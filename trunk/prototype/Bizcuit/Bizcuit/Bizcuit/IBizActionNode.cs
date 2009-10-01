@@ -9,8 +9,9 @@ namespace Bizcuit.Common
 	{
 
 		IBizAction Action { get; }
+		void Run(IBizActionRequest request, IBizActionResponse response);
 
-		void ApplyConfig(IBizActionConfig config);
+		void ApplyDigest(IBizActionDigest digest);
 
 
 		IBizActionNode GetNextActionNodeOnCondition(IBizCondition condition);

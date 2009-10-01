@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using Bizcuit.Common;
 
-namespace Bizcuit.Engine
+namespace Bizcuit.Engine.Access
 {
 	public class RegisterPendingFormAction : IBizRenderAction
 	{
 		#region IBizAction Members
 
-		public void Perform()
+		public void Perform(IBizActionRequest request, IBizActionResponse response)
 		{
 			throw new NotImplementedException();
 		}

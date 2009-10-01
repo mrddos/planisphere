@@ -10,7 +10,7 @@ namespace Bizcuit.Engine.Access
 	{
 		#region IBizAction Members
 
-		public void Perform()
+		public void Perform(IBizActionRequest request, IBizActionResponse response)
 		{
 			throw new NotImplementedException();
 		}

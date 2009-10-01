@@ -25,9 +25,9 @@ namespace Bizcuit.Engine
 
 
 		// TODO: Add default and wrong action command handler.
-		public string GetActionFlowDigest(IBizActionRequest request)
+		public string GetActionFlowDigest(string actionCommand)
 		{
-			return actionFlowDict[request.ActionCommnad];
+			return actionFlowDict[actionCommand];
 		}
 	}
 }

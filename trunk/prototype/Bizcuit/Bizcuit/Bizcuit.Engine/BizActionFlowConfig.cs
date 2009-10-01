@@ -21,7 +21,14 @@ namespace Bizcuit.Engine
 		IBizActionFlowDigest IBizActionFlowConfig.AddActionFlowDigest(string actionFlowName)
 		{
 			IBizActionFlowDigest digest = new BizActionFlowDigest(actionFlowName);
-			dict.Add(actionFlowName, digest);
+			if (!dict.ContainsKey(actionFlowName))
+			{
+				dict.Add(actionFlowName, digest);
+			}
+			else
+			{
+				throw new Exception("Duplicate action flow name.");
+			}
 			return digest;
 		}
 
@@ -61,15 +68,21 @@ namespace Bizcuit.Engine
 		{
 			Console.WriteLine("ParseActionFlowNode");
 			IBizActionFlowDigest digest = null;
+			string entryActionName = null;
 			foreach (XmlAttribute attr in node.Attributes)
 			{
 				if (attr.Name == "name")
 				{
 					digest = config.AddActionFlowDigest(attr.Value);
 				}
+				else if (attr.Name == "entry")
+				{
+					entryActionName = attr.Value;
+				}
 			}
 			if (digest != null)
 			{
+				digest.EntryActionName = entryActionName;
 				XmlNodeList children = node.ChildNodes;
 				foreach (XmlNode child in children)
 				{
@@ -100,7 +113,7 @@ namespace Bizcuit.Engine
 		{
 			// 主要获取name和class属性值，保存到Config对象中。
 			string actionName = null;
-			string actionClass = null;
+			string actionClassName = null;
 			foreach (XmlAttribute attr in actionNode.Attributes)
 			{
 				if (attr.Name == "name")
@@ -109,22 +122,22 @@ namespace Bizcuit.Engine
 				}
 				else if (attr.Name == "class")
 				{
-					actionClass = attr.Value;
+					actionClassName = attr.Value;
 				}
 			}
 			if (actionName == null)
 				return;	// TODO: 抛出Engine的ConfigParserException异常。需要定义一套异常。
-			IBizActionDigest actionDigest = digest.AddActionDigest(actionName);
+			IBizActionDigest actionDigest = digest.AddActionDigest(actionName, actionClassName);
 
 
 			// 获取action.next Tag的信息
-			foreach (XmlNode nextNode in actionNode.ChildNodes)
+			foreach (XmlNode node in actionNode.ChildNodes)
 			{
-				if (nextNode.Name == "action.next")
+				if (node.Name == "action.next")
 				{
 					string nextActionName = null;
 					string condition = null;
-					foreach (XmlAttribute attr in nextNode.Attributes)
+					foreach (XmlAttribute attr in node.Attributes)
 					{
 						if (attr.Name == "next")
 						{
@@ -136,6 +149,47 @@ namespace Bizcuit.Engine
 						}
 					}
 					actionDigest.SetNextActionOnCondition(condition, nextActionName);
+				}
+				else if (node.Name == "return")
+				{
+					XmlNode returnTypeNode = node.ChildNodes.Item(0);
+					string nodeName = returnTypeNode.Name;
+					if (nodeName == "content")
+					{
+						string contentType = null;
+						string contentSrc = null;
+						string contentValue = null;
+						foreach (XmlAttribute attr in returnTypeNode.Attributes)
+						{
+							if (attr.Name == "type")
+							{
+								contentType = attr.Value;
+							}
+							else if (attr.Name == "src")
+							{
+								contentSrc = attr.Value;
+							}
+							else if (attr.Name == "value")
+							{
+								contentValue = attr.Value;
+							}
+						}
+
+						actionDigest.SetReturnContentType(contentType);
+						actionDigest.SetReturnContent(contentValue);
+						actionDigest.SetReturnContentSource(contentSrc);
+
+
+
+
+
+					}
+					else if (nodeName == "value")
+					{
+						// TODO: check value type?
+					}
+
+					
 				}
 			}
 

@@ -10,6 +10,10 @@ namespace Bizcuit.Engine
 	{
 		private string actionFlowName = null;
 
+		private string entryActionName = null;
+
+		private Dictionary<string, IBizActionDigest> actionDigestDict = new Dictionary<string, IBizActionDigest>();
+
 
 		public BizActionFlowDigest(string actionFlowName)
 		{
@@ -34,11 +38,23 @@ namespace Bizcuit.Engine
 			private string actionName = null;
 			private string actionClassName = null;
 
-			private Dictionary<string, string> nextActionDict = new Dictionary<string,string>();
+			
+
+			private string returnContentType = null;
+			private string returnContentValue = null;
+			private string returnContentSource = null;
+
+			private Dictionary<string, string> nextActionDict = new Dictionary<string, string>();
 
 			internal BizActionDigest(string actionName)
 			{
 				this.actionName = actionName;
+			}
+
+			internal BizActionDigest(string actionName, string actionClassName)
+			{
+				this.actionName = actionName;
+				this.actionClassName = actionClassName;
 			}
 
 			#region IBizActionDigest Members
@@ -66,6 +82,41 @@ namespace Bizcuit.Engine
 			}
 
 			#endregion
+
+			#region IBizActionDigest Members
+
+			// Set, Get => change to Property...
+			public void SetReturnContentType(string contentType)
+			{
+				this.returnContentType = contentType;
+			}
+
+			public void SetReturnContent(string contentValue)
+			{
+				this.returnContentValue = contentValue;
+			}
+
+			public void SetReturnContentSource(string contentSrc)
+			{
+				this.returnContentSource = contentSrc;
+			}
+
+			public string GetReturnContentType()
+			{
+				return returnContentType;
+			}
+
+			public string GetReturnContent()
+			{
+				return returnContentValue;
+			}
+
+			public string GetReturnContentSource()
+			{
+				return returnContentSource;
+			}
+
+			#endregion
 		} // BizActionDigest end
 
 
@@ -73,23 +124,43 @@ namespace Bizcuit.Engine
 
 		#region IBizActionFlowDigest Members
 
-		IBizActionDigest IBizActionFlowDigest.AddActionDigest(string actionName)
+		IBizActionDigest IBizActionFlowDigest.AddActionDigest(string actionName, string actionClassName)
 		{
-			IBizActionDigest actionDigest = new BizActionDigest(actionName);
-
+			IBizActionDigest actionDigest = new BizActionDigest(actionName, actionClassName);
+			if (!actionDigestDict.ContainsKey(actionName))
+			{
+				actionDigestDict.Add(actionName, actionDigest);
+			}
+			else
+			{
+				throw new Exception("Duplicate ation name.");
+			}
 
 			return actionDigest;
 		}
 
-
+		//或许应该把这个部分从Digest类中拿出去。Digest应该更多展示信息。
 		IBizActionFlow IBizActionFlowDigest.CreateActionFlow()
 		{
-			throw new NotImplementedException();
+			string entryActionName = this.EntryActionName;
+			IBizActionFlow actionFlow = new BizActionFlow(entryActionName, this);
+			return actionFlow;
 		}
 
-		IBizActionFlowConfig IBizActionFlowDigest.GetConfig()
+		IBizActionDigest IBizActionFlowDigest.GetActionDigest(string actionName)
 		{
-			throw new NotImplementedException();
+			return actionDigestDict[actionName];
+		}
+
+		string IBizActionFlowDigest.GetActionClassName(string actionName)
+		{
+			return actionDigestDict[actionName].ClassName;/**/
+		}
+
+		public string EntryActionName
+		{
+			get { return entryActionName; }
+			set { entryActionName = value; }
 		}
 		#endregion
 	}

@@ -9,6 +9,6 @@ namespace Bizcuit.Common
 	{
 
 
-		void Perform();
+		void Perform(IBizActionRequest request, IBizActionResponse response);
 	}
 }

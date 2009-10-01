@@ -9,9 +9,9 @@ namespace Bizcuit.Engine.Access
 	public class RegisterFormAction : IBizRenderAction
 	{
 
-		
 
-		public void Perform()
+
+		public void Perform(IBizActionRequest request, IBizActionResponse response)
 		{
 			throw new NotImplementedException();
 		}
@@ -28,7 +28,7 @@ namespace Bizcuit.Engine.Access
 
 
 
-		public void Perform()
+		public void Perform(IBizActionRequest request, IBizActionResponse response)
 		{
 			throw new NotImplementedException();
 		}

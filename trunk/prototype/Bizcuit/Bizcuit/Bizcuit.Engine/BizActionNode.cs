@@ -10,15 +10,18 @@ namespace Bizcuit.Engine
 	class BizActionNode : IBizActionNode
 	{
 
-		private string actionClassName = null;
-
 		private IBizAction action = null;
 
-		private IBizActionConfig config = null;
+		private IBizActionDigest digest = null;
+
+		private string actionName = null;
+
+		private string actionClassName = null;
 
 		// For lazy loading...
-		public BizActionNode(string actionClassName)
+		public BizActionNode(string actionName, string actionClassName)
 		{
+			this.actionName = actionName;
 			this.actionClassName = actionClassName;
 		}
 
@@ -31,7 +34,7 @@ namespace Bizcuit.Engine
 		}
 
 
-		public void Run()
+		public void Run(IBizActionRequest request, IBizActionResponse response)
 		{
 			if (action == null)
 			{
@@ -40,12 +43,12 @@ namespace Bizcuit.Engine
 					Type actionType = Type.GetType(actionClassName);
 					if (actionType != null)
 					{
-						ConstructorInfo ci = actionType.GetConstructor(new Type[] { });
-						action = (IBizAction)ci.Invoke(new object[] { });
+						ConstructorInfo ci = actionType.GetConstructor(new Type[] { typeof(IBizActionDigest) });
+						action = (IBizAction)ci.Invoke(new object[] { this.digest });
 					}
 				}
 			}
-			action.Perform();
+			action.Perform(request, response);
 		}
 
 
@@ -54,9 +57,9 @@ namespace Bizcuit.Engine
 			get { return action; }
 		}
 
-		public void ApplyConfig(IBizActionConfig config)
+		public void ApplyDigest(IBizActionDigest digest)
 		{
-			this.config = config;
+			this.digest = digest;
 		}
 
 

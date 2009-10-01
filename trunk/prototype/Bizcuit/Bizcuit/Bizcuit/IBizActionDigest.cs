@@ -13,5 +13,14 @@ namespace Bizcuit.Common
 		string ClassName { get; set; }
 
 		void SetNextActionOnCondition(string condition, string nextActionName);
+
+		void SetReturnContentType(string contentType);
+		void SetReturnContent(string contentValue);
+		void SetReturnContentSource(string contentSrc);
+
+
+		string GetReturnContentType();
+		string GetReturnContent();
+		string GetReturnContentSource();
 	}
 }

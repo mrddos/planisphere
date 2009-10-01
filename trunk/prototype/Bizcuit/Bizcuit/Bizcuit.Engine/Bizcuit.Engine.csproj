@@ -58,12 +58,14 @@
     <Compile Include="BizActionRequest.cs" />
     <Compile Include="BizActionResponse.cs" />
     <Compile Include="BizCondition.cs" />
+    <Compile Include="BizSession.cs" />
     <Compile Include="HelloFormAction.cs" />
     <Compile Include="LoginAction.cs" />
     <Compile Include="LoginFormAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterFormAction.cs" />
     <Compile Include="RegisterPendingFormAction.cs" />
+    <Compile Include="WebSupport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bizcuit\Bizcuit.csproj">
