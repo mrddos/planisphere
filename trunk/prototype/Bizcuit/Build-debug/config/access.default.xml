@@ -5,6 +5,9 @@
 	<actionflow name="access.default.login.form" entry="LoginFormAction">
 		<actions>
 			<action name="LoginFormAction" class="Bizcuit.Engine.Access.LoginFormAction">
+				<return>
+					<content type="text/html" src="login.html"></content>
+				</return>
 			</action>
 		</actions>
 	</actionflow>
