@@ -33,12 +33,16 @@ public class GPassServlet extends HttpServlet {
 		if ("add".equalsIgnoreCase(command)) {
 			long id = addNewRecordEntry(request, response);
 			result = String.valueOf(id);
+			
 		} else if ("remove".equalsIgnoreCase(command)) {
 			removeRecordEntry(request, response);
+			
 		} else if ("modify".equalsIgnoreCase(command)) {
 			modifyRecordEntry(request, response);
+			
 		} else if ("get".equalsIgnoreCase(command)) {
 			getRecordEntry();
+			
 		} else if ("list".equalsIgnoreCase(command)) {
 			List<RecordEntry> entries = listRecordEntries(request, response);
 
@@ -46,6 +50,9 @@ public class GPassServlet extends HttpServlet {
 			Gson gson = builder.create();
 
 			result = gson.toJson(entries);
+			
+		} else if ("bank".equalsIgnoreCase(command)) {
+			
 		} else {
 			result = "command string required.";
 		}
