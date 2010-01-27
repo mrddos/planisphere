@@ -14,21 +14,27 @@ public class RecordEntry {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
+	
+	@Persistent
+	private String name;
 
 	@Persistent
 	private String description;
 
 	@Persistent
 	private String secret;
+	
+	
 
 	public RecordEntry() {
 	}
 
-	public RecordEntry(String description) {
-		this.description = description;
+	public RecordEntry(String name) {
+		this.name = name;
 	}
 
-	public RecordEntry(String description, String secret) {
+	public RecordEntry(String name, String description, String secret) {
+		this.name = name;
 		this.description = description;
 		this.secret = secret;
 
@@ -40,6 +46,14 @@ public class RecordEntry {
 
 	public long getId() {
 		return key.getId();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getDescription() {

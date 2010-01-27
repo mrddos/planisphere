@@ -1,6 +1,7 @@
 package org.healer.gpass;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.healer.PersistenceManagerDictionary;
+import org.healer.gpass.beans.Entry;
 import org.healer.gpass.beans.RecordEntry;
 
 
@@ -17,6 +19,9 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+
+
 
 public class GPassServlet extends HttpServlet {
 	private static final long serialVersionUID = 7982223539268242856L;
@@ -44,11 +49,13 @@ public class GPassServlet extends HttpServlet {
 			getRecordEntry();
 			
 		} else if ("list".equalsIgnoreCase(command)) {
-			List<RecordEntry> entries = listRecordEntries(request, response);
+			List<Entry> entries = listRecordEntries(request, response);
 
 			GsonBuilder builder = new GsonBuilder();
+			//
 			Gson gson = builder.create();
 
+			
 			result = gson.toJson(entries);
 			
 		} else if ("bank".equalsIgnoreCase(command)) {
@@ -58,17 +65,23 @@ public class GPassServlet extends HttpServlet {
 		}
 
 		response.setContentType("text/plain");
+		response.setCharacterEncoding("UTF-8");
 		response.getWriter().write(result);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private List<RecordEntry> listRecordEntries(HttpServletRequest request, HttpServletResponse response) {
+	private List<Entry> listRecordEntries(HttpServletRequest request, HttpServletResponse response) {
 		PersistenceManager pm = PersistenceManagerDictionary.get("secret-optional");
 		Query query = pm.newQuery(RecordEntry.class);
 
 	    List<RecordEntry> results = (List<RecordEntry>) query.execute();
+	    
+	    List<Entry> ret = new ArrayList<Entry>();
+	    for (RecordEntry re: results) {
+	    	ret.add(new Entry(re));
+	    }
 	    pm.close();
-		return results;
+		return ret;
 		
 	}
 	
@@ -78,17 +91,27 @@ public class GPassServlet extends HttpServlet {
 	}
 	
 	private long addNewRecordEntry(HttpServletRequest request, HttpServletResponse response) {
-		String desc = request.getParameter("desc");
-		String secr = request.getParameter("secr");
-		RecordEntry re = new RecordEntry(desc, secr);
-		
-		PersistenceManager pm = PersistenceManagerDictionary.get("secret-optional");
-		re = pm.makePersistent(re);
+		String name = request.getParameter(Entry.NAME);
+		String desc = request.getParameter(Entry.DESC);
+		String secr = request.getParameter(Entry.SECR);
+		if (name != null) {
+			if (desc == null) {
+				desc = "";
+			}
+			if (secr == null) {
+				secr = "";
+			}
+			RecordEntry re = new RecordEntry(name, desc, secr);
+			PersistenceManager pm = PersistenceManagerDictionary.get("secret-optional");
+			re = pm.makePersistent(re);
 
-		pm.flush();
-		pm.close();
+			pm.flush();
+			pm.close();
+			
+			return re.getId();
+		}
 		
-		return re.getId();
+		return -1;
 	}
 	
 	private void removeRecordEntry(HttpServletRequest request, HttpServletResponse response) {
