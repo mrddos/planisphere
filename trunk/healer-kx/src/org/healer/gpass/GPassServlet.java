@@ -40,7 +40,7 @@ public class GPassServlet extends HttpServlet {
 			result = String.valueOf(id);
 			
 		} else if ("remove".equalsIgnoreCase(command)) {
-			removeRecordEntry(request, response);
+			result = removeRecordEntry(request, response);
 			
 		} else if ("modify".equalsIgnoreCase(command)) {
 			modifyRecordEntry(request, response);
@@ -114,7 +114,7 @@ public class GPassServlet extends HttpServlet {
 		return -1;
 	}
 	
-	private void removeRecordEntry(HttpServletRequest request, HttpServletResponse response) {
+	private String removeRecordEntry(HttpServletRequest request, HttpServletResponse response) {
 		String Id = request.getParameter("id");
 		if (Id != null && Id.length() > 0) {
 			long id = Long.parseLong(Id);
@@ -122,12 +122,16 @@ public class GPassServlet extends HttpServlet {
 			PersistenceManager pm = PersistenceManagerDictionary.get("secret-optional");
 			
 			Key key = KeyFactory.createKey(RecordEntry.class.getSimpleName(), id);
-			RecordEntry re = new RecordEntry();
-			re.setKey(key);
-			pm.deletePersistent(re);
+			RecordEntry re = pm.getObjectById(RecordEntry.class, key);
+			if (re != null) {
+				pm.deletePersistent(re);
+			} else {
+				return "Error_NoThisObject";
+			}
 			pm.close();
+			return "Success";
 		}
-		
+		return "Error_WrongParameter";
 	}
 	
 	private void modifyRecordEntry(HttpServletRequest request, HttpServletResponse response) {
@@ -138,10 +142,9 @@ public class GPassServlet extends HttpServlet {
 			PersistenceManager pm = PersistenceManagerDictionary.get("secret-optional");
 			
 			Key key = KeyFactory.createKey(RecordEntry.class.getSimpleName(), id);
-			RecordEntry re = new RecordEntry();
-			re.setKey(key);
+			RecordEntry re = pm.getObjectById(RecordEntry.class, key);
 			
-			
+			// Add code for modify the RecordEntry;
 			pm.close();
 		}
 	}
