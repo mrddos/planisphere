@@ -22,17 +22,30 @@
 </script> 
 <script text='javascript'>
 function addOnClick() {
+	
 	var name = document.getElementById("name1").value;
 	var desc = document.getElementById("desc1").value;
 	var secr = document.getElementById("secr1").value;
 
 	var url = "/gpass?" + "command=add" + "&name=" + name + "&desc=" + desc + "&secr=" + secr;
+	console.debug(url);
+	//ajax
+	$.get( url, {},  function(data) { console.debug(data); }  
+	);  
+	
+}
+		
+function updateRecordEntry(id) {
+	alert(id);
+}
+
+function deleteRecordEntry(id) {
+	var url = "/gpass?" + "command=remove" + "&id=" + id;
 	$.get(  
 			url,  
 	         {},  
 	         function(data) { console.debug(data); }  
-	);  
-	
+	); 
 }
 
 function createCell(row, text) {
@@ -43,20 +56,25 @@ function createCell(row, text) {
 	row.appendChild(td);
 }
 
-function createCheckBoxCell(row) {
+function createButtonCell(row, text, func) {
 	var td = document.createElement("td");
-	var span = document.createElement("input");
-	span.innerHTML = text;
-	td.appendChild(span);
+	var btn = document.createElement("input");
+	btn.type = "button";
+	btn.value = text;
+	btn.onclick = func;
+	td.appendChild(btn);
 	row.appendChild(td);
 }
 
 function createRow(table, data) {
 	var tr = document.createElement("tr");
-	createCell(tr, data["id"]);
+	var id = data["id"];
+	createCell(tr, id);
 	createCell(tr, data["name"]);
 	createCell(tr, data["description"]);
 	createCell(tr, data["secret"]);
+	createButtonCell(tr, "update", function(){ updateRecordEntry(id);});
+	createButtonCell(tr, "dalete", function(){ deleteRecordEntry(id);});
 	table.appendChild(tr);
 	
 }
@@ -67,6 +85,7 @@ function fillDataList(data) {
 	var dataList = document.getElementById("dataList");
 	
 	var table = document.createElement("table");
+	table.cellSpacing = "0";
 	
 	for (var d in list) {
 		createRow(table, list[d]);
@@ -87,7 +106,7 @@ function listOnClick() {
 
 
 </script>
-</head>
+</head>  
 <body>
 	<div>
 		<%
@@ -134,7 +153,7 @@ function listOnClick() {
 			</td>
 		</tr>
 		<tr>
-			<div id='dataList' class="datalist" style="width:400px">
+			<div id='dataList' class="datalist" style="width:800px">
 				
 			</div>
 		</tr>
