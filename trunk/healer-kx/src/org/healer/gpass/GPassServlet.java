@@ -43,11 +43,10 @@ public class GPassServlet extends HttpServlet {
 			result = removeRecordEntry(request, response);
 			
 		} else if ("modify".equalsIgnoreCase(command)) {
-			modifyRecordEntry(request, response);
+			result = modifyRecordEntry(request, response);
 			
 		} else if ("get".equalsIgnoreCase(command)) {
 			getRecordEntry();
-			
 		} else if ("list".equalsIgnoreCase(command)) {
 			List<Entry> entries = listRecordEntries(request, response);
 
@@ -134,7 +133,7 @@ public class GPassServlet extends HttpServlet {
 		return "Error_WrongParameter";
 	}
 	
-	private void modifyRecordEntry(HttpServletRequest request, HttpServletResponse response) {
+	private String modifyRecordEntry(HttpServletRequest request, HttpServletResponse response) {
 		String Id = request.getParameter("id");
 		if (Id != null && Id.length() > 0) {
 			long id = Long.parseLong(Id);
@@ -144,8 +143,24 @@ public class GPassServlet extends HttpServlet {
 			Key key = KeyFactory.createKey(RecordEntry.class.getSimpleName(), id);
 			RecordEntry re = pm.getObjectById(RecordEntry.class, key);
 			
+			String name = request.getParameter(Entry.NAME);
+			String desc = request.getParameter(Entry.DESC);
+			String secr = request.getParameter(Entry.SECR);
+			
+			if (name != null) {
+				re.setName(name);
+			}
+			
+			if (desc != null) {
+				re.setDescription(desc);
+			}
+			if (secr != null) {
+				re.setSecret(secr);
+			}
 			// Add code for modify the RecordEntry;
 			pm.close();
+			return "Success";
 		}
+		return "Error";
 	}
 }
