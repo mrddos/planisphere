@@ -36,7 +36,15 @@ function addOnClick() {
 }
 		
 function updateRecordEntry(id) {
-	alert(id);
+	var name = document.getElementById("name1").value;
+	var desc = document.getElementById("desc1").value;
+	var secr = document.getElementById("secr1").value;
+
+	var url = "/gpass?" + "command=modify&id=" +id + "&name=" + name + "&desc=" + desc + "&secr=" + secr;
+	console.debug(url);
+	//ajax
+	$.get( url, {},  function(data) { console.debug(data); }  
+	);  
 }
 
 function deleteRecordEntry(id) {
@@ -79,12 +87,20 @@ function createRow(table, data) {
 	
 }
 
+var table = null;
+
 function fillDataList(data) {
 	var list = eval(data);
 	// a div
 	var dataList = document.getElementById("dataList");
-	
-	var table = document.createElement("table");
+
+	if (table == null) {
+		table = document.createElement("table");
+	} else {
+		dataList.removeChild(table);
+		table = document.createElement("table");
+	}
+		
 	table.cellSpacing = "0";
 	
 	for (var d in list) {
