@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 
-
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 public class GPassServlet extends HttpServlet {
 	private static final long serialVersionUID = 7982223539268242856L;
@@ -31,41 +35,48 @@ public class GPassServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
+		UserService userService = UserServiceFactory.getUserService(); 
+		if (userService.isUserLoggedIn()) {
 
-		String result = null;
-		
-		String command = request.getParameter("command");
-		if ("add".equalsIgnoreCase(command)) {
-			long id = addNewRecordEntry(request, response);
-			result = String.valueOf(id);
+			String result = null;
 			
-		} else if ("remove".equalsIgnoreCase(command)) {
-			result = removeRecordEntry(request, response);
+			request.getSession();
 			
-		} else if ("modify".equalsIgnoreCase(command)) {
-			result = modifyRecordEntry(request, response);
-			
-		} else if ("get".equalsIgnoreCase(command)) {
-			getRecordEntry();
-		} else if ("list".equalsIgnoreCase(command)) {
-			List<Entry> entries = listRecordEntries(request, response);
+			String command = request.getParameter("command");
+			if ("add".equalsIgnoreCase(command)) {
+				long id = addNewRecordEntry(request, response);
+				result = String.valueOf(id);
+				
+			} else if ("remove".equalsIgnoreCase(command)) {
+				result = removeRecordEntry(request, response);
+				
+			} else if ("modify".equalsIgnoreCase(command)) {
+				result = modifyRecordEntry(request, response);
+				
+			} else if ("get".equalsIgnoreCase(command)) {
+				getRecordEntry();
+			} else if ("list".equalsIgnoreCase(command)) {
+				List<Entry> entries = listRecordEntries(request, response);
 
-			GsonBuilder builder = new GsonBuilder();
-			//
-			Gson gson = builder.create();
+				GsonBuilder builder = new GsonBuilder();
+				//
+				Gson gson = builder.create();
 
+				
+				result = gson.toJson(entries);
+				
+			} else if ("bank".equalsIgnoreCase(command)) {
+				
+			} else {
+				result = "command string required.";
+			}
+
+			response.setContentType("text/plain");
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write(result);
 			
-			result = gson.toJson(entries);
-			
-		} else if ("bank".equalsIgnoreCase(command)) {
-			
-		} else {
-			result = "command string required.";
 		}
 
-		response.setContentType("text/plain");
-		response.setCharacterEncoding("UTF-8");
-		response.getWriter().write(result);
 	}
 	
 	@SuppressWarnings("unchecked")
