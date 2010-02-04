@@ -4,15 +4,7 @@ xmlns="http://java.sun.com/xml/ns/javaee"
 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-	<servlet>
-		<servlet-name>Healer_kx</servlet-name>
-		<servlet-class>org.healer.WelcomeHealerServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Healer_kx</servlet-name>
-		<url-pattern>/healer_kx</url-pattern>
-	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>GPass</servlet-name>
 		<servlet-class>org.healer.gpass.GPassServlet</servlet-class>
@@ -22,6 +14,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/gpass</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
+		<welcome-file>login.jsp</welcome-file>
 	</welcome-file-list>
 </web-app>
