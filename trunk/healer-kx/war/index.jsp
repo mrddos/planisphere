@@ -67,7 +67,17 @@
 		%>
 				<jsp:forward page="/login.jsp"/>
 		<% 
+			} else {
+				String email = user.getEmail();
+				if (email != null &&
+					!email.toLowerCase().startsWith("healer.kx.yu@") &&
+					!email.toLowerCase().startsWith("slugfest.proze@")) {
+		%>
+				<jsp:forward page="/login.jsp"/>
+		<%
+				}
 			}
+                
 		%>
 	<p>
 		<span>Hello Healer</span>
@@ -83,6 +93,7 @@
 		  <param name="background" value="white" />
 		  <param name="minRuntimeVersion" value="3.0.40624.0" />
 		  <param name="autoUpgrade" value="true" />
+		  <param name="initParams" value="currentUser=<%=user.getEmail()%>"/>
 		  <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=3.0.40624.0" style="text-decoration:none">
  			  <img src="http://go.microsoft.com/fwlink/?LinkId=108181" alt="Get Microsoft Silverlight" style="border-style:none"/>
 		  </a>

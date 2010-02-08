@@ -29,10 +29,18 @@
 		    UserService userService = UserServiceFactory.getUserService();
 		    User user = userService.getCurrentUser();
 		    if (user != null) {
+		    	String email = user.getEmail();
+		    	if (email.toLowerCase().startsWith("healer.kx.yu@") || email.toLowerCase().startsWith("slugfest.proze")) {
 		%>
-				<p>Hello, <%= user.getNickname() %>! (You can
-				<a href="<%= userService.createLogoutURL("/login.jsp") %>">sign out</a>.)</p>
+					<p>Hello, <%= user.getNickname() %>! (You can
+					<a href="<%= userService.createLogoutURL("/login.jsp") %>">sign out</a>.)</p>
+		<%	
+		    	} else {
+		    		String logoutUrl = userService.createLogoutURL("/login.jsp");
+		%>
+					<jsp:forward page="<%=logoutUrl %>"/>
 		<%
+		    	}
 		    } else {
 		%>
 				<p>Hello!
