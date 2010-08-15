@@ -1,12 +1,12 @@
 #summary Install and Config
 #labels Install,Config
 
-= Install and Config =
+=== Install and Config ===
 Format
 
 
-= Details =
+=== Details ===
 
 
-  * 1. Google App Engile (GAE)
-  * 2. Silverlight 4
+  # Google App Engile (GAE)
+  # Silverlight 4
