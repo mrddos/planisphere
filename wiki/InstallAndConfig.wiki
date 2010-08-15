@@ -1,13 +1,12 @@
 #summary Install and Config
+#labels Install,Config
 
-= Introduction =
-
-Add your content here.
+= Install and Config =
+Format
 
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+
+  * 1. Google App Engile (GAE)
+  * 2. Silverlight 4
