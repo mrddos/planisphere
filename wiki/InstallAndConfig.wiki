@@ -14,3 +14,5 @@ Format
   # Silverlight 4
    # Visuall Studio 2010
    # Silverlight4_Tools (注意语言选项匹配)
+  # SVN Client
+   # TortoiseSVN downloads (http://tortoisesvn.net/downloads)
