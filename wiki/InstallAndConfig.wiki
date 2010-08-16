@@ -10,7 +10,7 @@ Format
 
   # Google App Engile (GAE)
    # Eclipse for JavaEE, Helios, 3.6
-   # Update GAE Plugin
+   # Update GAE Plugin (http://dl.google.com/eclipse/plugin/3.6)
   # Silverlight 4
    # Visuall Studio 2010
-   # Silverlight4_Tools
+   # Silverlight4_Tools (注意语言选项匹配)
