@@ -1,0 +1,20 @@
+#summary REST Service Framework
+#labels REST,Service
+
+= Introduction =
+
+Add your content here.
+
+
+=== Details ===
+
+
+
+
+FOR DEV
+你只要创建自己的Service Class即可，实现RESTService接口。
+
+例如
+org.heaer.service.*file*.ListService
+
+http://*****/service/file/list
