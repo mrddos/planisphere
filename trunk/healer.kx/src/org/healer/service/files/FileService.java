@@ -1,30 +1,19 @@
 package org.healer.service.files;
 
 import java.io.IOException;
-import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.healer.config.Log;
-import org.healer.jdo.EMF;
-import org.healer.jdo.File;
-import org.healer.jdo.Tag;
-import org.healer.jdo.TagQuery;
 import org.healer.service.RESTService;
 
 public class FileService implements RESTService {
 
 	
 	private static void uploadFile(String fileName) {
-		//EntityManager em = EMF.get().
-		//em.getTransaction().begin();
-		//em.persist(new Tag("Lotus", 1L));
-		//em.getTransaction().commit();
-		
-		List<Tag> list = TagQuery.getTagByItemId((long) 1L);
-		
+
+		// Servlet
 	}
 	
 	
