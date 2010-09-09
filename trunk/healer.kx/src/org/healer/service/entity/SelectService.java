@@ -65,4 +65,11 @@ public class SelectService implements RESTService {
 
 	}
 
+	@Override
+	public void doService(HttpServletRequest request,
+			HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
