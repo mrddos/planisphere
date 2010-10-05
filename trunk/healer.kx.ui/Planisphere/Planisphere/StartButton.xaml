@@ -4,23 +4,40 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="100" d:DesignWidth="100">
+    d:DesignHeight="100" d:DesignWidth="300">
     
     <UserControl.Resources>
         <Style x:Key="StartButtonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Grid>
-                            <Ellipse Width="80" Height="80">
-                                <Ellipse.Fill>
-                                    <RadialGradientBrush GradientOrigin="0.7, 0.2">
-                                        <GradientStop Color="#FFFFFF" Offset="0.1"></GradientStop>
-                                        <GradientStop Color="#FF002C6F" Offset="0.8"></GradientStop>
+                        <Grid ShowGridLines="False">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"></ColumnDefinition>
+                                <ColumnDefinition Width="100*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Path Stroke="Silver" StrokeThickness="1" Grid.ColumnSpan="2">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="0,0">
+                                            <LineSegment Point="0,0"></LineSegment>
+                                            <LineSegment Point="120,0"></LineSegment>
+                                            <BezierSegment Point1="170,5" Point2="180,60" Point3="250, 80"></BezierSegment>
+                                            <LineSegment Point="250, 100"></LineSegment>
+                                            <LineSegment Point="0, 100"></LineSegment>
+                                            <LineSegment Point="0, 0"></LineSegment>
+                                        </PathFigure>
                                         
-                                    </RadialGradientBrush>
-                                </Ellipse.Fill>
-                            </Ellipse>
+                                    </PathGeometry>
+                                </Path.Data>
+                                <Path.Fill>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0.9,1">
+                                        <GradientStop Color="#FF8C8C8F" Offset="0.2"></GradientStop>
+                                        <GradientStop Color="#33ffffff" Offset="1"></GradientStop>
+                                    </LinearGradientBrush>
+                                </Path.Fill>
+                            </Path>
+                            
                             <TextBlock Text="Start" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
                         </Grid>
                     </ControlTemplate>
@@ -30,7 +47,7 @@
         </Style>
     </UserControl.Resources>
     
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="#00ffffff">
         <Button Style="{StaticResource StartButtonStyle}"></Button>
     </Grid>
 </UserControl>

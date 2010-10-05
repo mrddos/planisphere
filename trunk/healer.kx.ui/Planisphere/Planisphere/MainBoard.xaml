@@ -47,21 +47,21 @@
         </Canvas>
         <Grid Grid.Column="0" Grid.Row="4" Grid.RowSpan="2" Background="Transparent">
             <Grid.RowDefinitions>
-                <RowDefinition Height="25"></RowDefinition>
-                <RowDefinition Height="60*"></RowDefinition>
+                <RowDefinition Height="45"></RowDefinition>
+                <RowDefinition Height="30*"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="300"></ColumnDefinition>
                 <ColumnDefinition Width="100*"></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Border BorderThickness="2" BorderBrush="AliceBlue" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+            <Border BorderThickness="2" BorderBrush="Silver" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
                 <Rectangle Width="NaN" Height="NaN">
                     <Rectangle.Fill>
                         <LinearGradientBrush StartPoint="0.5, 0" EndPoint="0.5, 1">
-                            <GradientStop Color="#FF002C6F" Offset="0.4"></GradientStop>
-                            <GradientStop Color="#FF231cfc" Offset="0.6"></GradientStop>
-                            <GradientStop Color="#F00f2C6F" Offset="0.8"></GradientStop>
+                            <GradientStop Color="Silver" Offset="0.4"></GradientStop>
+                            <GradientStop Color="White" Offset="0.6"></GradientStop>
+                            <GradientStop Color="Silver" Offset="0.8"></GradientStop>
                         </LinearGradientBrush>
                     </Rectangle.Fill>
                 </Rectangle>    
@@ -69,7 +69,7 @@
 
 
 
-            <p:StartButton Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"></p:StartButton>
+            <p:StartButton Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Margin="0 0 0 2"></p:StartButton>
 
 
                 
