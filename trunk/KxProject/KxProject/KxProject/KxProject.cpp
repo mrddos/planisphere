@@ -14,13 +14,16 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	RKxString s = L"Hello World, 您好";
 
-	//RKxType t = s;
-	//RKxString b = o;
+	
+	// 编译失败，不可以Cast，Good!
+	//RKxType t = s; 
 
 	RKxArray array = Ref<KxArray>::GcNew();
 	array->Add(s);
 
 	RKxObject o = array->Get(0);
+
+	RKxString ds = Ref<KxString>::downcast(o);
 
 	wcout<<o->ToString();
 	cout<<endl;

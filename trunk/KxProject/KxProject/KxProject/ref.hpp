@@ -1,7 +1,7 @@
 /************************************************************************/
 /*                                                                      */
-/*                                                                      */
-/*                                                                      */
+/* C++ Code and Java Style                                              */
+/* Gc                                                                   */
 /*                                                                      */
 /*                                                                      */
 /*                                                                      */
@@ -28,7 +28,8 @@ template<class T1, class T2>
 class _ClassEqual
 {
 public:
-	enum{
+	enum
+	{
 		equal = false
 	};
 };
@@ -37,7 +38,8 @@ template<class T>
 class _ClassEqual<T, T>
 {
 public:
-	enum{
+	enum
+	{
 		equal = true
 	};
 };
@@ -46,7 +48,8 @@ template<class T1, class T2>
 class _InhritFrom
 {
 public:
-	enum{
+	enum
+	{
 		inherit = _InhritFrom<typename T1::BaseType, T2>::inherit
 	};
 };
@@ -55,7 +58,8 @@ template<class T>
 class _InhritFrom<T, T>
 {
 public:
-	enum{
+	enum
+	{
 		inherit = true
 	};
 };
@@ -64,7 +68,8 @@ template<class T>
 class _InhritFrom<_NoneObjectClass, T>
 {
 public:
-	enum{
+	enum
+	{
 		inherit = false
 	};
 };
@@ -83,7 +88,7 @@ public:
 	{
 		if (_InhritFrom<T, R>::inherit)
 		{
-			cout<<typeid(T).name()<<"inherit from "<<typeid(R).name()<<endl;
+			cout<<typeid(T).name()<<" inherit from "<<typeid(R).name()<<endl;
 		}
 
 		if (_InhritFrom<R, T>::inherit)
@@ -99,6 +104,18 @@ public:
 	Ref(T* pThis)
 	{
 		m_p = pThis;
+	}
+
+	template<class R>
+	static Ref<T> downcast(Ref<R> const& right)
+	{
+		if (_InhritFrom<T, R>::inherit)
+		{
+			cout<<typeid(T).name()<<" inherit from "<<typeid(R).name()<<endl;
+			Ref<T> r((T*)right.Ptr());
+			return r;
+		}
+		ATLASSERT(FALSE);
 	}
 
 
