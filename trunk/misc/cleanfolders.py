@@ -21,7 +21,9 @@ def usage():
 def clearfolders(rootdir, folder_name = ".svn"):
     for (path, dirs, files) in os.walk(rootdir):
         if folder_name in dirs:
-            shutil.rmtree(os.path.join(path, folder_name))
+            folder_full_name = os.path.join(path, folder_name)
+            os.chmod(folder_full_name, ~os.O_RDWR)
+            shutil.rmtree(folder_full_name)
             print 'Delete %s/.svn or /.cvs' % path
 
 
