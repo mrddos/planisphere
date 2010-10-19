@@ -158,7 +158,8 @@ private:
 	union
 	{
 		T* m_p;
-		T::basic_type m_b;
+		int m_lValue;
+		double m_fValue;
 	};
 
 };
