@@ -37,6 +37,7 @@ public:
 
 
 
+
 private:
 	Ref<KxString> m_arrayName;
 	std::vector<Ref<KxObject> > m_vec;

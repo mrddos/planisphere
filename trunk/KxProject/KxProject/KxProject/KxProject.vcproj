@@ -218,6 +218,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\kxnum.h"
+					>
+				</File>
+				<File
 					RelativePath=".\kxobj.h"
 					>
 				</File>

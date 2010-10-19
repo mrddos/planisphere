@@ -23,7 +23,6 @@ public:
 	virtual Ref<KxString> ToString() = 0;
 
 
-
 private:
 };
 

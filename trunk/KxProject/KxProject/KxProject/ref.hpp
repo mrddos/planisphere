@@ -75,10 +75,26 @@ public:
 };
 
 
+// class IntegerFlyweight
+// {
+// public:
+// private:
+// };
+// 
+// class FloatFlyweight
+// {
+// public:
+// private:
+// };
+
+
+
+
 template<class T>
 class Ref
 {
 public:
+	//friend T;
 	typedef typename T::ImplicitType ImplicitType;
 
 	Ref(){}
@@ -119,13 +135,13 @@ public:
 	}
 
 
-	T* Ptr() const
+	inline T* Ptr() const
 	{
 
 		return m_p;
 	}
 
-	T* operator->() const
+	inline T* operator->() const
 	{
 		return m_p;
 	}
@@ -139,7 +155,15 @@ public:
 
 
 private:
-	T* m_p;
+	union
+	{
+		T* m_p;
+		long m_lValue;
+		double m_fValue;
+	};
+
 };
+
+
 
 #endif

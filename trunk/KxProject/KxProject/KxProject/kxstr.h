@@ -45,7 +45,7 @@ Ref<KxString>::Ref(ImplicitType implicitValue)
 {
 	KxString* p = new KxString(implicitValue);
 	m_p = p;
-	wcout<<implicitValue<<endl;
+	//wcout<<implicitValue<<endl;
 }
 
 
@@ -60,6 +60,22 @@ wostream& operator<<(wostream& os, Ref<KxObject> const& kxObject)
 	os<< kxObject->ToString();
 	return os;
 }
+
+#include "kxnum.h"
+
+wostream& operator<<(wostream& os, Ref<KxInteger> const& kxInt)
+{
+	//os<< kxInt.m_lValue;
+	return os;
+}
+
+
+wostream& operator<<(wostream& os, Ref<KxFloat> const& kxFloat)
+{
+	//os<< kxObject->ToString();
+	return os;
+}
+
 
 
 #endif
