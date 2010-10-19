@@ -44,6 +44,8 @@ public:
 	};
 };
 
+// in VS2010, There is is_base_of template
+// http://msdn.microsoft.com/zh-cn/library/bb982243.aspx
 template<class T1, class T2>
 class _InhritFrom
 {
