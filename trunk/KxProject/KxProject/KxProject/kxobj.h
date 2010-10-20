@@ -22,7 +22,7 @@ public:
 
 	virtual Ref<KxString> ToString() = 0;
 
-
+	void AddGcMember(KxObject* pMember);
 private:
 };
 

@@ -36,7 +36,8 @@ void test_new()
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	test_new();
+	
+	//test_new();
 	RKxString s = L"Hello World";
 
 	
