@@ -11,6 +11,8 @@ using namespace std;
 #include "CString/CStringEx.h"
 #include "CPath/CPathEx.h"
 
+#include "MessageThread.h"
+
 
 wostream& operator<<(wostream& os, CString const& str)
 {
@@ -18,9 +20,25 @@ wostream& operator<<(wostream& os, CString const& str)
 	return os;
 }
 
+void TestMsgThread()
+{
+	MessageThread* mt = new MessageThread();
+	mt->Create();
+	mt->SendMessage(0, 0);
+	
+	MessageBox(NULL, NULL, NULL, NULL);
+	mt->SendMessage(1, 2);
+	MessageBox(NULL, NULL, NULL, NULL);
+	mt->SendMessage(3, 4);
+
+}
+
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+	TestMsgThread();
+
 	CString a = L"Hello World";
 	CString s1 = CStringEx::Lower(a);
 	CString s2 = CStringEx::Upper(a);
@@ -41,7 +59,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	
 	
-	
+	MessageBox(NULL, NULL, NULL, NULL);
 	return 0;
 }
 
