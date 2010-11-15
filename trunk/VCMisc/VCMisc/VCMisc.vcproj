@@ -230,6 +230,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Thread"
+				>
+				<File
+					RelativePath=".\MessageThread.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RemoveFilesTask.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Task.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
