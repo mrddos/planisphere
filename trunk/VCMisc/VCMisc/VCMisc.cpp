@@ -13,7 +13,6 @@ using namespace std;
 
 #include "MessageThread.h"
 
-
 wostream& operator<<(wostream& os, CString const& str)
 {
 	os<<(LPCWSTR)str;
@@ -30,14 +29,13 @@ void TestMsgThread()
 	mt->SendMessage(1, 2);
 	MessageBox(NULL, NULL, NULL, NULL);
 	mt->SendMessage(3, 4);
-
 }
-
-
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+
 	TestMsgThread();
+
 
 	CString a = L"Hello World";
 	CString s1 = CStringEx::Lower(a);
