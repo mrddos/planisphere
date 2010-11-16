@@ -5,7 +5,8 @@
 
 class Task
 {
-	
+public:
+	virtual BOOL Execute() = 0;
 
 };
 

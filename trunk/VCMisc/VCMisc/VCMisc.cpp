@@ -12,6 +12,7 @@ using namespace std;
 #include "CPath/CPathEx.h"
 
 #include "MessageThread.h"
+#include "RemoveFilesTask.h"
 
 wostream& operator<<(wostream& os, CString const& str)
 {
@@ -23,6 +24,7 @@ void TestMsgThread()
 {
 	MessageThread* mt = new MessageThread();
 	mt->Create();
+	mt->AttachTask(new RemoveFilesTask());
 	mt->SendMessage(0, 0);
 	
 	MessageBox(NULL, NULL, NULL, NULL);

@@ -12,6 +12,15 @@ public:
 
 	}
 
+public:
+	virtual BOOL Execute()
+	{
+
+
+		return TRUE;
+	}
+
+
 private:
 };
 
