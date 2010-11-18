@@ -69,18 +69,28 @@ private:
 
 };
 
+enum
+{
+	GridRow_LeftAlignment,
+	GridRow_RightAlignment,
+};
+
 class KxGridRow
 {
 	
 private:
-	DWORD m_dwHeight;
+	UINT	m_nFlag;
+	DWORD	m_dwHeight;
+	DWORD	m_dwPercent;
 };
 
 class KxGridColumn
 {
 
 private:
-	DWORD m_dwWidth;
+	UINT	m_nFlag;
+	DWORD	m_dwWidth;
+	DWORD	m_dwPercent;
 };
 
 class KxGridLayout
@@ -93,8 +103,8 @@ public:
 
 
 private:
-	std::vector<int> m_vecRow;
-	std::vector<int> m_vecCol;
+	std::vector<KxGridRow>		m_vecRow;
+	std::vector<KxGridColumn>	m_vecCol;
 };
 
 class KxLayer
