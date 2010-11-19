@@ -85,9 +85,15 @@ public:
 
 		m_Rect.right = m_Rect.left + bm.bmWidth;
 		m_Rect.bottom = m_Rect.top + bm.bmHeight;
-		BLENDFUNCTION bf = {AC_SRC_OVER, 0, 0xFF, AC_SRC_ALPHA};
-		AlphaBlend(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, bf);
-
+		if (bm.bmBitsPixel == 32)
+		{
+			BLENDFUNCTION bf = {AC_SRC_OVER, 0, 0xFF, AC_SRC_ALPHA};
+			AlphaBlend(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, bf);
+		}
+		else
+		{
+			::StretchBlt(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+		}
 		SelectObject(hMemDC, hOldObject);
 		DeleteObject(hMemDC);
 	}

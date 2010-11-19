@@ -57,9 +57,27 @@ public:
 			{
 				POINT p;
 				DragQueryPoint(hFileDrop, &p);
-				HBITMAP hImage = PngLoader::Load(szFileName);
 
-				m_CanvasBuilder->AddDnDImage(hImage, p);
+				HBITMAP hImage = NULL;
+
+				CString fileName(szFileName);
+				CString extFileName = fileName.Right(4);
+				if (extFileName.CompareNoCase(L".png") == 0)
+				{
+					hImage = PngLoader::Load(szFileName);
+				}
+				else if (extFileName.CompareNoCase(L".bmp") == 0)
+				{
+					OutputDebugString(L".bmp file not be supported now.");
+				}
+
+				if (hImage)
+				{
+					m_CanvasBuilder->AddDnDImage(hImage, p);
+				}
+				
+
+				InvalidateRect(NULL);
 			}
 		}
 		return S_OK;
