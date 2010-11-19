@@ -85,7 +85,8 @@ public:
 
 		m_Rect.right = m_Rect.left + bm.bmWidth;
 		m_Rect.bottom = m_Rect.top + bm.bmHeight;
-		StretchBlt(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+		BLENDFUNCTION bf = {AC_SRC_OVER, 0, 0xFF, AC_SRC_ALPHA};
+		AlphaBlend(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, bf);
 
 		SelectObject(hMemDC, hOldObject);
 		DeleteObject(hMemDC);

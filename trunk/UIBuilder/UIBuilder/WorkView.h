@@ -30,6 +30,7 @@ public:
 		ATLASSERT(m_CanvasBuilder);
 		if (dc)
 		{
+			
 			m_CanvasBuilder->Render(dc);
 		}
 		
@@ -58,7 +59,6 @@ public:
 				DragQueryPoint(hFileDrop, &p);
 				HBITMAP hImage = PngLoader::Load(szFileName);
 
-				//hImage = PngLoader::Load(IDB_IMAGE); //debug
 				m_CanvasBuilder->AddDnDImage(hImage, p);
 			}
 		}
