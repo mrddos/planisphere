@@ -21,6 +21,8 @@ public:
 	}
 };
 
+
+
 /* Double Buffering...
 class KxMemoryDC : public CDC
 {
@@ -45,23 +47,70 @@ public:
 
 	KxImage(HBITMAP hBitmap)
 		:m_hBitmap(hBitmap)
-	{}
+	{
+		GetObject(m_hBitmap, sizeof(BITMAP), &m_bm);
+	}
 
 	KxImage(KxImage const& image)
 	{
 		m_hBitmap = image.m_hBitmap;
+		CopyMemory(&m_bm, &image.m_bm, sizeof(BITMAP));
 	}
 
-	operator HBITMAP()
+	operator HBITMAP() const
 	{
 		return m_hBitmap;
 	}
 
+	LONG Width() const
+	{
+		return m_bm.bmWidth;
+	}
+
+	LONG Height() const
+	{
+		return m_bm.bmHeight;
+	}
+
+	BOOL Transparent() const
+	{
+		return m_bm.bmBitsPixel == 32;
+	}
+
+	
+
 private:
 	HBITMAP m_hBitmap;
+	BITMAP	m_bm;
 };
 
-class KxImageBox : public KxDrawable
+
+class KxImageDraw
+{
+public:
+	void Draw(HDC hDC, RECT const& rect, KxImage const& image, BOOL bTransparent)
+	{
+		HDC hMemDC = CreateCompatibleDC(hDC);
+		HANDLE hOldObject = SelectObject(hMemDC, (HBITMAP)image);
+
+		if (bTransparent)
+		{
+			BLENDFUNCTION bf = {AC_SRC_OVER, 0, 0xFF, AC_SRC_ALPHA};
+			AlphaBlend(hDC, rect.left, rect.top, KxRect::Width(rect), KxRect::Height(rect), hMemDC, 0, 0, image.Width(), image.Height(), bf);
+		}
+		else
+		{
+			::StretchBlt(hDC, rect.left, rect.top, KxRect::Width(rect), KxRect::Height(rect), hMemDC, 0, 0, image.Width(), image.Height(), SRCCOPY);
+		}
+		SelectObject(hMemDC, hOldObject);
+		DeleteObject(hMemDC);
+	}
+
+private:
+};
+
+
+class KxImageBox : public KxDrawable, protected KxImageDraw
 {
 public:
 	KxImageBox()
@@ -78,24 +127,11 @@ public:
 
 	virtual void Draw(HDC hDC)
 	{
-		HDC hMemDC = CreateCompatibleDC(hDC);
-		HANDLE hOldObject = SelectObject(hMemDC, (HBITMAP)m_Image);
-		BITMAP bm;
-		GetObject((HBITMAP)m_Image, sizeof(BITMAP), &bm);
+		m_Rect.right = m_Rect.left + m_Image.Width();
+		m_Rect.bottom = m_Rect.top + m_Image.Height();
 
-		m_Rect.right = m_Rect.left + bm.bmWidth;
-		m_Rect.bottom = m_Rect.top + bm.bmHeight;
-		if (bm.bmBitsPixel == 32)
-		{
-			BLENDFUNCTION bf = {AC_SRC_OVER, 0, 0xFF, AC_SRC_ALPHA};
-			AlphaBlend(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, bf);
-		}
-		else
-		{
-			::StretchBlt(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
-		}
-		SelectObject(hMemDC, hOldObject);
-		DeleteObject(hMemDC);
+		KxImageDraw::Draw(hDC, m_Rect, m_Image, m_Image.Transparent());
+
 	}
 
 private:
