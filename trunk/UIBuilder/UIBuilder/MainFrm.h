@@ -81,11 +81,16 @@ public:
 		pLoop->AddMessageFilter(this);
 		pLoop->AddIdleHandler(this);
 
+		PngLoader::Initialize();
+		HBITMAP hImage1 = PngLoader::Load(IDB_IMAGE);
+		HBITMAP hImage2 = PngLoader::Load(L"F:\\VS2008\\UIBuilder\\UIBuilder\\res\\image.png");
+
 		return 0;
 	}
 
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 	{
+		PngLoader::Terminate();
 		// unregister message filtering and idle updates
 		CMessageLoop* pLoop = _Module.GetMessageLoop();
 		ATLASSERT(pLoop != NULL);

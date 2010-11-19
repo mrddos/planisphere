@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="UIBuilder"
 	ProjectGUID="{6F6291DD-E3E9-431F-A1E2-D314371D7880}"
+	RootNamespace="UIBuilder"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -49,6 +50,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32;_WINDOWS;STRICT;_DEBUG"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -229,11 +231,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Lock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrm.h"
 				>
 			</File>
 			<File
+				RelativePath=".\PngLoader.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Singleton.h"
 				>
 			</File>
 			<File
@@ -266,6 +280,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\res\image.png"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -1,13 +1,21 @@
 
 #pragma once
 
-#include "KxCanvas.h"
+#include "KxCanvasBuilder.h"
 
 class CWorkView : public CWindowImpl<CWorkView>
 {
+public:
+	CWorkView()
+		:m_CanvasBuilder(NULL)
+	{
+
+	}
 
 	BEGIN_MSG_MAP(CWorkView)
-		MSG_WM_PAINT(OnPaint)
+		MESSAGE_HANDLER(WM_PAINT, OnPaint)
+		MSG_WM_CREATE(OnCreate)
+		MESSAGE_HANDLER(WM_DROPFILES, OnDropFiles)
 	END_MSG_MAP()
 
 	static DWORD GetWndExStyle(DWORD dwStyle)
@@ -16,9 +24,47 @@ class CWorkView : public CWindowImpl<CWorkView>
 	}
 
 
-	LRESULT OnPaint(HDC hDC)
+	LRESULT OnPaint(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{
-
+		CPaintDC dc(*this);
+		ATLASSERT(m_CanvasBuilder);
+		if (dc)
+		{
+			m_CanvasBuilder->Render(dc);
+		}
+		
+		
 		return S_OK;
 	}
+
+	LRESULT OnCreate(LPCREATESTRUCT pCreateStruct)
+	{
+
+		m_CanvasBuilder = new KxCanvasBuilder();
+		return S_OK;
+	}
+
+	LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+	{
+		HDROP hFileDrop = (HDROP)wParam;
+		if (hFileDrop)
+		{
+			WCHAR szFileName[MAX_PATH] = {};
+			UINT nCount = DragQueryFile(hFileDrop, 0, szFileName, MAX_PATH);
+
+			if (PathFileExists(szFileName))
+			{
+				POINT p;
+				DragQueryPoint(hFileDrop, &p);
+				HBITMAP hImage = PngLoader::Load(szFileName);
+
+				//hImage = PngLoader::Load(IDB_IMAGE); //debug
+				m_CanvasBuilder->AddDnDImage(hImage, p);
+			}
+		}
+		return S_OK;
+	}
+
+private:
+	KxCanvasBuilder* m_CanvasBuilder;
 };

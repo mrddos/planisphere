@@ -5,6 +5,31 @@
 #pragma once
 
 #include <vector>
+using std::vector;
+
+class KxRect
+{
+public:
+	static LONG Width(RECT const& r)
+	{
+		return r.right - r.left;
+	}
+
+	static LONG Height(RECT const& r)
+	{
+		return r.bottom - r.top;
+	}
+};
+
+/* Double Buffering...
+class KxMemoryDC : public CDC
+{
+public:
+
+private:
+
+};
+*/
 
 class KxDrawable
 {
@@ -15,17 +40,55 @@ public:
 
 class KxImage
 {
+public:
+	KxImage(){}
 
+	KxImage(HBITMAP hBitmap)
+		:m_hBitmap(hBitmap)
+	{}
+
+	KxImage(KxImage const& image)
+	{
+		m_hBitmap = image.m_hBitmap;
+	}
+
+	operator HBITMAP()
+	{
+		return m_hBitmap;
+	}
+
+private:
+	HBITMAP m_hBitmap;
 };
 
 class KxImageBox : public KxDrawable
 {
 public:
+	KxImageBox()
+	{
 
+	}
+
+	KxImageBox(KxImage const& image, POINT const& point)
+		:m_Image(image)
+	{
+		m_Rect.left = point.x - 10;
+		m_Rect.top = point.y - 10;
+	}
 
 	virtual void Draw(HDC hDC)
 	{
+		HDC hMemDC = CreateCompatibleDC(hDC);
+		HANDLE hOldObject = SelectObject(hMemDC, (HBITMAP)m_Image);
+		BITMAP bm;
+		GetObject((HBITMAP)m_Image, sizeof(BITMAP), &bm);
 
+		m_Rect.right = m_Rect.left + bm.bmWidth;
+		m_Rect.bottom = m_Rect.top + bm.bmHeight;
+		StretchBlt(hDC, m_Rect.left, m_Rect.top, KxRect::Width(m_Rect), KxRect::Height(m_Rect), hMemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+
+		SelectObject(hMemDC, hOldObject);
+		DeleteObject(hMemDC);
 	}
 
 private:
@@ -69,15 +132,27 @@ private:
 
 };
 
-enum
+enum GridRowFlag
 {
-	GridRow_LeftAlignment,
-	GridRow_RightAlignment,
+	GridRow_Fixed,
+	GridRow_ByPercent,
+	GridRow_Remaining,
+
+};
+
+enum GridColumnFlag
+{
+	GridColumn_Fixed,
+	GridColumn_ByPercent,
+	GridColumn_Remaining,
+
 };
 
 class KxGridRow
 {
+public:
 	
+
 private:
 	UINT	m_nFlag;
 	DWORD	m_dwHeight;
@@ -86,6 +161,7 @@ private:
 
 class KxGridColumn
 {
+public:
 
 private:
 	UINT	m_nFlag;
