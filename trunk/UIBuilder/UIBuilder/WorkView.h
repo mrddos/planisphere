@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "msgdef.h"
 #include "KxCanvasBuilder.h"
 
 class CWorkView : public CWindowImpl<CWorkView>
@@ -16,7 +17,16 @@ public:
 		MESSAGE_HANDLER(WM_PAINT, OnPaint)
 		MSG_WM_CREATE(OnCreate)
 		MESSAGE_HANDLER(WM_DROPFILES, OnDropFiles)
+		MESSAGE_HANDLER(MSG_HRULER_HOVER, OnHRulerHover)
+		MESSAGE_HANDLER(MSG_VRULER_HOVER, OnVRulerHover)
+		MESSAGE_HANDLER(MSG_HRULER_CLCIK, OnHRulerClick)
+		MESSAGE_HANDLER(MSG_VRULER_CLCIK, OnVRulerClick)
 	END_MSG_MAP()
+
+	LRESULT OnHRulerHover(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/);
+	LRESULT OnVRulerHover(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/);
+	LRESULT OnHRulerClick(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/);
+	LRESULT OnVRulerClick(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/);
 
 	static DWORD GetWndExStyle(DWORD dwStyle)
 	{
@@ -40,7 +50,7 @@ public:
 
 	LRESULT OnCreate(LPCREATESTRUCT pCreateStruct)
 	{
-
+		
 		m_CanvasBuilder = new KxCanvasBuilder();
 		return S_OK;
 	}

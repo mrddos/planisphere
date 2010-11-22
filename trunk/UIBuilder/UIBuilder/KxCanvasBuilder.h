@@ -5,6 +5,13 @@
 #pragma once
 #include "KxCanvas.h"
 
+enum
+{
+	LayerType_Default,
+
+	LayerType_Builder,
+};
+
 class KxHolder : public KxDrawable
 {
 public:
@@ -122,13 +129,14 @@ private:
 	CString		m_strLayerName;
 };
 
-class KxCanvasBuilder
+class KxCanvasBuilder : public KxCanvas
 {
-
+public:
 
 public:
 	KxCanvasBuilder()
 	{
+		KxImageDraw::Init();
 		_AddDefaultLayer();
 	}
 
@@ -203,7 +211,11 @@ public:
 private:
 	void _AddDefaultLayer()
 	{
-		AddLayer(L"Default Layer");
+		// As the background
+		AddLayer(L"Default-Layer");
+
+		// As the foreground, show grid lines...
+		AddLayer(L"Builder-Layer");
 	}
 
 private:

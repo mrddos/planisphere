@@ -9,7 +9,7 @@ class PngLoader
 public:
 	static BOOL Initialize()
 	{
-		s_hModule = LoadLibrary(L"png_reader.dll");
+		s_hModule = LoadLibrary(L"pngdecoder.dll");
 		if (s_hModule != NULL)
 		{
 			s_fnPNGDecode = (PNGDecode)GetProcAddress(s_hModule, "DecodePNG");
@@ -21,7 +21,7 @@ public:
 	static HBITMAP Load(UINT nID)
 	{
 		ATLASSERT(s_fnPNGDecode);
-		HRSRC hRes = ::FindResource ((HINSTANCE)&__ImageBase, MAKEINTRESOURCE(nID), _T("PNG")) ;
+		HRSRC hRes = ::FindResource ((HINSTANCE)&__ImageBase, MAKEINTRESOURCE(nID), _T("PNG"));
 		if (hRes)
 		{
 			BYTE* pImgData = (BYTE*)::LockResource(::LoadResource ((HINSTANCE)&__ImageBase, hRes)) ;

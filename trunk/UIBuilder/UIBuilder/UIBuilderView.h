@@ -4,7 +4,9 @@
 
 #pragma once
 
+#include "msgdef.h"
 #include "WorkView.h"
+#include "Ruler.h"
 
 class CUIBuilderView : public CDialogImpl<CUIBuilderView>
 {
@@ -28,12 +30,22 @@ public:
 	{
 		CWorkView* pWorkView = new CWorkView();
 		RECT r;
-		r.bottom = 500;
-		r.top = 100;
-		r.left = 100;
-		r.right = 800;
+		r.bottom = 480;
+		r.top = 20;
+		r.left = 40;
+		r.right = 850;
 		pWorkView->Create(this->m_hWnd, r);
 
+
+		RECT hr;
+		VRuler::GetRect(r, hr);
+		VRuler* pVRuler = new VRuler(pWorkView->m_hWnd);
+		pVRuler->Create(this->m_hWnd, hr);
+
+		RECT vr;
+		HRuler::GetRect(r, vr);
+		HRuler* pHRuler = new HRuler(pWorkView->m_hWnd);
+		pHRuler->Create(this->m_hWnd, vr);
 
 		return S_OK;
 	}

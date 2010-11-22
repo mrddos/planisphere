@@ -88,34 +88,48 @@ private:
 class KxImageDraw
 {
 public:
+	static BOOL Init()
+	{
+		if (s_hMemDC == NULL)
+		{
+			HDC hDC = ::GetDC(NULL);
+			s_hMemDC = CreateCompatibleDC(hDC);
+			::ReleaseDC(NULL, hDC);
+			return TRUE;
+		}
+		return FALSE;
+
+	}
 	void Draw(HDC hDC, RECT const& rect, KxImage const& image, BOOL bTransparent)
 	{
-		HDC hMemDC = CreateCompatibleDC(hDC);
-		HANDLE hOldObject = SelectObject(hMemDC, (HBITMAP)image);
+		//HDC hMemDC = CreateCompatibleDC(hDC);
+		HANDLE hOldObject = SelectObject(s_hMemDC, (HBITMAP)image);
 
+		::SetStretchBltMode(hDC, HALFTONE);
 		if (bTransparent)
 		{
 			BLENDFUNCTION bf = {AC_SRC_OVER, 0, 0xFF, AC_SRC_ALPHA};
-			AlphaBlend(hDC, rect.left, rect.top, KxRect::Width(rect), KxRect::Height(rect), hMemDC, 0, 0, image.Width(), image.Height(), bf);
+			AlphaBlend(hDC, rect.left, rect.top, KxRect::Width(rect), KxRect::Height(rect), s_hMemDC, 0, 0, image.Width(), image.Height(), bf);
 		}
 		else
 		{
-			::StretchBlt(hDC, rect.left, rect.top, KxRect::Width(rect), KxRect::Height(rect), hMemDC, 0, 0, image.Width(), image.Height(), SRCCOPY);
+			::SetStretchBltMode(hDC, HALFTONE);
+			::StretchBlt(hDC, rect.left, rect.top, KxRect::Width(rect), KxRect::Height(rect), s_hMemDC, 0, 0, image.Width(), image.Height(), SRCCOPY);
 		}
-		SelectObject(hMemDC, hOldObject);
-		DeleteObject(hMemDC);
+		SelectObject(s_hMemDC, hOldObject);
 	}
 
 private:
+	static HDC s_hMemDC;
 };
 
+__declspec(selectany) HDC KxImageDraw::s_hMemDC = NULL;
 
 class KxImageBox : public KxDrawable, protected KxImageDraw
 {
 public:
 	KxImageBox()
 	{
-
 	}
 
 	KxImageBox(KxImage const& image, POINT const& point)
@@ -220,6 +234,26 @@ public:
 
 	}
 
+	BOOL Init()
+	{
+		// Read Layout data from file or resource.
+
+		//
+	}
+
+	// index from 0, left to right, -1 means from right
+	DWORD AddRow(int index, DWORD dwValue, GridRowFlag flag)
+	{
+
+		return 0;
+	}
+
+	DWORD AddColumn(int index, DWORD dwValue, GridColumnFlag flag)
+	{
+
+		return 0;
+	}
+
 
 private:
 	std::vector<KxGridRow>		m_vecRow;
@@ -261,6 +295,11 @@ public:
 	{
 
 	}
+
+	BOOL Initialize()
+	{
+		m_Layout.Init();
+	}
 public:
 	void Render()
 	{
@@ -272,6 +311,17 @@ public:
 			m_pTextLayer->Render(m_hDC);
 	}
 
+// Grid Support
+public:
+	DWORD AddRow(DWORD dwValue, GridRowFlag flag = GridRow_Fixed)
+	{
+		m_Layout.AddRow(-1, dwValue, flag);
+	}
+
+	DWORD AddColumn(DWORD dwValue, GridColumnFlag flag = GridColumn_Fixed)
+	{
+		m_Layout.AddColumn(-1, dwValue, flag);
+	}
 
 private:
 	HDC		m_hDC;

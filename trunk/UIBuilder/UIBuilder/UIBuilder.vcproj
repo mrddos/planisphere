@@ -213,6 +213,10 @@
 				RelativePath=".\UIBuilder.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\WorkView.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -239,11 +243,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\msgdef.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PngLoader.h"
 				>
 			</File>
 			<File
 				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Ruler.h"
 				>
 			</File>
 			<File
