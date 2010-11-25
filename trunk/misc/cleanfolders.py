@@ -15,6 +15,7 @@
 # The code need refactor
 import getopt, os, sys, shutil
 
+
 def usage():
     print """Usage: clear.py dir_path [svn|cvs]"""
 
