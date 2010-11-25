@@ -203,7 +203,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\delegate.h"
+				RelativePath=".\FileAccess.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MessageThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RemoveFilesTask.h"
 				>
 			</File>
 			<File
@@ -212,6 +220,14 @@
 			</File>
 			<File
 				RelativePath=".\targetver.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Task.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Win32FilesFinder.h"
 				>
 			</File>
 			<Filter
@@ -231,22 +247,6 @@
 				>
 				<File
 					RelativePath=".\CPath\CPathEx.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Thread"
-				>
-				<File
-					RelativePath=".\MessageThread.h"
-					>
-				</File>
-				<File
-					RelativePath=".\RemoveFilesTask.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Task.h"
 					>
 				</File>
 			</Filter>
