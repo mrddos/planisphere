@@ -214,6 +214,22 @@
 				RelativePath=".\targetver.h"
 				>
 			</File>
+			<Filter
+				Name="HMAC-SHA1"
+				>
+				<File
+					RelativePath=".\hmac_sha1_mixin.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Base64"
+				>
+				<File
+					RelativePath=".\Base64.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
