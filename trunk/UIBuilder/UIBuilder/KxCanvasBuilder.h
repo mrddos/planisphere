@@ -3,131 +3,7 @@
 #define __KXCANVASBUILDER_H__
 
 #pragma once
-#include "KxCanvas.h"
-
-enum
-{
-	LayerType_Default,
-
-	LayerType_Builder,
-};
-
-class KxHolder : public KxDrawable
-{
-public:
-	KxHolder()
-	{
-
-	}
-
-	BOOL IsActived()
-	{
-		return m_bActived;
-	}
-
-	void SetActived(BOOL bActived = TRUE)
-	{
-		m_bActived = bActived;
-	}
-
-	BOOL IsVisible()
-	{
-		return m_bVisible;
-	}
-
-	BOOL SetVisible(BOOL bVisible)
-	{
-		m_bVisible = bVisible;
-	}
-
-private:
-	BOOL m_bActived;
-	BOOL m_bVisible;
-};
-
-class KxImageBoxHolder : public KxHolder, protected KxImageBox
-{
-public:
-	KxImageBoxHolder(KxImage const& image, POINT const& point)
-		:KxImageBox(image, point)
-	{
-
-	}
-
-	virtual void Draw(HDC hDC)
-	{
-		KxImageBox::Draw(hDC);
-	}
-
-
-private:
-};
-
-
-class KxTextBoxHolder : public KxHolder, protected KxTextBox
-{
-public:
-	virtual void Draw(HDC hDC)
-	{
-		KxTextBox::Draw(hDC);
-	}
-
-private:
-};
-
-
-class KxLayerHolder : public KxHolder, protected KxLayer
-{
-public:
-	KxLayerHolder(CString const& strLayerName)
-		:m_bVisible(TRUE), m_strLayerName(strLayerName)
-	{
-
-	}
-
-	void Render(HDC hDC)
-	{
-		if (m_bVisible)
-		{
-			KxLayer::Render(hDC);
-		}
-	}
-
-	virtual void Draw(HDC hDC)
-	{
-		if (!IsVisible())
-			return;
-
-		vector<KxHolder*>::const_iterator const_iter = m_vecDrawable.begin();
-		for (; const_iter != m_vecDrawable.end(); const_iter++)
-		{
-			KxHolder* pHolder = *const_iter;
-			if (pHolder)
-			{
-				if (pHolder)
-				{
-					pHolder->Draw(hDC);
-				}
-			}
-		}
-	}
-
-	void AddDnDImage(HBITMAP hBitmap, POINT const& point)
-	{
-		KxImage image(hBitmap);
-		KxImageBoxHolder* pImageBoxHolder = new KxImageBoxHolder(image, point);
-		if (pImageBoxHolder)
-		{
-			m_vecDrawable.push_back(pImageBoxHolder);
-		}
-
-	}
-
-private:
-	std::vector<KxHolder*> m_vecDrawable;
-	BOOL		m_bVisible;
-	CString		m_strLayerName;
-};
+#include "KxCanvasBuilder_i.h"
 
 class KxCanvasBuilder : public KxCanvas
 {
@@ -135,23 +11,14 @@ public:
 
 public:
 	KxCanvasBuilder()
+		:m_pBuilderLayerHolder(NULL)
 	{
 		KxImageDraw::Init();
 		_AddDefaultLayer();
 	}
 
-	void Render(HDC hDC)
-	{
-		vector<KxLayerHolder*>::const_iterator const_iter = m_LayerHolderArray.begin();
-		for (; const_iter != m_LayerHolderArray.end(); const_iter++)
-		{
-			KxLayerHolder* pLayerHolder = *const_iter;
-			if (pLayerHolder)
-			{
-				pLayerHolder->Draw(hDC);
-			}
-		}
-	}
+	void Render(HDC hDC);
+
 
 public:
 
@@ -194,6 +61,22 @@ public:
 		pLayerHolder->SetVisible(bShow);
 	}
 
+	void ShowGridLines(BOOL bShowGridLines)
+	{
+		if (m_pBuilderLayerHolder)
+		{
+			m_pBuilderLayerHolder->ShowGridLines(bShowGridLines);
+		}
+	}
+
+	void ShowGridBuilderLine(BOOL bShowGridBuilderLine, UINT nGridBuilderLineDirect /* 1: Vertical, 2: Horizontal */, LONG nGridBuilderLinePos)
+	{
+		if (m_pBuilderLayerHolder)
+		{
+			m_pBuilderLayerHolder->ShowGridBuilderLine(bShowGridBuilderLine, nGridBuilderLineDirect, nGridBuilderLinePos);
+		}
+	}
+
 public:
 	void AddDnDImage(HBITMAP hBitmap, POINT const& point)
 	{
@@ -215,11 +98,16 @@ private:
 		AddLayer(L"Default-Layer");
 
 		// As the foreground, show grid lines...
-		AddLayer(L"Builder-Layer");
+		m_pBuilderLayerHolder = new KxBuilderLayerHolder();
+
 	}
 
 private:
-	vector<KxLayerHolder*> m_LayerHolderArray;
+	vector<KxLayerHolder*>	m_LayerHolderArray;
+
+
+private:
+	KxBuilderLayerHolder*	m_pBuilderLayerHolder;
 
 };
 

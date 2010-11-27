@@ -190,6 +190,10 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
+				RelativePath=".\KxCanvasBuilder.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -232,6 +236,10 @@
 			</File>
 			<File
 				RelativePath=".\KxCanvasBuilder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\KxCanvasBuilder_i.h"
 				>
 			</File>
 			<File
