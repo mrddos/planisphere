@@ -21,7 +21,7 @@ void KxCanvasBuilder::Render(HDC hDC)
 	// Draw Builder Layer...
 	if (m_pBuilderLayerHolder)
 	{
-		m_pBuilderLayerHolder->Render(hDC);
+		m_pBuilderLayerHolder->Draw(hDC);
 	}
 }
 

@@ -84,13 +84,6 @@ public:
 
 	}
 
-	void Render(HDC hDC)
-	{
-		if (m_bVisible)
-		{
-			KxLayer::Render(hDC);
-		}
-	}
 
 	virtual void Draw(HDC hDC)
 	{
@@ -136,6 +129,33 @@ public:
 		:KxLayerHolder(L"Builder-Layer")
 	{
 
+	}
+
+	virtual void Draw(HDC hDC)
+	{
+		if (!IsVisible())
+			return;
+
+		// Draw Grid-lines
+		if (m_bShowGridLines)
+		{
+
+		}
+
+		// Draw Grid builder line
+		if (m_bShowGridBuilderLine)
+		{
+			if (1 == m_nGridBuilderLineDirect)
+			{
+
+			}
+			else if (2 == m_nGridBuilderLineDirect)
+			{
+
+			}
+		}
+
+		
 	}
 
 	void ShowGridLines(BOOL bShowGridLines)

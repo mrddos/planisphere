@@ -98,6 +98,7 @@ private:
 		AddLayer(L"Default-Layer");
 
 		// As the foreground, show grid lines...
+		// Do NOT push back into the vector
 		m_pBuilderLayerHolder = new KxBuilderLayerHolder();
 
 	}

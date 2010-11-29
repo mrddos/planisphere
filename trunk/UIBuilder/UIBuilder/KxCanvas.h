@@ -324,9 +324,9 @@ public:
 	}
 
 private:
-	HDC		m_hDC;
-	KxLayer* m_pLayer;		//background
-	KxLayer* m_pTextLayer;	//Text
+	HDC			m_hDC;
+	KxLayer*	m_pLayer;		//background
+	KxLayer*	m_pTextLayer;	//Text
 
 	KxGridLayout	m_Layout;
 };
