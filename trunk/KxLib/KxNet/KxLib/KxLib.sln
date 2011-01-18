@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KxLib", "KxLib\KxLib.vcproj", "{A8E2DCD7-BD58-43CA-95B2-1CBCC686993D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KxBasic", "..\KxBasic\KxBasic.vcproj", "{1C7264EB-3186-4304-B4CF-1588DCDA10F6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KxBasicTest", "..\KxBasicTest\KxBasicTest.vcproj", "{F27ABF75-6057-43B9-82E9-0222CBF4D8D3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KxNet", "..\KxNet\KxNet.vcproj", "{47D05310-0AC7-462E-A022-BC40892F81B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A8E2DCD7-BD58-43CA-95B2-1CBCC686993D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A8E2DCD7-BD58-43CA-95B2-1CBCC686993D}.Debug|Win32.Build.0 = Debug|Win32
+		{A8E2DCD7-BD58-43CA-95B2-1CBCC686993D}.Release|Win32.ActiveCfg = Release|Win32
+		{A8E2DCD7-BD58-43CA-95B2-1CBCC686993D}.Release|Win32.Build.0 = Release|Win32
+		{1C7264EB-3186-4304-B4CF-1588DCDA10F6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1C7264EB-3186-4304-B4CF-1588DCDA10F6}.Debug|Win32.Build.0 = Debug|Win32
+		{1C7264EB-3186-4304-B4CF-1588DCDA10F6}.Release|Win32.ActiveCfg = Release|Win32
+		{1C7264EB-3186-4304-B4CF-1588DCDA10F6}.Release|Win32.Build.0 = Release|Win32
+		{F27ABF75-6057-43B9-82E9-0222CBF4D8D3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F27ABF75-6057-43B9-82E9-0222CBF4D8D3}.Debug|Win32.Build.0 = Debug|Win32
+		{F27ABF75-6057-43B9-82E9-0222CBF4D8D3}.Release|Win32.ActiveCfg = Release|Win32
+		{F27ABF75-6057-43B9-82E9-0222CBF4D8D3}.Release|Win32.Build.0 = Release|Win32
+		{47D05310-0AC7-462E-A022-BC40892F81B0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{47D05310-0AC7-462E-A022-BC40892F81B0}.Debug|Win32.Build.0 = Debug|Win32
+		{47D05310-0AC7-462E-A022-BC40892F81B0}.Release|Win32.ActiveCfg = Release|Win32
+		{47D05310-0AC7-462E-A022-BC40892F81B0}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
