@@ -2,8 +2,10 @@
 #include "stdafx.h"
 #include "GcMemoryPool.h"
 
-GcMemoryPool::GcMemoryPool()
-:m_eGeneration(Generation_Zero)
+#include <algorithm>
+
+GcMemoryPool::GcMemoryPool(Generation eGeneration)
+:m_eGeneration(eGeneration)
 {
 	
 }
@@ -22,11 +24,18 @@ void GcMemoryPool::UpdateGeneration()
 
 void* GcMemoryPool::Alloc(size_t size)
 {
-
+	vector<int>::const_iterator iter = std::find(m_ranges.begin(), m_ranges.end(), size);
+	if (m_ranges.end() != iter)
+	{
+		vector<int>::difference_type dist =  iter - m_ranges.begin();
+		
+	}
+	
+	
 	return 0;
 }
 
 void GcMemoryPool::AttachProfile( GcMemoryProfile* pGCMemoryProfile )
 {
-
+	
 }

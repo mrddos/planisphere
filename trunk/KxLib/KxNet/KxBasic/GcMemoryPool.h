@@ -18,7 +18,7 @@ enum Generation
 class GcMemoryPool
 {
 public:
-	GcMemoryPool();
+	GcMemoryPool(Generation eGeneration);
 
 public:
 	inline Generation GetGeneration()
@@ -31,7 +31,7 @@ public:
 
 
 	void* Alloc(size_t size);
-	
+
 
 private:
 	Generation m_eGeneration;
@@ -39,7 +39,8 @@ private:
 private:
 	//////////////////////////////////////////////////////////////////////////
 	// (0, 4], (4, 8], ...(s, e]
-	vector<int>			m_vecRanges;
+	vector<int>			m_ranges;
+
 	
 	GcMemoryProfile*	m_pGCMemoryProfile;
 

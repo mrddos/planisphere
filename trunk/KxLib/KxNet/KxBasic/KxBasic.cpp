@@ -29,6 +29,12 @@ LRESULT Kx_Initialize(HMODULE hMod)
 	return E_FAIL;
 }
 
+LRESULT Kx_Log(LPCWSTR lpMsg, BOOL bToDbgView, HANDLE hFile)
+{
+
+	return S_OK;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // 
 void* Kx_Gc_Alloc(size_t size, HANDLE hThread)

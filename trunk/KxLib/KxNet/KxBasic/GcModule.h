@@ -29,6 +29,24 @@ private:
 
 private:
 	map<HANDLE, GcThreadAllocator*> m_mapGcThreadAllocator;
+
+	map<HANDLE, DWORD>				m_mapHandleFrequency;
+
+	DWORD						m_dwAllocMaxCount;
+	DWORD						m_dwAllocSecCount;
+	// cache
+	BOOL						m_bCacheWithFrequency;
+	UINT						m_nUpdateCacheCounter;
+	struct _CacheItem
+	{
+		HANDLE					hThread;
+		GcThreadAllocator*		pThreadAlloc;
+	};
+
+	typedef _CacheItem _CacheType[3];
+
+	_CacheType _cache;
+
 };
 
 
