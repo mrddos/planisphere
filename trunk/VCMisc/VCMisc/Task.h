@@ -1,12 +1,21 @@
 
-#ifndef __TASK_H__
-#define __TASK_H__
+#ifndef __Task_h__
+#define __Task_h__
 
+#include "Runnable.h"
 
-class Task
+class Task : public Runnable
 {
 public:
-	virtual BOOL Execute() = 0;
+	int Run()
+	{
+		PreExecute();
+		Execute();
+		PostExecute();
+	}
+	virtual int PreExecute() = 0;
+	virtual int Execute() = 0;
+	virtual int PostExecute() = 0;
 
 };
 

@@ -215,6 +215,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Runnable.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
@@ -227,7 +231,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Win32FilesFinder.h"
+				RelativePath=".\Win32FindFile.h"
 				>
 			</File>
 			<Filter

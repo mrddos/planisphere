@@ -12,8 +12,8 @@ using namespace std;
 #include "CPath/CPathEx.h"
 
 #include "MessageThread.h"
-#include "Win32FilesFinder.h"
-#include "RemoveFilesTask.h"
+
+
 
 
 wostream& operator<<(wostream& os, CString const& str)

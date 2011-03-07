@@ -3,38 +3,27 @@
 #define __MESSAGETHREAD_H__
 
 
-#define MTW_MSG L"MTW_MSG"
-
 class MessageThread
 {
 public:
 	MessageThread()
-		:m_hEvent(NULL), m_hThread(NULL), m_dwThreadId(0)
+		:m_hThread(NULL), m_dwThreadId(0)
 	{
 
 	}
 
 	BOOL Create()
 	{
-		m_hEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
-		if (m_hEvent)
-		{
-			m_hThread = ::CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)MessageThreadProc, this, NULL, &m_dwThreadId);
-			if (m_hThread)
-			{
-				WaitForSingleObject(m_hEvent, INFINITE);
-				return TRUE;
-			}
-		}
+		m_hThread = ::CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)MessageThreadProc, this, NULL, &m_dwThreadId);
 		return FALSE;
 	}
 
 	BOOL MessageLoop()
 	{
-		const LPCWSTR MessageThreadWindowClass = L"MessageThreadWindow";
+		const LPCWSTR MESSAGETHREADWINDOWCLASS = L"MessageThreadWindow";
 		WNDCLASSEX wcex;
 		wcex.cbSize = sizeof(WNDCLASSEX);
-		wcex.style			= CS_HREDRAW | CS_VREDRAW;
+		wcex.style			= 0;
 		wcex.lpfnWndProc	= WndProc;
 		wcex.cbClsExtra		= 0;
 		wcex.cbWndExtra		= 0;
@@ -43,35 +32,25 @@ public:
 		wcex.hCursor		= NULL;
 		wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW + 1);
 		wcex.lpszMenuName	= NULL;
-		wcex.lpszClassName	= MessageThreadWindowClass;
+		wcex.lpszClassName	= MESSAGETHREADWINDOWCLASS;
 		wcex.hIconSm		= NULL;
 
 		if (!RegisterClassEx(&wcex))
 			return FALSE;
-		HWND hWnd = CreateWindow(MessageThreadWindowClass, L"", NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL);
+		HWND hWnd = CreateWindowEx(NULL, MESSAGETHREADWINDOWCLASS, NULL, NULL, 0, 0, 0, 0, HWND_MESSAGE, NULL, NULL, NULL);
 		if (hWnd)
 		{
-			SetEvent(m_hEvent);
-			CloseHandle(m_hEvent);
-			m_hEvent = NULL;
-			m_hWnd = hWnd;
 			MSG msg;
-			while (GetMessage(&msg, hWnd, 0, 0)){}
-
+			while (GetMessage(&msg, hWnd, 0, 0))
+			{
+				DispatchMessage(&msg);
+			}
 			return TRUE;
 		}
 		return FALSE;
 	}
 
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM w, LPARAM l)
-	{
-		if (msg == RegisterWindowMessage(MTW_MSG))
-		{
-			ReplyMessage(0);
-			Sleep(10000);
-		}
-		return DefWindowProc(hWnd, msg, w, l);
-	}
+
 
 	static DWORD WINAPI MessageThreadProc(LPVOID pVoid)
 	{
@@ -89,6 +68,18 @@ public:
 	{
 
 		return 0;
+	}
+private:
+	
+
+	static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM w, LPARAM l)
+	{
+		if (msg == RegisterWindowMessage(MTW_MSG))
+		{
+			ReplyMessage(0);
+			Sleep(10000);
+		}
+		return DefWindowProc(hWnd, msg, w, l);
 	}
 
 
