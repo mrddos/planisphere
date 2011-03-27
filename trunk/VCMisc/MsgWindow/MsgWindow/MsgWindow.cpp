@@ -5,6 +5,9 @@
 #include "Resource.h"
 #include "MsgThread.h"
 
+#include <algorithm>
+using namespace std;
+
 #include "PartialQSortTask.h"
 
 
@@ -43,6 +46,36 @@ public:
 private:
 };
 
+bool comp(int a, int b)
+{
+	return a < b;
+}
+
+
+class SomeObject
+{
+public:
+
+private:
+};
+
+class SomeObjectComparator
+{
+public:
+	bool operator()(SomeObject const& a, SomeObject const& b)
+	{
+
+		return true;
+	}
+
+private:
+};
+
+static bool operator != (SomeObject const& a, SomeObject const& b)
+{
+
+	return true;
+}
 
 typedef PartialQSortTask<CString, FileSizeComparator> FilesPartialQSortTask;
 
@@ -65,6 +98,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	LoadString(hInstance, IDC_MSGWINDOW, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
 
+	
 	CString strFileList[] = { L"1", L"9", L"2", L"4", L"9", L"6", L"8", L"7", L"5" };
 	PartialQSort<CString, FileSizeComparator> partialQSort(strFileList, 9);
 	partialQSort.QuickSort();
@@ -77,19 +111,33 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	partialQSort.QuickSort();
 	partialQSort.QuickSort();
 	partialQSort.QuickSort();
+	
+
+	
+
+	//int array[] = { 1, 7, 5, 2, 5, 6, 2, 87, 9, 32, 23 ,32, 23 ,23 ,26, 35, 46, 3, 4, 5, 7, 8, 9, 23, 423, 4, 1};
+	int array[] = { 1, 2, 3};
+
+	//int array[] = { 1, 2, 3, 5, 4};
+	PartialQSort<int, IntegerComparator> partialIntegerQSort(array, sizeof(array) / sizeof(int));
+	int count = 0;
+	for (int i = 0; i < 60000; ++i)
+	{
+		PartialQSortStep step = partialIntegerQSort.QuickSort();
+		if (AllSorted == step)
+		{
+			break;
+		}
+		else if (PartialSorted == step)
+		{
+			count++;
+		}
+	}
 
 
-	int array[] = { 1, 7, 5, 2, 5, 6, 2, 87, 9, 32, 23 ,32, 23 ,23 ,26, 35, 46, 3, 4, 5, 7, 8, 9, 23, 423, 4 };
-	int* pArray = new int[1024 * 10];
-	for (int i = 0; i < 1024 * 10; ++i)
-	{
-		pArray[i] = array[i % 10];
-	}
-	PartialQSort<int, IntegerComparator> partialIntegerQSort(pArray, 1024 * 10);
-	for (int i = 0; i < 100000; ++i)
-	{
-		partialIntegerQSort.QuickSort();
-	}
+	SomeObject so[1];
+	PartialQSort<SomeObject, SomeObjectComparator> someObjectQSort(so, 1);
+	someObjectQSort.QuickSort();
 
 
 

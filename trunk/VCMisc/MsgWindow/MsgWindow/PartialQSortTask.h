@@ -7,19 +7,30 @@
 #include <stack>
 using std::stack;
 
+enum PartialQSortStep
+{
+	ReadyToSort,
+	PartialSorted,
+	PartialSortedFailed,
+	AllSorted,
+};
+
+
 template<class E, class F>
 class PartialQSort
 {
 public:
+
+
 	PartialQSort()
-		:_a(NULL), _size(0),
+		:_a(NULL), _size(0), _step(ReadyToSort), 
 		 _iMinPartLen(PartialContext::DefaultMinPartLength)
 	{
 
 	}
 
 	PartialQSort(E a[], int size)
-		:_a(a), _size(size),
+		:_a(a), _size(size), _step(ReadyToSort), 
 		 _iMinPartLen(PartialContext::DefaultMinPartLength)
 	{
 
@@ -94,10 +105,10 @@ public:
 	};
 
 	// Context
-	bool _QuickSortByContext(E a[], int size, PartialContext const& context)
+	PartialQSortStep _QuickSortByContext(E a[], int size, PartialContext const& context)
 	{
 		if (context.from >= context.to)
-			return false;
+			return PartialSortedFailed;
 
 		F _c;
 		E mv = a[context.to];
@@ -114,13 +125,15 @@ public:
 			}
 
 			if (i1 >= i2) break;
-
-			_Swap(a[i1], a[i2]);
+			
+			if (a[i1] != a[i2])
+				_Swap(a[i1], a[i2]);
 			//print(a, size);
 		}
 		while(1);
 
-		_Swap(a[i1], a[context.to]);
+		if (a[i1] != a[context.to])
+			_Swap(a[i1], a[context.to]);
 		//print(a, size);
 
 		// ==> i1;
@@ -131,7 +144,7 @@ public:
 
 		PartialContext ctx2(context.from, i1 - 1);
 		_context.push(ctx2);
-		return true;
+		return PartialSorted;
 	}
 
 
@@ -145,19 +158,25 @@ public:
 	}
 
 	// Sort all elements step by step.
-	void QuickSort()
+	PartialQSortStep QuickSort()
 	{
 		
 		if (_context.empty())
 		{
 			PartialContext context(0, _size - 1);
-			_QuickSortByContext(_a, _size, context);
+			return _QuickSortByContext(_a, _size, context);
 		}
 		else
 		{
 			PartialContext context = _context.top();
 			_context.pop();
-			_QuickSortByContext(_a, _size, context);
+			PartialQSortStep step = _QuickSortByContext(_a, _size, context);
+
+			if (_context.empty())
+			{
+				return AllSorted;
+			}
+			return step;
 		}
 
 		
@@ -175,6 +194,7 @@ private:
 	E*		_a;
 	int		_size;
 	int		_iMinPartLen;
+	PartialQSortStep			_step;
 	stack<PartialContext>		_context; // Root Context;
 };
 
