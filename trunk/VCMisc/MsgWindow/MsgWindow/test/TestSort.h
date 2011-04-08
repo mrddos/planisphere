@@ -7,6 +7,10 @@ class TestSort
 {
 public:
 	static BOOL testSortLargeIntArray();
+	static BOOL testCheckResult();
+
+private:
+	static BOOL checkResult(int* array, int size);
 };
 
 #endif

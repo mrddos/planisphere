@@ -5,6 +5,9 @@
 #include "Resource.h"
 #include "MsgThread.h"
 
+
+#include "test/TestSort.h"
+
 #include <algorithm>
 using namespace std;
 
@@ -112,6 +115,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	partialQSort.QuickSort();
 	partialQSort.QuickSort();
 	
+
+	TestSort::testCheckResult();
 
 	
 
