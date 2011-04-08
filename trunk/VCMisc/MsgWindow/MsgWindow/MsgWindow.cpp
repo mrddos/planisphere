@@ -134,11 +134,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		}
 	}
 
-
+	/*
 	SomeObject so[1];
 	PartialQSort<SomeObject, SomeObjectComparator> someObjectQSort(so, 1);
 	someObjectQSort.QuickSort();
-
+	*/
 
 
 	// Perform application initialization:

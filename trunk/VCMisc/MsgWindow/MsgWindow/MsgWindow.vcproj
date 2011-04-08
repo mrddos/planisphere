@@ -196,6 +196,14 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="test"
+				>
+				<File
+					RelativePath=".\test\TestSort.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -238,6 +246,14 @@
 				RelativePath=".\Win32FindFiles.h"
 				>
 			</File>
+			<Filter
+				Name="test"
+				>
+				<File
+					RelativePath=".\test\TestSort.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
