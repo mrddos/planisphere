@@ -1,3 +1,0 @@
-LIBRARY	"KxBasic"
-EXPORTS
-	Kx_Gc_Alloc
