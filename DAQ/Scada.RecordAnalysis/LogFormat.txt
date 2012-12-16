@@ -1,0 +1,3 @@
+﻿
+
+[12:57:23]<Event> Scada.VirtualAgent started.
