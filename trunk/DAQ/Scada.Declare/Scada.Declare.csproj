@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Declare.cs" />
+    <Compile Include="DeviceConfig.cs" />
     <Compile Include="LogEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StandardDevice.cs" />
