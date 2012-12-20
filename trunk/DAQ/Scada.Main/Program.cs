@@ -7,37 +7,17 @@ using System.Reflection;
 using Scada.Declare;
 using System.Threading;
 using System.Diagnostics;
+using System.IO;
 
 namespace Scada.Main
 {
-	/// <summary>
-	/// 
-	/// </summary>
-	//static class DebugProgram
-	//{
-	//    [STAThread]
-	//    static void Main()
-	//    {
-	//        StandardDevice sd = new StandardDevice("Device1");
 
-	//        if (sd.Connect("COM4"))
-	//        {
-				
-	//        }
-
-
-
-	//    }
-
-	//}
-
+    
 	/// <summary>
 	/// 
 	/// </summary>
     static class Program
     {
-        
-		
 
         [STAThread]
         static void Main()
@@ -48,14 +28,16 @@ namespace Scada.Main
             Device o = asm.CreateInstance("Scada.VirtualAgent") as Device;
             string s = o.ToString();
             */
-			Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
-			StandardDevice sd = new StandardDevice("Device1");
+
+            
+            /*
+            StandardDevice sd = new StandardDevice("Device1");
 
 			if (sd.Connect("COM4"))
 			{
 				sd.ReadData();
 			}
-         
+            */
             
 
             Application.EnableVisualStyles();

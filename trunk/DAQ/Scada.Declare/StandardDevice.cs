@@ -96,6 +96,9 @@ namespace Scada.Declare
 			return true;
 		}
 
+        public override void Run()
+        {
+        }
 
 
 		
