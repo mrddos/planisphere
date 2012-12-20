@@ -14,17 +14,28 @@ namespace Scada.Main
     {
 		private string deviceName;
 
-		private Thread workThread;
+        private string version;
 
 		public DeviceLoader(string deviceName)
         {
 			this.deviceName = deviceName;
         }
 
+        public DeviceLoader(string deviceName, string version)
+        {
+            this.deviceName = deviceName;
+            this.version = version;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Device Load()
         {
 			Device device = null;
-			StartDeviceOnWorkThread(device);
+			
 			return device;
         }
 
@@ -35,15 +46,5 @@ namespace Scada.Main
 			// 2.
 		}
 
-		private void StartDeviceOnWorkThread(Device device)
-		{
-			this.workThread = new Thread(new ParameterizedThreadStart(this.OnThreadStart));
-			this.workThread.Start(device);
-		}
-
-		private void OnThreadStart(object arg)
-		{
-			Device device = arg as Device;
-		}
     }
 }

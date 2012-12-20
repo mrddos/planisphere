@@ -5,13 +5,6 @@ using System.Text;
 
 namespace Scada.Declare
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum ErrorCode
-    {
-
-    }
 
     /// <summary>
     /// 
@@ -22,12 +15,14 @@ namespace Scada.Declare
 
 		private string version;
 
+        private bool running = false;
+
         /// <summary>
         /// 
         /// </summary>
         public string Name
-		{ 
-			get { return this.name;}
+		{
+			get { return this.name; }
 			set { this.name = value; }
 		}
 
@@ -40,7 +35,42 @@ namespace Scada.Declare
 			set { this.version = value; }
 		}
 
+        public bool Running
+        {
+            get { return this.running; }
+        }
+
+        public abstract void Run();
+
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public class DeviceEntry
+    {
+        private string name;
+
+        private string version;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name
+        {
+            get { return this.name; }
+            set { this.name = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Version
+        {
+            get { return this.version; }
+            set { this.version = value; }
+        }
+
+    }
 
 }
