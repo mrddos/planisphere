@@ -15,9 +15,12 @@ namespace Scada
 			this.Name = "virtual-agent";
 		}
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Run()
         {
+            // Start this device and return data...
             return;
         }
     }

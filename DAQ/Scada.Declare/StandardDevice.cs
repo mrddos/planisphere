@@ -53,7 +53,7 @@ namespace Scada.Declare
 				this.serialPort.ReadTimeout = -1;
 				this.serialPort.RtsEnable = true;
 				this.serialPort.NewLine = "/r";
-				this.serialPort.DataReceived += this.comm_DataReceived;
+				this.serialPort.DataReceived += this.SerialPortDataReceived;
 				this.serialPort.Open();
 
 				
@@ -71,7 +71,7 @@ namespace Scada.Declare
 			return true;
 		}
 
-		void comm_DataReceived(object sender, SerialDataReceivedEventArgs e)  
+		void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)  
 		{
 			int n = this.serialPort.BytesToRead; //先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致  
 			byte[] buffer = new byte[n];//声明一个临时数组存储当前来的串口数据  
@@ -84,7 +84,14 @@ namespace Scada.Declare
 			
 
 			// TODO: Deal-with the Data.
-			// If we have a completed 
+			// If we have a completed
+
+
+            if (this.DataReceived != null)
+            {
+                string data = string.Empty;
+                this.DataReceived(sender, data);
+            }
 
 		}
 		
@@ -98,6 +105,9 @@ namespace Scada.Declare
 
         public override void Run()
         {
+            // TODO: call method Connect to connect the Serial-Port.
+
+            // 
         }
 
 
