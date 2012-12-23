@@ -1,0 +1,3 @@
+
+
+Scada.VirtualAgent = COM3

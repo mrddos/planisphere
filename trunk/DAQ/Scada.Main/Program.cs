@@ -19,6 +19,40 @@ namespace Scada.Main
     static class Program
     {
 
+        private const string DeviceMappingFile = "d2d.m";
+
+        private static DeviceManager deviceManager = new DeviceManager();
+
+        /// <summary>
+        /// Retrieve device to device mapping.
+        /// </summary>
+        /// <returns>Dict with device to device mapping</returns>
+        static Dictionary<string, string> LoadDeviceMapping()
+        {
+            Dictionary<string, string> mapping = null;
+            string deviceMappingFile = string.Format("{0}\\{1}", MainApplication.InstallPath, DeviceMappingFile);
+            if (File.Exists(deviceMappingFile))
+            {
+                using (ScadaReader sr = new ScadaReader(deviceMappingFile))
+                {
+                    SectionType secType = SectionType.None;
+                    string line = null;
+                    string key = null;
+                    IValue value = null;
+                    mapping = new Dictionary<string, string>();
+                    while (sr.ReadLine(out secType, out line, out key, out value) == ReadLineResult.OK)
+                    {
+                        if (secType == SectionType.KeyWithStringValue)
+                        {
+                            mapping.Add(key, value.ToString());
+                        }
+                    }
+                }
+            }
+            return mapping;
+        }
+
+
         [STAThread]
         static void Main()
         {
@@ -29,6 +63,7 @@ namespace Scada.Main
             string s = o.ToString();
             */
 
+            LoadDeviceMapping();
             
             /*
             StandardDevice sd = new StandardDevice("Device1");
@@ -38,6 +73,15 @@ namespace Scada.Main
 				sd.ReadData();
 			}
             */
+
+            DBConnection c = new DBConnection();
+            c.Connect();
+
+            /*
+            deviceManager.Initialize();
+            deviceManager.SelectDevice("Scada.VirtualAgent", "0.9", true);
+            deviceManager.Run();
+             * */
             
 
             Application.EnableVisualStyles();

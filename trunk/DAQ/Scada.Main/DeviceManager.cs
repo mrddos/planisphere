@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -77,7 +78,7 @@ namespace Scada.Main
 
         public static string GetDevicePath(string deviceName, string version)
         {
-            return string.Format("{0}\\{1}\\{2}", MainApplication.InstallPath, deviceName, version);
+            return string.Format("{0}\\{1}\\{2}", MainApplication.DevicesRootPath, deviceName, version);
         }
 
         /// <summary>
@@ -97,6 +98,64 @@ namespace Scada.Main
             }
         }
 
+        public DeviceEntry LoadFromConfig(string configFile)
+        {
+            if (!File.Exists(configFile))
+                return null;
+
+            using (ScadaReader sr = new ScadaReader(configFile))
+            {
+                SectionType secType = SectionType.None;
+                string line = null;
+                string key = null;
+                IValue value = null;
+                ReadLineResult result = sr.ReadLine(out secType, out line, out key, out value);
+                // Dictionary<string, string> config = new Dictionary<string, string>();
+                DeviceEntry entry = new DeviceEntry();
+                while (result == ReadLineResult.OK)
+                {
+                    result = sr.ReadLine(out secType, out line, out key, out value);
+
+                    if (secType == SectionType.KeyWithStringValue)
+                    {
+                        if (key == "BaudRate")
+                        {
+                            entry.BaudRate = int.Parse(value.ToString());
+                        }
+                        else if (key == "Name")
+                        {
+                            entry.Name = value.ToString();
+                        }
+                        else if (key == "")
+                        {
+
+                        }
+                    }
+                }
+
+                return entry;
+            }
+        }
+
+        private Device Load(DeviceEntry entry)
+        {
+            if (typeof(StandardDevice).ToString() == entry.ClassName)
+            {
+                return new StandardDevice("name-todo");
+            }
+
+            // Assembly...
+            // Type deviceClass = Type.GetType(entry.ClassName);
+            // object device = Activator.CreateInstance(deviceClass, new object[]{});
+
+            return (Device)null;
+        }
+
+        private DeviceEntry ReadConfigFile(string configFile)
+        {
+            return this.LoadFromConfig(configFile);
+        }
+
         public bool Run()
         {
             foreach (string deviceName in selectedDevices.Keys)
@@ -107,6 +166,15 @@ namespace Scada.Main
                 {
                     string cfg = string.Format("{0}\\{1}", path, DeviceConfigFile);
                     // TODO: Config file reading
+
+                    DeviceEntry entry = this.ReadConfigFile(cfg);
+
+                    // 
+                    Device device = Load(entry);
+                    if (device != null)
+                    {
+                        device.Run();
+                    }
                 }
             }
             return true;

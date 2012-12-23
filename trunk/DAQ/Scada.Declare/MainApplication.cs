@@ -5,9 +5,14 @@ using System.Text;
 
 namespace Scada.Declare
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class MainApplication
     {
         private static string Devices = "devices";
+
+
 
         public static string InstallPath
         {
