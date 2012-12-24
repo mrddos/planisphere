@@ -60,39 +60,47 @@ namespace Scada.Declare
     /// </summary>
     public class DeviceEntry
     {
+        public const string Name = "Name";
 
-        private int baudRate = 9600;
+        public const string Version = "Version";
 
-        private string name;
+        public const string ClassName = "ClassName";
 
-        private string version;
+        public const string Assembly = "Assembly";
 
-        private string className = "Scada.Declare.StandardDevice";
+        public const string BaudRate = "BaudRate";
 
-        public string Name
+        public const string DataBits = "DataBits";
+
+        public const string StopBits = "StopBits";
+
+        public const string ReadTimeout = "ReadTimeout";
+
+        public const string Parity = "Parity";
+
+
+        private Dictionary<string, IValue> dict = new Dictionary<string, IValue>();
+
+        public DeviceEntry()
         {
-            get { return this.name; }
-            set { this.name = value; }
+            dict[ClassName] = new StringValue("Scada.Declare.StandardDevice");
         }
 
-        public string Version
-        {
-            get { return this.version; }
-            set { this.version = value; }
-        }
 
-        public int BaudRate
+        public IValue this[string name]
         {
-            get { return this.baudRate; }
-            set { this.baudRate = value; }
-        }
+            get
+            {
+                return dict.ContainsKey(name) ? dict[name] : null;
+            }
 
-        public string ClassName
-        {
-            get { return this.className; }
-            set { this.className = value; }
+            set
+            {
+                dict.Add(name, value);
+            }
         }
-
+        
+        
     }
 
 }

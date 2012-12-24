@@ -34,7 +34,7 @@ namespace Scada.Main
 
         public void Connect()
         {
-            conn.Open();
+            // conn.Open();
 
             
         }

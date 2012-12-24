@@ -125,6 +125,11 @@ namespace Scada.Main
 		//////////////////////////////////////////////////////////////////////////
 		private void func()
 		{
-		}
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+
+        }
     }
 }

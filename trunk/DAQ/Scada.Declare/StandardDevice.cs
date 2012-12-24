@@ -11,33 +11,73 @@ namespace Scada.Declare
 {
 	public class StandardDevice : Device
 	{
-		private SerialPort serialPort = null;
+        private DeviceEntry entry = null;
 
-		private const int ComDataBits = 8;			//Port data-bits
+		private SerialPort serialPort = null;
 
 		private int readTimeout = 12000;		//Receive timeout
 
 		private int baudRate = 19200;
 
+        private int dataBits = 8;
+
+        private StopBits stopBits = StopBits.One;
+
+        private Parity parity = Parity.None;
+
 		private StringBuilder content = new StringBuilder();
 
-		public StandardDevice(string deviceName)
-		{
-			this.Name = deviceName;
-		}
 
 
-		public int BaudRate
+		public StandardDevice(DeviceEntry entry)
 		{
-			get { return this.baudRate; }
-			set { this.baudRate = value; }
+            this.entry = entry;
+            this.Name = entry[DeviceEntry.Name].ToString();
+            this.Version = entry[DeviceEntry.Version].ToString();
+
+            IValue baudRate = entry[DeviceEntry.BaudRate];
+            if (baudRate != null)
+            {
+                this.baudRate = (StringValue)baudRate;
+            }
+
+            IValue readTimeout = entry[DeviceEntry.ReadTimeout];
+            if (readTimeout != null)
+            {
+                this.readTimeout = (StringValue)readTimeout;
+            }
+
+            IValue dataBits = entry[DeviceEntry.DataBits];
+            if (dataBits != null)
+            {
+                this.dataBits = (StringValue)dataBits;
+            }
+
+            StringValue stopBits = (StringValue)entry[DeviceEntry.StopBits];
+            if (stopBits != null)
+            {
+                this.stopBits = (StopBits)int.Parse(stopBits);
+            }
+
+            StringValue parity = (StringValue)entry[DeviceEntry.Parity];
+            if (parity != null)
+            {
+                if (parity == "None")
+                {
+                    this.parity = Parity.None;
+                }
+                else if (parity == "Odd")
+                {
+                    this.parity = Parity.Odd;
+                }
+                else if (parity == "Even")
+                {
+                    this.parity = Parity.Even;
+                }
+            }
+
 		}
 
-		public int ReadTimeout
-		{
-			get { return this.readTimeout; }
-			set { this.readTimeout = value; }
-		}
 
 		public bool Connect(string portName)
 		{
@@ -45,13 +85,14 @@ namespace Scada.Declare
 
 			try
 			{
-				this.serialPort.BaudRate = this.BaudRate;
+				this.serialPort.BaudRate = this.baudRate;
 
-				this.serialPort.Parity = Parity.None; //Parity none
-				this.serialPort.StopBits = StopBits.One; //StopBits 1
-				this.serialPort.DataBits = ComDataBits;        // DataBits 8bit
-				this.serialPort.ReadTimeout = -1;
-				this.serialPort.RtsEnable = true;
+				this.serialPort.Parity = this.parity; //Parity none
+                this.serialPort.StopBits = (StopBits)this.stopBits;    //StopBits 1
+                this.serialPort.DataBits = this.dataBits;   // DataBits 8bit
+                this.serialPort.ReadTimeout = this.readTimeout;
+				
+                this.serialPort.RtsEnable = true;
 				this.serialPort.NewLine = "/r";
 				this.serialPort.DataReceived += this.SerialPortDataReceived;
 				this.serialPort.Open();
@@ -106,7 +147,7 @@ namespace Scada.Declare
         public override void Run()
         {
             // TODO: call method Connect to connect the Serial-Port.
-
+            Connect("COM4");
             // 
         }
 

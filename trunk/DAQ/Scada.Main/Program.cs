@@ -65,23 +65,24 @@ namespace Scada.Main
 
             LoadDeviceMapping();
             
+            
+            // StandardDevice sd = new StandardDevice("Device1");
+            
             /*
-            StandardDevice sd = new StandardDevice("Device1");
-
 			if (sd.Connect("COM4"))
 			{
 				sd.ReadData();
 			}
             */
 
-            DBConnection c = new DBConnection();
-            c.Connect();
+            // DBConnection c = new DBConnection();
+            // c.Connect();
 
-            /*
+            
             deviceManager.Initialize();
-            deviceManager.SelectDevice("Scada.VirtualAgent", "0.9", true);
+            deviceManager.SelectDevice("Scada.RadiationDetector", "0.9", true);
             deviceManager.Run();
-             * */
+            
             
 
             Application.EnableVisualStyles();

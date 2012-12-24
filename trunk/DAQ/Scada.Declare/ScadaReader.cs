@@ -37,6 +37,16 @@ namespace Scada.Declare
         ScadaValueType Type { get; }
     }
 
+    public class NullValue : IValue
+    {
+        public static NullValue Null = new NullValue();
+
+        public ScadaValueType Type
+        {
+            get { return ScadaValueType.Null; }
+        }
+    }
+
     public class StringValue : IValue
     {
         private string value = null;
@@ -54,6 +64,16 @@ namespace Scada.Declare
         public override string ToString()
         {
             return this.value;
+        }
+
+        public static implicit operator string (StringValue sv)
+        {
+            return (sv != null) ? sv.ToString() : null;
+        }
+
+        public static implicit operator int (StringValue sv)
+        {
+            return (sv != null) ? int.Parse(sv.ToString()) : int.MaxValue;
         }
     }
 
