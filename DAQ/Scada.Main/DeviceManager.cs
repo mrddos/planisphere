@@ -118,18 +118,7 @@ namespace Scada.Main
 
                     if (secType == SectionType.KeyWithStringValue)
                     {
-                        if (key == "BaudRate")
-                        {
-                            entry.BaudRate = int.Parse(value.ToString());
-                        }
-                        else if (key == "Name")
-                        {
-                            entry.Name = value.ToString();
-                        }
-                        else if (key == "")
-                        {
-
-                        }
+                        entry[key] = value;
                     }
                 }
 
@@ -139,14 +128,22 @@ namespace Scada.Main
 
         private Device Load(DeviceEntry entry)
         {
-            if (typeof(StandardDevice).ToString() == entry.ClassName)
+            StringValue className = (StringValue)entry[DeviceEntry.ClassName];
+            if (typeof(StandardDevice).ToString() == className)
             {
-                return new StandardDevice("name-todo");
+                return new StandardDevice(entry);
             }
 
-            // Assembly...
-            // Type deviceClass = Type.GetType(entry.ClassName);
-            // object device = Activator.CreateInstance(deviceClass, new object[]{});
+            if (entry[DeviceEntry.Assembly] != null)
+            {
+                Assembly assembly = Assembly.Load((StringValue)entry[DeviceEntry.Assembly]);
+                Type deviceClass = assembly.GetType((StringValue)entry[DeviceEntry.ClassName]);
+                if (deviceClass != null)
+                {
+                    object device = Activator.CreateInstance(deviceClass, new object[] { });
+                    return device as Device;
+                }
+            }
 
             return (Device)null;
         }

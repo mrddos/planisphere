@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.deviceListView = new Scada.Main.DeviceListView();
             this.sysNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,6 +60,7 @@
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.deviceListView = new Scada.Main.DeviceListView();
             this.groupBox1.SuspendLayout();
             this.menuBar.SuspendLayout();
             this.toolBar.SuspendLayout();
@@ -73,26 +73,10 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 52);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(30, 33, 30, 33);
-            this.groupBox1.Size = new System.Drawing.Size(528, 332);
+            this.groupBox1.Size = new System.Drawing.Size(629, 332);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
-            // 
-            // deviceListView
-            // 
-            this.deviceListView.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
-            this.deviceListView.ControlPadding = 4;
-            this.deviceListView.FullRowSelect = true;
-            this.deviceListView.Location = new System.Drawing.Point(68, 68);
-            this.deviceListView.Margin = new System.Windows.Forms.Padding(20, 22, 20, 22);
-            this.deviceListView.Name = "deviceListView";
-            this.deviceListView.OwnerDraw = true;
-            this.deviceListView.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.deviceListView.RightToLeftLayout = true;
-            this.deviceListView.Size = new System.Drawing.Size(350, 196);
-            this.deviceListView.TabIndex = 0;
-            this.deviceListView.UseCompatibleStateImageBehavior = false;
-            this.deviceListView.View = System.Windows.Forms.View.Details;
             // 
             // sysNotifyIcon
             // 
@@ -109,7 +93,7 @@
             this.helpMenuItem});
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
-            this.menuBar.Size = new System.Drawing.Size(805, 24);
+            this.menuBar.Size = new System.Drawing.Size(660, 24);
             this.menuBar.TabIndex = 2;
             this.menuBar.Text = "menuStrip1";
             // 
@@ -298,7 +282,7 @@
             this.toolStripButton1});
             this.toolBar.Location = new System.Drawing.Point(0, 24);
             this.toolBar.Name = "toolBar";
-            this.toolBar.Size = new System.Drawing.Size(805, 25);
+            this.toolBar.Size = new System.Drawing.Size(660, 25);
             this.toolBar.TabIndex = 3;
             this.toolBar.Text = "toolStrip1";
             // 
@@ -315,15 +299,31 @@
             // 
             this.statusBar.Location = new System.Drawing.Point(0, 484);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(805, 22);
+            this.statusBar.Size = new System.Drawing.Size(660, 22);
             this.statusBar.TabIndex = 4;
             this.statusBar.Text = "statusStrip1";
+            // 
+            // deviceListView
+            // 
+            this.deviceListView.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
+            this.deviceListView.ControlPadding = 4;
+            this.deviceListView.FullRowSelect = true;
+            this.deviceListView.Location = new System.Drawing.Point(68, 68);
+            this.deviceListView.Margin = new System.Windows.Forms.Padding(20, 22, 20, 22);
+            this.deviceListView.Name = "deviceListView";
+            this.deviceListView.OwnerDraw = true;
+            this.deviceListView.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.deviceListView.RightToLeftLayout = true;
+            this.deviceListView.Size = new System.Drawing.Size(511, 196);
+            this.deviceListView.TabIndex = 0;
+            this.deviceListView.UseCompatibleStateImageBehavior = false;
+            this.deviceListView.View = System.Windows.Forms.View.Details;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(805, 506);
+            this.ClientSize = new System.Drawing.Size(660, 506);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.toolBar);
             this.Controls.Add(this.groupBox1);
@@ -332,6 +332,7 @@
             this.Name = "MainForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.groupBox1.ResumeLayout(false);
             this.menuBar.ResumeLayout(false);
             this.menuBar.PerformLayout();
