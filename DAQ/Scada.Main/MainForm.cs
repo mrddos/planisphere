@@ -10,6 +10,8 @@ using System.Windows.Forms;
 
 using Scada.Controls;
 using Scada.Main.Properties;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Scada.Main
 {
@@ -26,6 +28,10 @@ namespace Scada.Main
 			sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
 			sysNotifyIcon.Visible = true;
 
+
+            // SynchronizationContext syncContext = SynchronizationContext.Current;
+            Program.deviceManager.SynchronizationContext = SynchronizationContext.Current;
+
 			// SQLite!
 			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
 			
@@ -35,6 +41,11 @@ namespace Scada.Main
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Genre", excmbx_genre, 60));
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
 			deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
+        }
+
+        public void OnDataReceived(object state)
+        {
+            Debug.WriteLine(state);
         }
 
 

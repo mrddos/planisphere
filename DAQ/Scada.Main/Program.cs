@@ -21,7 +21,7 @@ namespace Scada.Main
 
         private const string DeviceMappingFile = "d2d.m";
 
-        private static DeviceManager deviceManager = new DeviceManager();
+        public static DeviceManager deviceManager = new DeviceManager();
 
         /// <summary>
         /// Retrieve device to device mapping.

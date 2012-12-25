@@ -19,6 +19,11 @@ namespace Scada.Main
 
         private List<Device> devices = new List<Device>();
 
+        private SynchronizationContext synchronizationContext = null;
+
+        private SendOrPostCallback dataReceived;
+        
+
         public DeviceManager Instance()
         {
             return null;
@@ -28,6 +33,17 @@ namespace Scada.Main
 		{
 
 		}
+
+        public SynchronizationContext SynchronizationContext
+        {
+            get { return this.synchronizationContext; }
+            set { this.synchronizationContext = value; }
+        }
+
+        public SendOrPostCallback DataReceived
+        {
+            set { this.dataReceived = value; }
+        }
 
         public string[] DeviceNames
         {
@@ -156,6 +172,12 @@ namespace Scada.Main
             return this.LoadFromConfig(configFile);
         }
 
+        private bool OnDataReceived(object sender, string data)
+        {
+            this.SynchronizationContext.Send(this.dataReceived, data);
+            return true;
+        }
+
         public bool Run()
         {
             foreach (string deviceName in selectedDevices.Keys)
@@ -173,6 +195,7 @@ namespace Scada.Main
 						Device device = Load(entry);
 						if (device != null)
 						{
+                            device.DataReceived += this.OnDataReceived;
 							device.Run();
 						}
 					}
