@@ -27,7 +27,9 @@ namespace Scada.Declare
 
         private Parity parity = Parity.None;
 
-		private StringBuilder content = new StringBuilder();
+        private string lineBreak = "\n"; 
+
+        private StringBuilder contentBuffer = new StringBuilder();
 
 
 
@@ -110,23 +112,20 @@ namespace Scada.Declare
 
 		void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)  
 		{
-			int n = this.serialPort.BytesToRead; //先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致  
-			byte[] buffer = new byte[n];//声明一个临时数组存储当前来的串口数据  
-			//received_count += n;//增加接收计数  
-			this.serialPort.Read(buffer, 0, n);//读取缓冲数据  
-			string line = Encoding.ASCII.GetString(buffer);
-			content.Append(line);
-			// Debug.WriteLine(line);
-			// Debug.WriteLine(Thread.CurrentThread.ManagedThreadId);
+			int n = this.serialPort.BytesToRead;
+			byte[] buffer = new byte[n];
 			
+			int r = this.serialPort.Read(buffer, 0, n);
+            
+			string line = Encoding.ASCII.GetString(buffer, 0, r);
+			contentBuffer.Append(line);
 
-			// TODO: Deal-with the Data.
-			// If we have a completed
-
+            string content = contentBuffer.ToString();
+            int p = content.IndexOf(lineBreak);
+            string data = content.Substring(0, p);
 
             if (this.DataReceived != null)
             {
-                string data = string.Empty;
                 this.DataReceived(sender, data);
             }
 
