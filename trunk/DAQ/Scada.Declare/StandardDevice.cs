@@ -11,6 +11,8 @@ namespace Scada.Declare
 {
 	public class StandardDevice : Device
 	{
+		private const int ComDataBits = 8;
+
         private DeviceEntry entry = null;
 
 		private SerialPort serialPort = null;
@@ -48,16 +50,10 @@ namespace Scada.Declare
             }
 
             IValue dataBits = entry[DeviceEntry.DataBits];
-            if (dataBits != null)
-            {
-                this.dataBits = (StringValue)dataBits;
-            }
+			this.dataBits = (dataBits != null) ? (StringValue)dataBits : ComDataBits;
 
             StringValue stopBits = (StringValue)entry[DeviceEntry.StopBits];
-            if (stopBits != null)
-            {
-                this.stopBits = (StopBits)int.Parse(stopBits);
-            }
+			this.stopBits = (stopBits != null) ? (StopBits)(int)stopBits : StopBits.One;
 
             StringValue parity = (StringValue)entry[DeviceEntry.Parity];
             if (parity != null)

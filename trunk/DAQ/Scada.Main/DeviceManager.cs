@@ -128,6 +128,9 @@ namespace Scada.Main
 
         private Device Load(DeviceEntry entry)
         {
+			if (entry == null)
+				return null;
+
             StringValue className = (StringValue)entry[DeviceEntry.ClassName];
             if (typeof(StandardDevice).ToString() == className)
             {
@@ -161,17 +164,19 @@ namespace Scada.Main
                 string path = GetDevicePath(deviceName, version);
                 if (Directory.Exists(path))
                 {
-                    string cfg = string.Format("{0}\\{1}", path, DeviceConfigFile);
+                    string deviceCfgFile = string.Format("{0}\\{1}", path, DeviceConfigFile);
                     // TODO: Config file reading
+					if (deviceCfgFile != null)
+					{
+						DeviceEntry entry = this.ReadConfigFile(deviceCfgFile);
 
-                    DeviceEntry entry = this.ReadConfigFile(cfg);
+						Device device = Load(entry);
+						if (device != null)
+						{
+							device.Run();
+						}
+					}
 
-                    // 
-                    Device device = Load(entry);
-                    if (device != null)
-                    {
-                        device.Run();
-                    }
                 }
             }
             return true;
