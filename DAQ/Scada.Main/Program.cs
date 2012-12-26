@@ -52,6 +52,12 @@ namespace Scada.Main
             return mapping;
         }
 
+		public static DeviceManager DeviceManager
+		{
+			get { return Program.deviceManager; }
+			private set { Program.deviceManager = value; }
+		}
+
 
         [STAThread]
         static void Main()
