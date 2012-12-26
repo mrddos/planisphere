@@ -81,7 +81,7 @@ namespace Scada.Main
             
             deviceManager.Initialize();
             deviceManager.SelectDevice("Scada.RadiationDetector", "0.9", true);
-            deviceManager.Run();
+            // deviceManager.Run();
             
             
 
