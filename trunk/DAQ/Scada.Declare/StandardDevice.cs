@@ -102,7 +102,10 @@ namespace Scada.Declare
 			catch (IOException e)
 			{
 				string message = e.Message;
-				// TODO: Log here.
+
+				SerialDataReceivedEventArgs events = null;
+				this.SerialPortDataReceived(null, events);
+
 				return false;
 			}
 
@@ -112,23 +115,32 @@ namespace Scada.Declare
 
 		void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)  
 		{
-			int n = this.serialPort.BytesToRead;
-			byte[] buffer = new byte[n];
+			try
+			{
+				int n = this.serialPort.BytesToRead;
+				byte[] buffer = new byte[n];
 			
-			int r = this.serialPort.Read(buffer, 0, n);
+				int r = this.serialPort.Read(buffer, 0, n);
             
-			string line = Encoding.ASCII.GetString(buffer, 0, r);
-			contentBuffer.Append(line);
+				string line = Encoding.ASCII.GetString(buffer, 0, r);
+				contentBuffer.Append(line);
 
-            string content = contentBuffer.ToString();
-            int p = content.IndexOf(lineBreak);
-            string data = content.Substring(0, p);
+				string content = contentBuffer.ToString();
+				int p = content.IndexOf(lineBreak);
+				string data = content.Substring(0, p);
 
-            if (this.DataReceived != null)
-            {
-                this.DataReceived(sender, data);
-            }
-
+				if (this.DataReceived != null)
+				{
+					this.DataReceived(sender, data);
+				}
+			}
+			catch (InvalidOperationException exception)
+			{
+				if (this.DataReceived != null)
+				{
+					this.DataReceived(sender, "");
+				}
+			}
 		}
 		
 		public bool ReadData()
