@@ -30,12 +30,19 @@ namespace Scada.Main
 
 
             // SynchronizationContext syncContext = SynchronizationContext.Current;
-            Program.deviceManager.SynchronizationContext = SynchronizationContext.Current;
-			Program.deviceManager.DataReceived = this.OnDataReceived;
-			Program.deviceManager.Run();
+            Program.DeviceManager.SynchronizationContext = SynchronizationContext.Current;
+			Program.DeviceManager.DataReceived = this.OnDataReceived;
+			Program.DeviceManager.Run();
 			// SQLite!
 			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
 			
+
+			/**
+			 * 
+			 * 
+			 * 
+			 */
+
 			// Initialize the Columns
 			deviceListView.Columns.Add(new EditableColumnHeaderEx("Movie", 20));
 			deviceListView.Columns.Add(new ColumnHeaderEx("Progress", 120));
@@ -46,7 +53,7 @@ namespace Scada.Main
 
         public void OnDataReceived(object state)
         {
-            Debug.WriteLine(state);
+            // Debug.WriteLine(state);
         }
 
 
