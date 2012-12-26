@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Scada.Declare
 {
 
-    public delegate bool OnDataReceived(object sender, string data);
+    public delegate bool OnDataReceived(object sender, string deviceName, string data);
 
     /// <summary>
     /// 
@@ -19,7 +20,9 @@ namespace Scada.Declare
 
         private bool running = false;
 
-        private OnDataReceived dataReceived;
+        private SynchronizationContext synchronizationContext;
+
+        private SendOrPostCallback dataReceived;
 
         /// <summary>
         /// 
@@ -44,10 +47,16 @@ namespace Scada.Declare
             get { return this.running; }
         }
 
-        public OnDataReceived DataReceived
+        public SendOrPostCallback DataReceived
         {
             get { return this.dataReceived; }
             set { this.dataReceived = value; }
+        }
+
+        public SynchronizationContext SynchronizationContext
+        {
+            get { return this.synchronizationContext; }
+            set { this.synchronizationContext = value; }
         }
 
         public abstract void Run();

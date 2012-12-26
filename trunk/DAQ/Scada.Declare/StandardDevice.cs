@@ -131,14 +131,16 @@ namespace Scada.Declare
 
 				if (this.DataReceived != null)
 				{
-					this.DataReceived(sender, data);
+					//this.DataReceived(sender, this.Name, data);
+
+                    this.SynchronizationContext.Post(this.DataReceived, null);
 				}
 			}
 			catch (InvalidOperationException exception)
 			{
 				if (this.DataReceived != null)
 				{
-					this.DataReceived(sender, "");
+                    this.SynchronizationContext.Post(this.DataReceived, null);
 				}
 			}
 		}
