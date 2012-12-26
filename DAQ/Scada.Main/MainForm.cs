@@ -30,9 +30,9 @@ namespace Scada.Main
 
 
             // SynchronizationContext syncContext = SynchronizationContext.Current;
-            Program.DeviceManager.SynchronizationContext = SynchronizationContext.Current;
+            // Program.DeviceManager.SynchronizationContext = SynchronizationContext.Current;
 			Program.DeviceManager.DataReceived = this.OnDataReceived;
-			Program.DeviceManager.Run();
+            Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
 			// SQLite!
 			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
 			
@@ -53,7 +53,7 @@ namespace Scada.Main
 
         public void OnDataReceived(object state)
         {
-            // Debug.WriteLine(state);
+            Debug.WriteLine(state);
         }
 
 
