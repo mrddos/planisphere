@@ -76,47 +76,63 @@ namespace Scada.Declare
 
 		}
 
+        ~StandardDevice()
+        {
+            int a = 0;
+        }
+
 
 		public bool Connect(string portName)
 		{
-			this.serialPort = new SerialPort(portName);
+            try
+            {
+                this.serialPort = new SerialPort(portName);
+                
+               
 
-			try
-			{
-				this.serialPort.BaudRate = this.baudRate;
+                this.serialPort.BaudRate = this.baudRate;
 
-				this.serialPort.Parity = this.parity; //Parity none
-                this.serialPort.StopBits = (StopBits)this.stopBits;    //StopBits 1
-                this.serialPort.DataBits = this.dataBits;   // DataBits 8bit
-                this.serialPort.ReadTimeout = this.readTimeout;
-				
+                this.serialPort.Parity = this.parity; //Parity none
+                this.serialPort.StopBits = StopBits.One; //(StopBits)this.stopBits;    //StopBits 1
+                this.serialPort.DataBits = 8;// this.dataBits;   // DataBits 8bit
+                this.serialPort.ReadTimeout = 10000;// this.readTimeout;
+
                 this.serialPort.RtsEnable = true;
-				this.serialPort.NewLine = "/r";
-				this.serialPort.DataReceived += this.SerialPortDataReceived;
-				this.serialPort.Open();
+                this.serialPort.NewLine = "/r/n";
+                this.serialPort.DataReceived += this.SerialPortDataReceived;
+                this.serialPort.Open();
+                // this.serialPort.Close();
+                // this.serialPort.Open();
 
-				
+                bool isOpen = this.serialPort.IsOpen;
+
+                int tid = Thread.CurrentThread.ManagedThreadId;
 
 
-			}
-			catch (IOException e)
-			{
-				string message = e.Message;
+            }
+            catch (IOException e)
+            {
+                string message = e.Message;
 
-				SerialDataReceivedEventArgs events = null;
-				this.SerialPortDataReceived(null, events);
+                // SerialDataReceivedEventArgs events = null;
+                // this.SerialPortDataReceived(null, events);
 
-				return false;
-			}
+                return false;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+            }
 
 
 			return true;
 		}
 
-		void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)  
+		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)  
 		{
 			try
 			{
+
 				int n = this.serialPort.BytesToRead;
 				byte[] buffer = new byte[n];
 			
@@ -156,7 +172,7 @@ namespace Scada.Declare
         public override void Run()
         {
             // TODO: call method Connect to connect the Serial-Port.
-            Connect("COM4");
+            Connect("COM5");
             // 
         }
 

@@ -106,7 +106,7 @@ namespace Scada.Main
             }
         }
 
-        public DeviceEntry LoadFromConfig(string configFile)
+        public static DeviceEntry LoadFromConfig(string configFile)
         {
             if (!File.Exists(configFile))
                 return null;
@@ -159,9 +159,9 @@ namespace Scada.Main
             return (Device)null;
         }
 
-        private DeviceEntry ReadConfigFile(string configFile)
+        private static DeviceEntry ReadConfigFile(string configFile)
         {
-            return this.LoadFromConfig(configFile);
+            return LoadFromConfig(configFile);
         }
 
         public bool Run(SynchronizationContext syncCtx, SendOrPostCallback callback)
@@ -176,7 +176,7 @@ namespace Scada.Main
                     // TODO: Config file reading
 					if (deviceCfgFile != null)
 					{
-						DeviceEntry entry = this.ReadConfigFile(deviceCfgFile);
+						DeviceEntry entry = ReadConfigFile(deviceCfgFile);
 
 						Device device = Load(entry);
 						if (device != null)
@@ -184,6 +184,9 @@ namespace Scada.Main
                             device.SynchronizationContext = syncCtx;
                             device.DataReceived += callback;
 							device.Run();
+
+                            // To hold the object.
+                            devices.Add(device);
 						}
 					}
 
