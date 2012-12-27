@@ -81,15 +81,15 @@ namespace Scada.Main
 			}
             */
 
+
             // DBConnection c = new DBConnection();
             // c.Connect();
-
             
             deviceManager.Initialize();
             deviceManager.SelectDevice("Scada.RadiationDetector", "0.9", true);
             // deviceManager.Run();
-            
-            
+
+            //Thread.Sleep(1000);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

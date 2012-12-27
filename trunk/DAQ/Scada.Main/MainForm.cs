@@ -25,14 +25,14 @@ namespace Scada.Main
         private void MainForm_Load(object sender, EventArgs e)
         {
 			// Notify Icon
-			sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
-			sysNotifyIcon.Visible = true;
+			//sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
+			//sysNotifyIcon.Visible = true;
 
 
-            // SynchronizationContext syncContext = SynchronizationContext.Current;
-            // Program.DeviceManager.SynchronizationContext = SynchronizationContext.Current;
-			Program.DeviceManager.DataReceived = this.OnDataReceived;
-            Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
+
+            startMenuItem_Click(null, null);
+
+            ////////////////////////////////////////////////////////////////
 			// SQLite!
 			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
 			
@@ -44,11 +44,11 @@ namespace Scada.Main
 			 */
 
 			// Initialize the Columns
-			deviceListView.Columns.Add(new EditableColumnHeaderEx("Movie", 20));
-			deviceListView.Columns.Add(new ColumnHeaderEx("Progress", 120));
+			//deviceListView.Columns.Add(new EditableColumnHeaderEx("Device", 20));
+			//deviceListView.Columns.Add(new ColumnHeaderEx("Version", 120));
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Genre", excmbx_genre, 60));
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
-			deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
+			//deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
         }
 
         public void OnDataReceived(object state)
@@ -105,7 +105,8 @@ namespace Scada.Main
 
 		private void startMenuItem_Click(object sender, EventArgs e)
 		{
-
+            Program.DeviceManager.DataReceived = this.OnDataReceived;
+            Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
 		}
 
 		private void stopMenuItem_Click(object sender, EventArgs e)
@@ -150,5 +151,6 @@ namespace Scada.Main
         {
 
         }
+
     }
 }
