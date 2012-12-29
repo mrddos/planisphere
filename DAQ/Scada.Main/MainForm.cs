@@ -24,9 +24,10 @@ namespace Scada.Main
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+			////////////////////////////////////////////////////////////////
 			// Notify Icon
-			//sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
-			//sysNotifyIcon.Visible = true;
+			// sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
+			// sysNotifyIcon.Visible = true;
 
 
 
@@ -35,7 +36,11 @@ namespace Scada.Main
             ////////////////////////////////////////////////////////////////
 			// SQLite!
 			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
-			
+
+
+			////////////////////////////////////////////////////////////////
+			// Start Watch Application
+
 
 			/**
 			 * 
@@ -50,12 +55,6 @@ namespace Scada.Main
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
 			//deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
         }
-
-        public void OnDataReceived(object state)
-        {
-            Debug.WriteLine(state);
-        }
-
 
 		private void InitSysNotifyIcon()
 		{

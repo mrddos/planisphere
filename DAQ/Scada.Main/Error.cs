@@ -5,11 +5,19 @@ using System.Text;
 
 namespace Scada.Main
 {
-    public class Error
+    public struct Error
     {
-        private string domain = null;
+		public const string Framework = "@framework";
 
-        private int code = 0;
+		public const string Devices = "@devices";
+
+		public const string Database = "@database";
+
+		// public const string Framework = "";
+
+        private string domain;
+
+        private int code;
 
         static Error()
         {
@@ -48,4 +56,17 @@ namespace Scada.Main
             }
         }
     }
+
+	public static class Errors
+	{
+		public static Error NoError = default(Error);
+
+		// Framework
+		public static Error UnknownError = new Error(Error.Framework, 1);
+
+
+
+		// Devices
+
+	}
 }

@@ -6,8 +6,20 @@ using System.Threading;
 
 namespace Scada.Declare
 {
-
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="deviceName"></param>
+	/// <param name="data"></param>
+	/// <returns></returns>
     public delegate bool OnDataReceived(object sender, string deviceName, string data);
+
+
+	public struct DeviceData
+	{
+
+	}
 
     /// <summary>
     /// 

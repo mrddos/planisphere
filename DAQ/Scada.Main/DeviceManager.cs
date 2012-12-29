@@ -20,6 +20,8 @@ namespace Scada.Main
         private List<Device> devices = new List<Device>();
 
         private SendOrPostCallback dataReceived;
+
+		private Dictionary<string, FileRecord> records = null;
         
 
         public DeviceManager Instance()
@@ -88,6 +90,17 @@ namespace Scada.Main
         {
             return string.Format("{0}\\{1}\\{2}", MainApplication.DevicesRootPath, deviceName, version);
         }
+
+
+		public bool RegisterRecordModule(string module, FileRecord fileRecord)
+		{
+			if (!this.records.ContainsKey(module))
+			{
+				this.records.Add(module, new FileRecord("TODO:"));
+				return true;
+			}
+			return false;
+		}
 
         /// <summary>
         /// Add a device to run.
@@ -181,12 +194,19 @@ namespace Scada.Main
 						Device device = Load(entry);
 						if (device != null)
 						{
+							// Set thread-sync-context
                             device.SynchronizationContext = syncCtx;
+							// Set data-received callback
                             device.DataReceived += callback;
-							device.Run();
+							// Set file-record
+							
+							FileRecord fr = new FileRecord("");
 
+							
                             // To hold the object.
                             devices.Add(device);
+
+							device.Run();
 						}
 					}
 
