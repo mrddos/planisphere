@@ -21,6 +21,8 @@ namespace Scada.Main
 
         private const string DeviceMappingFile = "d2d.m";
 
+		private const string WatchExeFileName = "scada.watch.exe";
+
         public static DeviceManager deviceManager = new DeviceManager();
 
         /// <summary>
@@ -58,7 +60,28 @@ namespace Scada.Main
 			private set { Program.deviceManager = value; }
 		}
 
+		public static bool IsWatchRunning()
+		{
+			Process[] procs = Process.GetProcesses();
+			foreach (Process proc in procs)
+			{
+				string processName = proc.ProcessName.ToLower();
+				if (processName.IndexOf(WatchExeFileName) > 0)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 
+		public static void StartWatchProcess()
+		{
+			// TODO: Start Watch Process
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
         [STAThread]
         static void Main()
         {
@@ -70,8 +93,14 @@ namespace Scada.Main
             */
 
             LoadDeviceMapping();
-            
-            
+
+
+			if (!IsWatchRunning())
+			{
+				StartWatchProcess();
+			}
+
+
             // StandardDevice sd = new StandardDevice("Device1");
             
             /*

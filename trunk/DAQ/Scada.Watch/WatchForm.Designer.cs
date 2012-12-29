@@ -1,6 +1,6 @@
 ﻿namespace Scada.Watch
 {
-    partial class Form1
+    partial class WatchForm
     {
         /// <summary>
         /// Required designer variable.

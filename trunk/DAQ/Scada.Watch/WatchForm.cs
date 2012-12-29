@@ -9,9 +9,9 @@ using System.Windows.Forms;
 
 namespace Scada.Watch
 {
-    public partial class Form1 : Form
+    public partial class WatchForm : Form
     {
-        public Form1()
+        public WatchForm()
         {
             InitializeComponent();
         }

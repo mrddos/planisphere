@@ -78,7 +78,6 @@ namespace Scada.Declare
 
         ~StandardDevice()
         {
-            int a = 0;
         }
 
 
@@ -128,7 +127,7 @@ namespace Scada.Declare
 			return true;
 		}
 
-		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs e)  
+		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
 		{
 			try
 			{
@@ -152,7 +151,7 @@ namespace Scada.Declare
                     this.SynchronizationContext.Post(this.DataReceived, null);
 				}
 			}
-			catch (InvalidOperationException exception)
+			catch (InvalidOperationException e)
 			{
 				if (this.DataReceived != null)
 				{
