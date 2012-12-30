@@ -204,9 +204,11 @@ namespace Scada.Main
 
 							
                             // To hold the object.
-                            devices.Add(device);
+                            this.devices.Add(device);
 
-							device.Run();
+							// Load the address from the d2d.cfg
+							string address = "COM5";
+							device.Start(address);
 						}
 					}
 
@@ -220,6 +222,12 @@ namespace Scada.Main
             this.LoadDevicesInfo(MainApplication.InstallPath);
 		}
 
-        
+		public void ShutdownDeviceConnection()
+		{
+			foreach (Device device in this.devices)
+			{
+				device.Stop();
+			}
+		}
 	}
 }

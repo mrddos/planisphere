@@ -72,6 +72,14 @@ namespace Scada.Declare
                 {
                     this.parity = Parity.Even;
                 }
+				else if (parity == "Mark")
+				{
+					this.parity = Parity.Mark;
+				}
+				else if (parity == "Space")
+				{
+					this.parity = Parity.Space;
+				}
             }
 
 		}
@@ -153,6 +161,7 @@ namespace Scada.Declare
 			}
 			catch (InvalidOperationException e)
 			{
+				Debug.WriteLine(e.Message);
 				if (this.DataReceived != null)
 				{
                     this.SynchronizationContext.Post(this.DataReceived, null);
@@ -168,12 +177,20 @@ namespace Scada.Declare
 			return true;
 		}
 
-        public override void Run()
+		public override void Start(string address)
         {
+			address = "COM5";
             // TODO: call method Connect to connect the Serial-Port.
-            Connect("COM5");
+			this.Connect(address);
             // 
         }
+
+
+		public override void Stop()
+		{
+
+			// 
+		}
 
 
 		
