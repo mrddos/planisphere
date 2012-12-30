@@ -12,11 +12,14 @@ using Scada.Controls;
 using Scada.Main.Properties;
 using System.Threading;
 using System.Diagnostics;
+using Scada.Common;
 
 namespace Scada.Main
 {
     public partial class MainForm : Form
     {
+		private System.Windows.Forms.Timer timer = null;
+
         public MainForm()
         {
             InitializeComponent();
@@ -28,6 +31,12 @@ namespace Scada.Main
 			// Notify Icon
 			// sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
 			// sysNotifyIcon.Visible = true;
+
+			// Keep-Alive timer
+			this.timer = new System.Windows.Forms.Timer();
+			this.timer.Interval = Defines.KeepAliveInterval;
+			this.timer.Tick += timerKeepAliveTick;
+			this.timer.Start();
 
 
 
@@ -56,6 +65,13 @@ namespace Scada.Main
 			//deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
         }
 
+
+
+		void timerKeepAliveTick(object sender, EventArgs e)
+		{
+			Program.SendWatch();
+		}
+
 		private void InitSysNotifyIcon()
 		{
 			// Notify Icon
@@ -71,10 +87,10 @@ namespace Scada.Main
 
 		}
 
-		private void StartConnectToDevices()
-		{
-			// Create N Threads to load the devices assemblies.
-		}
+		//private void StartConnectToDevices()
+		//{
+		//	// Create N Threads to load the devices assemblies.
+		//}
 
 		// Menu Entries
 		private void fileMenuItem_Click(object sender, EventArgs e)
@@ -110,7 +126,7 @@ namespace Scada.Main
 
 		private void stopMenuItem_Click(object sender, EventArgs e)
 		{
-
+			Program.DeviceManager.ShutdownDeviceConnection();
 		}
 
 		private void startMainVisionMenuItem_Click(object sender, EventArgs e)

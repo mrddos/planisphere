@@ -71,10 +71,11 @@ namespace Scada.Declare
             set { this.synchronizationContext = value; }
         }
 
-        public abstract void Run();
+        public abstract void Start(string address);
 
+		public abstract void Stop();
 
-    }
+	}
 
     /// <summary>
     /// 

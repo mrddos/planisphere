@@ -28,16 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.SuspendLayout();
-            // 
-            // Form1
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(423, 111);
-            this.Name = "Form1";
-            this.Text = "Watch";
-            this.ResumeLayout(false);
+			this.SuspendLayout();
+			// 
+			// WatchForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(423, 111);
+			this.Name = "WatchForm";
+			this.Text = "Watch";
+			this.Load += new System.EventHandler(this.WatchForm_Load);
+			this.ResumeLayout(false);
 
         }
 

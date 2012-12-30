@@ -8,6 +8,8 @@ using Scada.Declare;
 using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
+using Scada.Common;
 
 namespace Scada.Main
 {
@@ -18,12 +20,23 @@ namespace Scada.Main
 	/// </summary>
     static class Program
     {
+		[DllImport("User32.dll", EntryPoint = "PostMessage")]
+		public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+
+		private const int WM_KEEPALIVE = 0x006A;
+		/// <summary>
+		/// 
+		/// </summary>
+		private static IntPtr watchFormHandle;
 
         private const string DeviceMappingFile = "d2d.m";
 
-		private const string WatchExeFileName = "scada.watch.exe";
+		private const string WatchExeFileName = "scada.watch";
 
         public static DeviceManager deviceManager = new DeviceManager();
+
+		// private static CopyDataStruct cds = new CopyDataStruct() { cbData=10, lpData = "Hello" };
 
         /// <summary>
         /// Retrieve device to device mapping.
@@ -54,6 +67,11 @@ namespace Scada.Main
             return mapping;
         }
 
+		public static IntPtr WatchFormHandle
+		{
+			get { return Program.watchFormHandle; }
+		}
+
 		public static DeviceManager DeviceManager
 		{
 			get { return Program.deviceManager; }
@@ -66,12 +84,27 @@ namespace Scada.Main
 			foreach (Process proc in procs)
 			{
 				string processName = proc.ProcessName.ToLower();
-				if (processName.IndexOf(WatchExeFileName) > 0)
+				if (processName.IndexOf(WatchExeFileName) >= 0)
 				{
+					try
+					{
+						Program.watchFormHandle = proc.MainWindowHandle;
+					}
+					catch (Exception e)
+					{
+						Debug.WriteLine(e.Message);
+						Error error = Errors.UnknownError;
+					}
 					return true;
 				}
 			}
 			return false;
+		}
+
+		public static bool SendWatch()
+		{
+			bool ret = Program.PostMessage(Program.WatchFormHandle, Defines.WM_KEEPALIVE, Defines.KeepAlive, 232);
+			return true;
 		}
 
 		public static void StartWatchProcess()
@@ -99,6 +132,8 @@ namespace Scada.Main
 			{
 				StartWatchProcess();
 			}
+			//SendWatch("Scada.Main starts!");
+			
 
 
             // StandardDevice sd = new StandardDevice("Device1");

@@ -18,10 +18,16 @@ namespace Scada
         /// <summary>
         /// 
         /// </summary>
-        public override void Run()
+        public override void Start(string address)
         {
             // Start this device and return data...
             return;
         }
+
+		public override void Stop()
+		{
+			// Start this device and return data...
+			return;
+		}
     }
 }

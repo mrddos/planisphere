@@ -128,6 +128,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Scada.Common\Scada.Common.csproj">
+      <Project>{d18cb829-8870-41e7-b4ec-d9033aced3c5}</Project>
+      <Name>Scada.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Scada.Declare\Scada.Declare.csproj">
       <Project>{CC1F00BD-567A-4EFE-8F6E-C10E7183409D}</Project>
       <Name>Scada.Declare</Name>
