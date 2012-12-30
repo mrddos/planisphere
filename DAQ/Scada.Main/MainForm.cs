@@ -69,7 +69,7 @@ namespace Scada.Main
 
 		void timerKeepAliveTick(object sender, EventArgs e)
 		{
-			Program.SendWatch();
+			Program.SendKeepAlive();
 		}
 
 		private void InitSysNotifyIcon()

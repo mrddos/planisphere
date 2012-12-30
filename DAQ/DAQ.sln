@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Watch", "Scada.Watch\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Common", "Scada.Common\Scada.Common.csproj", "{D18CB829-8870-41E7-B4EC-D9033ACED3C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.XCase", "Scada.XCase\Scada.XCase.csproj", "{A31FB5E7-12E9-47DD-95E3-CC361ED3887E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{D18CB829-8870-41E7-B4EC-D9033ACED3C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D18CB829-8870-41E7-B4EC-D9033ACED3C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D18CB829-8870-41E7-B4EC-D9033ACED3C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A31FB5E7-12E9-47DD-95E3-CC361ED3887E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A31FB5E7-12E9-47DD-95E3-CC361ED3887E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A31FB5E7-12E9-47DD-95E3-CC361ED3887E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A31FB5E7-12E9-47DD-95E3-CC361ED3887E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
