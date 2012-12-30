@@ -101,7 +101,7 @@ namespace Scada.Main
 			return false;
 		}
 
-		public static bool SendWatch()
+		public static bool SendKeepAlive()
 		{
 			bool ret = Program.PostMessage(Program.WatchFormHandle, Defines.WM_KEEPALIVE, Defines.KeepAlive, 232);
 			return true;
@@ -132,8 +132,9 @@ namespace Scada.Main
 			{
 				StartWatchProcess();
 			}
-			//SendWatch("Scada.Main starts!");
+
 			
+
 
 
             // StandardDevice sd = new StandardDevice("Device1");
