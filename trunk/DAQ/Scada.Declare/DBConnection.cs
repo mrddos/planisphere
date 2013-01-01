@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using MySql.Data.Types;
 
-namespace Scada.Main
+namespace Scada.Declare
 {
 	class DBConnection
 	{
@@ -57,7 +57,15 @@ namespace Scada.Main
 			}
         }
 
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="doseRate"></param>
+		/// <param name="highVoltage"></param>
+		/// <param name="battery"></param>
+		/// <param name="temperature"></param>
+		/// <param name="alarm"></param>
+		/// <returns></returns>
 		public bool AddHIPCRecordData(string doseRate, string highVoltage, string battery, string temperature, short alarm)
 		{
 			try
@@ -81,6 +89,39 @@ namespace Scada.Main
 				}
 			}
 			catch(Exception e)
+			{
+				Debug.WriteLine(e.Message);
+				return false;
+			}
+			return true;
+		}
+
+
+		public bool AddWeatherRecordData(string dd)
+		{
+			try
+			{
+				/*
+				if (this.cmd != null)
+				{
+					cmd.CommandText = "insert into HIPCrec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, @4, @5, @6)";
+
+					cmd.Parameters.AddWithValue("@1", DateTime.Now);
+					cmd.Parameters.AddWithValue("@2", doseRate);
+					cmd.Parameters.AddWithValue("@3", highVoltage);
+					cmd.Parameters.AddWithValue("@4", battery);
+					cmd.Parameters.AddWithValue("@5", temperature);
+					cmd.Parameters.AddWithValue("@6", alarm);
+
+					cmd.ExecuteNonQuery();
+				}
+				else
+				{
+					return false;
+				}
+				*/ 
+			}
+			catch (Exception e)
 			{
 				Debug.WriteLine(e.Message);
 				return false;
