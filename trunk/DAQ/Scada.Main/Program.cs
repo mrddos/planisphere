@@ -147,8 +147,8 @@ namespace Scada.Main
             */
 
 
-            // DBConnection c = new DBConnection();
-            // c.Connect();
+            DBConnection c = new DBConnection();
+            c.Connect();
             
             deviceManager.Initialize();
             deviceManager.SelectDevice("Scada.RadiationDetector", "0.9", true);

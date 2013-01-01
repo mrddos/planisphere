@@ -11,9 +11,9 @@ namespace Scada.XCase
 		static void Main(string[] args)
 		{
 			DataParser dp = new DataParser();
-			dp.Pattern = "{Single} {Single}  {Single} {Single}";
+			dp.Pattern = "{Single} {Single}  {Single} {Single} {String}";
 
-			List<string> a =  dp.Search("11111.2 00.000 0.12121");
+			string[] a =  dp.Search("11111.2 00.000 0.12121 3.4 5.6");
 		}
 	}
 }
