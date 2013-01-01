@@ -14,26 +14,26 @@ namespace Scada.Common
 	/// </summary>
 	public class Scanner
 	{
-		protected static Dictionary<string, string> typePatterns;
+		protected static Dictionary<string, string> patterns;
 
 		static Scanner()
 		{
-			typePatterns = new Dictionary<string, string>();
+			Scanner.patterns = new Dictionary<string, string>();
 
-			typePatterns.Add("String", @"[\w\d\S]+");
-			typePatterns.Add("Int16", @"-[0-9]+|[0-9]+");
-			typePatterns.Add("UInt16", @"[0-9]+");
-			typePatterns.Add("Int32", @"-[0-9]+|[0-9]+");
-			typePatterns.Add("UInt32", @"[0-9]+");
-			typePatterns.Add("Int64", @"-[0-9]+|[0-9]+");
-			typePatterns.Add("UInt64", @"[0-9]+");
-			typePatterns.Add("Single", @"[-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+");
-			typePatterns.Add("Double", @"[-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+");
-			typePatterns.Add("Boolean", @"true|false");
-			typePatterns.Add("Byte", @"[0-9]{1,3}");
-			typePatterns.Add("SByte", @"-[0-9]{1,3}|[0-9]{1,3}");
-			typePatterns.Add("Char", @"[\w\S]{1}");
-			typePatterns.Add("Decimal", @"[-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+");
+			patterns.Add("String", @"[\w\d\S]+");
+			patterns.Add("Int16", @"-[0-9]+|[0-9]+");
+			patterns.Add("UInt16", @"[0-9]+");
+			patterns.Add("Int32", @"-[0-9]+|[0-9]+");
+			patterns.Add("UInt32", @"[0-9]+");
+			patterns.Add("Int64", @"-[0-9]+|[0-9]+");
+			patterns.Add("UInt64", @"[0-9]+");
+			patterns.Add("Single", @"[-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+");
+			patterns.Add("Double", @"[-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+");
+			patterns.Add("Boolean", @"true|false");
+			patterns.Add("Byte", @"[0-9]{1,3}");
+			patterns.Add("SByte", @"-[0-9]{1,3}|[0-9]{1,3}");
+			patterns.Add("Char", @"[\w\S]{1}");
+			patterns.Add("Decimal", @"[-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+");
 		}
 
 		public Scanner()
@@ -52,7 +52,7 @@ namespace Scada.Common
 		/// <param name="text"></param>
 		/// <param name="pattern">A string that may contain simple field specifications of the form {Int16}, {String}, etc</param>
 		/// <returns>object[] that contains values for each field</returns>
-		public object[] Scan(string text, string pattern)
+		public object[] ScanObject(string text, string pattern)
 		{
 			// string pattern;
 			object[] targets = null;
@@ -90,20 +90,20 @@ namespace Scada.Common
 				}
 
 				//Replace all of the types with the pattern that matches that type
-				masterPattern = Regex.Replace(masterPattern, @"\{String\}", (String)typePatterns["String"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Int16\}", (String)typePatterns["Int16"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{UInt16\}", (String)typePatterns["UInt16"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Int32\}", (String)typePatterns["Int32"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{UInt32\}", (String)typePatterns["UInt32"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Int64\}", (String)typePatterns["Int64"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{UInt64\}", (String)typePatterns["UInt64"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Single\}", (String)typePatterns["Single"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Double\}", (String)typePatterns["Double"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Boolean\}", (String)typePatterns["Boolean"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Byte\}", (String)typePatterns["Byte"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{SByte\}", (String)typePatterns["SByte"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Char\}", (String)typePatterns["Char"]);
-				masterPattern = Regex.Replace(masterPattern, @"\{Decimal\}", (String)typePatterns["Decimal"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{String\}", (String)patterns["String"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Int16\}", (String)patterns["Int16"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{UInt16\}", (String)patterns["UInt16"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Int32\}", (String)patterns["Int32"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{UInt32\}", (String)patterns["UInt32"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Int64\}", (String)patterns["Int64"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{UInt64\}", (String)patterns["UInt64"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Single\}", (String)patterns["Single"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Double\}", (String)patterns["Double"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Boolean\}", (String)patterns["Boolean"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Byte\}", (String)patterns["Byte"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{SByte\}", (String)patterns["SByte"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Char\}", (String)patterns["Char"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Decimal\}", (String)patterns["Decimal"]);
 
 				masterPattern = Regex.Replace(masterPattern, @"\s+", "\\s+");	//replace the white space with the pattern for white space
 
@@ -129,11 +129,103 @@ namespace Scada.Common
 			}
 			catch (Exception ex)
 			{
-				throw new ScanExeption("Scan exception", ex);
+				throw new ScannerExeption("Scan exception", ex);
 			}
 
 			return targets;
 		}//Scan
+
+
+		/// <summary>
+		/// Scan memics scanf.
+		/// A master regular expression pattern is created that will group each "word" in the text and using regex grouping
+		/// extract the values for the field specifications.
+		/// Example text: "Hello true 6.5"  fieldSpecification: "{String} {Boolean} {Double}"
+		/// The fieldSpecification will result in the generation of a master Pattern:
+		/// ([\w\d\S]+)\s+(true|false)\s+([-]|[.]|[-.]|[0-9][0-9]*[.]*[0-9]+)
+		/// This masterPattern is ran against the text string and the groups are extracted.
+		/// </summary>
+		/// <param name="text"></param>
+		/// <param name="pattern">A string that may contain simple field specifications of the form {Int16}, {String}, etc</param>
+		/// <returns>object[] that contains values for each field</returns>
+		public string[] Scan(string text, string pattern)
+		{
+			// string pattern;
+			string[] targets = null;
+			try
+			{
+				ArrayList targetMatchGroups = new ArrayList();
+				ArrayList targetTypes = new ArrayList();
+
+				//masterPattern is going to hold a "big" regex pattern that will be ran against the original text
+				string masterPattern = pattern.Trim();
+				string matchingPattern = @"(\S+)";
+				masterPattern = Regex.Replace(masterPattern, matchingPattern, "($1)");		//insert grouping parens
+
+				//store the group location of the format tags so that we can select the correct group values later.
+				matchingPattern = @"(\([\w\d\S]+\))";
+				Regex reggie = new Regex(matchingPattern);
+				MatchCollection matches = reggie.Matches(masterPattern);
+				for (int i = 0; i < matches.Count; i++)
+				{
+					Match m = matches[i];
+					string sVal = m.Groups[1].Captures[0].Value;
+
+					//is this value a {n} value. We will determine this by checking for {
+					if (sVal.IndexOf('{') >= 0)
+					{
+						targetMatchGroups.Add(i);
+						string p = @"\(\{(\w*)\}\)";	//pull out the type
+						sVal = Regex.Replace(sVal, p, "$1");
+						targetTypes.Add(sVal);
+					}
+				}
+
+				//Replace all of the types with the pattern that matches that type
+				masterPattern = Regex.Replace(masterPattern, @"\{String\}", (String)patterns["String"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Int16\}", (String)patterns["Int16"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{UInt16\}", (String)patterns["UInt16"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Int32\}", (String)patterns["Int32"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{UInt32\}", (String)patterns["UInt32"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Int64\}", (String)patterns["Int64"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{UInt64\}", (String)patterns["UInt64"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Single\}", (String)patterns["Single"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Double\}", (String)patterns["Double"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Boolean\}", (String)patterns["Boolean"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Byte\}", (String)patterns["Byte"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{SByte\}", (String)patterns["SByte"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Char\}", (String)patterns["Char"]);
+				masterPattern = Regex.Replace(masterPattern, @"\{Decimal\}", (String)patterns["Decimal"]);
+
+				masterPattern = Regex.Replace(masterPattern, @"\s+", "\\s+");	//replace the white space with the pattern for white space
+
+				//run our generated pattern against the original text.
+				reggie = new Regex(masterPattern);
+				matches = reggie.Matches(text);
+				//PrintMatches(matches);
+
+				//allocate the targets
+				targets = new string[targetMatchGroups.Count];
+				for (int x = 0; x < targetMatchGroups.Count; x++)
+				{
+					int i = (int)targetMatchGroups[x];
+					string tName = (string)targetTypes[x];
+					if (i < matches[0].Groups.Count)
+					{
+						//add 1 to i because i is a result of serveral matches each resulting in one group.
+						//this query is one match resulting in serveral groups.
+						string matched = matches[0].Groups[i + 1].Captures[0].Value;
+						targets[x] = matched;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				throw new ScannerExeption("Scan exception", ex);
+			}
+
+			return targets;
+		}
 
 		/// Scan memics scanf.
 		/// A master regular expression pattern is created that will group each "word" in the text and using regex grouping
@@ -214,7 +306,7 @@ namespace Scada.Common
 			}
 			catch (Exception ex)
 			{
-				throw new ScanExeption("Scan exception", ex);
+				throw new ScannerExeption("Scan exception", ex);
 			}
 		}	//Scan
 
@@ -299,59 +391,59 @@ namespace Scada.Common
 			switch (typeName)
 			{
 				case "Int16":
-					innerPattern = (String)typePatterns["Int16"];
+					innerPattern = (String)patterns["Int16"];
 					break;
 
 				case "UInt16":
-					innerPattern = (String)typePatterns["UInt16"];
+					innerPattern = (String)patterns["UInt16"];
 					break;
 
 				case "Int32":
-					innerPattern = (String)typePatterns["Int32"];
+					innerPattern = (String)patterns["Int32"];
 					break;
 
 				case "UInt32":
-					innerPattern = (String)typePatterns["UInt32"];
+					innerPattern = (String)patterns["UInt32"];
 					break;
 
 				case "Int64":
-					innerPattern = (String)typePatterns["Int64"];
+					innerPattern = (String)patterns["Int64"];
 					break;
 
 				case "UInt64":
-					innerPattern = (String)typePatterns["UInt64"];
+					innerPattern = (String)patterns["UInt64"];
 					break;
 
 				case "Single":
-					innerPattern = (String)typePatterns["Single"];
+					innerPattern = (String)patterns["Single"];
 					break;
 
 				case "Double":
-					innerPattern = (String)typePatterns["Double"];
+					innerPattern = (String)patterns["Double"];
 					break;
 
 				case "Boolean":
-					innerPattern = (String)typePatterns["Boolean"];
+					innerPattern = (String)patterns["Boolean"];
 					break;
 
 				case "Byte":
-					innerPattern = (String)typePatterns["Byte"];
+					innerPattern = (String)patterns["Byte"];
 					break;
 
 				case "SByte":
-					innerPattern = (String)typePatterns["SByte"];
+					innerPattern = (String)patterns["SByte"];
 					break;
 
 				case "Char":
-					innerPattern = (String)typePatterns["Char"];
+					innerPattern = (String)patterns["Char"];
 					break;
 
 				case "Decimal":
-					innerPattern = (String)typePatterns["Decimal"];
+					innerPattern = (String)patterns["Decimal"];
 					break;
 
 				case "String":
-					innerPattern = (String)typePatterns["String"];
+					innerPattern = (String)patterns["String"];
 					break;
 			}
 			return innerPattern;
@@ -389,24 +481,24 @@ namespace Scada.Common
 	/// <summary>
 	/// Exceptions that are thrown by this namespace and the Scanner Class
 	/// </summary>
-	class ScanExeption : Exception
+	class ScannerExeption : Exception
 	{
-		public ScanExeption()
+		public ScannerExeption()
 			: base()
 		{
 		}
 
-		public ScanExeption(string message)
+		public ScannerExeption(string message)
 			: base(message)
 		{
 		}
 
-		public ScanExeption(string message, Exception inner)
+		public ScannerExeption(string message, Exception inner)
 			: base(message, inner)
 		{
 		}
 
-		public ScanExeption(SerializationInfo info, StreamingContext context)
+		public ScannerExeption(SerializationInfo info, StreamingContext context)
 			: base(info, context)
 		{
 		}

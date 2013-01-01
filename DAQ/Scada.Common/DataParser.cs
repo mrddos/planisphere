@@ -12,17 +12,17 @@ namespace Scada.Declare
 
 		public string Pattern
 		{
-			get { return this.pattern; }
+			private get { return this.pattern; }
 			set { this.pattern = value; }
 		}
 
-		public List<string> Search(string data)
+		public string[] Search(string data)
 		{
 			Scanner scanner = new Scanner();
 
-			object[] r = scanner.Scan("0.00 1.2 3.4  5.0", this.Pattern);
-
-			return null;
+			string[] ret = scanner.Scan(data, this.Pattern);
+		
+			return ret;
 		}
 
 	}
