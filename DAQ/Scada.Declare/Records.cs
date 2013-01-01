@@ -49,8 +49,12 @@ namespace Scada.Declare
 	/// </summary>
 	public class MySQLRecord : IRecord
 	{
+		private DBConnection conn = null;
+
 		public MySQLRecord()
 		{
+			// TODO: Initilaize the DB connection
+			this.conn = new DBConnection();
 		}
 
 		public bool DoRecord(DeviceData data)

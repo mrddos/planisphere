@@ -54,7 +54,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data, Version=6.6.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -75,7 +74,6 @@
     <Compile Include="Controls\DeviceListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="DBConnection.cs" />
     <Compile Include="DeviceDebugger.cs" />
     <Compile Include="DeviceLoader.cs" />
     <Compile Include="Controls\ComboBoxEx.cs">
