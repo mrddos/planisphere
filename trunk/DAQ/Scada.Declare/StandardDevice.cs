@@ -27,10 +27,9 @@ namespace Scada.Declare
 
         private Parity parity = Parity.None;
 
-        private string lineBreak = "\n"; 
-
-        private StringBuilder contentBuffer = new StringBuilder();
-
+       
+		// 
+		private LineParser lineParser = null;
 
 
 		public StandardDevice(DeviceEntry entry)
@@ -81,6 +80,8 @@ namespace Scada.Declare
 					this.parity = Parity.Space;
 				}
             }
+
+			this.lineParser = new LineParser();
 
 		}
 
@@ -145,18 +146,16 @@ namespace Scada.Declare
 			
 				int r = this.serialPort.Read(buffer, 0, n);
             
-				string line = Encoding.ASCII.GetString(buffer, 0, r);
-				contentBuffer.Append(line);
+				string data = Encoding.ASCII.GetString(buffer, 0, r);
 
-				string content = contentBuffer.ToString();
-				int p = content.IndexOf(lineBreak);
-				string data = content.Substring(0, p);
 
 				if (this.DataReceived != null)
 				{
-					//this.DataReceived(sender, this.Name, data);
+					string line = this.lineParser.ContinueWith(data);
+					DeviceData dd = new DeviceData(this, line);
+					
 
-                    this.SynchronizationContext.Post(this.DataReceived, null);
+                    this.SynchronizationContext.Post(this.DataReceived, dd);
 				}
 			}
 			catch (InvalidOperationException e)

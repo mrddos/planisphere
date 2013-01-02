@@ -10,6 +10,14 @@ namespace Scada.XCase
 	{
 		static void Main(string[] args)
 		{
+
+			StringBuilder sb = new StringBuilder("Hello\rWorld");
+			string s = sb.ToString();
+			int p = s.IndexOf('\r');
+			sb.Remove(0, p);
+
+			string ass = sb.ToString();
+
 			DataParser dp = new DataParser();
 			dp.Pattern = "{Single} {Single}  {Single} {Single} {String}";
 

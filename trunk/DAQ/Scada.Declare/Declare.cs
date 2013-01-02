@@ -18,7 +18,26 @@ namespace Scada.Declare
 
 	public struct DeviceData
 	{
+		private string line;
 
+		private Device device;
+
+
+		public DeviceData(Device device, string line)
+		{
+			this.device = device;
+			this.line = line;
+		}
+
+		public string Line
+		{
+			get { return this.line; }
+		}
+
+		public Device Device
+		{
+			get { return this.device; }
+		}
 	}
 
     /// <summary>
