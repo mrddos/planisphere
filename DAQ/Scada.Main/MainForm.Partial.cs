@@ -14,15 +14,18 @@ namespace Scada.Main
 		private bool OnDataArrival(DeviceData data)
 		{
 			string line = data.Line;
-
+			Device device = data.Device;
 			RecordManager.DoRecord();
 
-
-			Actions.Delay(1000, () =>
+			if (line.IndexOf("SFTW-131-001ER Ver") >= 0)
 			{
-				// TODO: When match some action entry, then do action
+				Actions.Delay(1000, () =>
+				{
+					device.Send("#S 0\r");
 
-			});
+				});
+			}
+
 
 			// TODO: Into Database;
 			return true;

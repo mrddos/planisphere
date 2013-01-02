@@ -29,5 +29,10 @@ namespace Scada
 			// Start this device and return data...
 			return;
 		}
+
+		public override void Send(string data)
+		{
+			throw new NotImplementedException();
+		}
     }
 }

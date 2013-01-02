@@ -22,11 +22,16 @@ namespace Scada.Declare
 
 		private Device device;
 
+		private int delay;
+
+		private Action action;
 
 		public DeviceData(Device device, string line)
 		{
 			this.device = device;
 			this.line = line;
+			this.delay = 0;
+			this.action = null;
 		}
 
 		public string Line
@@ -37,6 +42,18 @@ namespace Scada.Declare
 		public Device Device
 		{
 			get { return this.device; }
+		}
+
+		public int Delay
+		{
+			get { return this.delay; }
+			set { this.delay = value; }
+		}
+
+		public Action Action
+		{
+			get { return this.action; }
+			set { this.action = value; }
 		}
 	}
 
@@ -78,6 +95,8 @@ namespace Scada.Declare
             get { return this.running; }
         }
 
+		
+
         public SendOrPostCallback DataReceived
         {
             get { return this.dataReceived; }
@@ -93,6 +112,8 @@ namespace Scada.Declare
         public abstract void Start(string address);
 
 		public abstract void Stop();
+
+		public abstract void Send(string data);
 
 	}
 
@@ -118,6 +139,16 @@ namespace Scada.Declare
         public const string ReadTimeout = "ReadTimeout";
 
         public const string Parity = "Parity";
+
+		public const string LineBreak = "LineBreak";
+
+		public const string Virtual = "Virtual";
+
+		public const string ActionCondition = "ActionCondition";
+
+		public const string ActionSend = "ActionSend";
+
+		public const string ActionDelay = "ActionDelay";
 
 
         private Dictionary<string, IValue> dict = new Dictionary<string, IValue>();
