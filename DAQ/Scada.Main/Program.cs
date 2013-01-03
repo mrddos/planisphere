@@ -151,7 +151,7 @@ namespace Scada.Main
             // c.Connect();
             
             deviceManager.Initialize();
-            deviceManager.SelectDevice("Scada.RadiationDetector", "0.9", true);
+            deviceManager.SelectDevice("Scada.HIPC", "0.9", true);
             // deviceManager.Run();
 
             //Thread.Sleep(1000);
