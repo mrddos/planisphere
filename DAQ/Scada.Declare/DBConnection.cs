@@ -39,8 +39,6 @@ namespace Scada.Declare
 
         public void Connect()
         {
-            
-
 			try
 			{
 				conn.Open();
@@ -48,14 +46,52 @@ namespace Scada.Declare
 
 				AddHIPCRecordData("243.5", "2.3", "5.88", "24.0000", 2);
 				AddHIPCRecordData("243.5", "2.3", "5.88", "24.0000", 2);
-
-
 			}
 			catch (Exception e)
 			{
 				Debug.WriteLine(e.Message);
 			}
         }
+
+
+		public bool AddRecordData(params object[] items)
+		{
+			try
+			{
+				if (this.cmd != null)
+				{
+					//				  "insert into HIPCrec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, @4, @5, @6, )"
+					cmd.CommandText = "insert into HIPCrec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, @4, @5, @6)";
+
+					for (int i = 0; i < items.Length; ++i)
+					{
+						string at = string.Format("@{0}", i + 1);
+						cmd.Parameters.AddWithValue(at, items[i]);
+					}
+					/*
+					cmd.Parameters.AddWithValue("@1", DateTime.Now);
+					cmd.Parameters.AddWithValue("@2", doseRate);
+					cmd.Parameters.AddWithValue("@3", highVoltage);
+					cmd.Parameters.AddWithValue("@4", battery);
+					cmd.Parameters.AddWithValue("@5", temperature);
+					cmd.Parameters.AddWithValue("@6", alarm);
+
+					cmd.ExecuteNonQuery();
+					*/
+				}
+				else
+				{
+					return false;
+				}
+			}
+			catch (Exception e)
+			{
+				Debug.WriteLine(e.Message);
+				return false;
+			}
+			return true;
+		}
+
 
 		/// <summary>
 		/// 

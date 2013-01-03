@@ -6,6 +6,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using Scada.Common;
 
 namespace Scada.Declare
 {
@@ -34,7 +35,16 @@ namespace Scada.Declare
 		private string actionSend = string.Empty;
 
 		private int actionDelay = 0;
-       
+
+		private string linePattern = string.Empty;
+
+		private string insertIntoCommand = string.Empty;
+
+		//private string fieldsConfig = string.Empty;
+
+		private FieldConfig[] fieldsConfig = null;
+
+		private DataParser dataParser = null;
 		// 
 		private LineParser lineParser = null;
 
@@ -73,34 +83,13 @@ namespace Scada.Declare
 			this.stopBits = (stopBits != null) ? (StopBits)(int)stopBits : StopBits.One;
 
 			StringValue parity = (StringValue)entry[DeviceEntry.Parity];
-			if (parity != null)
-			{
-				if (parity == "None")
-				{
-					this.parity = Parity.None;
-				}
-				else if (parity == "Odd")
-				{
-					this.parity = Parity.Odd;
-				}
-				else if (parity == "Even")
-				{
-					this.parity = Parity.Even;
-				}
-				else if (parity == "Mark")
-				{
-					this.parity = Parity.Mark;
-				}
-				else if (parity == "Space")
-				{
-					this.parity = Parity.Space;
-				}
-			}
+			this.parity = SerialPorts.ParseParity(parity);
 
 			// Line-Data Parser and LineBreak confing. 
 			this.lineParser = new LineParser();
 			this.lineParser.LineBreak = (StringValue)entry[DeviceEntry.LineBreak];
 
+			this.dataParser = new DataParser();
 			// Virtual On
 			string isVirtual = (StringValue)entry[DeviceEntry.Virtual];
 			if (isVirtual != null && isVirtual.ToLower() == "true")
@@ -111,6 +100,55 @@ namespace Scada.Declare
 			this.actionCondition = (StringValue)entry[DeviceEntry.ActionCondition];
 			this.actionSend = (StringValue)entry[DeviceEntry.ActionSend];
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
+
+			this.linePattern = (StringValue)entry[DeviceEntry.Pattern];
+			this.dataParser.Pattern = this.linePattern;
+
+			string tableName = (StringValue)entry[DeviceEntry.TableName];
+			string tableFields = (StringValue)entry[DeviceEntry.TableFields];
+
+			string[] fields = tableFields.Split(',');
+			string atList = string.Empty;
+			for (int i = 0; i < fields.Length; ++i)
+			{
+				string at = string.Format("@{0}, ", i + 1);
+				atList += at;
+			}
+			atList = atList.TrimEnd(',', ' ');
+
+			string cmd = string.Format("insert into {0}({1}) values({2})", tableName, tableFields, atList);
+			this.insertIntoCommand = cmd;
+
+			string fieldsConfigStr = (StringValue)entry[DeviceEntry.FieldsConfig];
+			string[] fieldsConfig = fieldsConfigStr.Split(',');
+			List<FieldConfig> fieldConfigList = new List<FieldConfig>();
+			for (int i = 0; i < fieldsConfig.Length; ++i)
+			{
+				string config = fieldsConfig[i];
+				config = config.Trim();
+				if (config == "Now")
+				{
+					FieldConfig fc = new FieldConfig();
+					fc.type = FieldType.TimeNow;
+					fieldConfigList.Add(fc);
+				}
+				else if (config.StartsWith("#"))
+				{
+					FieldConfig fc = new FieldConfig();
+					fc.type = FieldType.String;
+					fc.index = int.Parse(config.Substring(1));
+					fieldConfigList.Add(fc);
+				}
+				else if (config == "int")
+				{
+					FieldConfig fc = new FieldConfig();
+					fc.type = FieldType.Int;
+					fieldConfigList.Add(fc);
+				}
+
+			}
+			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
+			
 		}
 
 		public bool IsVirtual
@@ -140,7 +178,7 @@ namespace Scada.Declare
                 this.serialPort.ReadTimeout = 10000;// this.readTimeout;
 
                 this.serialPort.RtsEnable = true;
-                this.serialPort.NewLine = "/r/n";
+                this.serialPort.NewLine = "/r/n";	//?
                 this.serialPort.DataReceived += this.SerialPortDataReceived;
 				if (!this.IsVirtual)
 				{
@@ -148,6 +186,7 @@ namespace Scada.Declare
 				}
 				else
 				{
+					// To start the virtual-device.
 					this.Send(this.actionSend);
 				}
 
@@ -197,7 +236,8 @@ namespace Scada.Declare
 
 		private DeviceData GetDeviceData(string line)
 		{
-			DeviceData deviceData = new DeviceData(this, line);
+			string[] data = this.dataParser.Search(line);
+			DeviceData deviceData = new DeviceData(this, data);
 			if (IsActionCondition(line))
 			{
 				deviceData.Delay = this.actionDelay;
@@ -206,6 +246,8 @@ namespace Scada.Declare
 					this.Send(this.actionSend);
 				};
 			}
+			deviceData.InsertIntoCommand = this.insertIntoCommand;
+			deviceData.FieldsConfig = this.fieldsConfig;
 			return deviceData;
 		}
 
