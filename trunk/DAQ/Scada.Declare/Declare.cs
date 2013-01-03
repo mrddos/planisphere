@@ -23,11 +23,17 @@ namespace Scada.Declare
 		TimeNow,
 	}
 
-	public struct FieldConfig
+	public class FieldConfig
 	{
 		public FieldType type;
 
 		public int index;
+
+		public FieldConfig(FieldType type)
+		{
+			this.type = type;
+			this.index = -1;
+		}
 	}
 
 
@@ -43,16 +49,16 @@ namespace Scada.Declare
 
 		private string insertIntoCommand;
 
-		private FieldConfig[] fieldsConfig;
+		// private FieldConfig[] fieldsConfig;
 
-		public DeviceData(Device device, string[] data)
+		public DeviceData(Device device, object[] data)
 		{
 			this.device = device;
 			this.data = data;
 			this.delay = 0;
 			this.action = null;
 			this.insertIntoCommand = string.Empty;
-			this.fieldsConfig = null;
+			// this.fieldsConfig = null;
 		}
 
 		public object[] Data
@@ -82,12 +88,13 @@ namespace Scada.Declare
 			get { return this.insertIntoCommand; }
 			set { this.insertIntoCommand = value; }
 		}
-
+		/*
 		public FieldConfig[] FieldsConfig
 		{
 			get { return this.fieldsConfig; }
 			set { this.fieldsConfig = value; }
 		}
+		*/
 	}
 
     /// <summary>

@@ -128,20 +128,20 @@ namespace Scada.Declare
 				config = config.Trim();
 				if (config == "Now")
 				{
-					FieldConfig fc = new FieldConfig();
+					FieldConfig fc = new FieldConfig(FieldType.TimeNow);
 					fc.type = FieldType.TimeNow;
 					fieldConfigList.Add(fc);
 				}
 				else if (config.StartsWith("#"))
 				{
-					FieldConfig fc = new FieldConfig();
+					FieldConfig fc = new FieldConfig(FieldType.String);
 					fc.type = FieldType.String;
 					fc.index = int.Parse(config.Substring(1));
 					fieldConfigList.Add(fc);
 				}
 				else if (config == "int")
 				{
-					FieldConfig fc = new FieldConfig();
+					FieldConfig fc = new FieldConfig(FieldType.Int);
 					fc.type = FieldType.Int;
 					fieldConfigList.Add(fc);
 				}
@@ -234,10 +234,29 @@ namespace Scada.Declare
 			}
 		}
 
+		private object[] GetFieldsData(string[] data, FieldConfig[] fieldsConfig)
+		{
+			int count = fieldsConfig.Length;
+			object[] ret = new object[count];
+			for (int i = 0; i < count; ++i)
+			{
+				if (fieldsConfig[i].type == FieldType.TimeNow)
+				{
+					ret[i] = DateTime.Now;
+				}
+				else if (fieldsConfig[i].index >= 0)
+				{
+					ret[i] = data[fieldsConfig[i].index];
+				}
+			}
+			return ret;
+		}
+
 		private DeviceData GetDeviceData(string line)
 		{
 			string[] data = this.dataParser.Search(line);
-			DeviceData deviceData = new DeviceData(this, data);
+			object[] fields = GetFieldsData(data, this.fieldsConfig);
+			DeviceData deviceData = new DeviceData(this, fields);
 			if (IsActionCondition(line))
 			{
 				deviceData.Delay = this.actionDelay;
@@ -247,7 +266,7 @@ namespace Scada.Declare
 				};
 			}
 			deviceData.InsertIntoCommand = this.insertIntoCommand;
-			deviceData.FieldsConfig = this.fieldsConfig;
+			//deviceData.FieldsConfig = this.fieldsConfig;
 			return deviceData;
 		}
 
