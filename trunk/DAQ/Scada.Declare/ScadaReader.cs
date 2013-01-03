@@ -228,6 +228,10 @@ namespace Scada.Declare
                         }
                         else
                         {
+							if (assignAfter.StartsWith("\"") && assignAfter.EndsWith("\""))
+							{
+								assignAfter = assignAfter.Substring(1, assignAfter.Length - 2);
+							}
                             value = new StringValue(assignAfter);
                             secType = SectionType.KeyWithStringValue;
                             return ReadLineResult.OK;

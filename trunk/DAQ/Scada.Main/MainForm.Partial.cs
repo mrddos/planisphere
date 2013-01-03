@@ -11,20 +11,12 @@ namespace Scada.Main
 		/// </summary>
 		/// <param name="data"></param>
 		/// <returns></returns>
-		private bool OnDataArrival(DeviceData data)
+		private bool OnDataArrival(DeviceData deviceData)
 		{
-			string line = data.Line;
-			Device device = data.Device;
+			object[] data = deviceData.Data;
+			Device device = deviceData.Device;
 			RecordManager.DoRecord();
 
-			if (line.IndexOf("SFTW-131-001ER Ver") >= 0)
-			{
-				Actions.Delay(1000, () =>
-				{
-					device.Send("#S 0\r");
-
-				});
-			}
 
 
 			// TODO: Into Database;

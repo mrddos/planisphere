@@ -15,10 +15,25 @@ namespace Scada.Declare
 	/// <returns></returns>
     public delegate bool OnDataReceived(object sender, string deviceName, string data);
 
+	public enum FieldType
+	{
+		String,
+		Int,
+		Time,
+		TimeNow,
+	}
+
+	public struct FieldConfig
+	{
+		public FieldType type;
+
+		public int index;
+	}
+
 
 	public struct DeviceData
 	{
-		private string line;
+		private object[] data;
 
 		private Device device;
 
@@ -26,17 +41,23 @@ namespace Scada.Declare
 
 		private Action action;
 
-		public DeviceData(Device device, string line)
+		private string insertIntoCommand;
+
+		private FieldConfig[] fieldsConfig;
+
+		public DeviceData(Device device, string[] data)
 		{
 			this.device = device;
-			this.line = line;
+			this.data = data;
 			this.delay = 0;
 			this.action = null;
+			this.insertIntoCommand = string.Empty;
+			this.fieldsConfig = null;
 		}
 
-		public string Line
+		public object[] Data
 		{
-			get { return this.line; }
+			get { return this.data; }
 		}
 
 		public Device Device
@@ -54,6 +75,18 @@ namespace Scada.Declare
 		{
 			get { return this.action; }
 			set { this.action = value; }
+		}
+
+		public string InsertIntoCommand
+		{
+			get { return this.insertIntoCommand; }
+			set { this.insertIntoCommand = value; }
+		}
+
+		public FieldConfig[] FieldsConfig
+		{
+			get { return this.fieldsConfig; }
+			set { this.fieldsConfig = value; }
 		}
 	}
 
@@ -149,6 +182,14 @@ namespace Scada.Declare
 		public const string ActionSend = "ActionSend";
 
 		public const string ActionDelay = "ActionDelay";
+
+		public const string Pattern = "Pattern";
+
+		public const string TableName = "TableName";
+
+		public const string TableFields = "TableFields";
+
+		public const string FieldsConfig = "FieldsConfig";
 
 
         private Dictionary<string, IValue> dict = new Dictionary<string, IValue>();
