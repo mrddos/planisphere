@@ -1,4 +1,5 @@
-﻿using Scada.Declare;
+﻿using MySql.Data.MySqlClient;
+using Scada.Declare;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,13 +56,13 @@ namespace Scada.Declare
 		{
 			// TODO: Initilaize the DB connection
 			this.conn = new DBConnection();
+			
 		}
 
 		public bool DoRecord(DeviceData data)
 		{
-			/// throw new NotImplementedException();
-			/// 
-			return true;
+			bool ret = this.conn.AddRecordData(data.InsertIntoCommand, data.Data);
+			return ret;
 		}
 	}
 }

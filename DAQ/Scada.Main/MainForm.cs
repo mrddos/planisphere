@@ -13,6 +13,7 @@ using Scada.Main.Properties;
 using System.Threading;
 using System.Diagnostics;
 using Scada.Common;
+using Scada.Declare;
 
 namespace Scada.Main
 {
@@ -37,6 +38,8 @@ namespace Scada.Main
 			this.timer.Interval = Defines.KeepAliveInterval;
 			this.timer.Tick += timerKeepAliveTick;
 			this.timer.Start();
+
+			RecordManager.Initialize();
 
 
 
