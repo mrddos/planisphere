@@ -22,9 +22,14 @@ namespace Scada.Declare
 			RecordManager.frameworkRecord = new FileRecord("");
 		}
 
-		public static void DoRecord()
+		public static void DoRecord(DeviceData deviceData)
 		{
+			// TODO: Record it in the files.
 
+			if (!RecordManager.mysql.DoRecord(deviceData))
+			{
+				// TODO: Do log this failure.
+			}
 		}
 
 	}

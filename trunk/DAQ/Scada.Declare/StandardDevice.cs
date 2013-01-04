@@ -48,6 +48,8 @@ namespace Scada.Declare
 		// 
 		private LineParser lineParser = null;
 
+		private Timer timer = null;
+
 
 		public StandardDevice(DeviceEntry entry)
 		{
@@ -311,7 +313,7 @@ namespace Scada.Declare
 				{
 					if (data == this.actionSend)
 					{
-						Timer timer = new Timer(new TimerCallback((object state) =>
+						this.timer = new Timer(new TimerCallback((object state) =>
 						{
 							string line = @".0000   .0000   .0000   .0000   .5564   383.0   6.136   28.40   .0000 ";
 							DeviceData dd = this.GetDeviceData(line);

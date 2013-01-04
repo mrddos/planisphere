@@ -13,13 +13,11 @@ namespace Scada.Main
 		/// <returns></returns>
 		private bool OnDataArrival(DeviceData deviceData)
 		{
-			object[] data = deviceData.Data;
-			Device device = deviceData.Device;
-			RecordManager.DoRecord();
+			// object[] data = deviceData.Data;
+			// Device device = deviceData.Device;
 
+			RecordManager.DoRecord(deviceData);
 
-
-			// TODO: Into Database;
 			return true;
 		}
 
