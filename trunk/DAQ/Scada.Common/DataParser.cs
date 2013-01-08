@@ -10,6 +10,8 @@ namespace Scada.Declare
 	{
 		private string pattern;
 
+        Scanner scanner = new Scanner();
+
 		public string Pattern
 		{
 			private get { return this.pattern; }
@@ -18,11 +20,16 @@ namespace Scada.Declare
 
 		public string[] Search(string data)
 		{
-			Scanner scanner = new Scanner();
-
-			string[] ret = scanner.Scan(data, this.Pattern);
-		
-			return ret;
+            string[] ret = null;
+            try
+            {
+                ret = scanner.Scan(data, this.Pattern);
+                return ret;
+            }
+            catch (ScannerExeption se)
+            {
+                return null;
+            }
 		}
 
 	}

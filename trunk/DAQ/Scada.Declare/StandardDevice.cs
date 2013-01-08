@@ -89,7 +89,10 @@ namespace Scada.Declare
 
 			// Line-Data Parser and LineBreak confing. 
 			this.lineParser = new LineParser();
-			this.lineParser.LineBreak = (StringValue)entry[DeviceEntry.LineBreak];
+            string lineBreak = (StringValue)entry[DeviceEntry.LineBreak];
+            lineBreak = lineBreak.Replace("\\r", "\r");
+            lineBreak = lineBreak.Replace("\\n", "\n");
+            this.lineParser.LineBreak = lineBreak;
 
 			this.dataParser = new DataParser();
 			// Virtual On
@@ -185,6 +188,11 @@ namespace Scada.Declare
 				if (!this.IsVirtual)
 				{
 					this.serialPort.Open();
+                    if (this.actionCondition == null || 
+                        this.actionCondition.Length == 0)
+                    {
+                        this.Send(this.actionSend);
+                    }
 				}
 				else
 				{
@@ -224,9 +232,12 @@ namespace Scada.Declare
 				string data = Encoding.ASCII.GetString(buffer, 0, r);
 
 				string line = this.lineParser.ContinueWith(data);
-				DeviceData dd = this.GetDeviceData(line);
+                if (line != null && line.Length > 0)
+                {
+                    DeviceData dd = this.GetDeviceData(line);
 
-				this.SynchronizationContext.Post(this.DataReceived, dd);
+                    this.SynchronizationContext.Post(this.DataReceived, dd);
+                }
 				
 			}
 			catch (InvalidOperationException e)
@@ -248,7 +259,10 @@ namespace Scada.Declare
 				}
 				else if (fieldsConfig[i].index >= 0)
 				{
-					ret[i] = data[fieldsConfig[i].index];
+                    int index = fieldsConfig[i].index;
+                    if (index > data.Length)
+                        return null;
+                    ret[i] = data[index];
 				}
 			}
 			return ret;
@@ -257,6 +271,8 @@ namespace Scada.Declare
 		private DeviceData GetDeviceData(string line)
 		{
 			string[] data = this.dataParser.Search(line);
+            if (data == null || data.Length == 0)
+                return default(DeviceData);
 			object[] fields = GetFieldsData(data, this.fieldsConfig);
 			DeviceData deviceData = new DeviceData(this, fields);
 			if (IsActionCondition(line))
@@ -274,7 +290,7 @@ namespace Scada.Declare
 
 		private bool IsActionCondition(string line)
 		{
-			if (this.actionCondition == string.Empty)
+            if (this.actionCondition == null || this.actionCondition == string.Empty)
 			{
 				return true;
 			}
