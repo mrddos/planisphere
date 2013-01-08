@@ -159,11 +159,11 @@ namespace Scada.Common
 
 				//masterPattern is going to hold a "big" regex pattern that will be ran against the original text
 				string masterPattern = pattern.Trim();
-				string matchingPattern = @"(\S+)";
+				string matchingPattern = @"({[\w\d]+})";
 				masterPattern = Regex.Replace(masterPattern, matchingPattern, "($1)");		//insert grouping parens
-
+                
 				//store the group location of the format tags so that we can select the correct group values later.
-				matchingPattern = @"(\([\w\d\S]+\))";
+				matchingPattern = @"(\([{}\w\d]+\))";
 				Regex reggie = new Regex(matchingPattern);
 				MatchCollection matches = reggie.Matches(masterPattern);
 				for (int i = 0; i < matches.Count; i++)

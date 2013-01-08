@@ -1,0 +1,14 @@
+Create Table Weather_rec
+{
+Id int; /*采样ID,唯一号*/
+Time datetime; /*采样时间*/
+Windspeed varchar(8); /*风速，单位：m/s，数据格式：N4.2*/
+Direction varchar(8); /*风向，单位：o ，数据格式：N4.2*/
+Temperature varchar(8); /*温度，单位：℃，数据格式：N4.2*/
+Humidity varchar(8); /*湿度，单位：%，数据格式：N4.2*/
+Pressure varchar(8); /*气压，单位：hPa，数据格式：N4.2*/
+Raingauge varchar(8); /*雨量，单位：mm/min，数据格式：N4.2*/
+Dewpoint varchar(8); /*露点温度，单位：℃，数据格式：N4.2*/
+IfRain bit; /*感雨，单位：无，数据格式：0或1表示是否下雨*/
+Alarm bit; /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
+}

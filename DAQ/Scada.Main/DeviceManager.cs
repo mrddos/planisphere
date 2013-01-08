@@ -207,7 +207,7 @@ namespace Scada.Main
                             this.devices.Add(device);
 
 							// Load the address from the d2d.cfg
-							string address = "COM4";
+							string address = "COM3";
 							device.Start(address);
 						}
 					}
