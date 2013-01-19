@@ -64,6 +64,7 @@ namespace Scada.Declare
 		private void Initialize(DeviceEntry entry)
 		{
 			this.Name = entry[DeviceEntry.Name].ToString();
+            this.Path = entry[DeviceEntry.Path].ToString();
 			this.Version = entry[DeviceEntry.Version].ToString();
 
 			IValue baudRate = entry[DeviceEntry.BaudRate];
