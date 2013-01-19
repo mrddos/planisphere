@@ -142,7 +142,8 @@ namespace Scada.Main
                         entry[key] = value;
                     }
                 }
-
+                DirectoryInfo di = Directory.GetParent(configFile);
+                entry[DeviceEntry.Path] = new StringValue(di.FullName);
                 return entry;
             }
         }

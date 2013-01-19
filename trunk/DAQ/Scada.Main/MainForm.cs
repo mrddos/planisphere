@@ -39,10 +39,6 @@ namespace Scada.Main
 			this.timer.Tick += timerKeepAliveTick;
 			this.timer.Start();
 
-			RecordManager.Initialize();
-
-
-
             startMenuItem_Click(null, null);
 
             ////////////////////////////////////////////////////////////////
@@ -65,10 +61,15 @@ namespace Scada.Main
 			//deviceListView.Columns.Add(new ColumnHeaderEx("Version", 120));
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Genre", excmbx_genre, 60));
 			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
-			//deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
+			// deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
         }
 
-
+        private void RunDevices()
+        {
+            RecordManager.Initialize();
+            Program.DeviceManager.DataReceived = this.OnDataReceived;
+            Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
+        }
 
 		void timerKeepAliveTick(object sender, EventArgs e)
 		{
@@ -123,8 +124,7 @@ namespace Scada.Main
 
 		private void startMenuItem_Click(object sender, EventArgs e)
 		{
-            Program.DeviceManager.DataReceived = this.OnDataReceived;
-            Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
+            this.RunDevices();
 		}
 
 		private void stopMenuItem_Click(object sender, EventArgs e)

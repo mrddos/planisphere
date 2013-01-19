@@ -104,6 +104,8 @@ namespace Scada.Declare
     {
 		private string name;
 
+        private string path;
+
 		private string version;
 
         private bool running = false;
@@ -120,6 +122,12 @@ namespace Scada.Declare
 			get { return this.name; }
 			set { this.name = value; }
 		}
+
+        public string Path
+        {
+            get { return this.path; }
+            set { this.path = value; }
+        }
 
         /// <summary>
         /// 
@@ -163,6 +171,8 @@ namespace Scada.Declare
     public class DeviceEntry
     {
         public const string Name = "Name";
+
+        public const string Path = "path";
 
         public const string Version = "Version";
 
