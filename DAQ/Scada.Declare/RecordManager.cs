@@ -14,6 +14,8 @@ namespace Scada.Declare
 
 		private static FileRecord frameworkRecord = null;
 
+        private static IntPtr hAnalysisWnd = IntPtr.Zero;
+
         public struct StreamHolder
         {
             private FileStream fileStream;
@@ -45,11 +47,25 @@ namespace Scada.Declare
 			RecordManager.frameworkRecord = new FileRecord("");
 		}
 
+        public static void RegisterAnalysisWindow(IntPtr hWnd)
+        {
+            hAnalysisWnd = hWnd;
+        }
+
+        public static void UnregisterAnalysisWindow()
+        {
+            hAnalysisWnd = IntPtr.Zero;
+        }
+
 		public static void DoRecord(DeviceData deviceData)
 		{
 			// TODO: Record it in the files.
 
-            RecordManager.WriteDataToLog(deviceData);
+            string line = RecordManager.WriteDataToLog(deviceData);
+            if (hAnalysisWnd != IntPtr.Zero)
+            {
+                SendToAnalysisWindow(hAnalysisWnd, line);
+            }
 
 			if (!RecordManager.mysql.DoRecord(deviceData))
 			{
@@ -57,11 +73,11 @@ namespace Scada.Declare
 			}
 		}
 
-        private static void WriteDataToLog(DeviceData deviceData)
+        private static string WriteDataToLog(DeviceData deviceData)
         {
             DateTime now = DateTime.Now;
             FileStream stream = RecordManager.GetLogFileStream(deviceData.Device, now);
-            string time = string.Format("<{0}:{1}:{2}> ", now.Hour, now.Minute, now.Second);
+            string time = string.Format("[{0}:{1}:{2}] ", now.Hour, now.Minute, now.Second);
             StringBuilder sb = new StringBuilder(time);
             foreach (object o in deviceData.Data)
             {
@@ -71,12 +87,15 @@ namespace Scada.Declare
                 }
             }
             sb.Append("\r\n");
-            byte[] bytes = Encoding.ASCII.GetBytes(sb.ToString());
+            string line = sb.ToString();
+            byte[] bytes = Encoding.ASCII.GetBytes(line);
             stream.Write(bytes, 0, bytes.Length);
             
             // TODO: Optimize!
             stream.Flush();
             // TODO:???
+
+            return line;
         }
 
         private static FileStream GetLogFileStream(Device device, DateTime now)
@@ -126,5 +145,9 @@ namespace Scada.Declare
             return path;
         }
 
+        private static void SendToAnalysisWindow(IntPtr hWnd, string line)
+        {
+            // TODO:
+        }
 	}
 }
