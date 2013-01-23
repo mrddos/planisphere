@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,9 +11,14 @@ namespace Scada.DAQ.Installer
     {
         private string dataBaseFile;
 
+        private MySqlConnection conn;
+
+        private string connectionString;
+
         public DataBaseCreator(string dataBaseFile)
         {
             this.dataBaseFile = dataBaseFile;
+            this.conn = new MySqlConnection(connectionString);
         }
 
 
@@ -39,13 +45,14 @@ namespace Scada.DAQ.Installer
             SQLStatementParser parser = new SQLStatementParser();
             using(StringReader sr = new StringReader(content))
             {
+                MySqlCommand cmd = this.conn.CreateCommand();
                 string line = sr.ReadLine();
                 while (line != null)
                 {
                     string statement = parser.Add(line);
                     if (statement.Length > 0)
                     {
-                        this.ExecuteSQL(statement);
+                        this.ExecuteSQL(cmd, statement);
                     }
                     line = sr.ReadLine();
                 }
@@ -53,10 +60,12 @@ namespace Scada.DAQ.Installer
             }
         }
 
-        internal void ExecuteSQL(string statement)
+        internal void ExecuteSQL(MySqlCommand cmd, string statement)
         {
             string log = string.Format("Execute SQL: {0}", statement);
             Console.WriteLine(log);
+            cmd.CommandText = statement;
+            cmd.ExecuteNonQuery();
         }
     }
 }
