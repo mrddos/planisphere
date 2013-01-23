@@ -9,7 +9,11 @@ namespace Scada.DAQ.Installer
     {
         static void Main(string[] args)
         {
-
+            args = new string[] { "--init-database" };
+            if (args.Length == 0)
+            {
+                Console.WriteLine("Args required");
+            }
             string fa = args[0].ToLower();
             if (fa == "--init-database")
             {
@@ -30,7 +34,7 @@ namespace Scada.DAQ.Installer
         static void InitDataBase(string[] args)
         {
             Console.WriteLine("Initialize the DataBase");
-            DataBaseCreator creator = new DataBaseCreator();
+            DataBaseCreator creator = new DataBaseCreator(@"C:\Users\HealerKx\Desktop\daq2.sql");
             creator.Execute();
         }
 
