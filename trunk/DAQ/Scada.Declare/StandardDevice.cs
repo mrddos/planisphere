@@ -206,6 +206,8 @@ namespace Scada.Declare
             {
                 string message = e.Message;
 
+                // TODO: Do something when can NOT open the port.
+
                 // SerialDataReceivedEventArgs events = null;
                 // this.SerialPortDataReceived(null, events);
 

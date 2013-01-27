@@ -143,7 +143,15 @@ namespace Scada.Main
                     }
                 }
                 DirectoryInfo di = Directory.GetParent(configFile);
-                entry[DeviceEntry.Path] = new StringValue(di.FullName);
+                string devicePath = di.FullName;
+                // Path
+                entry[DeviceEntry.Path] = new StringValue(devicePath);
+                // Virtual 
+
+                if (File.Exists(devicePath + "\\virtual-device"))
+                {
+                    entry[DeviceEntry.Virtual] = new StringValue("true");
+                }
                 return entry;
             }
         }
