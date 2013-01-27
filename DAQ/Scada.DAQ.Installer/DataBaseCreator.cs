@@ -11,14 +11,13 @@ namespace Scada.DAQ.Installer
     {
         private string dataBaseFile;
 
-        private MySqlConnection conn;
+        private MySqlConnection conn = null;
 
-        private string connectionString;
+        private string connectionString = "datasource=127.0.0.1;username=root;database=scada";
 
         public DataBaseCreator(string dataBaseFile)
         {
             this.dataBaseFile = dataBaseFile;
-            this.conn = new MySqlConnection(connectionString);
         }
 
 
@@ -43,16 +42,28 @@ namespace Scada.DAQ.Installer
         internal void Execute(string content)
         {
             SQLStatementParser parser = new SQLStatementParser();
+            CreateDAQDB();
             using(StringReader sr = new StringReader(content))
             {
+                this.conn = new MySqlConnection(this.connectionString);
+                this.conn.Open();
+
                 MySqlCommand cmd = this.conn.CreateCommand();
+
                 string line = sr.ReadLine();
                 while (line != null)
                 {
                     string statement = parser.Add(line);
                     if (statement.Length > 0)
                     {
-                        this.ExecuteSQL(cmd, statement);
+                        if (statement.StartsWith("/*") && statement.EndsWith("*/"))
+                        {
+                            
+                        }
+                        else
+                        {
+                            this.ExecuteSQL(cmd, statement);
+                        }
                     }
                     line = sr.ReadLine();
                 }
@@ -66,6 +77,21 @@ namespace Scada.DAQ.Installer
             Console.WriteLine(log);
             cmd.CommandText = statement;
             cmd.ExecuteNonQuery();
+            // cmd.ExecuteScalar();
+        }
+
+        internal void CreateDAQDB()
+        {
+            string connectionString = "datasource=127.0.0.1;username=root;database=mysql";
+            using (var connToMySql = new MySqlConnection(connectionString))
+            {
+                connToMySql.Open();
+
+                MySqlCommand cmd = connToMySql.CreateCommand();
+                cmd.CommandText = "CREATE DATABASE scada"; ;
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
         }
     }
 }
