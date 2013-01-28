@@ -14,14 +14,14 @@ using System.Windows.Shapes;
 
 namespace Scada.MainVision
 {
-	/// <summary>
-	/// Interaction logic for Window1.xaml
-	/// </summary>
-	public partial class Window1 : Window
-	{
-		public Window1()
-		{
-			InitializeComponent();
-		}
-	}
+    /// <summary>
+    /// Interaction logic for TabView.xaml
+    /// </summary>
+    public partial class TabView : UserControl
+    {
+        public TabView()
+        {
+            InitializeComponent();
+        }
+    }
 }
