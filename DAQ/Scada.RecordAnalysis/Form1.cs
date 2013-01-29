@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Scada.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +16,18 @@ namespace Scada.RecordAnalysis
         public Form1()
         {
             InitializeComponent();
+        }
+
+        protected override void DefWndProc(ref Message m)
+        {
+            if (m.Msg == 0x004a)
+            {
+                CopyDataStruct cds = new CopyDataStruct();
+                cds = (CopyDataStruct)m.GetLParam(cds.GetType());
+                //Debug.WriteLine(cds.lpData);
+                // MessageBox.Show(cds.lpData);
+            }
+            base.DefWndProc(ref m);
         }
     }
 }

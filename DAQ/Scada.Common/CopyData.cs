@@ -9,6 +9,7 @@ namespace Scada.Common
 	/// <summary>
 	/// 
 	/// </summary>
+    [StructLayout(LayoutKind.Sequential)] 
 	public struct CopyDataStruct
 	{
 		public IntPtr dwData;
