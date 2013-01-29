@@ -50,6 +50,8 @@ namespace Scada.Declare
 
 		private Timer timer = null;
 
+        private string exampleLine;
+
 
 		public StandardDevice(DeviceEntry entry)
 		{
@@ -154,7 +156,7 @@ namespace Scada.Declare
 
 			}
 			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
-			
+            this.exampleLine = (StringValue)entry[DeviceEntry.ExampleLine];
 		}
 
 		public bool IsVirtual
@@ -334,7 +336,7 @@ namespace Scada.Declare
 					{
 						this.timer = new Timer(new TimerCallback((object state) =>
 						{
-							string line = @".0000   .0000   .0000   .0000   .5564   383.0   6.136   28.40   .0000 ";
+                            string line = this.GetExampleLine(); // @".0000   .0000   .0000   .0000   .5564   383.0   6.136   28.40   .0000 ";
 							DeviceData dd = this.GetDeviceData(line);
 
 							this.SynchronizationContext.Post(this.DataReceived, dd);
@@ -344,6 +346,11 @@ namespace Scada.Declare
 			}
 
 		}
+
+        private string GetExampleLine()
+        {
+            return this.exampleLine;
+        }
 
 
 		

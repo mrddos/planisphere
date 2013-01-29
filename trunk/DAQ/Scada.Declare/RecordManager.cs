@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Scada.Common;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 
 namespace Scada.Declare
 {
@@ -45,6 +49,28 @@ namespace Scada.Declare
 			RecordManager.analysis = new AnalysisRecord();
 
 			RecordManager.frameworkRecord = new FileRecord("");
+
+            using (Process process = new Process())
+            {
+                process.StartInfo.CreateNoWindow = true;    //设定不显示窗口
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = "Scada.RecordAnalysis.exe"; //设定程序名  
+                process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
+                process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
+                process.StartInfo.RedirectStandardError = true;//重定向错误输出
+                if (process.Start())
+                {
+                    do
+                    {
+                        Thread.Sleep(0);
+                        hAnalysisWnd = Defines.FindWindow(null, "Log Analysis");
+                    }
+                    while (hAnalysisWnd == IntPtr.Zero);
+
+                    SendToAnalysisWindow(hAnalysisWnd, "JHelllld fdd");
+                }
+            }
+
 		}
 
         public static void RegisterAnalysisWindow(IntPtr hWnd)
@@ -77,7 +103,7 @@ namespace Scada.Declare
         {
             DateTime now = DateTime.Now;
             FileStream stream = RecordManager.GetLogFileStream(deviceData.Device, now);
-            string time = string.Format("[{0}:{1}:{2}] ", now.Hour, now.Minute, now.Second);
+            string time = string.Format("[{0:HH:mm:ss}] ", now);
             StringBuilder sb = new StringBuilder(time);
             foreach (object o in deviceData.Data)
             {
@@ -124,6 +150,11 @@ namespace Scada.Declare
             StreamHolder newHolder = new StreamHolder() { FilePath = path };
             if (!File.Exists(path))
             {
+                string logPath = device.Path + "\\log";
+                if (!Directory.Exists(logPath))
+                {
+                    Directory.CreateDirectory(logPath);
+                }
                 FileStream fs = File.Create(path);
                 newHolder.FileStream = fs;
                 streams[deviceName] = newHolder;
@@ -147,7 +178,12 @@ namespace Scada.Declare
 
         private static void SendToAnalysisWindow(IntPtr hWnd, string line)
         {
-            // TODO:
+            CopyDataStruct cds = new CopyDataStruct() { lpData = line };
+            int size = Marshal.SizeOf(cds);
+            cds.cbData = line.Length;
+            IntPtr c = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(cds, c, false);
+            Defines.SendMessage(hWnd, Defines.WM_COPYDATA, 0, c);
         }
 	}
 }

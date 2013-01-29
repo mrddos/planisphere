@@ -20,10 +20,6 @@ namespace Scada.Main
 	/// </summary>
     static class Program
     {
-		[DllImport("User32.dll", EntryPoint = "PostMessage")]
-		public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-
 		private const int WM_KEEPALIVE = 0x006A;
 		/// <summary>
 		/// 
@@ -103,7 +99,7 @@ namespace Scada.Main
 
 		public static bool SendKeepAlive()
 		{
-			bool ret = Program.PostMessage(Program.WatchFormHandle, Defines.WM_KEEPALIVE, Defines.KeepAlive, 232);
+			bool ret = Defines.PostMessage(Program.WatchFormHandle, Defines.WM_KEEPALIVE, Defines.KeepAlive, 232);
 			return true;
 		}
 
@@ -152,6 +148,7 @@ namespace Scada.Main
             
             deviceManager.Initialize();
             deviceManager.SelectDevice("Scada.HIPC", "0.9", true);
+            deviceManager.SelectDevice("Scada.Weather", "0.9", true);
             // deviceManager.Run();
 
             //Thread.Sleep(1000);

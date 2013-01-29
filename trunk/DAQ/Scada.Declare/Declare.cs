@@ -208,6 +208,8 @@ namespace Scada.Declare
 
 		public const string FieldsConfig = "FieldsConfig";
 
+        public const string ExampleLine = "ExampleLine";
+
 
         private Dictionary<string, IValue> dict = new Dictionary<string, IValue>();
 
