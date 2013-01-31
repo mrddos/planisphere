@@ -7,27 +7,44 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Scada.RecordAnalysis
 {
     public partial class Form1 : Form
     {
+        private ServerPipeConnection serverPipeConn;
+
+        private Thread thread;
+
+        public delegate void MyInvoke(object sender, string str2);
+
         public Form1()
         {
             InitializeComponent();
+
+
+            //WorkThreadStart(null);
+            thread = new Thread(new ParameterizedThreadStart(this.WorkThreadStart));
+            thread.Start(null);
         }
 
-        protected override void DefWndProc(ref Message m)
+        private void WorkThreadStart(object param)
         {
-            if (m.Msg == 0x004a)
-            {
-                CopyDataStruct cds = new CopyDataStruct();
-                cds = (CopyDataStruct)m.GetLParam(cds.GetType());
-                //Debug.WriteLine(cds.lpData);
-                // MessageBox.Show(cds.lpData);
-            }
-            base.DefWndProc(ref m);
+            serverPipeConn = new ServerPipeConnection("MyPipe", 1024, 1024, 1024);
+            serverPipeConn.Connect();
+            string a = serverPipeConn.Read();
+
+            logListBox.Invoke(new MyInvoke(this.AddString), this, a);
+            
         }
+
+        private void AddString(object sender, string line)
+        {
+            logListBox.Items.Add(line);
+        }
+
+
     }
 }

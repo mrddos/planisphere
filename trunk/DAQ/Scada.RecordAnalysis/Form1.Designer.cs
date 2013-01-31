@@ -28,13 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.logListBox = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
+            // 
+            // logListBox
+            // 
+            this.logListBox.FormattingEnabled = true;
+            this.logListBox.Location = new System.Drawing.Point(12, 12);
+            this.logListBox.Name = "logListBox";
+            this.logListBox.Size = new System.Drawing.Size(490, 186);
+            this.logListBox.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 213);
+            this.Controls.Add(this.logListBox);
             this.Name = "Form1";
             this.Text = "Log Analysis";
             this.ResumeLayout(false);
@@ -42,6 +52,8 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.ListBox logListBox;
     }
 }
 

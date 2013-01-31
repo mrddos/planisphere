@@ -12,7 +12,7 @@ namespace Scada.Common
         public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         [DllImport("User32.dll", EntryPoint = "SendMessage")]
-        public static extern bool SendMessage(IntPtr hWnd, int Msg, int wParam, IntPtr lParam);
+        public static extern bool SendMessage(IntPtr hWnd, int Msg, int wParam, ref CopyData lParam);
 
         [DllImport("User32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);

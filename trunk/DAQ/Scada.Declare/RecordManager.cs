@@ -18,7 +18,7 @@ namespace Scada.Declare
 
 		private static FileRecord frameworkRecord = null;
 
-        private static IntPtr hAnalysisWnd = IntPtr.Zero;
+        // private static IntPtr hAnalysisWnd = IntPtr.Zero;
 
         public struct StreamHolder
         {
@@ -50,48 +50,31 @@ namespace Scada.Declare
 
 			RecordManager.frameworkRecord = new FileRecord("");
 
+            return;
             using (Process process = new Process())
             {
-                process.StartInfo.CreateNoWindow = true;    //设定不显示窗口
+                process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = "Scada.RecordAnalysis.exe"; //设定程序名  
                 process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
                 process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
                 process.StartInfo.RedirectStandardError = true;//重定向错误输出
-                if (process.Start())
-                {
-                    do
-                    {
-                        Thread.Sleep(0);
-                        hAnalysisWnd = Defines.FindWindow(null, "Log Analysis");
-                    }
-                    while (hAnalysisWnd == IntPtr.Zero);
+                process.Start();
 
-                    SendToAnalysisWindow(hAnalysisWnd, "JHelllld fdd");
-                }
+                Thread.Sleep(600);
             }
 
 		}
 
-        public static void RegisterAnalysisWindow(IntPtr hWnd)
-        {
-            hAnalysisWnd = hWnd;
-        }
 
-        public static void UnregisterAnalysisWindow()
-        {
-            hAnalysisWnd = IntPtr.Zero;
-        }
 
 		public static void DoRecord(DeviceData deviceData)
 		{
 			// TODO: Record it in the files.
 
             string line = RecordManager.WriteDataToLog(deviceData);
-            if (hAnalysisWnd != IntPtr.Zero)
-            {
-                SendToAnalysisWindow(hAnalysisWnd, line);
-            }
+
+            SendToAnalysisWindow(line);
 
 			if (!RecordManager.mysql.DoRecord(deviceData))
 			{
@@ -176,14 +159,21 @@ namespace Scada.Declare
             return path;
         }
 
-        private static void SendToAnalysisWindow(IntPtr hWnd, string line)
+        private static void SendToAnalysisWindow(string line)
         {
-            CopyDataStruct cds = new CopyDataStruct() { lpData = line };
-            int size = Marshal.SizeOf(cds);
-            cds.cbData = line.Length;
-            IntPtr c = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(cds, c, false);
-            Defines.SendMessage(hWnd, Defines.WM_COPYDATA, 0, c);
+            IInterProcessConnection clientConnection = null;
+            try
+            {
+                clientConnection = new ClientPipeConnection("MyPipe", ".");
+                clientConnection.Connect();
+                clientConnection.Write(line);
+                clientConnection.Close();
+            }
+            catch (Exception ex)
+            {
+                clientConnection.Dispose();
+                throw (ex);
+            }
         }
 	}
 }
