@@ -33,10 +33,14 @@ namespace Scada.RecordAnalysis
         private void WorkThreadStart(object param)
         {
             serverPipeConn = new ServerPipeConnection("MyPipe", 1024, 1024, 1024);
-            serverPipeConn.Connect();
-            string a = serverPipeConn.Read();
-
-            logListBox.Invoke(new MyInvoke(this.AddString), this, a);
+            
+            while (true)
+            {
+                serverPipeConn.Connect();
+                string line = serverPipeConn.Read();
+                logListBox.Invoke(new MyInvoke(this.AddString), this, line);
+                serverPipeConn.Disconnect();
+            }
             
         }
 
