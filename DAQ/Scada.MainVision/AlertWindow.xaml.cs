@@ -9,26 +9,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Scada.Controls;
 
 namespace Scada.MainVision
 {
-	/// <summary>
-	/// Interaction logic for Window1.xaml
-	/// </summary>
-	public partial class Window1 : Window
-	{
-		public Window1()
-		{
-			InitializeComponent();
-		}
-
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Interaction logic for AlertWindow.xaml
+    /// </summary>
+    public partial class AlertWindow : Window
+    {
+        public AlertWindow()
         {
-
-        } 
-	}
+            InitializeComponent();
+        }
+    }
 }
