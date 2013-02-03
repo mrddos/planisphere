@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MessageTimer.cs" />
     <Compile Include="PipeConnection.cs" />
     <Compile Include="ClientPipeConnection.cs" />
     <Compile Include="CopyData.cs" />

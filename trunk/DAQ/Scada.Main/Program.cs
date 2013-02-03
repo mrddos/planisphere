@@ -142,12 +142,13 @@ namespace Scada.Main
 			}
             */
 
+            // Add WinForm Windows Message Based Timer.
+            MainApplication.TimerCreator = new WinFormTimerCreator();
 
-            //DBConnection c = new DBConnection();
-            // c.Connect();
+
             
             deviceManager.Initialize();
-            deviceManager.SelectDevice("Scada.HIPC", "0.9", true);
+            // deviceManager.SelectDevice("Scada.HIPC", "0.9", true);
             deviceManager.SelectDevice("Scada.Weather", "0.9", true);
             // deviceManager.Run();
 

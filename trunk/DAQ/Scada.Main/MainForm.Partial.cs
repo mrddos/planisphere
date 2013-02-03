@@ -27,6 +27,9 @@ namespace Scada.Main
 			if (state is DeviceData)
 			{
 				this.OnDataArrival((DeviceData)state);
+
+                // TODO: Register the next time and action.
+
 				
 
 
