@@ -47,6 +47,7 @@
             this.Controls.Add(this.logListBox);
             this.Name = "Form1";
             this.Text = "Log Analysis";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.ResumeLayout(false);
 
         }
