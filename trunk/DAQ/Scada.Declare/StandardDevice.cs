@@ -211,10 +211,7 @@ namespace Scada.Declare
 				}
 				else
 				{
-                    if (this.actionInterval > 0)
-                    {
-                        this.StartSenderTimer(this.actionInterval);
-                    }
+                    this.StartVirtualDevice();
 				}
 
             }
@@ -251,6 +248,18 @@ namespace Scada.Declare
             }
         }
 
+        private void StartVirtualDevice()
+        {
+            if (this.actionInterval > 0)
+            {
+                this.StartSenderTimer(this.actionInterval);
+            }
+            else if (!string.IsNullOrEmpty(this.actionCondition))
+            {
+                this.Send(this.actionSend);
+            }
+        }
+
 		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
 		{
 			Debug.Assert(this.DataReceived != null);
@@ -264,7 +273,7 @@ namespace Scada.Declare
 				string data = Encoding.ASCII.GetString(buffer, 0, r);
 
 				string line = this.lineParser.ContinueWith(data);
-                if (line != null && line.Length > 0)
+                if (!string.IsNullOrEmpty(line))
                 {
                     DeviceData dd = this.GetDeviceData(line);
 
@@ -344,38 +353,63 @@ namespace Scada.Declare
 
 		public override void Stop()
 		{
+            if (this.senderTimer != null)
+            {
+                this.senderTimer.Close();
+            }
 
+            if (this.serialPort != null && this.IsOpen)
+            {
+                this.serialPort.Close();
+            }
 			// 
 		}
 
-		public override void Send(string data)
+		public override void Send(string action)
 		{
 			if (this.serialPort != null && this.IsOpen)
 			{
 				if (this.IsVirtual == false)
 				{
-					byte[] buffer = Encoding.ASCII.GetBytes(data);
+					byte[] buffer = Encoding.ASCII.GetBytes(action);
 					this.serialPort.Write(buffer, 0, buffer.Length);
 				}
 				else
 				{
-					if (data == this.actionSend)
-					{
-						this.timer = new Timer(new TimerCallback((object state) =>
-						{
-                            string line = this.GetExampleLine(); // @".0000   .0000   .0000   .0000   .5564   383.0   6.136   28.40   .0000 ";
-							DeviceData dd = this.GetDeviceData(line);
-
-							this.SynchronizationContext.Post(this.DataReceived, dd);
-						}), null, 1000, 2000);
-					}					
+                    this.OnSendDataToVirtualDevice(action);					
 				}
 			}
 
 		}
 
-        private string GetExampleLine()
+        private void OnSendDataToVirtualDevice(string action)
         {
+            if (action == this.actionSend)
+            {
+                if (this.actionInterval > 0)
+                {
+                    // Depends on the WinFormTimer.
+                    string line = this.GetExampleLine();
+                    DeviceData dd = this.GetDeviceData(line);
+
+                    this.SynchronizationContext.Post(this.DataReceived, dd);
+                }
+                else
+                {
+                    this.timer = new Timer(new TimerCallback((object state) =>
+                    {
+                        string line = this.GetExampleLine();
+                        DeviceData dd = this.GetDeviceData(line);
+
+                        this.SynchronizationContext.Post(this.DataReceived, dd);
+                    }), null, 1000, 2000);
+                }
+            }	
+        }
+
+        private string GetExampleLine(int rand = 0)
+        {
+            // TODO: Maybe need random example lines.
             return this.exampleLine;
         }
 
