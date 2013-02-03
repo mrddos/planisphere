@@ -17,6 +17,9 @@ namespace Scada.Common
         [DllImport("User32.dll", EntryPoint = "FindWindow")]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
+
+        public const string LocalPipeName = "ScadaPipe";
+
         public const int WM_COPYDATA = 0x004A;
 
 

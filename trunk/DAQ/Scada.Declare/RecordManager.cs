@@ -18,7 +18,9 @@ namespace Scada.Declare
 
 		private static FileRecord frameworkRecord = null;
 
-        // private static IntPtr hAnalysisWnd = IntPtr.Zero;
+        private static bool analysisToolOpen = false;
+
+        private const string LocalPipeServer = "."; 
 
         public struct StreamHolder
         {
@@ -74,7 +76,10 @@ namespace Scada.Declare
 
             string line = RecordManager.WriteDataToLog(deviceData);
 
-            SendToAnalysisWindow(line);
+            if (analysisToolOpen)
+            {
+                SendToAnalysisWindow(line);
+            }
 
 			if (!RecordManager.mysql.DoRecord(deviceData))
 			{
@@ -164,15 +169,15 @@ namespace Scada.Declare
             IInterProcessConnection clientConnection = null;
             try
             {
-                clientConnection = new ClientPipeConnection("MyPipe", ".");
+                clientConnection = new ClientPipeConnection(Defines.LocalPipeName, LocalPipeServer);
                 clientConnection.Connect();
                 clientConnection.Write(line);
                 clientConnection.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 clientConnection.Dispose();
-                throw (ex);
+                RecordManager.analysisToolOpen = false;
             }
         }
 	}
