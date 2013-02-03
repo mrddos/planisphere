@@ -36,6 +36,8 @@ namespace Scada.Declare
 
 		private int actionDelay = 0;
 
+        private int actionInterval = 0;
+
 		private string linePattern = string.Empty;
 
 		private string insertIntoCommand = string.Empty;
@@ -47,6 +49,8 @@ namespace Scada.Declare
 		private DataParser dataParser = null;
 		// 
 		private LineParser lineParser = null;
+
+        private IMessageTimer senderTimer = null;
 
 		private Timer timer = null;
 
@@ -108,6 +112,7 @@ namespace Scada.Declare
 			this.actionCondition = (StringValue)entry[DeviceEntry.ActionCondition];
 			this.actionSend = (StringValue)entry[DeviceEntry.ActionSend];
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
+            this.actionInterval = (StringValue)entry[DeviceEntry.ActionInterval];
 
 			this.linePattern = (StringValue)entry[DeviceEntry.Pattern];
 			this.dataParser.Pattern = this.linePattern;
@@ -191,16 +196,25 @@ namespace Scada.Declare
 				if (!this.IsVirtual)
 				{
 					this.serialPort.Open();
-                    if (this.actionCondition == null || 
-                        this.actionCondition.Length == 0)
+
+                    if (this.actionInterval > 0)
+                    {
+                        this.StartSenderTimer(this.actionInterval);
+                    }
+
+                    /* TODO: Remove after test.
+                    if (this.actionCondition == null || this.actionCondition.Length == 0)
                     {
                         this.Send(this.actionSend);
                     }
+                    */
 				}
 				else
 				{
-					// To start the virtual-device.
-					this.Send(this.actionSend);
+                    if (this.actionInterval > 0)
+                    {
+                        this.StartSenderTimer(this.actionInterval);
+                    }
 				}
 
             }
@@ -223,6 +237,19 @@ namespace Scada.Declare
 
 			return true;
 		}
+
+        private void StartSenderTimer(int interval)
+        {
+            if (MainApplication.TimerCreator != null)
+            {
+                this.senderTimer = MainApplication.TimerCreator.CreateTimer(interval);
+                this.senderTimer.Start(() => 
+                {
+                    this.Send(this.actionSend);
+                });
+
+            }
+        }
 
 		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
 		{

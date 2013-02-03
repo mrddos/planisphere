@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,11 @@ namespace Scada.Declare
     {
         private static string Devices = "devices";
 
-
+        public static MessageTimerCreator TimerCreator
+        {
+            set;
+            get;
+        }
 
         public static string InstallPath
         {

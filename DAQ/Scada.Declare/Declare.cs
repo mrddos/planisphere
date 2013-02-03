@@ -200,6 +200,8 @@ namespace Scada.Declare
 
 		public const string ActionDelay = "ActionDelay";
 
+        public const string ActionInterval = "ActionInterval";
+
 		public const string Pattern = "Pattern";
 
 		public const string TableName = "TableName";
