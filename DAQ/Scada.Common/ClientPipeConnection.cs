@@ -7,8 +7,22 @@ namespace Scada.Common
     {
         private string Server = ".";
 
-        ClientPipeConnection()
+        public ClientPipeConnection()
         {
+        }
+
+        public ClientPipeConnection(string name)
+        {
+            this.Name = name;
+            this.Server = ".";
+            this.maxReadBytes = Int32.MaxValue;
+        }
+
+        public ClientPipeConnection(string name, string server)
+        {
+            this.Name = name;
+            this.Server = server;
+            this.maxReadBytes = Int32.MaxValue;
         }
 
         ~ClientPipeConnection()
@@ -35,20 +49,5 @@ namespace Scada.Common
 
             return ReturnVal;
         }
-
-        public ClientPipeConnection(string name)
-        {
-            this.Name = name;
-            this.Server = ".";
-            this.maxReadBytes = Int32.MaxValue;
-        }
-
-        public ClientPipeConnection(string name, string server)
-        {
-            this.Name = name;
-            this.Server = server;
-            this.maxReadBytes = Int32.MaxValue;
-        }
-
     }
 }
