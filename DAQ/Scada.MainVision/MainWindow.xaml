@@ -2,25 +2,40 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="331.25" Width="636.458" Loaded="Window_Loaded_1">
-    <Grid>
+    <Grid Background="Blue">
+        
+        <Grid.Resources>
+            <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type ContentControl}">
+                <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" CornerRadius="5,5,5,5" Name="PART_Background">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="Silver" Offset="0.0" />
+                            <GradientStop Color="Silver" Offset="0.5" />
+                            <GradientStop Color="White" Offset="0.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+
+            <ControlTemplate x:Key="ContentTemplate" TargetType="{x:Type ContentControl}">
+                <Button Content="HH"></Button>
+            </ControlTemplate>
+                
+        </Grid.Resources>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="200"/>
             <RowDefinition Height="160"/>
         </Grid.RowDefinitions>
 
 
-        <ListView Name="list" Margin="0,0,0,64.583">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Date" Width="150" DisplayMemberBinding="{Binding Date}"/>
+        <ContentControl Template="{StaticResource ButtonTemplate}" Cursor="Hand" Name="button1" Opacity="1" Grid.Row="0" Foreground="#FF7C7C03" Margin="74,163,214,10">
+        </ContentControl>
 
-                    <GridViewColumn Header="Number" Width="200" DisplayMemberBinding="{Binding Name}"/>
-                </GridView>
-            </ListView.View>
-
-        </ListView>
-        
-        <Button Grid.Row="1" Click="Button_Click_1"></Button>
+        <ContentControl Template="{StaticResource ContentTemplate}" Grid.Row="1">
+            
+        </ContentControl>
     </Grid>
     
 

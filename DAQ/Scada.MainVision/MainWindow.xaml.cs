@@ -35,24 +35,14 @@ namespace Scada.MainVision
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-            List<Item> a = new List<Item>();
-            a.Add(new Item() { Name = "AA", Date = "fasadfsda" });
-            a.Add(new Item() { Name = "VV", Date = "sdafdsaf" });
-            a.Add(new Item() { Name = "FF", Date = "fasdf" });
-            this.list.ItemsSource = a;
+
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void button1_Click_1(object sender, RoutedEventArgs e)
         {
-            List<Item> a = new List<Item>();
-            a.Add(new Item() { Name = "AA", Date = "fasadfsda" });
-            a.Add(new Item() { Name = "VV", Date = "sdafdsaf" });
-            a.Add(new Item() { Name = "AA", Date = "fasadfsda" });
-            a.Add(new Item() { Name = "VV", Date = "sdafdsaf" });
-            a.Add(new Item() { Name = "FF", Date = "fasdf" });
-            a.Add(new Item() { Name = "FF", Date = "fasdf" });
-            this.list.ItemsSource = a;
+
         }
+
 
 
     }
