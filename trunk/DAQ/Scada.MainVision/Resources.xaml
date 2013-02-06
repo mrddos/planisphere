@@ -14,6 +14,15 @@
         </Border>
     </ControlTemplate>
 
+    <!-- -->
+    <ControlTemplate x:Key="BasicDataPanelTemplate" TargetType="{x:Type ContentControl}">
+
+        <StackPanel Orientation="Vertical" Height="200" Background="AliceBlue">
+
+            <ContentControl Template="{StaticResource  ButtonTemplate}" HorizontalAlignment="Stretch" Margin="5" Height="20"></ContentControl>
+
+        </StackPanel>
+    </ControlTemplate>
 
     <!-- -->
     <ControlTemplate x:Key="ContentTemplate" TargetType="{x:Type ContentControl}">
