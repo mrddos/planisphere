@@ -3,25 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="331.25" Width="636.458" Loaded="Window_Loaded_1">
     <Grid Background="Blue">
-        
-        <Grid.Resources>
-            <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type ContentControl}">
-                <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" CornerRadius="5,5,5,5" Name="PART_Background">
-                    <Border.Background>
-                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                            <GradientStop Color="Silver" Offset="0.0" />
-                            <GradientStop Color="Silver" Offset="0.5" />
-                            <GradientStop Color="White" Offset="0.0" />
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                </Border>
-            </ControlTemplate>
 
-            <ControlTemplate x:Key="ContentTemplate" TargetType="{x:Type ContentControl}">
-                <Button Content="HH"></Button>
-            </ControlTemplate>
-                
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="Resources.xaml"/>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
         </Grid.Resources>
         
         <Grid.RowDefinitions>
