@@ -21,10 +21,11 @@
 
         <c:ListViewPanel Grid.Row="1">
             <c:ListViewPanel.ListViewContent>
-                <Button>S</Button>
+                <ListView Background="AliceBlue" >
+                    
+                </ListView>
             </c:ListViewPanel.ListViewContent>
         </c:ListViewPanel>
-
     </Grid>
     
 
