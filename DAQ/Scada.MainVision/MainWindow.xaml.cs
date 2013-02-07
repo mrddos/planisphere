@@ -18,7 +18,7 @@ namespace Scada.MainVision
         public string Name { get; set; }
 
 
-        public string Date { get; set; }
+        public UIElement Contents { get; set; }
     }
 
 
@@ -36,12 +36,10 @@ namespace Scada.MainVision
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
 
+
+            
         }
 
-        private void button1_Click_1(object sender, RoutedEventArgs e)
-        {
-
-        }
 
 
 

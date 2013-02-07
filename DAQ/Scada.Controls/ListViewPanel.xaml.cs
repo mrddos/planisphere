@@ -19,21 +19,28 @@ namespace Scada.Controls
 	/// </summary>
 	public partial class ListViewPanel : UserControl
 	{
+
+        private ListView listView = null;
+
+
 		public ListViewPanel()
 		{
 			InitializeComponent();
 		}
 
-		public Button ListViewContent
+        public ListView ListViewContent
 		{
 			get
 			{
-				return null;
+                return this.listView;
 			}
 			set
 			{
-
-				this.ListViewContainer.Content = value;
+                this.listView = value;
+                if (this.listView != null)
+                {
+                    this.ListViewContainer.Content = this.listView;
+                }
 			}
 		}
 	}

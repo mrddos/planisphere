@@ -7,8 +7,8 @@
 
         <StackPanel Orientation="Vertical" Height="200" Background="AliceBlue">
 
-            <ContentControl Template="{StaticResource  ButtonTemplate}" HorizontalAlignment="Stretch" Margin="5" Height="20"></ContentControl>
-
+            <ContentControl Template="{StaticResource ButtonTemplate}" HorizontalAlignment="Stretch" Margin="5" Height="20"></ContentControl>
+            <ContentControl Content="{Binding}"></ContentControl>
         </StackPanel>
     </ControlTemplate>
 
