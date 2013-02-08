@@ -19,10 +19,16 @@
         </Grid.RowDefinitions>
 
 
-        <c:ListViewPanel Grid.Row="1">
+        <c:ListViewPanel Grid.Row="0">
             <c:ListViewPanel.ListViewContent>
                 <ListView Background="AliceBlue" >
-                    
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Date" Width="150" DisplayMemberBinding="{Binding Date}"/>
+
+                            <GridViewColumn Header="Number" Width="200" DisplayMemberBinding="{Binding Name}"/>
+                        </GridView>
+                    </ListView.View>
                 </ListView>
             </c:ListViewPanel.ListViewContent>
         </c:ListViewPanel>
