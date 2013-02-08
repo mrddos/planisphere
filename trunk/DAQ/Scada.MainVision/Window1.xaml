@@ -26,7 +26,7 @@
             <TextBlock Foreground="Black">Dock = "Left"</TextBlock>
             -->
         </Border>
-        <Border Background="White" BorderBrush="Black" BorderThickness="1">
+        <Border Background="White" BorderBrush="Black" BorderThickness="1" RenderTransformOrigin="0.355,0.591">
             <sm:TabView></sm:TabView>
         </Border>
     </DockPanel>
