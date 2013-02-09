@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,17 +29,37 @@ namespace Scada.MainVision
     /// </summary>
     public partial class MainWindow : Window
     {
+
+		private PanelManager panelManager;
+
         public MainWindow()
         {
             InitializeComponent();
+			this.panelManager = new PanelManager(this);
         }
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-
+			ListView list = this.Panel.ListViewContent;
+			GridView grid = (GridView)list.View;
+			GridViewColumn col = new GridViewColumn();
+			col.Header = "fff";
+			grid.Columns.Add(col);
 
             
         }
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			ListViewPanel panel = this.panelManager.CreateListViewPanel();
+
+
+
+			// Manage
+			this.Grid.Children.Add(panel);
+
+			panel.SetValue(Grid.RowProperty, 1);
+		}
 
 
 
