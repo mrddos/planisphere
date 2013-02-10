@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <!-- ListViewPanel's Header template -->
     <ControlTemplate x:Key="HeaderTemplateKey" TargetType="{x:Type ContentControl}">
-        <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" CornerRadius="5,5,5,5" Name="PART_Background">
+        
+        <Border BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="0" CornerRadius="5,5,5,5" x:Name="WW">
             <Border.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="Silver" Offset="0.0" />
@@ -10,7 +11,12 @@
                     <GradientStop Color="White" Offset="0.0" />
                 </LinearGradientBrush>
             </Border.Background>
+       
+            <!--
             <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            -->
+            
+            <Button Content="X" x:Name="CloseButton"></Button>
         </Border>
     </ControlTemplate>
     

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -26,6 +27,7 @@ namespace Scada.Controls
 		public ListViewPanel()
 		{
 			InitializeComponent();
+			
 		}
 
         public ListView ListViewContent
@@ -43,5 +45,29 @@ namespace Scada.Controls
                 }
 			}
 		}
+
+		[Category("Behavior")]
+		public event RoutedEventHandler CloseClick;
+
+
+		public override void OnApplyTemplate()
+		{
+			base.OnApplyTemplate();
+			// Can NOT Find Element in Template;
+		}
+
+		private void ContentLoaded(object sender, RoutedEventArgs e)
+		{
+			Button closeButton = (Button)this.HeaderBar.Template.FindName("CloseButton", this.HeaderBar);
+			if (closeButton != null)
+			{
+				closeButton.Click += (s, c) => 
+				{
+					this.CloseClick(s, e);
+				};
+			}
+		}
+
+
 	}
 }
