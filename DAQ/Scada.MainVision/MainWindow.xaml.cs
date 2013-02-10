@@ -53,8 +53,8 @@ namespace Scada.MainVision
 			// Manage
 			this.Grid.Children.Add(panel);
 
-			panel.SetValue(Grid.ColumnProperty, 1);
-			panel.SetValue(Grid.RowProperty, 1);
+			this.panelManager.SetListViewPanelPos(panel, 1, 1);
+
 		}
 
 

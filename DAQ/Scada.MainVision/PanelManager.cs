@@ -14,6 +14,8 @@ namespace Scada.MainVision
 
 		private List<ListViewPanel> panelList = new List<ListViewPanel>();
 
+		private ListViewPanel currentPanel;
+
 		public PanelManager(Window window)
 		{
 			this.window = window;
@@ -38,10 +40,21 @@ namespace Scada.MainVision
 			gridView.Columns.Add(col);
 
 			listView.View = gridView;
+
+			if (this.currentPanel != null)
+			{
+			}
+			this.currentPanel = panel;
 			
 
 			this.panelList.Add(panel);
 			return panel;
+		}
+
+		public void SetListViewPanelPos(ListViewPanel listViewPanel, int row, int column)
+		{
+			listViewPanel.SetValue(Grid.ColumnProperty, column);
+			listViewPanel.SetValue(Grid.RowProperty, row);
 		}
 
 		public void HideListViewPanel(ListViewPanel listViewPanel)
