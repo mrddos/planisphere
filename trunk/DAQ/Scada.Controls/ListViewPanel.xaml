@@ -12,19 +12,36 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+
+    <!--<Grid x:Name="LayoutRoot" Margin="0,-11,0,0">
+            <Rectangle Name="mask" Fill="#FF3434E9" Stroke="Black" RadiusX="6" RadiusY="6">
+            </Rectangle>
+            
+            <Grid.OpacityMask>
+                <VisualBrush Visual="{Binding ElementName=mask}"/>
+            </Grid.OpacityMask>
+        </Grid> 
+    -->
+    <Grid Background="AliceBlue">
         
         <Grid.RowDefinitions>
-            <RowDefinition/>
+            <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2">
+        </Rectangle>
 
-        <ContentControl Grid.Row="0" Template="{StaticResource HeaderTemplateKey}">
-            
-        </ContentControl>
         
-        <ContentControl Grid.Row="1" x:Name="ListViewContainer">
+        <ContentControl Grid.Row="0" Template="{StaticResource HeaderTemplateKey}" Margin="10,10">
             
         </ContentControl>
+
+        <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="10,0,10,10">
+            
+        </ContentControl>
+
+        <Grid.OpacityMask>
+            <VisualBrush Visual="{Binding ElementName=Rect}"/>
+        </Grid.OpacityMask>
     </Grid>
 </UserControl>

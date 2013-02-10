@@ -29,6 +29,6 @@ namespace Scada.MainVision
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-        } 
+        }
 	}
 }

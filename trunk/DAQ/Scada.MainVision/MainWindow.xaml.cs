@@ -40,11 +40,6 @@ namespace Scada.MainVision
 
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
-			ListView list = this.Panel.ListViewContent;
-			GridView grid = (GridView)list.View;
-			GridViewColumn col = new GridViewColumn();
-			col.Header = "fff";
-			grid.Columns.Add(col);
 
             
         }
@@ -58,6 +53,7 @@ namespace Scada.MainVision
 			// Manage
 			this.Grid.Children.Add(panel);
 
+			panel.SetValue(Grid.ColumnProperty, 1);
 			panel.SetValue(Grid.RowProperty, 1);
 		}
 
