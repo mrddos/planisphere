@@ -2,10 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 
-    <!-- -->
-    <ControlTemplate x:Key="BasicDataPanelTemplate" TargetType="{x:Type ListView}">
 
-    </ControlTemplate>
 
     <!-- -->
     <ControlTemplate x:Key="ContentTemplate" TargetType="{x:Type ContentControl}">

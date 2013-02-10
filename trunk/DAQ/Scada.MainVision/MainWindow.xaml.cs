@@ -47,14 +47,19 @@ namespace Scada.MainVision
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
 			ListViewPanel panel = this.panelManager.CreateListViewPanel();
-
-
+			panel.CloseClick += this.ClosePanelButtonClick;
+			
 
 			// Manage
 			this.Grid.Children.Add(panel);
 
 			this.panelManager.SetListViewPanelPos(panel, 1, 1);
 
+		}
+
+		void ClosePanelButtonClick(object sender, RoutedEventArgs e)
+		{
+			
 		}
 
 
