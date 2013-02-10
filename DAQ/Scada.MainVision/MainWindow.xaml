@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="clr-namespace:Scada.Controls;assembly=Scada.Controls"
-        Title="MainWindow" Height="331.25" Width="445.458" Loaded="Window_Loaded_1">
+        Title="MainWindow" Height="600" Width="800" Loaded="Window_Loaded_1">
     <Grid x:Name="Grid" Background="Blue">
 
         <Grid.Resources>
@@ -24,6 +24,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- UIElements -->
+        <!--
         <c:ListViewPanel Grid.Row="0" x:Name="Panel">
             <c:ListViewPanel.ListViewContent>
                 <ListView Background="AliceBlue">
@@ -37,9 +38,9 @@
                 </ListView>
             </c:ListViewPanel.ListViewContent>
         </c:ListViewPanel>
-        
+        -->
         <!-- Buuton for testing -->
-        <Button Content="Button" Grid.Column="1" HorizontalAlignment="Left" Margin="110,28,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
+        <Button Content="Button" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
 
 
 
