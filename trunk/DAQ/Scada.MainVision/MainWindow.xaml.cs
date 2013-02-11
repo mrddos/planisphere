@@ -30,11 +30,13 @@ namespace Scada.MainVision
     /// </summary>
     public partial class MainWindow : Window
     {
-		private DBDataProvider dataProvider;
+		private DataProvider dataProvider;
 
 		private PanelManager panelManager;
 
 		private Timer refreshDataTimer;
+
+		private bool connectedToDataBase = false;
 
         public MainWindow()
         {
@@ -45,7 +47,14 @@ namespace Scada.MainVision
 		private void WindowLoaded(object sender, RoutedEventArgs e)
         {
 			// TODO: Window Loaded.
-			this.dataProvider = new DBDataProvider();
+			if (connectedToDataBase)
+			{
+				this.dataProvider = new DBDataProvider();
+			}
+			else
+			{
+				this.dataProvider = new VirtualDataProvider();
+			}
 
 			this.refreshDataTimer = new Timer();
 			this.refreshDataTimer.Interval = 2000;
@@ -65,7 +74,7 @@ namespace Scada.MainVision
 		private void ShowListViewPanel()
 		{
 			ListViewPanel panel = this.panelManager.CreateListViewPanel();
-			panel.AddDataListener(this.dataProvider.GetListener(""));
+			panel.AddDataListener(this.dataProvider.GetDataListener(""));
 			panel.CloseClick += this.ClosePanelButtonClick;
 
 
