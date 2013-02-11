@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Scada.Controls
 {
+	using Scada.Controls.Data;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -23,7 +14,7 @@ namespace Scada.Controls
 
         private ListView listView = null;
 
-		private DBDataListener listener;
+		private DataListener dataListener;
 
 		public ListViewPanel()
 		{
@@ -69,12 +60,12 @@ namespace Scada.Controls
 			}
 		}
 
-		public void AddDataListener(DBDataListener listener)
+		public void AddDataListener(DataListener listener)
 		{
-			this.listener = listener;
-			if (this.listener != null)
+			this.dataListener = listener;
+			if (this.dataListener != null)
 			{
-				this.listener.OnDataArrival += this.OnDataArrival;
+				this.dataListener.OnDataArrival += this.OnDataArrival;
 			}
 		}
 
