@@ -23,6 +23,7 @@ namespace Scada.Controls
 
         private ListView listView = null;
 
+		private DBDataListener listener;
 
 		public ListViewPanel()
 		{
@@ -63,11 +64,24 @@ namespace Scada.Controls
 			{
 				closeButton.Click += (s, c) => 
 				{
-					this.CloseClick(s, e);
+					this.CloseClick(this, c);
 				};
 			}
 		}
 
+		public void AddDataListener(DBDataListener listener)
+		{
+			this.listener = listener;
+			if (this.listener != null)
+			{
+				this.listener.OnDataArrival += this.OnDataArrival;
+			}
+		}
+
+		private void OnDataArrival(params object[] data)
+		{
+
+		}
 
 	}
 }

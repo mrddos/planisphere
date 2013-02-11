@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -29,8 +30,11 @@ namespace Scada.MainVision
     /// </summary>
     public partial class MainWindow : Window
     {
+		private DBDataProvider dataProvider;
 
 		private PanelManager panelManager;
+
+		private Timer refreshDataTimer;
 
         public MainWindow()
         {
@@ -38,28 +42,49 @@ namespace Scada.MainVision
 			this.panelManager = new PanelManager(this);
         }
 
-        private void Window_Loaded_1(object sender, RoutedEventArgs e)
+		private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+			// TODO: Window Loaded.
+			this.dataProvider = new DBDataProvider();
 
-            
+			this.refreshDataTimer = new Timer();
+			this.refreshDataTimer.Interval = 2000;
+			this.refreshDataTimer.Tick += RefreshDataTimerTick;
+
+			this.refreshDataTimer.Start();
         }
 
-		private void Button_Click_1(object sender, RoutedEventArgs e)
+		void RefreshDataTimerTick(object sender, EventArgs e)
+		{
+			if (this.dataProvider != null)
+			{
+				this.dataProvider.Refresh();
+			}
+		}
+
+		private void ShowListViewPanel()
 		{
 			ListViewPanel panel = this.panelManager.CreateListViewPanel();
+			panel.AddDataListener(this.dataProvider.GetListener(""));
 			panel.CloseClick += this.ClosePanelButtonClick;
-			
+
 
 			// Manage
 			this.Grid.Children.Add(panel);
 
 			this.panelManager.SetListViewPanelPos(panel, 1, 1);
+		}
+
+		private void Button_Click_1(object sender, RoutedEventArgs e)
+		{
+			this.ShowListViewPanel();
 
 		}
 
 		void ClosePanelButtonClick(object sender, RoutedEventArgs e)
 		{
-			
+			ListViewPanel panel = (ListViewPanel)sender;
+			this.panelManager.CloseListViewPanel(panel);
 		}
 
 

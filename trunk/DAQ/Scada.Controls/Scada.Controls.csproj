@@ -44,6 +44,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBDataListener.cs" />
     <Compile Include="ListViewPanel.xaml.cs">
       <DependentUpon>ListViewPanel.xaml</DependentUpon>
     </Compile>
