@@ -44,9 +44,8 @@ namespace Scada.MainVision
 			this.panelManager = new PanelManager(this);
         }
 
-		private void WindowLoaded(object sender, RoutedEventArgs e)
-        {
-			// TODO: Window Loaded.
+		private void LoadDataProvider()
+		{
 			if (connectedToDataBase)
 			{
 				this.dataProvider = new DBDataProvider();
@@ -55,6 +54,12 @@ namespace Scada.MainVision
 			{
 				this.dataProvider = new VirtualDataProvider();
 			}
+		}
+
+		private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+			// TODO: Window Loaded.
+			this.LoadDataProvider();
 
 			this.refreshDataTimer = new Timer();
 			this.refreshDataTimer.Interval = 2000;
@@ -73,8 +78,9 @@ namespace Scada.MainVision
 
 		private void ShowListViewPanel()
 		{
+			string tableName = "weather";
 			ListViewPanel panel = this.panelManager.CreateListViewPanel();
-			panel.AddDataListener(this.dataProvider.GetDataListener(""));
+			panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
 			panel.CloseClick += this.ClosePanelButtonClick;
 
 
