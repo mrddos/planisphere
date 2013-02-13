@@ -5,7 +5,11 @@ using System.Text;
 
 namespace Scada.Controls.Data
 {
-	public delegate void OnDataArrival(params object[] data);
+	public delegate void OnDataArrivalBegin();
+
+	public delegate void OnDataArrival(Dictionary<string, object> data);
+
+	public delegate void OnDataArrivalEnd();
 
 	public abstract class DataListener
 	{
@@ -15,6 +19,18 @@ namespace Scada.Controls.Data
 		}
 
 		public OnDataArrival OnDataArrival
+		{
+			get;
+			set;
+		}
+
+		public OnDataArrivalBegin OnDataArrivalBegin
+		{ 
+			get;
+			set;
+		}
+
+		public OnDataArrivalEnd OnDataArrivalEnd
 		{
 			get;
 			set;
