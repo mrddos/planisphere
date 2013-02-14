@@ -66,6 +66,10 @@ namespace Scada.MainVision
 			this.refreshDataTimer.Tick += RefreshDataTimerTick;
 
 			this.refreshDataTimer.Start();
+
+			// Device List
+			this.DeviceList.AddDevice("Weather");
+			this.DeviceList.AddDevice("Weather");
         }
 
 		void RefreshDataTimerTick(object sender, EventArgs e)
