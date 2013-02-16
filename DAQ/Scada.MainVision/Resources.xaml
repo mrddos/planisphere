@@ -8,4 +8,27 @@
     <ControlTemplate x:Key="ContentTemplate" TargetType="{x:Type ContentControl}">
         <Button Content="HH"></Button>
     </ControlTemplate>
+
+    <ControlTemplate x:Key="HerePaneTemplate" TargetType="{x:Type ContentControl}">
+        <Grid>
+            <!-- Path would be set in C# code -->
+            <Path x:Name="Path" Stroke="Black" StrokeThickness=".5" Fill="#CCCCFF">
+                <Path.Data>
+                    <PathGeometry Figures=" M 0,0 L800,0 V100 L0,100 Z" />
+                </Path.Data>
+            </Path>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <!--
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="ButtonPolygon" Property="Fill" Value="Black"></Setter>
+            </Trigger>
+            -->
+            <!--
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="ButtonPolygon" Property="Fill" Value="Gray"/>
+            </Trigger>
+            -->
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 </ResourceDictionary>
