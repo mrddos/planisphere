@@ -58,6 +58,7 @@ namespace Scada.MainVision
 
 		private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+			
 			// TODO: Window Loaded.
 			this.LoadDataProvider();
 
@@ -91,7 +92,7 @@ namespace Scada.MainVision
 			// Manage
 			this.Grid.Children.Add(panel);
 
-			this.panelManager.SetListViewPanelPos(panel, 1, 1);
+			this.panelManager.SetListViewPanelPos(panel, 2, 1);
 		}
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)

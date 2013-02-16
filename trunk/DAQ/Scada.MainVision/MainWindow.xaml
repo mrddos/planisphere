@@ -4,7 +4,7 @@
         xmlns:c="clr-namespace:Scada.Controls;assembly=Scada.Controls"
         xmlns:m="clr-namespace:Scada.MainVision"
         Title="MainWindow" Height="600" Width="800" Loaded="WindowLoaded">
-    <Grid x:Name="Grid" Background="Blue">
+    <Grid x:Name="Grid" Background="AliceBlue">
 
         <Grid.Resources>
             <ResourceDictionary>
@@ -16,12 +16,13 @@
         <!-- Definitions -->
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="260"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- UIElements -->
@@ -40,8 +41,10 @@
             </c:ListViewPanel.ListViewContent>
         </c:ListViewPanel>
         -->
-            
-        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="1" Grid.Column="0">
+
+        <m:HerePane Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"></m:HerePane>
+        
+        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="2" Grid.Column="0">
 
         </m:DeviceListPanel>
 
