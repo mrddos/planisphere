@@ -39,7 +39,8 @@ namespace Scada.MainVision
 			if (path != null)
 			{
 
-				//path.Data = Geometry.Parse(this.DrawPath());
+				path.Data = this.DrawPath();
+				
 			}
 		}
 
@@ -51,87 +52,27 @@ namespace Scada.MainVision
 		/// 
 		/// </summary>
 		/// <returns></returns>
-		private string DrawPath(int windowWidth = 800)
+		private Geometry DrawPath(int width = 800)
 		{
-			string format =
-@"
-M 0,0 
-V #Height#
-H #SideWidth#
-A 
-L #B1C#
-H #BumpWidth#
-L #B2C#
-H #WindowWidth#
-V 0
-Z
-";
-			double x = 0.0;
-			double y = 0.0;
-			const double Offset = 12.0; 
+			const double Radius = 5.0;
+			const double Width1 = 100;
+			const double Height1 = 100;
+			const double Height2 = 70;
+			double x = 10;
+			double y = 10;
+			GeometryGroup gg = new GeometryGroup();
 
-			double bumpWidth = windowWidth - (AZoneSideWidth + AtoBWidth) * 2;
-			string ret = format;
-			ret = ret.Replace("#Height#", APointV.ToString());
-			ret = ret.Replace("#SideWidth#", (AZoneSideWidth - Offset).ToString());
-			ret = ret.Replace("#WindowWidth#", windowWidth.ToString());
-			ret = ret.Replace("#BumpWidth#", bumpWidth.ToString());
+			RectangleGeometry rect1 = new RectangleGeometry(new Rect(x, y, Width1, Height1), Radius, Radius);
+			
 
-			string[] ps = { "#B1C#", "#B1E#", "#B2C#", "#B2E#", };// "#B1E#", "#B2C#", "#B2E#", "#B4S#", "#B4C#", "#B4E#" };
+			RectangleGeometry rect2 = new RectangleGeometry(new Rect(x, y, width, Height2), Radius, Radius);
 
-			foreach (string po in ps)
-			{
-				
-				// double ctrlPointOffsetX = 0.0;
-				// double ctrlPointOffsetY = 0.0;
-				double startPointOffsetX = 0.0;
-				double startPointOffsetY = 0.0;
-				double endPointOffsetX = 0.0;
-				double endPointOffsetY = 0.0;
-				switch (po[2])
-				{
+			
+			gg.FillRule = FillRule.Nonzero;
+			gg.Children.Add(rect1);
+			gg.Children.Add(rect2);
 
-
-					case '1':
-						x = AZoneSideWidth + AtoBWidth;
-						y = BPointV;
-						
-						//ctrlPointOffsetY = Offset / 2;
-						startPointOffsetX = -Offset;
-						startPointOffsetY = -Offset;
-						endPointOffsetX = Offset;
-						break;
-					case '2':
-						x = AZoneSideWidth + AtoBWidth + bumpWidth;
-						y = BPointV;
-						//ctrlPointOffsetX = Offset / 2;
-						//ctrlPointOffsetY = Offset / 2;
-						startPointOffsetX = -Offset;
-						endPointOffsetX = Offset;
-						endPointOffsetY = -Offset;
-						break;
-
-				}
-
-				switch (po[3])
-				{
-					case 'C':
-						//x += ctrlPointOffsetX;
-						//y += ctrlPointOffsetY;
-						break;
-
-					case 'E':
-						x += endPointOffsetX;
-						y += endPointOffsetY;
-						break;
-					default:
-						break;
-				}
-
-				ret = ret.Replace(po, string.Format("{0},{1}", x, y));
-			}
-			ret = ret.Replace("\r\n", " ");
-			return ret;
+			return gg.GetOutlinedPathGeometry();
 		}
 
 
