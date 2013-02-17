@@ -55,22 +55,43 @@ namespace Scada.MainVision
 		private Geometry DrawPath(int width = 800)
 		{
 			const double Radius = 5.0;
-			const double Width1 = 100;
-			const double Height1 = 100;
-			const double Height2 = 70;
+			const double Width1 = 200;
+			const double Height1 = 200;
+			const double Height2 = Width1 - 50;
 			double x = 10;
 			double y = 10;
 			GeometryGroup gg = new GeometryGroup();
 
 			RectangleGeometry rect1 = new RectangleGeometry(new Rect(x, y, Width1, Height1), Radius, Radius);
-			
 
 			RectangleGeometry rect2 = new RectangleGeometry(new Rect(x, y, width, Height2), Radius, Radius);
 
-			
+			PathGeometry corner = new PathGeometry();
+
+
+			PathFigureCollection pathFigures = new PathFigureCollection();
+			PathFigure pathFigure = new PathFigure();
+			pathFigures.Add(pathFigure);
+
+			corner.Figures = pathFigures;
+			pathFigure.StartPoint = new Point(x + Width1, y + Height2);
+			pathFigure.IsClosed = true;
+
+			//pathFigure
+			LineSegment ls1 = new LineSegment(new Point(x + Width1 + Radius, y + Height2), true);
+			ArcSegment as1 = new ArcSegment(new Point(x + Width1, y + Height2 + Radius), new Size(Radius, Radius), 90, false, SweepDirection.Counterclockwise, true);
+
+			PathSegmentCollection pathSegmentCollection = new PathSegmentCollection();
+
+			pathSegmentCollection.Add(ls1);
+			pathSegmentCollection.Add(as1);
+
+			pathFigure.Segments = pathSegmentCollection;
+
 			gg.FillRule = FillRule.Nonzero;
 			gg.Children.Add(rect1);
 			gg.Children.Add(rect2);
+			gg.Children.Add(corner);
 
 			return gg.GetOutlinedPathGeometry();
 		}
