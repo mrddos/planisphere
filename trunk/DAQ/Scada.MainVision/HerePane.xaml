@@ -12,5 +12,5 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <!-- Control -->
-    <UserControl x:Name="Control" Background="AliceBlue" Template="{StaticResource HerePaneTemplate}" Loaded="HerePaneLoaded"></UserControl>
+    <UserControl x:Name="Control" Background="Bisque" Template="{StaticResource HerePaneTemplate}" Loaded="HerePaneLoaded"></UserControl>
 </UserControl>

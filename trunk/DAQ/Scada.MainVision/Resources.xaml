@@ -12,7 +12,7 @@
     <ControlTemplate x:Key="HerePaneTemplate" TargetType="{x:Type ContentControl}">
         <Grid>
             <!-- Path would be set in C# code -->
-            <Path x:Name="Path" Stroke="Black" StrokeThickness="2" Fill="AliceBlue">
+            <Path x:Name="Path" Stroke="WhiteSmoke" StrokeThickness="2" Fill="WhiteSmoke">
                 <Path.Effect>
                     <DropShadowEffect Direction="270" ShadowDepth="3" Opacity=".5"></DropShadowEffect>
                 </Path.Effect>

@@ -6,10 +6,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="200" Loaded="DeviceListLoaded">
     <Grid >
-
-        
-        <TreeView x:Name="DeviceList" Margin="0,0,0,83" Background="Aqua"/>
-        
-        
+        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2">
+        </Rectangle>
+        <!--
+        <Border CornerRadius="5,5,5,5" BorderThickness="0" BorderBrush="{TemplateBinding Control.BorderBrush}">
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="Silver" Offset="0.0" />
+                    <GradientStop Color="Silver" Offset="0.5" />
+                    <GradientStop Color="White" Offset="0.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+            
+            
+        </Border>
+        -->
+        <TreeView x:Name="DeviceList" Margin="3,3,3,83" BorderBrush="White"/>
+        <Grid.OpacityMask>
+            <VisualBrush Visual="{Binding ElementName=Rect}"/>
+        </Grid.OpacityMask>
     </Grid>
 </UserControl>
