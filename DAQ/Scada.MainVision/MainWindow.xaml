@@ -15,13 +15,13 @@
         </Grid.Resources>
         <!-- Definitions -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
             <RowDefinition Height="150"/>
-            <RowDefinition Height="260"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -44,8 +44,7 @@
 
         <m:HerePane Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"></m:HerePane>
         
-        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="2" Grid.Column="0">
-
+        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="2" Grid.Column="0" Padding="5,5,5,5">
         </m:DeviceListPanel>
 
             <!-- Buuton for testing -->

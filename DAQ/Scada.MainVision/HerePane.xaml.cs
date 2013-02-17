@@ -55,11 +55,11 @@ namespace Scada.MainVision
 		private Geometry DrawPath(int width = 800)
 		{
 			const double Radius = 5.0;
-			const double Width1 = 200;
-			const double Height1 = 200;
-			const double Height2 = Width1 - 50;
-			double x = 10;
-			double y = 10;
+			const double Width1 = 280;
+			const double Height1 = 220;
+			const double Height2 = Height1 - 70;
+			double x = 5;
+			double y = 5;
 			GeometryGroup gg = new GeometryGroup();
 
 			RectangleGeometry rect1 = new RectangleGeometry(new Rect(x, y, Width1, Height1), Radius, Radius);
