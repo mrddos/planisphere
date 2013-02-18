@@ -69,6 +69,8 @@ namespace Scada.MainVision
 			this.refreshDataTimer.Start();
 
 			// Device List
+            this.DeviceList.ClickDeviceItem += this.OnDeviceItemClicked;
+
 			this.DeviceList.AddDevice("Weather");
 			this.DeviceList.AddDevice("Weather");
         }
@@ -106,6 +108,11 @@ namespace Scada.MainVision
 			ListViewPanel panel = (ListViewPanel)sender;
 			this.panelManager.CloseListViewPanel(panel);
 		}
+
+        void OnDeviceItemClicked(object sender, EventArgs e)
+        {
+            this.ShowListViewPanel();
+        }
 
 
 

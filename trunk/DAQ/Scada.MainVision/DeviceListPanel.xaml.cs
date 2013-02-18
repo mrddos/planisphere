@@ -32,22 +32,33 @@ namespace Scada.MainVision
 		{
 			this.groupTreeViewItem = new TreeViewItem();
 			groupTreeViewItem.Header = "Device List";
-			groupTreeViewItem.Height = 30;
+			// groupTreeViewItem.Height = 100;
 
+            
 			this.DeviceList.Items.Add(groupTreeViewItem);
 		}
 
 		public void AddDevice(string deviceName)
 		{
+            /*
 			Button deviceItem = new Button();
 			deviceItem.Height = 40.0;
 			deviceItem.Click += OnDeviceItemClick;
+             * */
 			// deviceItem.Template = 
 			//this.DeviceListContainer.Children.Add(deviceItem);
 
+            ResourceDictionary rd = this.Resources;
+            ControlTemplate ct = (ControlTemplate)rd["A"];
+
+            //ControlTemplate ct = new ControlTemplate(typeof(TreeViewItem));
+            //ct.VisualTree = null;
+
 			TreeViewItem tvi = new TreeViewItem();
+            tvi.Template = ct;
+            tvi.MouseDoubleClick += OnDeviceItemClick;
 			tvi.Header = deviceName;
-			tvi.Height = 30;
+            
 
 			this.groupTreeViewItem.Items.Add(tvi);
 
@@ -55,7 +66,7 @@ namespace Scada.MainVision
 
 		private void OnDeviceItemClick(object sender, RoutedEventArgs args)
 		{
-			//DeviceList
+            this.ClickDeviceItem(sender, args);
 		}
 
 		private void DeviceListLoaded(object sender, RoutedEventArgs e)
@@ -64,5 +75,7 @@ namespace Scada.MainVision
 		}
 
 
-	}
+
+        public event EventHandler ClickDeviceItem;
+    }
 }
