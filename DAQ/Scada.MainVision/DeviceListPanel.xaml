@@ -7,8 +7,8 @@
              d:DesignHeight="500" d:DesignWidth="280" Loaded="DeviceListLoaded">
     <UserControl.Resources>
         <ResourceDictionary x:Name="Resources">
-            <ControlTemplate x:Key="A" TargetType="TreeViewItem">
-                <Button Height="50" Width="50" >ABBBBDDD</Button>
+            <ControlTemplate x:Key="DeviceItemTemplate" TargetType="TreeViewItem">
+                <Button Height="40" Content="{Binding Name}"></Button>
             </ControlTemplate>
         </ResourceDictionary>
     </UserControl.Resources>

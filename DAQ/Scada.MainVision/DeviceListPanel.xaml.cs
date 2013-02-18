@@ -14,12 +14,19 @@ using System.Windows.Shapes;
 
 namespace Scada.MainVision
 {
+    class DeviceItem
+    {
+        public string Name { get; set; }
+    }
+
 	/// <summary>
 	/// Interaction logic for DeviceListPanel.xaml
 	/// </summary>
 	public partial class DeviceListPanel : UserControl
 	{
-		private TreeViewItem groupTreeViewItem;
+        private const string DeviceItemTemplate = "DeviceItemTemplate";
+
+		private TreeViewItem deviceGroup;
 
 		public DeviceListPanel()
 		{
@@ -30,37 +37,26 @@ namespace Scada.MainVision
 
 		public void AddDeviceGroup()
 		{
-			this.groupTreeViewItem = new TreeViewItem();
-			groupTreeViewItem.Header = "Device List";
-			// groupTreeViewItem.Height = 100;
-
+			this.deviceGroup = new TreeViewItem();
+			deviceGroup.Header = "Device List";
             
-			this.DeviceList.Items.Add(groupTreeViewItem);
+			this.DeviceList.Items.Add(deviceGroup);
 		}
 
 		public void AddDevice(string deviceName)
 		{
-            /*
-			Button deviceItem = new Button();
-			deviceItem.Height = 40.0;
-			deviceItem.Click += OnDeviceItemClick;
-             * */
-			// deviceItem.Template = 
-			//this.DeviceListContainer.Children.Add(deviceItem);
+            //
+            ControlTemplate ct = (ControlTemplate)this.Resources[DeviceItemTemplate];
 
-            ResourceDictionary rd = this.Resources;
-            ControlTemplate ct = (ControlTemplate)rd["A"];
-
-            //ControlTemplate ct = new ControlTemplate(typeof(TreeViewItem));
-            //ct.VisualTree = null;
 
 			TreeViewItem tvi = new TreeViewItem();
             tvi.Template = ct;
+            tvi.DataContext = new DeviceItem() { Name = deviceName };
             tvi.MouseDoubleClick += OnDeviceItemClick;
-			tvi.Header = deviceName;
+			//tvi.Header = deviceName;
             
 
-			this.groupTreeViewItem.Items.Add(tvi);
+			this.deviceGroup.Items.Add(tvi);
 
 		}
 

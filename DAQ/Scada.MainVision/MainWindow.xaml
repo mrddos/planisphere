@@ -41,13 +41,15 @@
             </c:ListViewPanel.ListViewContent>
         </c:ListViewPanel>
         -->
-
+        
+        <!-- Here Pane as the Header -->
         <m:HerePane Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"></m:HerePane>
         
-        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="2" Grid.Column="0" Padding="5,5,5,5" Height="200">
+        <!-- Device List -->
+        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="2" Grid.Column="0" Padding="5,5,5,5" >
         </m:DeviceListPanel>
 
-            <!-- Buuton for testing -->
+        <!-- Buuton for testing -->
         <Button Content="Button" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1"/>
 
 
