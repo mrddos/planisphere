@@ -46,16 +46,13 @@ namespace Scada.MainVision
 
 		/// <summary>
 		/// 
-		/// 1					         6
-		/// 2    b3                b4    5
-		///            b1    b2	
 		/// 
 		/// </summary>
 		/// <returns></returns>
 		private Geometry DrawPath(int width = 800)
 		{
 			const double Radius = 5.0;
-			const double Width1 = 280;
+			const double Width1 = 290;
 			const double Height1 = 220;
 			const double Height2 = Height1 - 70;
 			double x = 5;
