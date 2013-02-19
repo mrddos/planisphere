@@ -25,6 +25,10 @@ namespace Scada.MainVision
 				
 				
 				this.dataListener.OnDataArrival(d);
+                Dictionary<string, object> d2 = new Dictionary<string, object>(10);
+
+
+                this.dataListener.OnDataArrival(d2);
 				/*
 				this.dataListener.OnDataArrival("1A", "1B", "1C", ".33");
 				this.dataListener.OnDataArrival("2A", "2B", "2C", ".4454");
