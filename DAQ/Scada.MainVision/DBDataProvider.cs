@@ -15,7 +15,7 @@ namespace Scada.MainVision
 	}
 
 	/// <summary>
-	/// 
+	/// Each Device has a Listener.
 	/// </summary>
 	internal class DBDataProvider : DataProvider
 	{
@@ -26,6 +26,8 @@ namespace Scada.MainVision
 		private MySqlCommand cmd = null;
 
 		private List<string> tableNames = new List<string>();
+
+        private Dictionary<string, DBDataCommonListerner> dataListeners = new Dictionary<string, DBDataCommonListerner>();
 
 		/// <summary>
 		/// 
@@ -46,27 +48,54 @@ namespace Scada.MainVision
 		public override DataListener GetDataListener(string tableName)
 		{
 			this.tableNames.Add(tableName);
-			return new DBDataCommonListerner();
+            if (this.dataListeners.ContainsKey(tableName))
+            {
+                return this.dataListeners[tableName];
+            }
+            else
+            {
+                DBDataCommonListerner listener = new DBDataCommonListerner();
+                this.dataListeners.Add(tableName, listener);
+                return listener;
+            }
+
 		}
 
+        /// <summary>
+        /// If no listener, provider would not query the database.
+        /// 
+        /// </summary>
 		public override void Refresh()
 		{
 			foreach (string tableName in this.tableNames)
 			{
-				// TODO: 
-				this.cmd.CommandText = "";
-				MySqlDataReader reader = this.cmd.ExecuteReader();
+                if (!this.dataListeners.ContainsKey(tableName))
+                {
+                    continue;
+                }
+                DBDataCommonListerner listener = this.dataListeners[tableName];
+                if (listener != null)
+                {
+                    // TODO:
+                    this.cmd.CommandText = "";
+                    MySqlDataReader reader = this.cmd.ExecuteReader();
 
-				while (reader.Read())
-				{
-					// reader.
-				}
+                    while (reader.Read())
+                    {
+                        // reader.
+                    }
+                }
+                
 			}
 		}
 
 		private DataListener GetDataListenerByTableName(string tableName)
 		{
-			return null;
+            if (!this.dataListeners.ContainsKey(tableName))
+            {
+                return null;
+            }
+            return this.dataListeners[tableName];
 		}
 	}
 }
