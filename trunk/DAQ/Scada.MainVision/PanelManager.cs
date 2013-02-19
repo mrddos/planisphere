@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Scada.MainVision
 {
@@ -28,18 +29,22 @@ namespace Scada.MainVision
 
 		public ListViewPanel CreateListViewPanel()
 		{
-			ListViewPanel panel = new ListViewPanel();
-
 			// ListView
 			ListView listView = new ListView();
+            
+
+            ListViewPanel panel = new ListViewPanel();
 			panel.ListViewContent = listView;
 			GridView gridView = new GridView();
+            listView.View = gridView;
 
 			GridViewColumn col = new GridViewColumn();
 			col.Header = "ASS";
+            col.DisplayMemberBinding = new Binding("[Name]");
+            col.Width = 100;
 			gridView.Columns.Add(col);
 
-			listView.View = gridView;
+			
 
 			if (this.currentPanel != null)
 			{
