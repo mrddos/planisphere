@@ -9,7 +9,32 @@ using System.Windows.Data;
 
 namespace Scada.MainVision
 {
-	public class PanelManager
+    class ColumnInfo
+    {
+        public string Header
+        {
+            get;
+            set;
+        }
+
+        public string BindingName
+        {
+            get;
+            set;
+        }
+
+        public double Width
+        {
+            get;
+            set;
+        }
+    }
+
+    /**
+     * PanelManager
+     * 
+     */
+    public class PanelManager
 	{
 		private Window window;
 
@@ -38,12 +63,21 @@ namespace Scada.MainVision
 			GridView gridView = new GridView();
             listView.View = gridView;
 
-			GridViewColumn col = new GridViewColumn();
-			col.Header = "ASS";
-            col.DisplayMemberBinding = new Binding("[Name]");
-            col.Width = 100;
-			gridView.Columns.Add(col);
+            var columnInfoList = new List<ColumnInfo>();
+            // TODO: add in the initialize code for each device.
+            columnInfoList.Add(new ColumnInfo() { Header = "Name", BindingName = "Name", Width = 100 });
+            columnInfoList.Add(new ColumnInfo() { Header = "Age", BindingName = "Age", Width = 70 });
+            columnInfoList.Add(new ColumnInfo() { Header = "Temp", BindingName = "Temp", Width = 100 });
 
+            foreach (var columnInfo in columnInfoList)
+            {
+                GridViewColumn col = new GridViewColumn();
+                col.Header = columnInfo.Header;
+                string bindingName = string.Format("[{0}]", columnInfo.BindingName);
+                col.DisplayMemberBinding = new Binding(bindingName);
+                col.Width = columnInfo.Width;
+                gridView.Columns.Add(col);
+            }
 			
 
 			if (this.currentPanel != null)
@@ -66,7 +100,6 @@ namespace Scada.MainVision
 		{
 			listViewPanel.Visibility = Visibility.Hidden;
 		}
-
 
 		public void CloseListViewPanel(ListViewPanel listViewPanel)
 		{
