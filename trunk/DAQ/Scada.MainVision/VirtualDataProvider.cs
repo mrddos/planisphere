@@ -50,5 +50,16 @@ namespace Scada.MainVision
 			}
 			return null;
 		}
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public override void RemoveDataListener(string tableName)
+        {
+            // Do nothing.
+        }
 	}
 }
