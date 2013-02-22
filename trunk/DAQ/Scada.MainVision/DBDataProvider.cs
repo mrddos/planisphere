@@ -12,7 +12,8 @@ namespace Scada.MainVision
 	internal class DBDataCommonListerner : DataListener
 	{
 
-	}
+        
+    }
 
 	/// <summary>
 	/// Each Device has a Listener.
@@ -21,13 +22,15 @@ namespace Scada.MainVision
 	{
 		private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
 
+        private const int MaxCountFetchRecent = 10;
+
 		private MySqlConnection conn = new MySqlConnection(ConnectionString);
 
 		private MySqlCommand cmd = null;
 
 		private List<string> tableNames = new List<string>();
 
-        private Dictionary<string, DBDataCommonListerner> dataListeners = new Dictionary<string, DBDataCommonListerner>();
+        private Dictionary<string, DBDataCommonListerner> dataListeners;
 
 		/// <summary>
 		/// 
@@ -42,7 +45,13 @@ namespace Scada.MainVision
 		/// </summary>
 		public DBDataProvider()
 		{
-			this.cmd = this.conn.CreateCommand();
+            this.dataListeners = new Dictionary<string, DBDataCommonListerner>();
+            if (this.conn != null)
+            {
+                this.conn.Open();
+                this.cmd = this.conn.CreateCommand();
+            }
+
 		}
 
 		public override DataListener GetDataListener(string tableName)
@@ -73,21 +82,31 @@ namespace Scada.MainVision
                 {
                     continue;
                 }
+
                 DBDataCommonListerner listener = this.dataListeners[tableName];
                 if (listener != null)
                 {
-                    // TODO:
-                    this.cmd.CommandText = "";
+
+                    int count = MaxCountFetchRecent;
+                    this.cmd.CommandText = this.GetSelectStatement(tableName, count);
                     MySqlDataReader reader = this.cmd.ExecuteReader();
 
                     while (reader.Read())
                     {
-                        // reader.
+                        // TODO: Mashal the data into Dict;
+                        string a = reader.GetString(2);
+                        
                     }
                 }
                 
 			}
 		}
+
+        private string GetSelectStatement(string tableName, int count)
+        {
+            string format = "select * from {0} order by Id DESC limit {1}";
+            return string.Format(format, tableName, count);
+        }
 
 		private DataListener GetDataListenerByTableName(string tableName)
 		{

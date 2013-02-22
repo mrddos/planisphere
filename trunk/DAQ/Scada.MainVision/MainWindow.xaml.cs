@@ -36,7 +36,7 @@ namespace Scada.MainVision
 
 		private Timer refreshDataTimer;
 
-		private bool connectedToDataBase = false;
+		private bool connectedToDataBase = true;
 
         public MainWindow()
         {
