@@ -21,5 +21,13 @@ namespace Scada.MainVision
 		/// <returns></returns>
 		public abstract DataListener GetDataListener(string tableName);
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public abstract void RemoveDataListener(string tableName);
+
 	}
 }

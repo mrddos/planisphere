@@ -48,8 +48,15 @@ namespace Scada.MainVision
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>();
             if (this.conn != null)
             {
-                this.conn.Open();
-                this.cmd = this.conn.CreateCommand();
+                try
+                {
+                    this.conn.Open();
+                    this.cmd = this.conn.CreateCommand();
+                }
+                catch (Exception e)
+                {
+                    string msg = e.Message;
+                }
             }
 
 		}
@@ -69,6 +76,14 @@ namespace Scada.MainVision
             }
 
 		}
+
+        public override void RemoveDataListener(string tableName)
+        {
+            if (this.tableNames.Contains(tableName))
+            {
+                this.tableNames.Remove(tableName);
+            }
+        }
 
         /// <summary>
         /// If no listener, provider would not query the database.
