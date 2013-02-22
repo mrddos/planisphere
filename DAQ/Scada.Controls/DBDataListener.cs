@@ -18,6 +18,12 @@ namespace Scada.Controls.Data
 
 		}
 
+        public string TableName
+        {
+            get;
+            set;
+        }
+
 		public OnDataArrival OnDataArrival
 		{
 			get;
