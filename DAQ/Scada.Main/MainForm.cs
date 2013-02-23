@@ -57,11 +57,11 @@ namespace Scada.Main
 			 */
 
 			// Initialize the Columns
-			//deviceListView.Columns.Add(new EditableColumnHeaderEx("Device", 20));
-			//deviceListView.Columns.Add(new ColumnHeaderEx("Version", 120));
-			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Genre", excmbx_genre, 60));
-			// deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
-			// deviceListView.Columns.Add(new ColumnHeaderEx("Status", 80));
+			deviceListView.Columns.Add(new EditableColumnHeaderEx("Device", 250));
+			deviceListView.Columns.Add(new ColumnHeaderEx("Version", 60));
+			//deviceListView.Columns.Add(new EditableColumnHeaderEx("Genre", excmbx_genre, 60));
+			//deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
+			deviceListView.Columns.Add(new ColumnHeaderEx("Status", 100));
         }
 
         private void RunDevices()
@@ -166,6 +166,11 @@ namespace Scada.Main
         }
 
         private void MainForm_Resize(object sender, EventArgs e)
+        {
+
+        }
+
+        private void deviceListView_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
