@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.sysNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,22 +60,9 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.deviceListView = new Scada.Main.DeviceListView();
-            this.groupBox1.SuspendLayout();
             this.menuBar.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.AutoSize = true;
-            this.groupBox1.Controls.Add(this.deviceListView);
-            this.groupBox1.Location = new System.Drawing.Point(12, 52);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(30, 33, 30, 33);
-            this.groupBox1.Size = new System.Drawing.Size(629, 332);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
             // 
             // sysNotifyIcon
             // 
@@ -93,7 +79,7 @@
             this.helpMenuItem});
             this.menuBar.Location = new System.Drawing.Point(0, 0);
             this.menuBar.Name = "menuBar";
-            this.menuBar.Size = new System.Drawing.Size(660, 24);
+            this.menuBar.Size = new System.Drawing.Size(661, 24);
             this.menuBar.TabIndex = 2;
             this.menuBar.Text = "menuStrip1";
             // 
@@ -282,7 +268,7 @@
             this.toolStripButton1});
             this.toolBar.Location = new System.Drawing.Point(0, 24);
             this.toolBar.Name = "toolBar";
-            this.toolBar.Size = new System.Drawing.Size(660, 25);
+            this.toolBar.Size = new System.Drawing.Size(661, 25);
             this.toolBar.TabIndex = 3;
             this.toolBar.Text = "toolStrip1";
             // 
@@ -297,9 +283,9 @@
             // 
             // statusBar
             // 
-            this.statusBar.Location = new System.Drawing.Point(0, 484);
+            this.statusBar.Location = new System.Drawing.Point(0, 359);
             this.statusBar.Name = "statusBar";
-            this.statusBar.Size = new System.Drawing.Size(660, 22);
+            this.statusBar.Size = new System.Drawing.Size(661, 22);
             this.statusBar.TabIndex = 4;
             this.statusBar.Text = "statusStrip1";
             // 
@@ -307,33 +293,33 @@
             // 
             this.deviceListView.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
             this.deviceListView.ControlPadding = 4;
+            this.deviceListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.deviceListView.FullRowSelect = true;
-            this.deviceListView.Location = new System.Drawing.Point(68, 68);
-            this.deviceListView.Margin = new System.Windows.Forms.Padding(20, 22, 20, 22);
+            this.deviceListView.Location = new System.Drawing.Point(0, 49);
+            this.deviceListView.Margin = new System.Windows.Forms.Padding(5);
             this.deviceListView.Name = "deviceListView";
             this.deviceListView.OwnerDraw = true;
-            this.deviceListView.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.deviceListView.RightToLeftLayout = true;
-            this.deviceListView.Size = new System.Drawing.Size(511, 196);
+            this.deviceListView.Size = new System.Drawing.Size(661, 310);
             this.deviceListView.TabIndex = 0;
             this.deviceListView.UseCompatibleStateImageBehavior = false;
             this.deviceListView.View = System.Windows.Forms.View.Details;
+            this.deviceListView.SelectedIndexChanged += new System.EventHandler(this.deviceListView_SelectedIndexChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(660, 506);
+            this.ClientSize = new System.Drawing.Size(661, 381);
+            this.Controls.Add(this.deviceListView);
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.toolBar);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuBar);
             this.MainMenuStrip = this.menuBar;
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "系统设备管理器";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.groupBox1.ResumeLayout(false);
             this.menuBar.ResumeLayout(false);
             this.menuBar.PerformLayout();
             this.toolBar.ResumeLayout(false);
@@ -345,8 +331,7 @@
 
         #endregion
 
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.NotifyIcon sysNotifyIcon;
+        private System.Windows.Forms.NotifyIcon sysNotifyIcon;
 		private System.Windows.Forms.MenuStrip menuBar;
 		private System.Windows.Forms.ToolStripMenuItem fileMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem addDeviceFileMenuItem;
