@@ -9,14 +9,33 @@ using System.Threading;
 
 namespace Scada.Main
 {
+
+    class DevicesInfo
+    {
+        public List<string> Versions
+        {
+            get;
+            set;
+        }
+
+        public string DisplayName
+        {
+            get;
+            set;
+        }
+    }
+
 	class DeviceManager
 	{
         private const string DeviceConfigFile = @"device.cfg";
 
-        private Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>();
+        private Dictionary<string, DevicesInfo> dict = new Dictionary<string, DevicesInfo>();
 
         private Dictionary<string, string> selectedDevices = new Dictionary<string, string>();
 
+        /// <summary>
+        /// Running devices;
+        /// </summary>
         private List<Device> devices = new List<Device>();
 
         private SendOrPostCallback dataReceived;
@@ -47,12 +66,12 @@ namespace Scada.Main
         // TODO:
         public string GetDeviceDisplayName(string deviceName)
         {
-            return deviceName;
+            return dict[deviceName.ToLower()].DisplayName;
         }
 
         public List<string> GetVersions(string deviceName)
         {
-            return dict[deviceName];
+            return dict[deviceName].Versions;
         }
 
         static string DirectoryName(string dir)
@@ -64,39 +83,64 @@ namespace Scada.Main
 		
         private void LoadDevicesInfo(string installPath)
         {
-            string[] devicePaths = Directory.GetDirectories(installPath + "\\devices");
+            string[] devicePaths = Directory.GetDirectories(MainApplication.DevicesRootPath);
             foreach (string devicePath in devicePaths)
             {
                 string deviceName = DirectoryName(devicePath);
+                string deviceKey = deviceName.ToLower();
 
-                string[] versions = Directory.GetDirectories(devicePath);
-                foreach (string version in versions)
+                DevicesInfo di = null;
+                if (!dict.ContainsKey(deviceKey))
                 {
-                    this.AddDeviceVersion(deviceName, DirectoryName(version));
+                    di = new DevicesInfo() { Versions = new List<string>() };
+                    dict.Add(deviceKey, di);
+                }
+                else
+                {
+                    di = dict[deviceKey];
+                }
+
+                string displayConfig = devicePath + "\\display.cfg";
+                if (File.Exists(displayConfig))
+                {
+                    using (ScadaReader sr = new ScadaReader(displayConfig))
+                    {
+                        SectionType secType = SectionType.None;
+                        string line = null;
+                        string key = null;
+                        IValue value = null;
+                        ReadLineResult result = sr.ReadLine(out secType, out line, out key, out value);
+
+                        while (result == ReadLineResult.OK)
+                        {
+                            if (key.ToLower() == "name")
+                            {
+                                di.DisplayName = value.ToString();
+                            }
+                            result = sr.ReadLine(out secType, out line, out key, out value);
+                        }
+                    }
+                }
+
+                string[] versionPaths = Directory.GetDirectories(devicePath);
+                foreach (string versionPath in versionPaths)
+                {
+                    string version = DirectoryName(versionPath);
+                    di.Versions.Add(version);
                 }
             }
         }
 
-        private void AddDeviceVersion(string deviceName, string version)
+
+        public static string GetDevicePath(string deviceName)
         {
-            deviceName = deviceName.ToLower();
-            if (dict.Keys.Contains(deviceName))
-            {
-                dict[deviceName].Add(version);
-            }
-            else
-            {
-                List<string> versions = new List<string>();
-                versions.Add(version);
-                dict[deviceName] = versions;
-            }
+            return string.Format("{0}\\{1}", MainApplication.DevicesRootPath, deviceName);
         }
 
         public static string GetDevicePath(string deviceName, string version)
         {
             return string.Format("{0}\\{1}\\{2}", MainApplication.DevicesRootPath, deviceName, version);
         }
-
 
 		public bool RegisterRecordModule(string module, FileRecord fileRecord)
 		{
@@ -235,6 +279,7 @@ namespace Scada.Main
 
 		public void Initialize()
 		{
+            // TODO: Remove the param;
             this.LoadDevicesInfo(MainApplication.InstallPath);
 		}
 
