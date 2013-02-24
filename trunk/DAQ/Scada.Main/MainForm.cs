@@ -55,9 +55,11 @@ namespace Scada.Main
 
             foreach (string deviceName in Program.DeviceManager.DeviceNames)
             {
-                ListViewGroup g = deviceListView.Groups.Add(deviceName, deviceName + "A");
-                
-                List<string> versions = Program.DeviceManager.GetVersions(deviceName);
+                string deviceKey = deviceName.ToLower();
+                string displayName = Program.DeviceManager.GetDeviceDisplayName(deviceKey);
+                ListViewGroup g = deviceListView.Groups.Add(deviceKey, displayName);
+
+                List<string> versions = Program.DeviceManager.GetVersions(deviceKey);
                 ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Wait");
 
                 g.Items.Add(lvi);
