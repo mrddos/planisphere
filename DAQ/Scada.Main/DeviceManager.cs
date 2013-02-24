@@ -44,6 +44,12 @@ namespace Scada.Main
             get { return dict.Keys.ToArray<string>(); }
         }
 
+        // TODO:
+        public string GetDeviceDisplayName(string deviceName)
+        {
+            return deviceName;
+        }
+
         public List<string> GetVersions(string deviceName)
         {
             return dict[deviceName];
@@ -58,7 +64,7 @@ namespace Scada.Main
 		
         private void LoadDevicesInfo(string installPath)
         {
-            string[] devicePaths = Directory.GetDirectories(installPath);
+            string[] devicePaths = Directory.GetDirectories(installPath + "\\devices");
             foreach (string devicePath in devicePaths)
             {
                 string deviceName = DirectoryName(devicePath);

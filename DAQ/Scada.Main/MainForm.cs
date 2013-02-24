@@ -47,16 +47,22 @@ namespace Scada.Main
 			////////////////////////////////////////////////////////////////
 			// Start Watch Application
 
-
-
             deviceListView.Columns.Add("设备", 280);
 			deviceListView.Columns.Add("版本", 80);
 			deviceListView.Columns.Add("状态", 100);
 
-            ListViewItem lvi = deviceListView.Items.Add(new ListViewItem("AA"));
-            //ListViewItem.ListViewSubItem svi = lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, "BB"));
-            //deviceListView.AddControlToSubItem(
-            
+            deviceListView.ShowGroups = true;
+
+            foreach (string deviceName in Program.DeviceManager.DeviceNames)
+            {
+                ListViewGroup g = deviceListView.Groups.Add(deviceName, deviceName + "A");
+                
+                List<string> versions = Program.DeviceManager.GetVersions(deviceName);
+                ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Wait");
+
+                g.Items.Add(lvi);
+            }
+
         }
 
         private void RunDevices()
@@ -64,6 +70,16 @@ namespace Scada.Main
             RecordManager.Initialize();
             Program.DeviceManager.DataReceived = this.OnDataReceived;
             Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
+        }
+
+        private ListViewItem AddDeviceToList(string deviceName, string version, string status)
+        {
+            ListViewItem lvi = deviceListView.Items.Add(new ListViewItem(deviceName));
+
+            lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, version));
+            lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, status));
+
+            return lvi;
         }
 
 		void timerKeepAliveTick(object sender, EventArgs e)
