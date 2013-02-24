@@ -297,8 +297,6 @@
             this.deviceListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.deviceListView.FullRowSelect = true;
             this.deviceListView.HideSelection = false;
-            this.deviceListView.HotTracking = true;
-            this.deviceListView.HoverSelection = true;
             this.deviceListView.Location = new System.Drawing.Point(0, 49);
             this.deviceListView.Margin = new System.Windows.Forms.Padding(5);
             this.deviceListView.Name = "deviceListView";
