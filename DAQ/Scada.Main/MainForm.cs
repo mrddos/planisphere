@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-
-using Scada.Controls;
 using Scada.Main.Properties;
 using System.Threading;
 using System.Diagnostics;
@@ -50,18 +48,15 @@ namespace Scada.Main
 			// Start Watch Application
 
 
-			/**
-			 * 
-			 * 
-			 * 
-			 */
 
-			// Initialize the Columns
-			deviceListView.Columns.Add(new EditableColumnHeaderEx("Device", 250));
-			deviceListView.Columns.Add(new ColumnHeaderEx("Version", 60));
-			//deviceListView.Columns.Add(new EditableColumnHeaderEx("Genre", excmbx_genre, 60));
-			//deviceListView.Columns.Add(new EditableColumnHeaderEx("Rate", excmbx_rate, 100));
-			deviceListView.Columns.Add(new ColumnHeaderEx("Status", 100));
+            deviceListView.Columns.Add("设备", 280);
+			deviceListView.Columns.Add("版本", 80);
+			deviceListView.Columns.Add("状态", 100);
+
+            ListViewItem lvi = deviceListView.Items.Add(new ListViewItem("AA"));
+            //ListViewItem.ListViewSubItem svi = lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, "BB"));
+            //deviceListView.AddControlToSubItem(
+            
         }
 
         private void RunDevices()

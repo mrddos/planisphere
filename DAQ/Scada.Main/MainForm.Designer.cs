@@ -59,7 +59,7 @@
             this.toolBar = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusBar = new System.Windows.Forms.StatusStrip();
-            this.deviceListView = new Scada.Main.DeviceListView();
+            this.deviceListView = new System.Windows.Forms.ListView();
             this.menuBar.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
@@ -291,15 +291,17 @@
             // 
             // deviceListView
             // 
+            this.deviceListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.deviceListView.Alignment = System.Windows.Forms.ListViewAlignment.SnapToGrid;
-            this.deviceListView.ControlPadding = 4;
+            this.deviceListView.CheckBoxes = true;
             this.deviceListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.deviceListView.FullRowSelect = true;
+            this.deviceListView.HideSelection = false;
+            this.deviceListView.HotTracking = true;
+            this.deviceListView.HoverSelection = true;
             this.deviceListView.Location = new System.Drawing.Point(0, 49);
             this.deviceListView.Margin = new System.Windows.Forms.Padding(5);
             this.deviceListView.Name = "deviceListView";
-            this.deviceListView.OwnerDraw = true;
-            this.deviceListView.RightToLeftLayout = true;
             this.deviceListView.Size = new System.Drawing.Size(661, 310);
             this.deviceListView.TabIndex = 0;
             this.deviceListView.UseCompatibleStateImageBehavior = false;
@@ -351,7 +353,7 @@
 		private System.Windows.Forms.ToolStripMenuItem docMenuItem;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
-		private DeviceListView deviceListView;
+        private System.Windows.Forms.ListView deviceListView;
 		private System.Windows.Forms.ToolStripPanel BottomToolStripPanel;
 		private System.Windows.Forms.ToolStripPanel TopToolStripPanel;
 		private System.Windows.Forms.ToolStripPanel RightToolStripPanel;
