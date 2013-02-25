@@ -112,7 +112,12 @@ namespace Scada.Declare
 			this.actionCondition = (StringValue)entry[DeviceEntry.ActionCondition];
 			this.actionSend = (StringValue)entry[DeviceEntry.ActionSend];
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
-            this.actionInterval = (StringValue)entry[DeviceEntry.ActionInterval];
+
+            var interval = entry[DeviceEntry.ActionInterval];
+            if (interval != null)
+            {
+                this.actionInterval = (StringValue)interval;
+            }
 
 			this.linePattern = (StringValue)entry[DeviceEntry.Pattern];
 			this.dataParser.Pattern = this.linePattern;

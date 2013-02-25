@@ -37,7 +37,8 @@ namespace Scada.Main
 			this.timer.Tick += timerKeepAliveTick;
 			this.timer.Start();
 
-            startMenuItem_Click(null, null);
+            // TODO: Start the selected device by main args;
+            // startMenuItem_Click(null, null);
 
             ////////////////////////////////////////////////////////////////
 			// SQLite!
@@ -45,7 +46,7 @@ namespace Scada.Main
 
 
 			////////////////////////////////////////////////////////////////
-			// Start Watch Application
+			// Device List in Group.
 
             deviceListView.Columns.Add("设备", 280);
 			deviceListView.Columns.Add("版本", 80);
@@ -69,6 +70,7 @@ namespace Scada.Main
 
         private void RunDevices()
         {
+            deviceListView.Enabled = false;
             RecordManager.Initialize();
             Program.DeviceManager.DataReceived = this.OnDataReceived;
             Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
@@ -77,7 +79,7 @@ namespace Scada.Main
         private ListViewItem AddDeviceToList(string deviceName, string version, string status)
         {
             ListViewItem lvi = deviceListView.Items.Add(new ListViewItem(deviceName));
-
+            // Subitems;
             lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, version));
             lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, status));
 
@@ -137,6 +139,8 @@ namespace Scada.Main
 
 		private void startMenuItem_Click(object sender, EventArgs e)
 		{
+            // TODO: Select the device in the list;
+            this.SelectDevices();
             this.RunDevices();
 		}
 
@@ -185,7 +189,30 @@ namespace Scada.Main
 
         private void deviceListView_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int a = 0;
+        }
 
+        private void SelectDevices()
+        {
+            foreach (ListViewItem item in this.deviceListView.Items)
+            {
+                if (item.Checked)
+                {
+                    string deviceName = item.SubItems[0].Text;
+                    string version = item.SubItems[1].Text;
+                    Program.DeviceManager.SelectDevice(deviceName, version, true);
+                }
+            }
+        }
+
+        private void deviceListView_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            bool itemChecked = e.Item.Checked;
+            if (itemChecked)
+            {
+                // TODO: If there are multi-items, only one can be selected.    
+            }
+            
         }
 
     }
