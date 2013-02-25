@@ -18,6 +18,12 @@ namespace Scada.Main
             set;
         }
 
+        public string Name
+        {
+            get;
+            set;
+        }
+
         public string DisplayName
         {
             get;
@@ -60,7 +66,15 @@ namespace Scada.Main
 
         public string[] DeviceNames
         {
-            get { return dict.Keys.ToArray<string>(); }
+            get 
+            {
+                List<string> deviceNames = new List<string>();
+                foreach (var deviceInfo in dict.Values)
+                {
+                    deviceNames.Add(deviceInfo.Name);
+                }
+                return deviceNames.ToArray();
+            }
         }
 
         // TODO:
@@ -92,7 +106,8 @@ namespace Scada.Main
                 DevicesInfo di = null;
                 if (!dict.ContainsKey(deviceKey))
                 {
-                    di = new DevicesInfo() { Versions = new List<string>() };
+                    di = new DevicesInfo() { Name = deviceName };
+                    di.Versions = new List<string>();
                     dict.Add(deviceKey, di);
                 }
                 else
@@ -261,7 +276,6 @@ namespace Scada.Main
 							
 							FileRecord fr = new FileRecord("");
 
-							
                             // To hold the object.
                             this.devices.Add(device);
 

@@ -125,14 +125,14 @@
             // startMenuItem
             // 
             this.startMenuItem.Name = "startMenuItem";
-            this.startMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.startMenuItem.Size = new System.Drawing.Size(152, 22);
             this.startMenuItem.Text = "启动";
             this.startMenuItem.Click += new System.EventHandler(this.startMenuItem_Click);
             // 
             // stopMenuItem
             // 
             this.stopMenuItem.Name = "stopMenuItem";
-            this.stopMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.stopMenuItem.Size = new System.Drawing.Size(152, 22);
             this.stopMenuItem.Text = "停止";
             this.stopMenuItem.Click += new System.EventHandler(this.stopMenuItem_Click);
             // 
@@ -304,6 +304,7 @@
             this.deviceListView.TabIndex = 0;
             this.deviceListView.UseCompatibleStateImageBehavior = false;
             this.deviceListView.View = System.Windows.Forms.View.Details;
+            this.deviceListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.deviceListView_ItemChecked);
             this.deviceListView.SelectedIndexChanged += new System.EventHandler(this.deviceListView_SelectedIndexChanged);
             // 
             // MainForm
