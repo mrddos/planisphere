@@ -112,8 +112,11 @@ namespace Scada.Main
 		/// 
 		/// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
+            // 
+            Program.DeviceManager.Args = args;
+
             /*
             string p = @"D:\Projects\SVN\DAQ\Bin\Debug\devices\Scada.VirtualAgent\0.9\Scada.VirtualAgent.dll";
             Assembly asm = Assembly.LoadFile(p);
@@ -146,8 +149,9 @@ namespace Scada.Main
             MainApplication.TimerCreator = new WinFormTimerCreator();
 
 
-            
             deviceManager.Initialize();
+
+
             // deviceManager.SelectDevice("Scada.HIPC", "0.9", true);
             // deviceManager.SelectDevice("Scada.Weather", "0.9", true);
             // deviceManager.Run();

@@ -47,7 +47,12 @@ namespace Scada.Main
         private SendOrPostCallback dataReceived;
 
 		private Dictionary<string, FileRecord> records = null;
-        
+
+        public string[] Args
+        {
+            get;
+            set;
+        }
 
         public DeviceManager Instance()
         {

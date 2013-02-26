@@ -43,7 +43,16 @@ namespace Scada.Main
             ////////////////////////////////////////////////////////////////
 			// SQLite!
 			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
-
+            bool recover = false;
+            string[] args = Program.DeviceManager.Args;
+            if (args != null && args.Length > 0)
+            {
+                string options = args[0];
+                if (options.Contains("/R"))
+                {
+                    recover = true;
+                }
+            }
 
 			////////////////////////////////////////////////////////////////
 			// Device List in Group.
@@ -66,6 +75,22 @@ namespace Scada.Main
                 g.Items.Add(lvi);
             }
 
+            // TODO:
+            // Do Recover.
+            if (recover)
+            {
+                // TODO: Load devices selected from a file, insert them into ListView.
+                for (; ; )
+                {
+                    // Select the devices.
+                    Program.DeviceManager.SelectDevice("", "", true);
+
+                    // TODO: List Them into ListView
+                }
+                //
+                this.RunDevices();
+            }
+            
         }
 
         private void RunDevices()
@@ -189,7 +214,6 @@ namespace Scada.Main
 
         private void deviceListView_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int a = 0;
         }
 
         private void SelectDevices()
