@@ -1,4 +1,5 @@
 ﻿using Scada.Controls;
+using Scada.Controls.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,27 +10,6 @@ using System.Windows.Data;
 
 namespace Scada.MainVision
 {
-    class ColumnInfo
-    {
-        public string Header
-        {
-            get;
-            set;
-        }
-
-        public string BindingName
-        {
-            get;
-            set;
-        }
-
-        public double Width
-        {
-            get;
-            set;
-        }
-    }
-
     /**
      * PanelManager
      * 
@@ -52,22 +32,24 @@ namespace Scada.MainVision
 
 		}
 
-		public ListViewPanel CreateListViewPanel()
+        public ListViewPanel CreateListViewPanel(DataListener dataListener)
 		{
 			// ListView
 			ListView listView = new ListView();
             
 
             ListViewPanel panel = new ListViewPanel();
+            panel.AddDataListener(dataListener);
 			panel.ListViewContent = listView;
 			GridView gridView = new GridView();
             listView.View = gridView;
 
-            var columnInfoList = new List<ColumnInfo>();
+
+            var columnInfoList = dataListener.GetColumnsInfo(); // new List<ColumnInfo>();
             // TODO: add in the initialize code for each device.
-            columnInfoList.Add(new ColumnInfo() { Header = "Name", BindingName = "Name", Width = 100 });
-            columnInfoList.Add(new ColumnInfo() { Header = "Age", BindingName = "Age", Width = 70 });
-            columnInfoList.Add(new ColumnInfo() { Header = "Temp", BindingName = "Temp", Width = 100 });
+            //columnInfoList.Add(new ColumnInfo() { Header = "Name", BindingName = "Name", Width = 100 });
+            //columnInfoList.Add(new ColumnInfo() { Header = "Age", BindingName = "Age", Width = 70 });
+            //columnInfoList.Add(new ColumnInfo() { Header = "Temp", BindingName = "Temp", Width = 100 });
 
             foreach (var columnInfo in columnInfoList)
             {

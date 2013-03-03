@@ -45,7 +45,7 @@ namespace Scada.MainVision
 		{
 			if (tableName.ToLower() == "weather")
 			{
-				this.dataListener = new DBDataCommonListerner();
+                this.dataListener = new DBDataCommonListerner(tableName);
 				return this.dataListener;
 			}
 			return null;
