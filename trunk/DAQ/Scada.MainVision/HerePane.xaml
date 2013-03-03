@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="200">
+    <!--
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -11,6 +12,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
+    -->
     <!-- Control -->
-    <UserControl x:Name="Control" Background="Bisque" Template="{StaticResource HerePaneTemplate}" Loaded="HerePaneLoaded"></UserControl>
+    
+    <StackPanel x:Name="Panel" Orientation="Horizontal">
+
+    </StackPanel>
+
 </UserControl>

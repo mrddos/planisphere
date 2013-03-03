@@ -33,22 +33,15 @@ namespace Scada.MainVision
 			InitializeComponent();
 		}
 
-		private void HerePaneLoaded(object sender, RoutedEventArgs e)
-		{
-			Path path = (Path)this.Control.Template.FindName("Path", this.Control);
-			if (path != null)
-			{
+        public HerePaneItem AddItem()
+        {
+            HerePaneItem hpi = new HerePaneItem();
+            this.Panel.Children.Add(hpi);
 
-				path.Data = this.DrawPath();
-				
-			}
-		}
+            return hpi;
+        }
 
-		/// <summary>
-		/// 
-		/// 
-		/// </summary>
-		/// <returns></returns>
+        /*
 		private Geometry DrawPath(int width = 800)
 		{
 			const double Radius = 5.0;
@@ -92,7 +85,7 @@ namespace Scada.MainVision
 
 			return gg.GetOutlinedPathGeometry();
 		}
-
+        */
 
 
 		
