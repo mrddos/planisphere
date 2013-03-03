@@ -105,6 +105,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataProvider.cs" />
+    <Compile Include="DBDataCommonListerner.cs" />
     <Compile Include="DBDataConnector.cs" />
     <Compile Include="DBDataProvider.cs" />
     <Compile Include="DeviceListPanel.xaml.cs">
