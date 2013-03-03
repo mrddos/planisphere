@@ -96,13 +96,16 @@ namespace Scada.MainVision
 			// Manage
 			this.Grid.Children.Add(panel);
 
-			this.panelManager.SetListViewPanelPos(panel, 2, 1);
+			this.panelManager.SetListViewPanelPos(panel, 1, 1);
 		}
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
 			this.ShowListViewPanel();
 
+            this.herePane.AddItem();
+
+            this.herePane.AddItem();
 		}
 
 		void ClosePanelButtonClick(object sender, RoutedEventArgs e)
