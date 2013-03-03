@@ -1,4 +1,5 @@
 ﻿using Scada.Controls;
+using Scada.Controls.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace Scada.MainVision
 
 		private Timer refreshDataTimer;
 
-		private bool connectedToDataBase = true;
+		private bool connectedToDataBase = false;
 
         public MainWindow()
         {
@@ -86,8 +87,9 @@ namespace Scada.MainVision
 		private void ShowListViewPanel()
 		{
 			string tableName = "weather";
-			ListViewPanel panel = this.panelManager.CreateListViewPanel();
-			panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
+            DataListener dl = this.dataProvider.GetDataListener(tableName);
+            ListViewPanel panel = this.panelManager.CreateListViewPanel(dl);
+			// panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
 			panel.CloseClick += this.ClosePanelButtonClick;
 
 

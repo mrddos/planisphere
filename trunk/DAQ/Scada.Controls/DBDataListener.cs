@@ -11,6 +11,27 @@ namespace Scada.Controls.Data
 
 	public delegate void OnDataArrivalEnd();
 
+    public class ColumnInfo
+    {
+        public string Header
+        {
+            get;
+            set;
+        }
+
+        public string BindingName
+        {
+            get;
+            set;
+        }
+
+        public double Width
+        {
+            get;
+            set;
+        }
+    }
+
 	public abstract class DataListener
 	{
 		public DataListener()
@@ -41,5 +62,8 @@ namespace Scada.Controls.Data
 			get;
 			set;
 		}
-	}
+
+        public abstract List<ColumnInfo> GetColumnsInfo();
+
+    }
 }
