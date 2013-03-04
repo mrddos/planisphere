@@ -78,6 +78,10 @@ namespace Scada.MainVision
 
             this.herePane.AddItem("高压电离室");
             this.herePane.AddItem("气象");
+
+
+            this.herePane.AddItem("虚构设备1");
+            this.herePane.AddItem("虚构设备2");
         }
 
 		void RefreshDataTimerTick(object sender, EventArgs e)
