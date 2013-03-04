@@ -22,19 +22,20 @@ namespace Scada.MainVision
 			{
 				this.dataListener.OnDataArrivalBegin();
 
-                Dictionary<string, object> d = new Dictionary<string, object>(10);
-				this.dataListener.OnDataArrival(d);
 
-                Dictionary<string, object> d2 = new Dictionary<string, object>(10);
-                this.dataListener.OnDataArrival(d2);
-				/*
-				this.dataListener.OnDataArrival("1A", "1B", "1C", ".33");
-				this.dataListener.OnDataArrival("2A", "2B", "2C", ".4454");
-				this.dataListener.OnDataArrival("3A", "3B", "3C", ".1444");
-				this.dataListener.OnDataArrival("4A", "4B", "4C", ".4544");
-				this.dataListener.OnDataArrival("5A", "5B", "5C", ".8448");
-				this.dataListener.OnDataArrival("6A", "6B", "6C", ".4144");
-				 */
+                for (int i = 0; i < 15; ++i)
+                {
+                    Dictionary<string, object> d = new Dictionary<string, object>(10);
+                    d["temp"] = "213.5";
+                    d["press"] = "4.33";
+                    d["wspeed"] = "0.33";
+                    d["temp2"] = "45.5";
+    
+                    
+                    this.dataListener.OnDataArrival(d);
+                }
+
+
 				this.dataListener.OnDataArrivalEnd();
 			}
 		}

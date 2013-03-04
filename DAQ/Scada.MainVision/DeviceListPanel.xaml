@@ -8,7 +8,7 @@
     <UserControl.Resources>
         <ResourceDictionary x:Name="Resources">
             <ControlTemplate x:Key="DeviceItemTemplate" TargetType="TreeViewItem">
-                <Button Height="40" Content="{Binding Name}"></Button>
+                <ToggleButton Height="40" Content="{Binding Name}"></ToggleButton>
             </ControlTemplate>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -17,7 +17,7 @@
         <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Gray" RadiusX="6" RadiusY="6" Grid.RowSpan="2" StrokeThickness="2" >
 
             <Rectangle.Effect>
-                <DropShadowEffect Direction="360" ShadowDepth="30" Opacity=".5"></DropShadowEffect>
+                <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
             </Rectangle.Effect>
         </Rectangle>
         <!--

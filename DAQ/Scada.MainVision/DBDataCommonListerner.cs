@@ -34,7 +34,7 @@ namespace Scada.MainVision
                 r.Add(new ColumnInfo() { Header = "温度", BindingName = "temp", Width = 100 });
                 r.Add(new ColumnInfo() { Header = "气压", BindingName = "press", Width = 100 });
                 r.Add(new ColumnInfo() { Header = "风速", BindingName = "wspeed", Width = 100 });
-                r.Add(new ColumnInfo() { Header = "****", BindingName = "---", Width = 100 });
+                r.Add(new ColumnInfo() { Header = "其他数据", BindingName = "temp2", Width = 100 });
             }
             else if (tableName.ToLower() == "hipc")
             {

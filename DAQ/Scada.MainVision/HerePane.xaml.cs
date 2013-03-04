@@ -33,12 +33,13 @@ namespace Scada.MainVision
 			InitializeComponent();
 		}
 
-        public HerePaneItem AddItem()
+        public HerePaneItem AddItem(string title)
         {
-            HerePaneItem hpi = new HerePaneItem();
-            this.Panel.Children.Add(hpi);
+            HerePaneItem item = new HerePaneItem();
+            item.Title = title;
+            this.Panel.Children.Add(item);
 
-            return hpi;
+            return item;
         }
 
         /*

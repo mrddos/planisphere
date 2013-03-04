@@ -14,6 +14,28 @@ using System.Windows.Shapes;
 
 namespace Scada.MainVision
 {
+
+    public class HerePaneItemData
+    {
+        public string Title
+        {
+            get;
+            set;
+        }
+
+        public string Data1
+        {
+            get;
+            set;
+        }
+
+        public string Data2
+        {
+            get;
+            set;
+        }
+    }
+
     /// <summary>
     /// Interaction logic for HerePaneItem.xaml
     /// </summary>
@@ -23,5 +45,22 @@ namespace Scada.MainVision
         {
             InitializeComponent();
         }
+
+        public string Title
+        {
+            get;
+            set;
+        }
+
+        private void ItemLoaded(object sender, RoutedEventArgs e)
+        {
+            var data = new HerePaneItemData() { Title = this.Title };
+            this.itemGrid.DataContext = data;
+
+            data.Data1 = "31.4  ℃";
+            data.Data2 = "12 m/s";
+        }
+
+
     }
 }
