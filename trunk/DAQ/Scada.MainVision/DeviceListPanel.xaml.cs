@@ -38,7 +38,7 @@ namespace Scada.MainVision
 		public void AddDeviceGroup()
 		{
 			this.deviceGroup = new TreeViewItem();
-			deviceGroup.Header = "Device List";
+			deviceGroup.Header = "设备列表";
             
 			this.DeviceList.Items.Add(deviceGroup);
 		}
@@ -46,14 +46,15 @@ namespace Scada.MainVision
 		public void AddDevice(string deviceName)
 		{
             //
-            ControlTemplate ct = (ControlTemplate)this.Resources[DeviceItemTemplate];
+            //ControlTemplate ct = (ControlTemplate)this.Resources[DeviceItemTemplate];
 
 
 			TreeViewItem tvi = new TreeViewItem();
-            tvi.Template = ct;
+            //tvi.Template = ct;
             tvi.DataContext = new DeviceItem() { Name = deviceName };
             tvi.MouseDoubleClick += OnDeviceItemClick;
-			//tvi.Header = deviceName;
+			tvi.Header = deviceName;
+            tvi.FontSize = 14.0;
             
 
 			this.deviceGroup.Items.Add(tvi);
