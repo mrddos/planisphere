@@ -46,10 +46,6 @@ namespace Scada.MainVision
 
 
             var columnInfoList = dataListener.GetColumnsInfo(); // new List<ColumnInfo>();
-            // TODO: add in the initialize code for each device.
-            //columnInfoList.Add(new ColumnInfo() { Header = "Name", BindingName = "Name", Width = 100 });
-            //columnInfoList.Add(new ColumnInfo() { Header = "Age", BindingName = "Age", Width = 70 });
-            //columnInfoList.Add(new ColumnInfo() { Header = "Temp", BindingName = "Temp", Width = 100 });
 
             foreach (var columnInfo in columnInfoList)
             {
@@ -72,11 +68,32 @@ namespace Scada.MainVision
 			return panel;
 		}
 
+        public GraphViewPanel CreateGraphViewPanel(DataListener dataListener)
+        {
+            GraphViewPanel panel = new GraphViewPanel();
+            panel.AddDataListener(dataListener);
+
+            var columnInfoList = dataListener.GetColumnsInfo(); 
+
+            foreach (var columnInfo in columnInfoList)
+            {
+                panel.AddLineName(columnInfo.BindingName, columnInfo.Header);
+            }
+
+            return panel;
+        }
+
 		public void SetListViewPanelPos(ListViewPanel listViewPanel, int row, int column)
 		{
 			listViewPanel.SetValue(Grid.ColumnProperty, column);
 			listViewPanel.SetValue(Grid.RowProperty, row);
 		}
+
+        public void SetGraphViewPanelPos(GraphViewPanel listViewPanel, int row, int column)
+        {
+            listViewPanel.SetValue(Grid.ColumnProperty, column);
+            listViewPanel.SetValue(Grid.RowProperty, row);
+        }
 
 		public void HideListViewPanel(ListViewPanel listViewPanel)
 		{
