@@ -107,6 +107,21 @@ namespace Scada.MainVision
 			this.panelManager.SetListViewPanelPos(panel, 1, 1);
 		}
 
+        private void ShowGraphViewPanel()
+        {
+            string tableName = "weather";
+            DataListener dl = this.dataProvider.GetDataListener(tableName);
+            GraphViewPanel panel = this.panelManager.CreateGraphViewPanel(dl);
+            // panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
+            // panel.CloseClick += this.ClosePanelButtonClick;
+
+
+            // Manage
+            this.Grid.Children.Add(panel);
+
+            this.panelManager.SetGraphViewPanelPos(panel, 1, 1);
+        }
+
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
 			this.ShowListViewPanel();
@@ -121,7 +136,7 @@ namespace Scada.MainVision
 
         void OnDeviceItemClicked(object sender, EventArgs e)
         {
-            this.ShowListViewPanel();
+            this.ShowGraphViewPanel();
         }
 
 
