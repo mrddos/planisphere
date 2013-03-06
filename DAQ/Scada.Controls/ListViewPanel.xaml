@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:c="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Loaded="ContentLoaded" Margin="5,5,5,5">
+             d:DesignHeight="300" d:DesignWidth="600" Loaded="ContentLoaded" Margin="5,5,5,5">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,20 +17,54 @@
     <Grid Background="AliceBlue">
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
+            <RowDefinition Height="45"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="30"/>
+        </Grid.ColumnDefinitions>
+        
+        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2" Grid.ColumnSpan="2">
             <Rectangle.Effect>
                 <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
             </Rectangle.Effect>
         </Rectangle>
 
         <!-- Header -->
+        <!--
         <ContentControl x:Name="HeaderBar" Grid.Row="0" Template="{StaticResource HeaderTemplateKey}" Margin="10,10">
         </ContentControl>
+        -->
+        <Border BorderBrush="Silver" BorderThickness="0" CornerRadius="5,5,5,5" Margin="10,10" x:Name="WW">
+            <!--
+            <Border.Background>
+                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                    <GradientStop Color="Silver" Offset="0.0" />
+                    <GradientStop Color="Silver" Offset="0.5" />
+                    <GradientStop Color="White" Offset="0.0" />
+                </LinearGradientBrush>
+            </Border.Background>
+            -->
+            <StackPanel Orientation="Horizontal">
+                <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
+                <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
+                <ComboBox Text="每分钟" Width="100" >每分钟</ComboBox>
+            </StackPanel>
+            
+            <!--
+            <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            -->
+
+            
+        </Border>
+
+
+        <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,5"
+                Template="{StaticResource CloseButtonTemplateKey}"/>
         <!-- List View as Content -->
-        <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="10,0,10,10">
+        <ContentControl Grid.Row="1" x:Name="ViewContainer" Grid.ColumnSpan="2">
         </ContentControl>
         
         <!-- Mask MUST after the content -->
