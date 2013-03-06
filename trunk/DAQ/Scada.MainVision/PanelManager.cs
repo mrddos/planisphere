@@ -32,18 +32,30 @@ namespace Scada.MainVision
 
 		}
 
-        public ListViewPanel CreateListViewPanel(DataListener dataListener)
-		{
-			// ListView
-			ListView listView = new ListView();
-            
 
+        public ListViewPanel CreateDataViewPanel(DataListener dataListener)
+		{
             ListViewPanel panel = new ListViewPanel();
             panel.AddDataListener(dataListener);
-			panel.ListViewContent = listView;
-			GridView gridView = new GridView();
-            listView.View = gridView;
+            //panel.ViewContent = this.ShowListView(panel, dataListener);
+            panel.ViewContent = this.ShowGraphView(panel, dataListener);
 
+			if (this.currentPanel != null)
+			{
+			}
+			this.currentPanel = panel;
+			
+
+			this.panelList.Add(panel);
+			return panel;
+		}
+
+        public ListView ShowListView(ListViewPanel panel, DataListener dataListener)
+        {
+            // ListView
+            ListView listView = new ListView();
+            GridView gridView = new GridView();
+            listView.View = gridView;
 
             var columnInfoList = dataListener.GetColumnsInfo(); // new List<ColumnInfo>();
 
@@ -56,31 +68,24 @@ namespace Scada.MainVision
                 col.Width = columnInfo.Width;
                 gridView.Columns.Add(col);
             }
-			
 
-			if (this.currentPanel != null)
-			{
-			}
-			this.currentPanel = panel;
-			
+            return listView;
+        }
 
-			this.panelList.Add(panel);
-			return panel;
-		}
 
-        public GraphViewPanel CreateGraphViewPanel(DataListener dataListener)
+        public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener)
         {
-            GraphViewPanel panel = new GraphViewPanel();
+            GraphView graphView = new GraphView();
             panel.AddDataListener(dataListener);
 
             var columnInfoList = dataListener.GetColumnsInfo(); 
 
             foreach (var columnInfo in columnInfoList)
             {
-                panel.AddLineName(columnInfo.BindingName, columnInfo.Header);
+                graphView.AddLineName(columnInfo.BindingName, columnInfo.Header);
             }
 
-            return panel;
+            return graphView;
         }
 
 		public void SetListViewPanelPos(ListViewPanel listViewPanel, int row, int column)
@@ -89,7 +94,7 @@ namespace Scada.MainVision
 			listViewPanel.SetValue(Grid.RowProperty, row);
 		}
 
-        public void SetGraphViewPanelPos(GraphViewPanel listViewPanel, int row, int column)
+        public void SetGraphViewPanelPos(GraphView listViewPanel, int row, int column)
         {
             listViewPanel.SetValue(Grid.ColumnProperty, column);
             listViewPanel.SetValue(Grid.RowProperty, row);

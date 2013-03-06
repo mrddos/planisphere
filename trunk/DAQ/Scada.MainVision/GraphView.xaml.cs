@@ -21,7 +21,7 @@ namespace Scada.MainVision
     /// <summary>
     /// Interaction logic for GraphViewPanel.xaml
     /// </summary>
-    public partial class GraphViewPanel : UserControl
+    public partial class GraphView : UserControl
     {
         int i = 0;
 
@@ -33,7 +33,7 @@ namespace Scada.MainVision
 
         private Dictionary<string, ObservableDataSource<Point>> dataSources = new Dictionary<string, ObservableDataSource<Point>>();
 
-        public GraphViewPanel()
+        public GraphView()
         {
             InitializeComponent();
         }
