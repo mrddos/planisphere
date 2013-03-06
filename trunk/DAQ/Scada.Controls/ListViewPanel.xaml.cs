@@ -12,7 +12,7 @@ using System.Collections.Generic;
 	/// </summary>
 	public partial class ListViewPanel : UserControl
 	{
-        private ListView listView = null;
+        private Control view = null;
 
 		private DataListener dataListener;
 
@@ -24,18 +24,18 @@ using System.Collections.Generic;
 			
 		}
 
-        public ListView ListViewContent
+        public Control ViewContent
 		{
 			get
 			{
-                return this.listView;
+                return this.view;
 			}
 			set
 			{
-                this.listView = value;
-                if (this.listView != null)
+                this.view = value;
+                if (this.view != null)
                 {
-                    this.ListViewContainer.Content = this.listView;
+                    this.ViewContainer.Content = this.view;
                 }
 			}
 		}
@@ -52,6 +52,7 @@ using System.Collections.Generic;
 
 		private void ContentLoaded(object sender, RoutedEventArgs e)
 		{
+            /*
 			Button closeButton = (Button)this.HeaderBar.Template.FindName("CloseButton", this.HeaderBar);
 			if (closeButton != null)
 			{
@@ -60,6 +61,7 @@ using System.Collections.Generic;
 					this.CloseClick(this, c);
 				};
 			}
+             * */
 		}
 
 		public void AddDataListener(DataListener listener)
@@ -94,7 +96,14 @@ using System.Collections.Generic;
 
 		private void OnDataArrivalEnd()
 		{
-			this.ListViewContent.ItemsSource = this.dataSource;
+            if (this.ViewContent != null)
+            {
+                if (this.ViewContent is ListView)
+                {
+                    ((ListView)this.ViewContent).ItemsSource = this.dataSource;
+                }
+            }
+			
 		}
 
 

@@ -19,8 +19,36 @@
             <Button Content="X" x:Name="CloseButton"></Button>
         </Border>
     </ControlTemplate>
-    
-    
-    
-    
+
+    <ControlTemplate x:Key="CloseButtonTemplateKey" TargetType="{x:Type Button}">
+        <Border x:Name="PART_Border" CornerRadius="4" BorderBrush="Gray" BorderThickness="1" 
+Padding="2">
+            <Path x:Name="PART_Path" Data="M7,7 L7,7 9,9 M9,7 L9,7 7,9" Fill="Gray" 
+Stretch="Fill" Stroke="Gray" StrokeThickness="2" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" TargetName="PART_Border">
+                    <Setter.Value>
+                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                            <GradientStop Color="Silver" Offset="0.0" />
+                            <GradientStop Color="White" Offset="0.5" />
+                            <GradientStop Color="Silver" Offset="0.0" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Stroke" TargetName="PART_Path" Value="#FFBA3232" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="UIElement.Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="10" Color="Black" Direction="0"
+Opacity="0.6" RenderingBias="Performance" ShadowDepth="0" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+
 </ResourceDictionary>

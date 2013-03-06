@@ -56,6 +56,7 @@ namespace Scada.MainVision
             plotter.AddLineGraph(dataSource, colors[dataSources.Count], 2, displayName);
             dataSources.Add(lineName, dataSource);
             plotter.Viewport.FitToView();
+            
         }
 
         private void OnDataArrivalBegin()
