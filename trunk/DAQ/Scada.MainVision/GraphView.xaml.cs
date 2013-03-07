@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
+using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
 
 namespace Scada.MainVision
 {
@@ -28,8 +29,8 @@ namespace Scada.MainVision
         private DataListener dataListener;
 
         static Color[] colors = { Colors.Green, Colors.Red, Colors.Blue, Colors.OrangeRed, Colors.Purple };
-        //private ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
-        private List<Dictionary<string, object>> dataSource;
+        // private ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
+        // private List<Dictionary<string, object>> dataSource;
 
         private Dictionary<string, ObservableDataSource<Point>> dataSources = new Dictionary<string, ObservableDataSource<Point>>();
 
@@ -55,22 +56,26 @@ namespace Scada.MainVision
             
             plotter.AddLineGraph(dataSource, colors[dataSources.Count], 2, displayName);
             dataSources.Add(lineName, dataSource);
-            plotter.Viewport.FitToView();
+            plotter.Viewport.PredictFocus(FocusNavigationDirection.Right);
             
+            plotter.Viewport.AutoFitToView = true;
+            
+            //plotter.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
         }
 
         private void OnDataArrivalBegin()
         {
-            if (this.dataSource != null)
-            {
+            //if (this.dataSource != null)
+            //{
                 // this.dataSource.Clear();
-            }
+            //}
             // this.dataSource = new List<Dictionary<string, object>>();
         }
 
 
         private void OnDataArrival(Dictionary<string, object> entry)
         {
+
             foreach (string key in entry.Keys)
             {
                 ObservableDataSource<Point> dataSource = (ObservableDataSource<Point>)dataSources[key];

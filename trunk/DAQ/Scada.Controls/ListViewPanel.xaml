@@ -17,16 +17,11 @@
     <Grid Background="AliceBlue">
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="45"/>
-            <RowDefinition/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="30"/>
-        </Grid.ColumnDefinitions>
         
-        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2" Grid.ColumnSpan="2">
+        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2">
             <Rectangle.Effect>
                 <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
             </Rectangle.Effect>
@@ -37,7 +32,26 @@
         <ContentControl x:Name="HeaderBar" Grid.Row="0" Template="{StaticResource HeaderTemplateKey}" Margin="10,10">
         </ContentControl>
         -->
-        <Border BorderBrush="Silver" BorderThickness="0" CornerRadius="5,5,5,5" Margin="10,10" x:Name="WW">
+        <Border BorderBrush="Silver" BorderThickness="1" CornerRadius="5,5,5,5" Margin="5,5,5,0" Padding="5,5,5,5" x:Name="WW">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                    <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
+                    <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
+                    <ComboBox Width="100" Margin="5,0,5,0" SelectedValue="每分钟">每分钟</ComboBox>
+                </StackPanel>
+                
+                <Button Width="18" Height="18" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,5"
+                    Template="{StaticResource CloseButtonTemplateKey}"/>
+            </Grid>
             <!--
             <Border.Background>
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -47,11 +61,9 @@
                 </LinearGradientBrush>
             </Border.Background>
             -->
-            <StackPanel Orientation="Horizontal">
-                <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
-                <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
-                <ComboBox Text="每分钟" Width="100" >每分钟</ComboBox>
-            </StackPanel>
+
+
+
             
             <!--
             <ContentPresenter Content="{TemplateBinding ContentControl.Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -60,13 +72,9 @@
             
         </Border>
 
-
-        <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,5"
-                Template="{StaticResource CloseButtonTemplateKey}"/>
         <!-- List View as Content -->
-        <ContentControl Grid.Row="1" x:Name="ViewContainer" Grid.ColumnSpan="2">
-        </ContentControl>
-        
+        <ContentControl Grid.Row="1" x:Name="ViewContainer"/>
+
         <!-- Mask MUST after the content -->
         <Grid.OpacityMask>
             <VisualBrush Visual="{Binding ElementName=Rect}"/>

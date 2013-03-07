@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:c="clr-namespace:Scada.Controls;assembly=Scada.Controls"
         xmlns:m="clr-namespace:Scada.MainVision"
-        Title="MainWindow" Height="600" Width="800" Loaded="WindowLoaded">
+        Title="MainWindow" Height="600" Width="920" Loaded="WindowLoaded">
     <Grid x:Name="Grid" Background="AliceBlue">
 
         <Grid.Resources>

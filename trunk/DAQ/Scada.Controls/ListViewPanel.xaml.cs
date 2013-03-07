@@ -87,10 +87,10 @@ using System.Collections.Generic;
 
 		private void OnDataArrival(Dictionary<string, object> entry)
 		{
-            if (!entry.ContainsKey("Name"))
-            {
-                entry.Add("Name", "Healer");
-            }
+            //if (!entry.ContainsKey("Name"))
+            //{
+            //    entry.Add("Name", "Healer");
+            //}
 			this.dataSource.Add(entry);
 		}
 
