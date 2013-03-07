@@ -23,13 +23,14 @@ namespace Scada.MainVision
 				this.dataListener.OnDataArrivalBegin();
 
 
-                for (int i = 0; i < 15; ++i)
+                Random rd = new Random();
+                for (int i = 0; i < 5; ++i)
                 {
                     Dictionary<string, object> d = new Dictionary<string, object>(10);
-                    d["temp"] = "213.5";
-                    d["press"] = "4.33";
-                    d["wspeed"] = "0.33";
-                    d["temp2"] = "45.5";
+                    d["temp"] = (183.5 * rd.Next(1, 10)/10).ToString();
+                    d["press"] = (120.0 * rd.Next(1, 10)/10).ToString();
+                    d["wspeed"] = (98.5 * rd.Next(1, 10)/10).ToString();
+                    d["temp2"] = (70.5 * rd.Next(1, 10)/10).ToString();
     
                     
                     this.dataListener.OnDataArrival(d);

@@ -24,11 +24,13 @@
             </d3:ChartPlotter.VerticalAxis>
 
             <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalIntegerAxis />
+                <d3:HorizontalDateTimeAxis />
             </d3:ChartPlotter.HorizontalAxis>
 
             <d3:Header Content="实时曲线图"/>
             <d3:VerticalAxisTitle Content="风向/温度"/>
+            <d3:HorizontalAxisTitle Content="时间轴" Name="chart2Title"></d3:HorizontalAxisTitle>
+            
         </d3:ChartPlotter>
     </Grid>
 </UserControl>

@@ -82,6 +82,9 @@ namespace Scada.MainVision
 
             this.herePane.AddItem("虚构设备1");
             this.herePane.AddItem("虚构设备2");
+
+
+            this.OnDeviceItemClicked(null, null);
         }
 
 		void RefreshDataTimerTick(object sender, EventArgs e)

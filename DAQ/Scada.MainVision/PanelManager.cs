@@ -76,7 +76,7 @@ namespace Scada.MainVision
         public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener)
         {
             GraphView graphView = new GraphView();
-            panel.AddDataListener(dataListener);
+            graphView.AddDataListener(dataListener);
 
             var columnInfoList = dataListener.GetColumnsInfo(); 
 
