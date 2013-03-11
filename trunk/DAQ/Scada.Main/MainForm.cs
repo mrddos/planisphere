@@ -19,6 +19,8 @@ namespace Scada.Main
     {
 		private System.Windows.Forms.Timer timer = null;
 
+        private Process mainVisionProcess;
+
         public MainForm()
         {
             InitializeComponent();
@@ -176,10 +178,7 @@ namespace Scada.Main
 
 		private void startMainVisionMenuItem_Click(object sender, EventArgs e)
 		{
-			// TODO:
-			// Proc-start with args
-			IntPtr hWnd =  this.Handle;	// As a arg
-
+            // Show MainVision
             using (Process process = new Process())
             {
                 process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
@@ -190,14 +189,8 @@ namespace Scada.Main
                 process.StartInfo.RedirectStandardError = true;//重定向错误输出
                 process.Start();
 
-                Thread.Sleep(600);
             }
             
-		}
-
-		private void closeMainVisionMenuItem_Click(object sender, EventArgs e)
-		{
-
 		}
 
 		private void logToolMenuItem_Click(object sender, EventArgs e)
