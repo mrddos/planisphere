@@ -41,7 +41,6 @@
             this.stopMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startMainVisionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeMainVisionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataCenterSetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logToolMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +139,6 @@
             // 
             this.dataMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startMainVisionMenuItem,
-            this.closeMainVisionMenuItem,
             this.dataCenterSetMenuItem});
             this.dataMenuItem.Name = "dataMenuItem";
             this.dataMenuItem.Size = new System.Drawing.Size(45, 20);
@@ -152,13 +150,6 @@
             this.startMainVisionMenuItem.Size = new System.Drawing.Size(152, 22);
             this.startMainVisionMenuItem.Text = "启动数据视图";
             this.startMainVisionMenuItem.Click += new System.EventHandler(this.startMainVisionMenuItem_Click);
-            // 
-            // closeMainVisionMenuItem
-            // 
-            this.closeMainVisionMenuItem.Name = "closeMainVisionMenuItem";
-            this.closeMainVisionMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.closeMainVisionMenuItem.Text = "关闭数据视图";
-            this.closeMainVisionMenuItem.Click += new System.EventHandler(this.closeMainVisionMenuItem_Click);
             // 
             // dataCenterSetMenuItem
             // 
@@ -342,8 +333,7 @@
 		private System.Windows.Forms.ToolStripMenuItem startMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem stopMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem dataMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem startMainVisionMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem closeMainVisionMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem startMainVisionMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem logMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem logToolMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem logBankMenuItem;
