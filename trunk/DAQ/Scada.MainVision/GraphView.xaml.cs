@@ -17,6 +17,8 @@ using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
 
+
+// TODO:http://dynamicdatadisplay.codeplex.com/discussions/53203
 namespace Scada.MainVision
 {
     /// <summary>
@@ -52,8 +54,12 @@ namespace Scada.MainVision
 
         public void AddLineName(string lineName, string displayName)
         {
+            CompositeDataSource cds = new CompositeDataSource();
+            
+            // CompositeDataSource
             ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
             
+            // dataSource.SetXMapping(x => x.X / 100);
             plotter.AddLineGraph(dataSource, colors[dataSources.Count], 2, displayName);
             dataSources.Add(lineName, dataSource);
             plotter.Viewport.PredictFocus(FocusNavigationDirection.Right);
@@ -75,13 +81,14 @@ namespace Scada.MainVision
 
         private void OnDataArrival(Dictionary<string, object> entry)
         {
-
+            
+            
             foreach (string key in entry.Keys)
             {
                 ObservableDataSource<Point> dataSource = (ObservableDataSource<Point>)dataSources[key];
-
+                //dataSource.SetXMapping(x => x);
                 string v = (string)entry[key];
-                dataSource.AppendAsync(this.Dispatcher, new Point(i, double.Parse(v)));
+                dataSource.AppendAsync(this.Dispatcher, new Point(i / 10.0, double.Parse(v)));
             }
             i++;
         }
