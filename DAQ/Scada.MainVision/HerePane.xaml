@@ -14,9 +14,11 @@
     </UserControl.Resources>
     -->
     <!-- Control -->
-    
-    <StackPanel x:Name="Panel" Orientation="Horizontal">
 
-    </StackPanel>
+    <ScrollViewer x:Name="panelScrollViewer" Height="150" Margin="15,0" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Visible">
+        <StackPanel x:Name="Panel" Orientation="Horizontal">
+
+        </StackPanel>
+    </ScrollViewer>
 
 </UserControl>
