@@ -81,7 +81,8 @@ namespace Scada.MainVision
 
         private void OnDataArrival(Dictionary<string, object> entry)
         {
-            
+            // TODO: Remove
+            return;
             
             foreach (string key in entry.Keys)
             {
