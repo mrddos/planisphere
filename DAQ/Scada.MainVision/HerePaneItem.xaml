@@ -13,7 +13,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border CornerRadius="6" BorderThickness="2" BorderBrush="Silver">
-        <Grid x:Name="itemGrid" Margin="4,4,4,4">
+        <Grid x:Name="itemGrid" Margin="4,4,4,4" MouseEnter="OnMouseEnterRect" MouseLeave="OnMouseLeaveRect">
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
@@ -40,10 +40,27 @@
 
 
             <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Gray" RadiusX="6" RadiusY="6" 
-                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="3">
+                   Grid.Row="0" Grid.Column="0" Grid.RowSpan="4" Grid.ColumnSpan="3" StrokeThickness="0.2"
+                       >
                 <Rectangle.Effect>
                     <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
                 </Rectangle.Effect>
+                <!--
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup Name="MouseStates">
+                        <VisualState Name="BlueState">
+                            <Storyboard>
+                                <ColorAnimation To="Blue" Storyboard.TargetName="rectBrush" Storyboard.TargetProperty="Color"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState Name="OrangeState">
+                            <Storyboard>
+                                <ColorAnimation To="Orange" Storyboard.TargetName="rectBrush" Storyboard.TargetProperty="Color"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+                -->
             </Rectangle>
 
             <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,5"

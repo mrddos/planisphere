@@ -61,6 +61,16 @@ namespace Scada.MainVision
             data.Data2 = "12 m/s";
         }
 
+        private void OnMouseEnterRect(object sender, MouseEventArgs e)
+        {
+            this.Rect.Fill = new SolidColorBrush(Colors.White);
+        }
+
+        private void OnMouseLeaveRect(object sender, MouseEventArgs e)
+        {
+            this.Rect.Fill = new SolidColorBrush(Colors.AliceBlue);
+        }
+
 
     }
 }
