@@ -1,4 +1,9 @@
 
+#
+# ReadMe: Run Scada.DAQ.Installer.exe --init-database
+# To Create Database and tables.
+#
+
 
 DROP TABLE IF EXISTS `weather`;
 CREATE TABLE `weather` (
