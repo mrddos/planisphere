@@ -236,6 +236,10 @@ namespace Scada.Main
             {
                 return new StandardDevice(entry);
             }
+			else if (typeof(TelnetDevice).ToString() == className)
+			{
+				return new TelnetDevice(entry);
+			}
 
             if (entry[DeviceEntry.Assembly] != null)
             {
