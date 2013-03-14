@@ -86,6 +86,7 @@
     <Compile Include="Records.cs" />
     <Compile Include="ScadaReader.cs" />
     <Compile Include="StandardDevice.cs" />
+    <Compile Include="TelnetDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

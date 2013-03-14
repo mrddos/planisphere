@@ -195,7 +195,7 @@ namespace Scada.Main
 
 		private void logToolMenuItem_Click(object sender, EventArgs e)
 		{
-
+			RecordManager.OpenRecordAnalysis();
 		}
 
 		private void logBankMenuItem_Click(object sender, EventArgs e)

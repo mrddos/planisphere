@@ -51,24 +51,22 @@ namespace Scada.Declare
 			RecordManager.analysis = new AnalysisRecord();
 
 			RecordManager.frameworkRecord = new FileRecord("");
-
-            return;
-            using (Process process = new Process())
-            {
-                process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = "Scada.RecordAnalysis.exe"; //设定程序名  
-                process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
-                process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
-                process.StartInfo.RedirectStandardError = true;//重定向错误输出
-                process.Start();
-
-                Thread.Sleep(600);
-            }
-
 		}
 
-
+		public static bool OpenRecordAnalysis()
+		{
+			using (Process process = new Process())
+			{
+				process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
+				process.StartInfo.UseShellExecute = false;
+				process.StartInfo.FileName = "Scada.RecordAnalysis.exe"; //设定程序名  
+				process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
+				process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
+				process.StartInfo.RedirectStandardError = true;//重定向错误输出
+				RecordManager.analysisToolOpen = process.Start();
+				return RecordManager.analysisToolOpen;
+			}
+		}
 
 		public static void DoRecord(DeviceData deviceData)
 		{
