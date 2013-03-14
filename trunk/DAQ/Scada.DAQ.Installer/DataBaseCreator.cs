@@ -88,7 +88,7 @@ namespace Scada.DAQ.Installer
                 connToMySql.Open();
 
                 MySqlCommand cmd = connToMySql.CreateCommand();
-                cmd.CommandText = "CREATE DATABASE scada"; ;
+                cmd.CommandText = "CREATE DATABASE if NOT EXISTS scada";
                 cmd.ExecuteNonQuery();
                 cmd.Dispose();
             }
