@@ -56,18 +56,25 @@ namespace Scada.Declare
 
         private string exampleLine;
 
+		private string error = "No Error";
+
 
 		public StandardDevice(DeviceEntry entry)
 		{
             this.entry = entry;
-			this.Initialize(entry);
+			if (!this.Initialize(entry))
+			{
+				string initFailedEvent = string.Format("Device '{0}' initialized failed. Error is {1}.", entry[DeviceEntry.Identity], error);
+				RecordManager.DoSystemEventRecord(this, initFailedEvent);
+			}
+
 		}
 
         ~StandardDevice()
         {
         }
 
-		private void Initialize(DeviceEntry entry)
+		private bool Initialize(DeviceEntry entry)
 		{
 			this.Name = entry[DeviceEntry.Name].ToString();
             this.Path = entry[DeviceEntry.Path].ToString();
@@ -167,6 +174,7 @@ namespace Scada.Declare
 			}
 			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
             this.exampleLine = (StringValue)entry[DeviceEntry.ExampleLine];
+			return true;
 		}
 
 		public bool IsVirtual

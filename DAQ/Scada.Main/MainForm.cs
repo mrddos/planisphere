@@ -19,7 +19,7 @@ namespace Scada.Main
     {
 		private System.Windows.Forms.Timer timer = null;
 
-        private Process mainVisionProcess;
+        //private Process mainVisionProcess;
 
         public MainForm()
         {

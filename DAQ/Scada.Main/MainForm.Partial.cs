@@ -16,7 +16,7 @@ namespace Scada.Main
 			// object[] data = deviceData.Data;
 			// Device device = deviceData.Device;
 
-			RecordManager.DoRecord(deviceData);
+			RecordManager.DoDataRecord(deviceData);
 
 			return true;
 		}
