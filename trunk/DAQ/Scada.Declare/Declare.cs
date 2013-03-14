@@ -174,6 +174,8 @@ namespace Scada.Declare
 
         public const string Path = "path";
 
+		public const string Identity = "id";
+
         public const string Version = "Version";
 
         public const string ClassName = "ClassName";

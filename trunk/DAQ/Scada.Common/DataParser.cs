@@ -28,7 +28,8 @@ namespace Scada.Declare
             }
             catch (ScannerExeption se)
             {
-                return null;
+				ret = new string[] { se.Message };
+				return ret;
             }
 		}
 

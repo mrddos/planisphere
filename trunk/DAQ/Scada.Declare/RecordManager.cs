@@ -16,12 +16,18 @@ namespace Scada.Declare
 
 		private static AnalysisRecord analysis = null;
 
-		private static FileRecord frameworkRecord = null;
+		// private static FileRecord frameworkRecord = null;
 
         private static bool analysisToolOpen = false;
 
-        private const string LocalPipeServer = "."; 
+        private const string LocalPipeServer = ".";
 
+
+		private static int flushCtrlCount = 0;
+
+		/// <summary>
+		/// StreamHolder presents a Daily stream for log.
+		/// </summary>
         public struct StreamHolder
         {
             private FileStream fileStream;
@@ -50,7 +56,7 @@ namespace Scada.Declare
 
 			RecordManager.analysis = new AnalysisRecord();
 
-			RecordManager.frameworkRecord = new FileRecord("");
+			// RecordManager.frameworkRecord = new FileRecord("");
 		}
 
 		public static bool OpenRecordAnalysis()
@@ -68,12 +74,22 @@ namespace Scada.Declare
 			}
 		}
 
-		public static void DoRecord(DeviceData deviceData)
+		public static void DoSystemEventRecord(Device device, string systemEvent)
+		{
+			RecordManager.WriteDataToLog(device, systemEvent);
+
+			if (analysisToolOpen)
+			{
+				SendToAnalysisWindow(systemEvent);
+			}
+		}
+
+		public static void DoDataRecord(DeviceData deviceData)
 		{
 			// TODO: Record it in the files.
 
-            string line = RecordManager.WriteDataToLog(deviceData);
-
+			string line = RecordManager.PackDeviceData(deviceData);
+			RecordManager.WriteDataToLog(deviceData.Device, line);
             if (analysisToolOpen)
             {
                 SendToAnalysisWindow(line);
@@ -85,12 +101,9 @@ namespace Scada.Declare
 			}
 		}
 
-        private static string WriteDataToLog(DeviceData deviceData)
+		private static string PackDeviceData(DeviceData deviceData)
         {
-            DateTime now = DateTime.Now;
-            FileStream stream = RecordManager.GetLogFileStream(deviceData.Device, now);
-            string time = string.Format("[{0:HH:mm:ss}] ", now);
-            StringBuilder sb = new StringBuilder(time);
+            StringBuilder sb = new StringBuilder();
             foreach (object o in deviceData.Data)
             {
                 if (o != null)
@@ -98,17 +111,30 @@ namespace Scada.Declare
                     sb.Append(o.ToString()).Append(" ");
                 }
             }
-            sb.Append("\r\n");
-            string line = sb.ToString();
-            byte[] bytes = Encoding.ASCII.GetBytes(line);
-            stream.Write(bytes, 0, bytes.Length);
-            
-            // TODO: Optimize!
-            stream.Flush();
-            // TODO:???
-
-            return line;
+            return sb.ToString();
         }
+
+		private static void WriteDataToLog(Device device, string content)
+		{
+			DateTime now = DateTime.Now;
+			FileStream stream = RecordManager.GetLogFileStream(device, now);
+			string time = string.Format("[{0:HH:mm:ss}] ", now);
+			StringBuilder sb = new StringBuilder(time);
+			sb.Append(content);
+			sb.Append("\r\n");
+			string line = sb.ToString();
+
+			byte[] bytes = Encoding.ASCII.GetBytes(line);
+			stream.Write(bytes, 0, bytes.Length);
+
+			// Flush Control.
+			if (flushCtrlCount % 10 == 0)
+			{
+				stream.Flush();
+			}
+			flushCtrlCount = (flushCtrlCount + 1) % 5;
+		}
+
 
         private static FileStream GetLogFileStream(Device device, DateTime now)
         {

@@ -189,7 +189,7 @@ namespace Scada.Main
             }
         }
 
-        public static DeviceEntry LoadFromConfig(string configFile)
+        public static DeviceEntry LoadFromConfig(string deviceName, string configFile)
         {
             if (!File.Exists(configFile))
                 return null;
@@ -216,6 +216,7 @@ namespace Scada.Main
                 string devicePath = di.FullName;
                 // Path
                 entry[DeviceEntry.Path] = new StringValue(devicePath);
+				entry[DeviceEntry.Identity] = new StringValue(deviceName);
                 // Virtual 
 
                 if (File.Exists(devicePath + "\\virtual-device"))
@@ -241,6 +242,7 @@ namespace Scada.Main
 				return new TelnetDevice(entry);
 			}
 
+			// Other Device defined in some Assemblies.
             if (entry[DeviceEntry.Assembly] != null)
             {
                 Assembly assembly = Assembly.Load((StringValue)entry[DeviceEntry.Assembly]);
@@ -255,9 +257,9 @@ namespace Scada.Main
             return (Device)null;
         }
 
-        private static DeviceEntry ReadConfigFile(string configFile)
+        private static DeviceEntry ReadConfigFile(string deviceName, string configFile)
         {
-            return LoadFromConfig(configFile);
+			return LoadFromConfig(deviceName, configFile);
         }
 
         public bool Run(SynchronizationContext syncCtx, SendOrPostCallback callback)
@@ -272,18 +274,20 @@ namespace Scada.Main
                     // TODO: Config file reading
 					if (deviceCfgFile != null)
 					{
-						DeviceEntry entry = ReadConfigFile(deviceCfgFile);
+						DeviceEntry entry = ReadConfigFile(deviceName, deviceCfgFile);
 
 						Device device = Load(entry);
 						if (device != null)
 						{
+							string deviceLoadedStr = string.Format("Device: '{0}' Loaded.", entry[DeviceEntry.Identity]);
+							RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
 							// Set thread-sync-context
                             device.SynchronizationContext = syncCtx;
 							// Set data-received callback
                             device.DataReceived += callback;
 							// Set file-record
 							
-							FileRecord fr = new FileRecord("");
+							// FileRecord fr = new FileRecord("");
 
                             // To hold the object.
                             this.devices.Add(device);
