@@ -198,6 +198,8 @@ namespace Scada.Declare
 
 		public const string ActionCondition = "ActionCondition";
 
+		public const string ActionSendInHex = "ActionSendInHex";
+
 		public const string ActionSend = "ActionSend";
 
 		public const string ActionDelay = "ActionDelay";
@@ -205,6 +207,8 @@ namespace Scada.Declare
         public const string ActionInterval = "ActionInterval";
 
 		public const string Pattern = "Pattern";
+
+		public const string ASCIIFormater = "ASCIIFormater";
 
 		public const string TableName = "TableName";
 

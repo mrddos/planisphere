@@ -6,24 +6,31 @@ using System.Text;
 
 namespace Scada.Declare
 {
-	public class DataParser
+	public abstract class DataParser
 	{
+		public abstract string[] Search(string data);
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class PatternDataParser : DataParser
+	{
+		public PatternDataParser(string pattern)
+		{
+			this.pattern = pattern;
+		}
 		private string pattern;
 
         Scanner scanner = new Scanner();
 
-		public string Pattern
-		{
-			private get { return this.pattern; }
-			set { this.pattern = value; }
-		}
 
-		public string[] Search(string data)
+		public override string[] Search(string data)
 		{
             string[] ret = null;
             try
             {
-                ret = scanner.Scan(data, this.Pattern);
+                ret = scanner.Scan(data, this.pattern);
                 return ret;
             }
             catch (ScannerExeption se)
@@ -34,4 +41,5 @@ namespace Scada.Declare
 		}
 
 	}
+
 }
