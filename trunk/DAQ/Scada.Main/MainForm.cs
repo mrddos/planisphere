@@ -243,8 +243,8 @@ namespace Scada.Main
             {
                 // TODO: If there are multi-items, only one can be selected.    
             }
-            
-        }
+
+		}
 
     }
 }
