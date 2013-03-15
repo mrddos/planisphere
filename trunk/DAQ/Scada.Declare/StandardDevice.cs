@@ -30,6 +30,8 @@ namespace Scada.Declare
 
 		private bool isVirtual = false;
 
+		private bool actionSendInHex = false;
+
 		private string actionCondition = string.Empty;
 
 		private string actionSend = string.Empty;
@@ -101,14 +103,7 @@ namespace Scada.Declare
 			StringValue parity = (StringValue)entry[DeviceEntry.Parity];
 			this.parity = SerialPorts.ParseParity(parity);
 
-			// Line-Data Parser and LineBreak confing. 
-			this.lineParser = new LineParser();
-            string lineBreak = (StringValue)entry[DeviceEntry.LineBreak];
-            lineBreak = lineBreak.Replace("\\r", "\r");
-            lineBreak = lineBreak.Replace("\\n", "\n");
-            this.lineParser.LineBreak = lineBreak;
-
-			this.dataParser = new DataParser();
+			
 			// Virtual On
 			string isVirtual = (StringValue)entry[DeviceEntry.Virtual];
 			if (isVirtual != null && isVirtual.ToLower() == "true")
@@ -117,7 +112,18 @@ namespace Scada.Declare
 			}
 
 			this.actionCondition = (StringValue)entry[DeviceEntry.ActionCondition];
-			this.actionSend = (StringValue)entry[DeviceEntry.ActionSend];
+			string actionSendInHex = (StringValue)entry[DeviceEntry.ActionSendInHex];
+			if (actionSendInHex != "true")
+			{
+				this.actionSend = (StringValue)entry[DeviceEntry.ActionSend];
+			}
+			else
+			{
+				this.actionSendInHex = true;
+				string hexes = (StringValue)entry[DeviceEntry.ActionSend];
+				this.actionSend = ParseHex(hexes);
+			}
+
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
 
             var interval = entry[DeviceEntry.ActionInterval];
@@ -125,9 +131,30 @@ namespace Scada.Declare
             {
                 this.actionInterval = (StringValue)interval;
             }
+			
+			string asciiFormaterClass = (StringValue)entry[DeviceEntry.ASCIIFormater];
+			if (!string.IsNullOrEmpty(asciiFormaterClass))
+			{
+				if (asciiFormaterClass == "DWD485ASCIIFormater")
+				{
+					this.dataParser = new DWD485ASCIIFormater();
 
-			this.linePattern = (StringValue)entry[DeviceEntry.Pattern];
-			this.dataParser.Pattern = this.linePattern;
+					this.lineParser = new DWD485ASCIILineParser();
+				}
+			}
+			else
+			{
+				this.linePattern = (StringValue)entry[DeviceEntry.Pattern];
+				this.dataParser = new PatternDataParser(this.linePattern);
+
+				// Line-Data Parser and LineBreak confing. 
+				this.lineParser = new LineParser();
+				string lineBreak = (StringValue)entry[DeviceEntry.LineBreak];
+				lineBreak = lineBreak.Replace("\\r", "\r");
+				lineBreak = lineBreak.Replace("\\n", "\n");
+				this.lineParser.LineBreak = lineBreak;
+			}
+			
 
 			string tableName = (StringValue)entry[DeviceEntry.TableName];
 			string tableFields = (StringValue)entry[DeviceEntry.TableFields];
@@ -403,6 +430,10 @@ namespace Scada.Declare
                 {
                     // Depends on the WinFormTimer.
                     string line = this.GetExampleLine();
+					if (this.actionSendInHex)
+					{
+						line = ParseHex(line);
+					}
                     DeviceData dd = this.GetDeviceData(line);
 
                     this.SynchronizationContext.Post(this.DataReceived, dd);
@@ -412,6 +443,10 @@ namespace Scada.Declare
                     this.timer = new Timer(new TimerCallback((object state) =>
                     {
                         string line = this.GetExampleLine();
+						if (this.actionSendInHex)
+						{
+							line = ParseHex(line);
+						}
                         DeviceData dd = this.GetDeviceData(line);
 
                         this.SynchronizationContext.Post(this.DataReceived, dd);
@@ -426,6 +461,19 @@ namespace Scada.Declare
             return this.exampleLine;
         }
 
+
+		private static string ParseHex(string line)
+		{
+			string[] hexArray = line.Split(' ');
+			List<byte> bs = new List<byte>();
+			foreach (string hex in hexArray)
+			{
+				byte a = (byte)int.Parse(hex, System.Globalization.NumberStyles.AllowHexSpecifier);
+				bs.Add(a);
+			}
+			string ret = Encoding.ASCII.GetString(bs.ToArray(), 0, bs.Count);
+			return ret;
+		}
 
 		
 	}

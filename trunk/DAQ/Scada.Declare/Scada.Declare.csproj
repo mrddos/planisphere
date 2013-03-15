@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBConnection.cs" />
+    <Compile Include="DWD485ASCIIFormater.cs" />
     <Compile Include="IRecord.cs" />
     <Compile Include="LineParser.cs" />
     <Compile Include="MainApplication.cs" />

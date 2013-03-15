@@ -23,7 +23,7 @@ namespace Scada.Declare
 			set { this.lineBreak = value; }
 		}
 
-		public string ContinueWith(string data)
+		public virtual string ContinueWith(string data)
 		{
 			this.sb.Append(data);
 			
