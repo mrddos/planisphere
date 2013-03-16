@@ -1,3 +1,3 @@
 
 
-Scada.VirtualAgent = COM3
+Scada.HIPC = COM5

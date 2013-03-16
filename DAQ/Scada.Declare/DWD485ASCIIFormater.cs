@@ -8,40 +8,50 @@ namespace Scada.Declare
 	public class DWD485ASCIIFormater : DataParser
 	{
 		public DWD485ASCIIFormater()
-		{ 
+		{
 		}
 
-		public override string[] Search(string data)
+		public override string[] Search(byte[] bytes)
 		{
-			byte[] bytes = Encoding.ASCII.GetBytes(data);
-			if (bytes[0] == 0)
-			{
+			// 00 
+			// 32 CD A0 
+			// 3B 
+			// 32 
+			// 30 30 31 30 33 30 30 30 30 30 02 51 01 1A 
+			
+			// Skip 0 123 4
+			
+			bool open = (bytes[5] == 0x31);
+			string opens = string.Format("{0}", open);
 
-			}
-			int len = bytes[4];
-			int open = bytes[5];
-
-			//?
+			// Skip
 			int a = bytes[6];
 			int b = bytes[7];
 			int c = bytes[8];
 
 			bool rain = bytes[9] == 0x30;
+			string rains = string.Format("{0}", rain);
+
 			bool full = bytes[10] == 0x33;
+			string fulls = string.Format("{0}", full);
 			string time = Encoding.ASCII.GetString(bytes, 11, 5);	// in minutes;
 
-			return new string[] { };
+			return new string[] { opens, rains, fulls, time };
 		}
 	}
 
 	public class DWD485ASCIILineParser : LineParser
 	{
-		private string remain = string.Empty;
+		private List<byte> list = new List<byte>();
 
-		public override string ContinueWith(string data)
+		public override byte[] ContinueWith(byte[] data)
 		{
-			this.remain += data;
-			byte[] bytes = Encoding.ASCII.GetBytes(remain);
+			return null;
+			/*
+			for (int i = 0; i < data.Length; ++i)
+			{
+				list.Add(data[i]);
+			}
 
 			int start = 0;
 			int end = 0;
@@ -65,6 +75,7 @@ namespace Scada.Declare
 			string line = Encoding.ASCII.GetString(bytes, start, end);
 			line.IndexOf('\0');
 			return line;
+			 * */
 		}
 
 	}

@@ -161,7 +161,7 @@ namespace Scada.Declare
 
 		public abstract void Stop();
 
-		public abstract void Send(string data);
+		public abstract void Send(byte[] action);
 
 	}
 
@@ -188,6 +188,11 @@ namespace Scada.Declare
 
         public const string StopBits = "StopBits";
 
+		public const string IPAddress = "IPAddress";
+
+		public const string IPPort = "IPPort";
+
+
         public const string ReadTimeout = "ReadTimeout";
 
         public const string Parity = "Parity";
@@ -208,7 +213,7 @@ namespace Scada.Declare
 
 		public const string Pattern = "Pattern";
 
-		public const string ASCIIFormater = "ASCIIFormater";
+		public const string DataParser = "DataParser";
 
 		public const string TableName = "TableName";
 
@@ -223,7 +228,6 @@ namespace Scada.Declare
 
         public DeviceEntry()
         {
-            dict[ClassName] = new StringValue("Scada.Declare.StandardDevice");
         }
 
 
