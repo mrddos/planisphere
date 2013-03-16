@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBConnection.cs" />
+    <Compile Include="DeviceDataParser.cs" />
     <Compile Include="DWD485ASCIIFormater.cs" />
     <Compile Include="IRecord.cs" />
     <Compile Include="LineParser.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Records.cs" />
     <Compile Include="ScadaReader.cs" />
     <Compile Include="StandardDevice.cs" />
+    <Compile Include="Telnet.cs" />
     <Compile Include="TelnetDevice.cs" />
   </ItemGroup>
   <ItemGroup>

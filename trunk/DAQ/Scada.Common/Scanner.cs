@@ -210,18 +210,22 @@ namespace Scada.Common
 				{
 					int i = (int)targetMatchGroups[x];
 					string tName = (string)targetTypes[x];
-					if (i < matches[0].Groups.Count)
+					if (matches.Count > 0)
 					{
-						//add 1 to i because i is a result of serveral matches each resulting in one group.
-						//this query is one match resulting in serveral groups.
-						string matched = matches[0].Groups[i + 1].Captures[0].Value;
-						targets[x] = matched;
+						if (i < matches[0].Groups.Count)
+						{
+							//add 1 to i because i is a result of serveral matches each resulting in one group.
+							//this query is one match resulting in serveral groups.
+							string matched = matches[0].Groups[i + 1].Captures[0].Value;
+							targets[x] = matched;
+						}
 					}
+
 				}
 			}
 			catch (Exception ex)
 			{
-				throw new ScannerExeption("Scan exception", ex);
+				// throw new ScannerExeption("Scan exception", ex);
 			}
 
 			return targets;

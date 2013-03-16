@@ -30,7 +30,7 @@ namespace Scada
 			return;
 		}
 
-		public override void Send(string data)
+		public override void Send(byte[] data)
 		{
 			throw new NotImplementedException();
 		}

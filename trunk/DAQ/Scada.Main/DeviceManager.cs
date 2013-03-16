@@ -106,6 +106,10 @@ namespace Scada.Main
             foreach (string devicePath in devicePaths)
             {
                 string deviceName = DirectoryName(devicePath);
+				if (deviceName.StartsWith("!") || deviceName.StartsWith("."))
+				{
+					continue;
+				}
                 string deviceKey = deviceName.ToLower();
 
                 DevicesInfo di = null;
@@ -292,8 +296,10 @@ namespace Scada.Main
                             // To hold the object.
                             this.devices.Add(device);
 
-							// Load the address from the d2d.cfg
-							string address = "COM3";
+							// Load the address from the d2d.m
+							string address = "COM1";
+
+							
                             
 							device.Start(address);
 						}
