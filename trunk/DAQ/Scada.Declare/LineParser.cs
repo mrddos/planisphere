@@ -27,7 +27,7 @@ namespace Scada.Declare
 			int count = list.Count;
 			for (int i = 0; i < count; ++i)
 			{
-				if (list[i] == this.LineBreak[1])
+				if (list[i] == this.LineBreak[0])
 				{
 					bool find = true;
 					for (int j = 1; j < this.LineBreak.Length && (i + j < count); ++j)
@@ -40,7 +40,7 @@ namespace Scada.Declare
 					}
 					if (find)
 					{
-
+						return i;
 					}
 				}
 			}
@@ -49,7 +49,7 @@ namespace Scada.Declare
 
 		public virtual byte[] ContinueWith(byte[] data)
 		{
-			byte[] line = null;
+			byte[] line = DataParser.EmptyByteArray;
 			for (int i = 0; i < data.Length; ++i)
 			{
 				list.Add(data[i]);
@@ -57,30 +57,20 @@ namespace Scada.Declare
 
 			int p = this.IndexLineBreak();
 
-
-			return line;
-			/*
-			string s = this.sb.ToString();
-			int p = s.IndexOf(this.LineBreak);
 			if (p > 0)
 			{
-				string line = s.Substring(0, p);
-				this.sb.Remove(0, p + this.LineBreak.Length);
-				return line;
+				byte[] ret = new byte[p];
+				list.CopyTo(0, ret, 0, p);
+				list.RemoveRange(0, p);
+				return ret;
 			}
 			else if (p == 0)
 			{
-				this.sb.Remove(0, this.LineBreak.Length);
-				s = this.sb.ToString();
-				int n = s.IndexOf(this.LineBreak);
-				string line = s.Substring(0, n + LineBreak.Length);
+				list.RemoveRange(0, this.LineBreak.Length);
 				return line;
 			}
-			else
-			{
-				return string.Empty;
-			}
-			*/
+
+			return line;
 		}
 	}
 }

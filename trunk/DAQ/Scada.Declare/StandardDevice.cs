@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Threading;
 using Scada.Common;
 using System.Reflection;
+using System.Globalization;
 
 namespace Scada.Declare
 {
@@ -57,7 +58,12 @@ namespace Scada.Declare
 
 		private Timer timer = null;
 
+		private bool handled = true;
+
         private string exampleLine;
+		private List<byte> exampleBuffer = new List<byte>();
+		private int exampleFrom = 0;
+		private int exampleRand = 12;
 
 		private string error = "No Error";
 
@@ -184,7 +190,15 @@ namespace Scada.Declare
 
 			}
 			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
-            this.exampleLine = (StringValue)entry[DeviceEntry.ExampleLine];
+
+			if (this.IsVirtual)
+			{
+				string el = (StringValue)entry[DeviceEntry.ExampleLine];
+				el = el.Replace("\\r", "\r");
+				el = el.Replace("\\n", "\n");
+
+				this.exampleLine = el;
+			}
 			return true;
 		}
 
@@ -288,37 +302,81 @@ namespace Scada.Declare
             }
         }
 
-		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
+		private byte[] ReadData()
 		{
-			Debug.Assert(this.DataReceived != null);
-
-			try
+			if (!this.isVirtual)
 			{
 				int n = this.serialPort.BytesToRead;
 				byte[] buffer = new byte[n];
-			
+
 				int r = this.serialPort.Read(buffer, 0, n);
-				
-				//string data = Encoding.Default.GetString(buffer, 0, r);
 
-				byte[] line = this.lineParser.ContinueWith(buffer);
+				return buffer;
+			}
+			else
+			{
+				if (this.actionInterval > 1)
+				{
+					// 假设: 应答式的数据，都是完整的帧.
+					return this.GetExampleLine();
+				}
+				else
+				{
+					if (this.actionSendInHex)
+					{
+						return this.GetExampleLine();
+					}
+					// 不完整帧模拟
+					byte[] bytes = this.GetExampleLine();
+					int len = bytes.Length;
+					foreach (byte b in bytes)
+					{
+						exampleBuffer.Add(b);
+					}
 
-                if (line.Length > 0)
-                {
-                    DeviceData dd;
+					int c = new Random().Next(len - 5, len + 5);
+					int count = Math.Min(c, len);
+					byte[] ret = new byte[count];
+
+					for (int i = 0; i < count; ++i)
+					{
+						ret[i] = exampleBuffer[i];
+					}
+					exampleBuffer.RemoveRange(0, count);
+
+					return ret;
+				}
+			}
+		}
+
+		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
+		{
+			Debug.Assert(this.DataReceived != null);
+			try
+			{
+				handled = false;
+				byte[] buffer = this.ReadData();
+
+				byte[] line = this.dataParser.GetLineBytes(buffer);
+
+				if (line.Length > 0)
+				{
+					DeviceData dd;
 					bool got = this.GetDeviceData(line, out dd);
 					if (got)
 					{
 						this.SynchronizationContext.Post(this.DataReceived, dd);
-
 					}
-                }
-				
+				}
 			}
 			catch (InvalidOperationException e)
 			{
 				Debug.WriteLine(e.Message);
 				// !
+			}
+			finally
+			{
+				handled = true;
 			}
 		}
 
@@ -425,49 +483,32 @@ namespace Scada.Declare
             {
                 if (this.actionInterval > 0)
                 {
-                    // Depends on the WinFormTimer.
-                    string line = this.GetExampleLine();
-					byte[] bytes = null;
-					if (this.actionSendInHex)
-					{
-						bytes = ParseHex(line);
-					}
-					else
-					{
-						bytes = Encoding.ASCII.GetBytes(line);
-					}
-					DeviceData dd;
-					if (this.GetDeviceData(bytes, out dd))
-					{
-						this.SynchronizationContext.Post(this.DataReceived, dd);
-					}
+					this.SerialPortDataReceived("virtual-device", null);
                 }
                 else
                 {
                     this.timer = new Timer(new TimerCallback((object state) =>
                     {
-                        string line = this.GetExampleLine();
-						byte[] bytes = Encoding.ASCII.GetBytes(line);
-						//if (this.actionSendInHex)
-						//{
-						//	line = ParseHex(line);
-						//}
-						DeviceData dd;
-						if (this.GetDeviceData(bytes, out dd))
+						if (handled)
 						{
-							this.SynchronizationContext.Post(this.DataReceived, dd);
+							this.SerialPortDataReceived("virtual-device", null);
 						}
-                    }), null, 1000, 2000);
+					}), null, 2000, 5000);
                 }
             }	
         }
 
-        private string GetExampleLine(int rand = 0)
+        private byte[] GetExampleLine(int rand = 0)
         {
-            // TODO: Maybe need random example lines.
-            return this.exampleLine;
+			if (actionSendInHex)
+			{
+				return ParseHex(this.exampleLine);
+			}
+			else
+			{
+				return Encoding.ASCII.GetBytes(this.exampleLine);
+			}
         }
-
 
 		private static byte[] ParseHex(string line)
 		{
@@ -475,7 +516,7 @@ namespace Scada.Declare
 			List<byte> bs = new List<byte>();
 			foreach (string hex in hexArray)
 			{
-				byte b = (byte)int.Parse(hex, System.Globalization.NumberStyles.AllowHexSpecifier);
+				byte b = (byte)int.Parse(hex, NumberStyles.AllowHexSpecifier);
 				bs.Add(b);
 			}
 			return bs.ToArray<byte>();
