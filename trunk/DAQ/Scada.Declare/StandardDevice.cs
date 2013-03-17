@@ -187,6 +187,12 @@ namespace Scada.Declare
 					fc.type = FieldType.Int;
 					fieldConfigList.Add(fc);
 				}
+				else if (config == "null")
+				{
+					FieldConfig fc = new FieldConfig(FieldType.Null);
+					fc.type = FieldType.Null;
+					fieldConfigList.Add(fc);
+				}
 
 			}
 			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
@@ -390,12 +396,16 @@ namespace Scada.Declare
 				{
 					ret[i] = DateTime.Now;
 				}
+				else if (fieldsConfig[i].type == FieldType.Null)
+				{
+					ret[i] = "<Null>";
+				}
 				else if (fieldsConfig[i].index >= 0)
 				{
-                    int index = fieldsConfig[i].index;
-                    if (index > data.Length)
-                        return null;
-                    ret[i] = data[index];
+					int index = fieldsConfig[i].index;
+					if (index > data.Length)
+						return null;
+					ret[i] = data[index];
 				}
 			}
 			return ret;
