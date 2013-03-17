@@ -85,6 +85,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	CString strPathName = argv[2];
 
 	DWORD dwProcId = GetProcessID(strProcName);
+
 	
 	// ----
 	HWND hWnd = GetProcessMainWnd(dwProcId);
