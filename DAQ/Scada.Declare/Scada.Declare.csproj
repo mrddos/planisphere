@@ -79,6 +79,7 @@
     <Compile Include="DBConnection.cs" />
     <Compile Include="DeviceDataParser.cs" />
     <Compile Include="DWD485ASCIIFormater.cs" />
+    <Compile Include="FormProxyDevice.cs" />
     <Compile Include="IRecord.cs" />
     <Compile Include="LineParser.cs" />
     <Compile Include="MainApplication.cs" />
