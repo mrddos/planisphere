@@ -51,8 +51,7 @@ namespace Scada.Declare
 		private FieldConfig[] fieldsConfig = null;
 
 		private DataParser dataParser = null;
-		// 
-		private LineParser lineParser = null;
+		
 
         private IMessageTimer senderTimer = null;
 
@@ -62,8 +61,7 @@ namespace Scada.Declare
 
         private string exampleLine;
 		private List<byte> exampleBuffer = new List<byte>();
-		private int exampleFrom = 0;
-		private int exampleRand = 12;
+
 
 		private string error = "No Error";
 
