@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataParsers.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="DeviceDataParser.cs" />
     <Compile Include="DWD485ASCIIFormater.cs" />

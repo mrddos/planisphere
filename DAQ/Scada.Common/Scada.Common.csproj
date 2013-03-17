@@ -43,7 +43,6 @@
     <Compile Include="PipeConnection.cs" />
     <Compile Include="ClientPipeConnection.cs" />
     <Compile Include="CopyData.cs" />
-    <Compile Include="DataParser.cs" />
     <Compile Include="IChannelManager.cs" />
     <Compile Include="IClientChannel.cs" />
     <Compile Include="IInterProcessConnection.cs" />

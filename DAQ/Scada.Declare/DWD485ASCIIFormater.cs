@@ -38,45 +38,12 @@ namespace Scada.Declare
 
 			return new string[] { opens, rains, fulls, time };
 		}
-	}
 
-	public class DWD485ASCIILineParser : LineParser
-	{
-		private List<byte> list = new List<byte>();
-
-		public override byte[] ContinueWith(byte[] data)
+		public override byte[] GetLineBytes(byte[] data)
 		{
-			return null;
-			/*
-			for (int i = 0; i < data.Length; ++i)
-			{
-				list.Add(data[i]);
-			}
-
-			int start = 0;
-			int end = 0;
-			for (int i = 0; i < bytes.Length; ++i)
-			{
-				if (bytes[i] == '\0')
-				{
-					start = i;
-					continue;
-				}
-
-				if (bytes[i] == 0x01)
-				{
-					end = i;
-					break;
-				}
-			}
-
-			remain = Encoding.ASCII.GetString(bytes, end + 1, bytes.Length - end);
-
-			string line = Encoding.ASCII.GetString(bytes, start, end);
-			line.IndexOf('\0');
-			return line;
-			 * */
+			return data;
 		}
-
 	}
+
+	
 }
