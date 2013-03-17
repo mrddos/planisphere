@@ -17,6 +17,7 @@ namespace Scada.Declare
 
 	public enum FieldType
 	{
+		Null,
 		String,
 		Int,
 		Time,
