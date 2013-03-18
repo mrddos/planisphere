@@ -5,20 +5,48 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.DAQ.Tools", "Scada.DA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.DAQ.Installer", "Scada.DAQ.Installer\Scada.DAQ.Installer.csproj", "{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scada.DAQ.DataForm", "Scada.DAQ.DataForm\Scada.DAQ.DataForm.vcxproj", "{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{733C3F7F-9E01-4141-A1C4-312CB0D2CE4E}.Release|Win32.ActiveCfg = Release|Any CPU
 		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{70C82EF4-4F1F-4965-AF56-A9B6ECD4BB19}.Release|Win32.ActiveCfg = Release|Any CPU
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Debug|Win32.Build.0 = Debug|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Any CPU.ActiveCfg = Release|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Win32.ActiveCfg = Release|Win32
+		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
