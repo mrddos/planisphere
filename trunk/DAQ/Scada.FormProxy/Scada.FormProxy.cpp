@@ -22,10 +22,10 @@ BOOL CALLBACK EnumProc(HWND hWnd, LPARAM lParam)
     if(dwProcID == pInfo->dwProcessId)
     {
         // !!! first is not main
-        HWND pWnd = GetParent(hWnd);
-        while (GetParent(pWnd) != NULL)
-            pWnd = GetParent(pWnd);
-        pInfo->hWnd = pWnd;
+        HWND hParentWnd = NULL;
+        while ((hParentWnd = GetParent(hWnd)) != NULL)
+			hParentWnd = hWnd;
+        pInfo->hWnd = hWnd;
         return FALSE;
     }
     return TRUE;
@@ -63,11 +63,13 @@ DWORD __fastcall GetProcessID(CString const& strProcessName)
     return 0;
 }
 
-void WriteWindowInfo(CString const& strPathName)
+void WriteWindowInfo(CString const& strPathName, HWND hWnd)
 {
 	FILE* file = NULL;
 	file = _wfopen(strPathName, L"w");
-
+	char buffer[32] = {};
+	int l = sprintf(buffer, "%d", (long)hWnd);
+	fwrite(buffer, l, 1, file); 
 	// TODO: Write.
 	if (file)
 	{
@@ -81,15 +83,30 @@ void WriteWindowInfo(CString const& strPathName)
 // 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	CString strProcName = argv[1];
-	CString strPathName = argv[2];
+	CString strProcName;
+	CString strPathName;
+	if (argc > 1)
+	{
+		strProcName = argv[1];
+		strPathName = argv[2];
+	}
+
+	if (strProcName.GetLength() == 0)
+	{
+		strProcName = L"Scada.DAQ.DataForm.exe";
+	}
+
+	if (strPathName.GetLength() == 0)
+	{
+		strPathName = L"C:\\Users\\HealerKx\\Projects\\DAQ-Proj\\DAQ\\Bin\\Debug\\devices\\Scada.FormProxy\\0.9\\HWND.r";
+	}
 
 	DWORD dwProcId = GetProcessID(strProcName);
 
 	
 	// ----
 	HWND hWnd = GetProcessMainWnd(dwProcId);
-	WriteWindowInfo(strPathName);
+	WriteWindowInfo(strPathName, hWnd);
 	return 0;
 }
 

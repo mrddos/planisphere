@@ -245,6 +245,10 @@ namespace Scada.Main
 			{
 				return new TelnetDevice(entry);
 			}
+            else if (typeof(FormProxyDevice).ToString() == className)
+            {
+                return new FormProxyDevice(entry);
+            }
 
 			// Other Device defined in some Assemblies.
             if (entry[DeviceEntry.Assembly] != null)
