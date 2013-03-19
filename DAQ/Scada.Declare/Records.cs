@@ -56,7 +56,7 @@ namespace Scada.Declare
 		{
 			// TODO: Initilaize the DB connection
 			this.conn = new DBConnection();
-			
+            this.conn.Connect();
 		}
 
 		public bool DoRecord(DeviceData data)

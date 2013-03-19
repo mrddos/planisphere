@@ -67,6 +67,7 @@ namespace Scada.Declare
 						cmd.Parameters.AddWithValue(at, items[i]);
 					}
 					cmd.ExecuteNonQuery();
+                    cmd.Parameters.Clear();
 				}
 				else
 				{
