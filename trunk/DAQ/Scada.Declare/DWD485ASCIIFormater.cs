@@ -22,7 +22,7 @@ namespace Scada.Declare
 			// Skip 0 123 4
 			
 			bool open = (bytes[5] == 0x31);
-			string opens = string.Format("{0}", open);
+            string opens = string.Format("{0}", open ? 1 : 0);
 
 			// Skip
 			int a = bytes[6];
@@ -30,10 +30,10 @@ namespace Scada.Declare
 			int c = bytes[8];
 
 			bool rain = bytes[9] == 0x30;
-			string rains = string.Format("{0}", rain);
+            string rains = string.Format("{0}", rain ? 1 : 0);
 
 			bool full = bytes[10] == 0x33;
-			string fulls = string.Format("{0}", full);
+            string fulls = string.Format("{0}", full ? 1 : 0);
 			string time = Encoding.ASCII.GetString(bytes, 11, 5);	// in minutes;
 
 			return new string[] { opens, rains, fulls, time };

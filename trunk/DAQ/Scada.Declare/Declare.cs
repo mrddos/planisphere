@@ -15,14 +15,15 @@ namespace Scada.Declare
 	/// <returns></returns>
     public delegate bool OnDataReceived(object sender, string deviceName, string data);
 
-	public enum FieldType
-	{
-		Null,
-		String,
-		Int,
-		Time,
-		TimeNow,
-	}
+    public enum FieldType
+    {
+        Null,
+        String,
+        Int,
+        Time,
+        TimeNow,
+        Bit,
+    }
 
 	public class FieldConfig
 	{

@@ -160,39 +160,7 @@ namespace Scada.Declare
 			this.insertIntoCommand = cmd;
 
 			string fieldsConfigStr = (StringValue)entry[DeviceEntry.FieldsConfig];
-			string[] fieldsConfig = fieldsConfigStr.Split(',');
-			List<FieldConfig> fieldConfigList = new List<FieldConfig>();
-			for (int i = 0; i < fieldsConfig.Length; ++i)
-			{
-				string config = fieldsConfig[i];
-				config = config.Trim();
-				if (config == "Now")
-				{
-					FieldConfig fc = new FieldConfig(FieldType.TimeNow);
-					fc.type = FieldType.TimeNow;
-					fieldConfigList.Add(fc);
-				}
-				else if (config.StartsWith("#"))
-				{
-					FieldConfig fc = new FieldConfig(FieldType.String);
-					fc.type = FieldType.String;
-					fc.index = int.Parse(config.Substring(1));
-					fieldConfigList.Add(fc);
-				}
-				else if (config == "int")
-				{
-					FieldConfig fc = new FieldConfig(FieldType.Int);
-					fc.type = FieldType.Int;
-					fieldConfigList.Add(fc);
-				}
-				else if (config == "null")
-				{
-					FieldConfig fc = new FieldConfig(FieldType.Null);
-					fc.type = FieldType.Null;
-					fieldConfigList.Add(fc);
-				}
-
-			}
+            List<FieldConfig> fieldConfigList = ParseDataFieldConfig(fieldsConfigStr);
 			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
 
 			if (this.IsVirtual)
@@ -403,7 +371,16 @@ namespace Scada.Declare
 					int index = fieldsConfig[i].index;
 					if (index > data.Length)
 						return null;
-					ret[i] = data[index];
+                    string item = data[index] ;
+                    if (fieldsConfig[i].type == FieldType.Bit)
+                    {
+                        bool r = (item == "1" || item.ToLower() == "true");
+                        ret[i] = r;
+                    }
+                    else
+                    {
+                        ret[i] = item;
+                    }
 				}
 			}
 			return ret;
@@ -545,6 +522,61 @@ namespace Scada.Declare
 				this.dataParser = (DataParser)dataParser;
 			}
 		}
+
+        private List<FieldConfig> ParseDataFieldConfig(string fieldsConfigStr)
+        {
+            string[] fieldsConfig = fieldsConfigStr.Split(',');
+            List<FieldConfig> fieldConfigList = new List<FieldConfig>();
+            for (int i = 0; i < fieldsConfig.Length; ++i)
+            {
+                string config = fieldsConfig[i];
+                config = config.Trim();
+                if (config == "Now")
+                {
+                    FieldConfig fc = new FieldConfig(FieldType.TimeNow);
+                    fc.type = FieldType.TimeNow;
+                    fieldConfigList.Add(fc);
+                }
+                else if (config.StartsWith("#"))
+                {
+                    string cast = string.Empty;
+                    int lb = config.IndexOf("(");
+                    int rb = config.IndexOf(")");
+                    if (lb > 0 && rb > lb)
+                    {
+                        cast = config.Substring(lb + 1, rb - lb - 1);
+                        cast = cast.Trim().ToLower();
+                    }
+                    FieldType fieldType = FieldType.String;
+                    if (cast == "bit")
+                    {
+                        fieldType = FieldType.Bit;
+                    }
+                    else if (cast == "int")
+                    {
+                        fieldType = FieldType.Int;
+                    }
+                    FieldConfig fc = new FieldConfig(fieldType);
+                    int numl = lb > 0 ? lb - 1 : config.Length - 1;
+                    fc.index = int.Parse(config.Substring(1, numl));
+                    fieldConfigList.Add(fc);
+                }
+                else if (config == "int")
+                {
+                    FieldConfig fc = new FieldConfig(FieldType.Int);
+                    fc.type = FieldType.Int;
+                    fieldConfigList.Add(fc);
+                }
+                else if (config == "null")
+                {
+                    FieldConfig fc = new FieldConfig(FieldType.Null);
+                    fc.type = FieldType.Null;
+                    fieldConfigList.Add(fc);
+                }
+
+            }
+            return fieldConfigList;
+        }
 		
 	}
 }
