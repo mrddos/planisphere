@@ -75,6 +75,8 @@ CREATE TABLE `RDSampler_rec` (
 `IfRain` bit, /*感雨，单位：无，数据格式：0或1表示是否下雨*/
 `Barrel` bit, /*桶状态，单位：无，数据格式：0、1、2表示哪个桶正在使用*/
 `Alarm` bit,/*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
+`IsLidOpen` bit,
+`CurrentRainTime` varchar(10) ,
 `BeginTime` datetime DEFAULT NULL,/*开始时间，保留字段*/
 `Endtime` datetime DEFAULT NULL,/*开始时间，保留字段*/
 PRIMARY KEY (`Id`)
