@@ -165,6 +165,98 @@ namespace Scada.Declare
 
 		public abstract void Send(byte[] action);
 
+
+        public static object[] GetFieldsData(string[] data, FieldConfig[] fieldsConfig)
+        {
+            int count = fieldsConfig.Length;
+            object[] ret = new object[count];
+            for (int i = 0; i < count; ++i)
+            {
+                if (fieldsConfig[i].type == FieldType.TimeNow)
+                {
+                    ret[i] = DateTime.Now;
+                }
+                else if (fieldsConfig[i].type == FieldType.Null)
+                {
+                    ret[i] = "<Null>";
+                }
+                else if (fieldsConfig[i].index >= 0)
+                {
+                    int index = fieldsConfig[i].index;
+                    if (index > data.Length)
+                        return null;
+                    string item = data[index];
+                    if (fieldsConfig[i].type == FieldType.Bit)
+                    {
+                        bool r = (item == "1" || item.ToLower() == "true");
+                        ret[i] = r;
+                    }
+                    else
+                    {
+                        ret[i] = item;
+                    }
+                }
+            }
+            return ret;
+        }
+
+
+        protected List<FieldConfig> ParseDataFieldConfig(string fieldsConfigStr)
+        {
+            string[] fieldsConfig = fieldsConfigStr.Split(',');
+            List<FieldConfig> fieldConfigList = new List<FieldConfig>();
+            for (int i = 0; i < fieldsConfig.Length; ++i)
+            {
+                string config = fieldsConfig[i];
+                config = config.Trim();
+                if (config == "Now")
+                {
+                    FieldConfig fc = new FieldConfig(FieldType.TimeNow);
+                    fc.type = FieldType.TimeNow;
+                    fieldConfigList.Add(fc);
+                }
+                else if (config.StartsWith("#"))
+                {
+                    string cast = string.Empty;
+                    int lb = config.IndexOf("(");
+                    int rb = config.IndexOf(")");
+                    if (lb > 0 && rb > lb)
+                    {
+                        cast = config.Substring(lb + 1, rb - lb - 1);
+                        cast = cast.Trim().ToLower();
+                    }
+                    FieldType fieldType = FieldType.String;
+                    if (cast == "bit")
+                    {
+                        fieldType = FieldType.Bit;
+                    }
+                    else if (cast == "int")
+                    {
+                        fieldType = FieldType.Int;
+                    }
+                    FieldConfig fc = new FieldConfig(fieldType);
+                    int numl = lb > 0 ? lb - 1 : config.Length - 1;
+                    fc.index = int.Parse(config.Substring(1, numl));
+                    fieldConfigList.Add(fc);
+                }
+                else if (config == "int")
+                {
+                    FieldConfig fc = new FieldConfig(FieldType.Int);
+                    fc.type = FieldType.Int;
+                    fieldConfigList.Add(fc);
+                }
+                else if (config == "null")
+                {
+                    FieldConfig fc = new FieldConfig(FieldType.Null);
+                    fc.type = FieldType.Null;
+                    fieldConfigList.Add(fc);
+                }
+
+            }
+            return fieldConfigList;
+        }
+
+
 	}
 
     /// <summary>

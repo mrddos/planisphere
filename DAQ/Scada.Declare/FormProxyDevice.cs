@@ -11,6 +11,8 @@ namespace Scada.Declare
 {
 	public class FormProxyDevice : Device
 	{
+        public const string ProcessName = "ProcessName";
+
 		[DllImport("user32.dll")]
 		static extern IntPtr GetDlgItem(IntPtr hDlg, int nIDDlgItem);
 
@@ -23,9 +25,10 @@ namespace Scada.Declare
         [DllImport("kernel32.dll")]
         public extern static int GetLastError();
 
-        private IntPtr hWnd1 = IntPtr.Zero;
+        private string processName;
 
-        private IntPtr hWnd2 = IntPtr.Zero;
+        private IntPtr hWnd = IntPtr.Zero;
+
 
         private const int WM_GETTEXT = 0x000D;
 
@@ -33,7 +36,11 @@ namespace Scada.Declare
 
         StringBuilder sb = new StringBuilder(BufferLength);
 
-        private readonly string[] EmptyStringArray = new string[0]; 
+        private readonly string[] EmptyStringArray = new string[0];
+
+        private string insertIntoCommand;
+
+        private FieldConfig[] fieldsConfig = null;
 
         int nEditId1 = 0;
         int nEditId2 = 0;
@@ -56,10 +63,32 @@ namespace Scada.Declare
             this.Path = entry[DeviceEntry.Path].ToString();
             this.Version = entry[DeviceEntry.Version].ToString();
 
-            int nEditId1 = (StringValue)entry["EditId1"];
-            int nEditId2 = (StringValue)entry["EditId2"];
-            int nEditId3 = (StringValue)entry["EditId3"];
-            int nEditId4 = (StringValue)entry["EditId4"];
+            this.processName = (StringValue)entry[ProcessName];
+
+            this.nEditId1 = (StringValue)entry["EditId1"];
+            this.nEditId2 = (StringValue)entry["EditId2"];
+            this.nEditId3 = (StringValue)entry["EditId3"];
+            this.nEditId4 = (StringValue)entry["EditId4"];
+
+            string tableName = (StringValue)entry[DeviceEntry.TableName];
+            string tableFields = (StringValue)entry[DeviceEntry.TableFields];
+
+            string[] fields = tableFields.Split(',');
+            string atList = string.Empty;
+            for (int i = 0; i < fields.Length; ++i)
+            {
+                string at = string.Format("@{0}, ", i + 1);
+                atList += at;
+            }
+            atList = atList.TrimEnd(',', ' ');
+
+            string cmd = string.Format("insert into {0}({1}) values({2})", tableName, tableFields, atList);
+            this.insertIntoCommand = cmd;
+
+
+            string fieldsConfigStr = (StringValue)entry[DeviceEntry.FieldsConfig];
+            List<FieldConfig> fieldConfigList = ParseDataFieldConfig(fieldsConfigStr);
+            this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
 
 			return true;
 		}
@@ -80,6 +109,8 @@ namespace Scada.Declare
 
         private IntPtr FetchWindowHandle(string processName)
         {
+            string hWndCfgFile = this.Path + "\\HWND.r";
+
             using (Process process = new Process())
             {
                 process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
@@ -88,13 +119,16 @@ namespace Scada.Declare
                 process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
                 process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
                 process.StartInfo.RedirectStandardError = true;//重定向错误输出
+                
+                string args = string.Format("{0} {1}", this.processName, hWndCfgFile);
+                process.StartInfo.Arguments = args;
                 process.Start();
             }
 
             Thread.Sleep(678);
 
             byte[] bytes = new byte[32];
-            string hWndCfgFile = this.Path + "\\HWND.r";
+            
             FileStream fs = File.Open(hWndCfgFile, FileMode.Open);
             int r = fs.Read(bytes, 0, 32);
             fs.Close();
@@ -117,19 +151,40 @@ namespace Scada.Declare
             return ret;
         }
 
+        private bool GetDeviceData(string[] data, out DeviceData deviceData)
+        {
+            deviceData = default(DeviceData);
+            if (data == null || data.Length == 0)
+            {
+                return false;
+            }
+
+            object[] fields = GetFieldsData(data, this.fieldsConfig);
+            deviceData = new DeviceData(this, fields);
+            deviceData.InsertIntoCommand = this.insertIntoCommand;
+            //deviceData.FieldsConfig = this.fieldsConfig;
+            return true;
+        }
+
 		public override void Start(string address)
 		{
+            Timer timer = null;
+
             Thread thread = new Thread(new ThreadStart(() => {
 
-                // TODO:
-                this.hWnd1 = FetchWindowHandle("?");
-                this.hWnd2 = FetchWindowHandle("?");
+                this.hWnd = FetchWindowHandle(this.processName);
 
+                timer = new Timer(new TimerCallback((object o) => {
 
-                Timer timer = new Timer(new TimerCallback((object o) => {
+                    string[] dataSet = GetData(hWnd);
 
-                    string[] ds1 = GetData(hWnd1);
-                    string[] ds2 = GetData(hWnd2);
+                    DeviceData dd;
+                    bool got = this.GetDeviceData(dataSet, out dd);
+                    if (got)
+                    {
+                        this.SynchronizationContext.Post(this.DataReceived, dd);
+                    }
+
                 }), null, 1000, 10000);
                 
             }));

@@ -90,7 +90,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		strProcName = argv[1];
 		strPathName = argv[2];
 	}
-
+	// MessageBox(NULL, strProcName, strPathName, 0);
 	if (strProcName.GetLength() == 0)
 	{
 		strProcName = L"Scada.DAQ.DataForm.exe";
