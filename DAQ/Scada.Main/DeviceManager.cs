@@ -37,6 +37,13 @@ namespace Scada.Main
 
         private Dictionary<string, DevicesInfo> dict = new Dictionary<string, DevicesInfo>();
 
+        /// <summary>
+        /// 
+        /// At most has 10 SerailPort device.
+        /// </summary>
+        private Dictionary<string, string> d2d = new Dictionary<string, string>(10);
+
+
         private Dictionary<string, string> selectedDevices = new Dictionary<string, string>();
 
         /// <summary>
@@ -152,6 +159,28 @@ namespace Scada.Main
                     string version = DirectoryName(versionPath);
                     di.Versions.Add(version);
                 }
+            }
+
+            // TODO: Load d2d
+            string d2dFile = MainApplication.InstallPath + "\\d2d.m";
+            if (File.Exists(d2dFile))
+            {
+                using (StreamReader sr = new StreamReader(d2dFile))
+                {
+                    string line = string.Empty;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        line = line.Trim();
+                        string[] kv = line.Split(':');
+                        if (kv.Length == 2)
+                        {
+                            string device = kv[0].Trim();
+                            string address = kv[1].Trim();
+                            this.d2d.Add(device.ToLower(), address); 
+                        }
+                    }
+                }
+
             }
         }
 
@@ -287,8 +316,6 @@ namespace Scada.Main
 						Device device = Load(entry);
 						if (device != null)
 						{
-							string deviceLoadedStr = string.Format("Device: '{0}' Loaded.", entry[DeviceEntry.Identity]);
-							RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
 							// Set thread-sync-context
                             device.SynchronizationContext = syncCtx;
 							// Set data-received callback
@@ -301,9 +328,10 @@ namespace Scada.Main
                             this.devices.Add(device);
 
 							// Load the address from the d2d.m
-							string address = "COM1";
+                            string address = this.GetCOMPort(deviceName);
 
-							
+                            string deviceLoadedStr = string.Format("Device: '{0}' Loaded @ '{1}'", entry[DeviceEntry.Identity], address);
+                            RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
                             
 							device.Start(address);
 						}
@@ -327,5 +355,15 @@ namespace Scada.Main
 				device.Stop();
 			}
 		}
+
+        private string GetCOMPort(string deviceName)
+        {
+            string deviceKey = deviceName.ToLower();
+            if (this.d2d.ContainsKey(deviceKey))
+            {
+                return this.d2d[deviceKey];
+            }
+            return string.Empty;
+        }
 	}
 }

@@ -1,3 +1,3 @@
 
 
-Scada.HIPC = COM5
+Scada.HIPC : COM1
