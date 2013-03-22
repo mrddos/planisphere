@@ -207,6 +207,7 @@ namespace Scada.Declare
 				{
 					this.serialPort.Open();
 
+                    RecordManager.DoSystemEventRecord(this, "Start send command");
 					if (this.actionInterval > 0)
 					{
 						this.StartSenderTimer(this.actionInterval);
@@ -225,24 +226,21 @@ namespace Scada.Declare
 				}
 				else
 				{
+                    RecordManager.DoSystemEventRecord(this, "Notice, Virtual Device Started");
                     this.StartVirtualDevice();
 				}
 
             }
             catch (IOException e)
             {
-                string message = e.Message;
-
-                // TODO: Do something when can NOT open the port.
-
-                // SerialDataReceivedEventArgs events = null;
-                // this.SerialPortDataReceived(null, events);
-
+                string message = "IO: " + e.Message;
+                RecordManager.DoSystemEventRecord(this, message);
                 return false;
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                string message = "Other: " + e.Message;
+                RecordManager.DoSystemEventRecord(this, message);
             }
 
 
@@ -323,32 +321,37 @@ namespace Scada.Declare
 
 		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
 		{
+            RecordManager.DoSystemEventRecord(this, "recv");
 			Debug.Assert(this.DataReceived != null);
 			try
 			{
+                RecordManager.DoSystemEventRecord(this, "recv");
 				handled = false;
 				byte[] buffer = this.ReadData();
 
 				byte[] line = this.dataParser.GetLineBytes(buffer);
-
+                RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(buffer));
 				if (line.Length > 0)
 				{
+                    RecordManager.DoSystemEventRecord(this, "line 2");
 					DeviceData dd;
 					bool got = this.GetDeviceData(line, out dd);
 					if (got)
 					{
+                        RecordManager.DoSystemEventRecord(this, "line 3");
 						this.SynchronizationContext.Post(this.DataReceived, dd);
 					}
 				}
 			}
 			catch (InvalidOperationException e)
 			{
-				Debug.WriteLine(e.Message);
+                RecordManager.DoSystemEventRecord(this, e.Message);
 				// !
 			}
 			finally
 			{
 				handled = true;
+                RecordManager.DoSystemEventRecord(this, "fff");
 			}
 		}
 
@@ -392,9 +395,13 @@ namespace Scada.Declare
 
 		public override void Start(string address)
         {
+            RecordManager.DoSystemEventRecord(this, "Start222");
 			// address = "COM5";
             // TODO: call method Connect to connect the Serial-Port.
-			this.Connect(address);
+            if (!this.Connect(address))
+            {
+                RecordManager.DoSystemEventRecord(this, "Connection Failure");
+            }
             // 
         }
 
@@ -419,6 +426,7 @@ namespace Scada.Declare
 			{
 				if (!this.IsVirtual)
 				{
+                    RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(action));
 					this.serialPort.Write(action, 0, action.Length);
 				}
 				else
