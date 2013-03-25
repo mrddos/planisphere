@@ -103,6 +103,10 @@ namespace Scada.Declare
 
 		private static string PackDeviceData(DeviceData deviceData)
         {
+            if (deviceData.Data == null)
+            {
+                return "<DeviceData::Data Is Null>";
+            }
             StringBuilder sb = new StringBuilder();
             foreach (object o in deviceData.Data)
             {

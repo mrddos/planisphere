@@ -207,7 +207,6 @@ namespace Scada.Declare
 				{
 					this.serialPort.Open();
 
-                    RecordManager.DoSystemEventRecord(this, "Start send command");
 					if (this.actionInterval > 0)
 					{
 						this.StartSenderTimer(this.actionInterval);
@@ -321,24 +320,20 @@ namespace Scada.Declare
 
 		private void SerialPortDataReceived(object sender, SerialDataReceivedEventArgs evt)  
 		{
-            RecordManager.DoSystemEventRecord(this, "recv");
 			Debug.Assert(this.DataReceived != null);
 			try
 			{
-                RecordManager.DoSystemEventRecord(this, "recv");
 				handled = false;
 				byte[] buffer = this.ReadData();
 
 				byte[] line = this.dataParser.GetLineBytes(buffer);
-                RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(buffer));
+
 				if (line.Length > 0)
 				{
-                    RecordManager.DoSystemEventRecord(this, "line 2");
 					DeviceData dd;
 					bool got = this.GetDeviceData(line, out dd);
 					if (got)
 					{
-                        RecordManager.DoSystemEventRecord(this, "line 3");
 						this.SynchronizationContext.Post(this.DataReceived, dd);
 					}
 				}
@@ -351,7 +346,6 @@ namespace Scada.Declare
 			finally
 			{
 				handled = true;
-                RecordManager.DoSystemEventRecord(this, "fff");
 			}
 		}
 
@@ -365,18 +359,10 @@ namespace Scada.Declare
 				return false;
 			}
 
-			// Seems NO need for HIPC!!! [Notice!!!]
-			/*
-			if (IsActionCondition(line))
-			{
-				this.Send(this.actionSend);
-				return false;
-			}
-			*/
 			object[] fields = GetFieldsData(data, this.fieldsConfig);
 			dd = new DeviceData(this, fields);
 			dd.InsertIntoCommand = this.insertIntoCommand;
-			//deviceData.FieldsConfig = this.fieldsConfig;
+			// deviceData.FieldsConfig = this.fieldsConfig;
 			return true;
 		}
 
@@ -395,14 +381,10 @@ namespace Scada.Declare
 
 		public override void Start(string address)
         {
-            RecordManager.DoSystemEventRecord(this, "Start222");
-			// address = "COM5";
-            // TODO: call method Connect to connect the Serial-Port.
             if (!this.Connect(address))
             {
                 RecordManager.DoSystemEventRecord(this, "Connection Failure");
             }
-            // 
         }
 
 
@@ -426,7 +408,7 @@ namespace Scada.Declare
 			{
 				if (!this.IsVirtual)
 				{
-                    RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(action));
+                    // RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(action));
 					this.serialPort.Write(action, 0, action.Length);
 				}
 				else

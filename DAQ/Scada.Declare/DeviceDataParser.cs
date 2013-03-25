@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,14 @@ namespace Scada.Declare
 	{
 		public WeatherDataParser()
 		{
-			//this.lineParser = new LineParser();
+            this.lineParser = new LineParser();
 		}
 
 		public override string[] Search(byte[] data)
 		{
 			// >"11/29/12","00:58", 10.0, 55,  1.3,1018.4,360,  0.0,   0.0,2,!195
 			string line = Encoding.ASCII.GetString(data);
+            
 			int p = line.IndexOf('>');
 			line = line.Substring(p + 1);
 			string[] items = line.Split(',');
@@ -28,7 +30,11 @@ namespace Scada.Declare
 
 		public override byte[] GetLineBytes(byte[] data)
 		{
-			return data;
+            if (this.lineParser != null)
+            {
+                return this.lineParser.ContinueWith(data);
+            }
+            return data;
 		}
 	}
 
