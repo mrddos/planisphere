@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LogWatcher.cs" />
     <Compile Include="WatchForm.cs">
       <SubType>Form</SubType>
     </Compile>

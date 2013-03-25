@@ -26,42 +26,13 @@ namespace Scada.Main
 		/// </summary>
 		private static IntPtr watchFormHandle;
 
-        private const string DeviceMappingFile = "d2d.m";
+        
 
 		private const string WatchExeFileName = "scada.watch";
 
         public static DeviceManager deviceManager = new DeviceManager();
 
 		// private static CopyDataStruct cds = new CopyDataStruct() { cbData=10, lpData = "Hello" };
-
-        /// <summary>
-        /// Retrieve device to device mapping.
-        /// </summary>
-        /// <returns>Dict with device to device mapping</returns>
-        static Dictionary<string, string> LoadDeviceMapping()
-        {
-            Dictionary<string, string> mapping = null;
-            string deviceMappingFile = string.Format("{0}\\{1}", MainApplication.InstallPath, DeviceMappingFile);
-            if (File.Exists(deviceMappingFile))
-            {
-                using (ScadaReader sr = new ScadaReader(deviceMappingFile))
-                {
-                    SectionType secType = SectionType.None;
-                    string line = null;
-                    string key = null;
-                    IValue value = null;
-                    mapping = new Dictionary<string, string>();
-                    while (sr.ReadLine(out secType, out line, out key, out value) == ReadLineResult.OK)
-                    {
-                        if (secType == SectionType.KeyWithStringValue)
-                        {
-                            mapping.Add(key, value.ToString());
-                        }
-                    }
-                }
-            }
-            return mapping;
-        }
 
 		public static IntPtr WatchFormHandle
 		{
@@ -124,10 +95,7 @@ namespace Scada.Main
             string s = o.ToString();
             */
 
-            LoadDeviceMapping();
-
-
-			if (!IsWatchRunning())
+            if (!IsWatchRunning())
 			{
 				StartWatchProcess();
 			}

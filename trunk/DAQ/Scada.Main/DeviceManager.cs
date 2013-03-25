@@ -35,6 +35,8 @@ namespace Scada.Main
 	{
         private const string DeviceConfigFile = @"device.cfg";
 
+        private const string DeviceMappingFile = @"d2d.m";
+
         private Dictionary<string, DevicesInfo> dict = new Dictionary<string, DevicesInfo>();
 
         /// <summary>
@@ -162,7 +164,7 @@ namespace Scada.Main
             }
 
             // TODO: Load d2d
-            string d2dFile = MainApplication.InstallPath + "\\d2d.m";
+            string d2dFile = MainApplication.InstallPath + "\\" + DeviceMappingFile;
             if (File.Exists(d2dFile))
             {
                 using (StreamReader sr = new StreamReader(d2dFile))
@@ -250,8 +252,8 @@ namespace Scada.Main
                 // Path
                 entry[DeviceEntry.Path] = new StringValue(devicePath);
 				entry[DeviceEntry.Identity] = new StringValue(deviceName);
-                // Virtual 
 
+                // Virtual 
                 if (File.Exists(devicePath + "\\virtual-device"))
                 {
                     entry[DeviceEntry.Virtual] = new StringValue("true");
