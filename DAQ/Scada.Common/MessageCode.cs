@@ -29,8 +29,10 @@ namespace Scada.Common
 		public const int KeepAlive = 232;
 
 
-		public const int KeepAliveInterval = 5000;
+		// public const int KeepAliveInterval = 5000;
 
+
+        public const int RescueCheckTimer = 5000;
 
 	}
 }

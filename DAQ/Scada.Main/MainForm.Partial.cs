@@ -1,9 +1,14 @@
-﻿
-
-using Scada.Declare;
+﻿/**
+ * 
+ * 
+ * 
+ */
 
 namespace Scada.Main
 {
+    using Scada.Declare;
+    using System;
+
     public partial class MainForm
     {
 		/// <summary>
@@ -13,10 +18,16 @@ namespace Scada.Main
 		/// <returns></returns>
 		private bool OnDataArrival(DeviceData deviceData)
 		{
-			// object[] data = deviceData.Data;
-			// Device device = deviceData.Device;
-
+            // Record.
 			RecordManager.DoDataRecord(deviceData);
+
+            // For Rescue
+            Device device = deviceData.Device;
+            if (device != null)
+            {
+                string deviceKey = device.Id.ToLower();
+                Program.DeviceManager.UpdateLastModifyTime(deviceKey, DateTime.Now.Ticks);
+            }
 
 			return true;
 		}

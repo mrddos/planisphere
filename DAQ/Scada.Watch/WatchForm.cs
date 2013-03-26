@@ -80,7 +80,7 @@ namespace Scada.Watch
             AddWatch();
 
 			this.timer = new Timer();
-			this.timer.Interval = Defines.KeepAliveInterval;
+            this.timer.Interval = 60 * 1000;    // Defines.KeepAliveInterval;
 			this.timer.Tick += timerTick;
 			this.timer.Start();
 

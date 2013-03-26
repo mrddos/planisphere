@@ -48,6 +48,10 @@ namespace Scada.Main
 
         private Dictionary<string, string> selectedDevices = new Dictionary<string, string>();
 
+
+        private Dictionary<string, long> lastUpdateDict = new Dictionary<string, long>();
+
+
         /// <summary>
         /// Running devices;
         /// </summary>
@@ -367,5 +371,43 @@ namespace Scada.Main
             }
             return string.Empty;
         }
-	}
+
+        /// <summary>
+        /// Update the device last modify time.
+        /// </summary>
+        /// <param name="deviceKey"></param>
+        /// <param name="p"></param>
+        internal void UpdateLastModifyTime(string deviceKey, long p)
+        {
+            if (this.lastUpdateDict.ContainsKey(deviceKey))
+            {
+                this.lastUpdateDict[deviceKey] = p;
+            }
+            else
+            {
+                this.lastUpdateDict.Add(deviceKey, p);
+            }
+        }
+
+        internal void CheckLastModifyTime()
+        {
+            long now = DateTime.Now.Ticks;
+            foreach (string deviceKey in this.lastUpdateDict.Keys)
+            {
+                long lastModifyTime = this.lastUpdateDict[deviceKey];
+                long diff = now - lastModifyTime;
+                if (diff > 1000 * 10)
+                {
+                    // TODO: Rescue.
+                    this.RescueDevice(deviceKey);
+                }
+            }
+        }
+
+        private void RescueDevice(string deviceKey)
+        {
+            // TODO: Restart the device would be OK.
+            // TODO: 
+        }
+    }
 }

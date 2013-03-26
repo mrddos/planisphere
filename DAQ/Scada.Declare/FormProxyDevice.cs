@@ -60,6 +60,7 @@ namespace Scada.Declare
 		private bool Initialize(DeviceEntry entry)
 		{
             this.Name = entry[DeviceEntry.Name].ToString();
+            this.Id = entry[DeviceEntry.Identity].ToString();
             this.Path = entry[DeviceEntry.Path].ToString();
             this.Version = entry[DeviceEntry.Version].ToString();
 
