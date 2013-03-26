@@ -35,7 +35,7 @@ namespace Scada.Main
 
 			// Keep-Alive timer
 			this.timer = new System.Windows.Forms.Timer();
-			this.timer.Interval = Defines.KeepAliveInterval;
+            this.timer.Interval = Defines.RescueCheckTimer;
 			this.timer.Tick += timerKeepAliveTick;
 			this.timer.Start();
 
@@ -115,7 +115,11 @@ namespace Scada.Main
 
 		void timerKeepAliveTick(object sender, EventArgs e)
 		{
-			Program.SendKeepAlive();
+            // Not use this method to send keep alive message.
+			// Program.SendKeepAlive();
+
+            // Check the Last Modify time of each device.
+            Program.DeviceManager.CheckLastModifyTime();
 		}
 
 		private void InitSysNotifyIcon()

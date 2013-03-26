@@ -68,11 +68,16 @@ namespace Scada.Main
 			return false;
 		}
 
+        /*
+         * This is for Cross Process sending KeepAlive message.
+         * But it's not good for self rescue plan.
+         * So, not used.
 		public static bool SendKeepAlive()
 		{
 			bool ret = Defines.PostMessage(Program.WatchFormHandle, Defines.WM_KEEPALIVE, Defines.KeepAlive, 232);
 			return true;
 		}
+        */
 
 		public static void StartWatchProcess()
 		{

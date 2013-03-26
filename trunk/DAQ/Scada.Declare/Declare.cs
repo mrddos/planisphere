@@ -125,6 +125,12 @@ namespace Scada.Declare
 			set { this.name = value; }
 		}
 
+        public string Id
+        {
+            get;
+            set;
+        }
+
         public string Path
         {
             get { return this.path; }
