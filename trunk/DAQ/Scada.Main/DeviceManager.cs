@@ -31,6 +31,45 @@ namespace Scada.Main
         }
     }
 
+    class DeviceRunContext
+    {
+        public DeviceRunContext(string deviceName, string version)
+        {
+            this.DeviceName = deviceName;
+            this.Version = version;
+        }
+
+        public string DeviceName
+        {
+            get;
+            private set;
+        }
+
+        public string Version
+        {
+            get;
+            private set;
+        }
+
+        public SynchronizationContext SynchronizationContext
+        {
+            get;
+            set;
+        }
+
+        public SendOrPostCallback Callback
+        {
+            get;
+            set;
+        }
+
+        public Device Device
+        {
+            get;
+            set;
+        }
+    }
+
 	class DeviceManager
 	{
         private const string DeviceConfigFile = @"device.cfg";
@@ -46,7 +85,7 @@ namespace Scada.Main
         private Dictionary<string, string> d2d = new Dictionary<string, string>(10);
 
 
-        private Dictionary<string, string> selectedDevices = new Dictionary<string, string>();
+        private Dictionary<string, DeviceRunContext> selectedDevices = new Dictionary<string, DeviceRunContext>();
 
 
         private Dictionary<string, long> lastUpdateDict = new Dictionary<string, long>();
@@ -55,7 +94,7 @@ namespace Scada.Main
         /// <summary>
         /// Running devices;
         /// </summary>
-        private List<Device> devices = new List<Device>();
+        // private List<Device> devices = new List<Device>();
 
         private SendOrPostCallback dataReceived;
 
@@ -218,13 +257,14 @@ namespace Scada.Main
         /// <param name="version"></param>
         public void SelectDevice(string deviceName, string version, bool selected)
         {
+            string deviceKey = deviceName.ToLower();
             if (selected)
             {
-                selectedDevices.Add(deviceName, version);
+                selectedDevices.Add(deviceKey, new DeviceRunContext(deviceName, version));
             }
             else
             {
-                selectedDevices.Remove(deviceName);
+                selectedDevices.Remove(deviceKey);
             }
         }
 
@@ -309,43 +349,50 @@ namespace Scada.Main
         {
             foreach (string deviceName in selectedDevices.Keys)
             {
-                string version = selectedDevices[deviceName];
-                string path = GetDevicePath(deviceName, version);
-                if (Directory.Exists(path))
-                {
-                    string deviceCfgFile = string.Format("{0}\\{1}", path, DeviceConfigFile);
-                    // TODO: Config file reading
-					if (deviceCfgFile != null)
-					{
-						DeviceEntry entry = ReadConfigFile(deviceName, deviceCfgFile);
+                DeviceRunContext context = this.selectedDevices[deviceName];
+                context.SynchronizationContext = syncCtx;
+                context.Callback = callback;
 
-						Device device = Load(entry);
-						if (device != null)
-						{
-							// Set thread-sync-context
-                            device.SynchronizationContext = syncCtx;
-							// Set data-received callback
-                            device.DataReceived += callback;
-							// Set file-record
-							
-							// FileRecord fr = new FileRecord("");
+                this.RunDevice(context);
 
-                            // To hold the object.
-                            this.devices.Add(device);
-
-							// Load the address from the d2d.m
-                            string address = this.GetCOMPort(deviceName);
-
-                            string deviceLoadedStr = string.Format("Device: '{0}' Loaded @ '{1}'", entry[DeviceEntry.Identity], address);
-                            RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
-                            
-							device.Start(address);
-						}
-					}
-
-                }
             }
             return true;
+        }
+
+        private bool RunDevice(DeviceRunContext context)
+        {
+            string path = GetDevicePath(context.DeviceName, context.Version);
+            if (Directory.Exists(path))
+            {
+                string deviceCfgFile = string.Format("{0}\\{1}", path, DeviceConfigFile);
+                // TODO: Config file reading
+                if (deviceCfgFile != null)
+                {
+                    DeviceEntry entry = ReadConfigFile(context.DeviceName, deviceCfgFile);
+
+                    Device device = Load(entry);
+                    if (device != null)
+                    {
+                        context.Device = device;
+
+                        // Set thread-sync-context
+                        device.SynchronizationContext = context.SynchronizationContext;
+                        // Set data-received callback
+                        device.DataReceived += context.Callback;
+
+                        // Load the address from the d2d.m
+                        string address = this.GetCOMPort(context.DeviceName);
+
+                        string deviceLoadedStr = string.Format("Device: '{0}' Loaded @ '{1}'", entry[DeviceEntry.Identity], address);
+                        RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
+
+                        device.Start(address);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
 		public void Initialize()
@@ -356,10 +403,12 @@ namespace Scada.Main
 
 		public void ShutdownDeviceConnection()
 		{
+            /*
 			foreach (Device device in this.devices)
 			{
 				device.Stop();
 			}
+             * */
 		}
 
         private string GetCOMPort(string deviceName)
@@ -406,8 +455,17 @@ namespace Scada.Main
 
         private void RescueDevice(string deviceKey)
         {
-            // TODO: Restart the device would be OK.
-            // TODO: 
+            DeviceRunContext context = this.selectedDevices[deviceKey];
+
+            if (context != null)
+            {
+                Device badDevice = context.Device;
+                if (badDevice != null)
+                {
+                    badDevice.Stop();
+                }
+                this.RunDevice(context);
+            }
         }
     }
 }

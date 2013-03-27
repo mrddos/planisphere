@@ -204,6 +204,7 @@ namespace Scada.Declare
                 this.serialPort.RtsEnable = true;
                 this.serialPort.NewLine = "/r/n";	//?
                 this.serialPort.DataReceived += this.SerialPortDataReceived;
+                // Real Devie begins here.
 				if (!this.IsVirtual)
 				{
 					this.serialPort.Open();
