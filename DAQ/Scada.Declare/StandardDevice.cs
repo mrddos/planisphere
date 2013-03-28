@@ -124,8 +124,11 @@ namespace Scada.Declare
 			if (actionSendInHex != "true")
 			{
 				string actionSend = (StringValue)entry[DeviceEntry.ActionSend];
-				actionSend = actionSend.Replace("\\r", "\r");
-				this.actionSend = Encoding.ASCII.GetBytes(actionSend);
+                if (actionSend != null)
+                {
+                    actionSend = actionSend.Replace("\\r", "\r");
+                    this.actionSend = Encoding.ASCII.GetBytes(actionSend);
+                }
 			}
 			else
 			{
@@ -215,7 +218,10 @@ namespace Scada.Declare
 					}
 					else
 					{
-						this.Send(this.actionSend);
+                        if (this.actionSend != null && this.actionSend.Length > 0)
+                        {
+                            this.Send(this.actionSend);
+                        }
 					}
 
                     /* TODO: Remove after test.
@@ -267,10 +273,16 @@ namespace Scada.Declare
             {
                 this.StartSenderTimer(this.actionInterval);
             }
+            else if (this.actionInterval == 0)
+            {
+                this.OnSendDataToVirtualDevice(this.actionSend);
+            }
+            /*
             else if (!string.IsNullOrEmpty(this.actionCondition))
             {
                 this.Send(this.actionSend);
             }
+            */
         }
 
 		private byte[] ReadData()

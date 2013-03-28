@@ -10,6 +10,10 @@ namespace Scada.Common
 
 		public static bool Equals(byte[] a, byte[] b)
 		{
+            if (a == b)
+            {
+                return true;
+            }
 			if (a.Length != b.Length)
 			{
 				return false;

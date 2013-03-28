@@ -67,4 +67,32 @@ namespace Scada.Declare
 		}
 	}
 
+
+    public class ShelterDataParser : DataParser
+    {
+        public ShelterDataParser()
+		{
+			this.lineParser = new LineParser();
+		}
+
+		public override string[] Search(byte[] data)
+		{
+			// .0000   .0000   .0000   .0000   .5564   383.0   6.136   28.40   .0000 
+			string line = Encoding.ASCII.GetString(data);
+			int p = line.IndexOf('#');
+			line = line.Substring(p + 1);
+			string[] items = line.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+			return items;
+		}
+
+		public override byte[] GetLineBytes(byte[] data)
+		{
+			if (this.lineParser != null)
+			{
+				return this.lineParser.ContinueWith(data);
+			}
+			return data;
+		}
+    }
 }
