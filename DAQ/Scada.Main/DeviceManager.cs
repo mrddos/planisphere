@@ -444,8 +444,8 @@ namespace Scada.Main
             foreach (string deviceKey in this.lastUpdateDict.Keys)
             {
                 long lastModifyTime = this.lastUpdateDict[deviceKey];
-                long diff = now - lastModifyTime;
-                if (diff > 1000 * 10)
+                long diffInSec = (now - lastModifyTime) / 10000000;
+                if (diffInSec > 60 * 5)
                 {
                     // TODO: Rescue.
                     this.RescueDevice(deviceKey);
