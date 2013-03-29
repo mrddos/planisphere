@@ -438,8 +438,12 @@ namespace Scada.Main
             }
         }
 
+        // [Notice]; The the device no data arrived at the very beginning.
+        // TODO: Should alert at all!
         internal void CheckLastModifyTime()
         {
+            // At the very beginning, a device has NO data received, that case Not in rescue case.
+            // So, the this.lastUpdateDict would NOT contain the device's last modify info.
             long now = DateTime.Now.Ticks;
             foreach (string deviceKey in this.lastUpdateDict.Keys)
             {
@@ -447,7 +451,6 @@ namespace Scada.Main
                 long diffInSec = (now - lastModifyTime) / 10000000;
                 if (diffInSec > 60 * 5)
                 {
-                    // TODO: Rescue.
                     this.RescueDevice(deviceKey);
                 }
             }
@@ -460,6 +463,8 @@ namespace Scada.Main
             if (context != null)
             {
                 Device badDevice = context.Device;
+                const string DeviceWillRestart = "The device will restart now.";
+                RecordManager.DoSystemEventRecord(badDevice, DeviceWillRestart);
                 if (badDevice != null)
                 {
                     badDevice.Stop();
