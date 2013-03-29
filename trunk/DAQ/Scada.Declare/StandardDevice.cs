@@ -223,6 +223,8 @@ namespace Scada.Declare
                             this.Send(this.actionSend);
                         }
 					}
+                    SetStartStatus();
+
 
                     /* TODO: Remove after test.
                     if (this.actionCondition == null || this.actionCondition.Length == 0)
@@ -249,7 +251,6 @@ namespace Scada.Declare
                 string message = "Other: " + e.Message;
                 RecordManager.DoSystemEventRecord(this, message);
             }
-
 
 			return true;
 		}
@@ -355,13 +356,19 @@ namespace Scada.Declare
 			catch (InvalidOperationException e)
 			{
                 RecordManager.DoSystemEventRecord(this, e.Message);
-				// !
 			}
 			finally
 			{
 				handled = true;
 			}
 		}
+
+        private void SetStartStatus()
+        {
+            DeviceData dd = new DeviceData(this, null);
+            
+            this.SynchronizationContext.Post(this.DataReceived, dd);
+        }
 
 
 		private bool GetDeviceData(byte[] line, out DeviceData dd)
