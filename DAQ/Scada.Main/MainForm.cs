@@ -69,12 +69,15 @@ namespace Scada.Main
             {
                 string deviceKey = deviceName.ToLower();
                 string displayName = Program.DeviceManager.GetDeviceDisplayName(deviceKey);
-                ListViewGroup g = deviceListView.Groups.Add(deviceKey, displayName);
+                if (displayName != null)
+                {
+                    ListViewGroup g = deviceListView.Groups.Add(deviceKey, displayName);
 
-                List<string> versions = Program.DeviceManager.GetVersions(deviceKey);
-                ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Wait");
+                    List<string> versions = Program.DeviceManager.GetVersions(deviceKey);
+                    ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Wait");
 
-                g.Items.Add(lvi);
+                    g.Items.Add(lvi);
+                }
             }
 
             // TODO:
@@ -248,7 +251,13 @@ namespace Scada.Main
                 // TODO: If there are multi-items, only one can be selected.    
             }
 
-		}
+        }
+
+        private void settingClick(object sender, EventArgs e)
+        {
+            var form = new SettingsForm();
+            form.ShowDialog();
+        }
 
     }
 }
