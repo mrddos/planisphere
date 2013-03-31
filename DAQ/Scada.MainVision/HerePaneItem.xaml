@@ -70,9 +70,9 @@
             <TextBlock Grid.Row="0" TextAlignment="Center" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 10, 10, 10" Text="{Binding Title}" FontFamily="Arial Black" FontSize="14">
             </TextBlock>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 10, 10, 10" Text="{Binding Data1}" FontFamily="Arial Black" FontSize="13"/>
+            <TextBlock x:Name="data1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 10, 10, 10" Text="{Binding Data1}" FontFamily="Arial Black" FontSize="13"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 10, 10, 10" Text="{Binding Data2}" FontFamily="Arial Black" FontSize="13"/>
+            <TextBlock x:Name="data2" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 10, 10, 10" Text="{Binding Data2}" FontFamily="Arial Black" FontSize="13"/>
 
             <!-- Mask MUST after the content -->
             <Grid.OpacityMask>
