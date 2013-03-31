@@ -41,6 +41,8 @@ namespace Scada.MainVision
     /// </summary>
     public partial class HerePaneItem : UserControl
     {
+        private HerePaneItemData data;
+
         public HerePaneItem()
         {
             InitializeComponent();
@@ -54,11 +56,31 @@ namespace Scada.MainVision
 
         private void ItemLoaded(object sender, RoutedEventArgs e)
         {
-            var data = new HerePaneItemData() { Title = this.Title };
-            this.itemGrid.DataContext = data;
+            this.data = new HerePaneItemData() { Title = this.Title };
+            this.itemGrid.DataContext = this.data;
 
             data.Data1 = "31.4  ℃";
             data.Data2 = "12 m/s";
+        }
+
+        public TextBlock this[int i]
+        {
+            get
+            {
+                if (i == 0)
+                {
+                    return this.data1;
+                }
+                else if (i == 1)
+                {
+                    return this.data2;
+                }
+                else if (i == 2)
+                {
+                    return null;
+                }
+                return null;
+            }
         }
 
         private void OnMouseEnterRect(object sender, MouseEventArgs e)
