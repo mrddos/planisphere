@@ -33,9 +33,17 @@ namespace Scada.DAQ.Installer
 
         static void InitDataBase(string[] args)
         {
-            Console.WriteLine("Initialize the DataBase");
-            DataBaseCreator creator = new DataBaseCreator(@".\scada.sql");
-            creator.Execute();
+            Console.WriteLine("Initialize the DataBase:");
+            Console.WriteLine("Notice: This Command would clear all you record in tables!");
+            Console.WriteLine("Tap 'Yes' to continue.");
+            string input = Console.ReadLine();
+            if (input == "Yes")
+            {
+                Console.WriteLine("Execute .\\scada.sql");
+                DataBaseCreator creator = new DataBaseCreator(@".\scada.sql");
+                creator.Execute();
+            }
+
         }
 
         static void InitDirectories(string[] args)
