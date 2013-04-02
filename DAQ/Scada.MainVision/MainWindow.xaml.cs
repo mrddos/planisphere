@@ -24,7 +24,13 @@ namespace Scada.MainVision
         public UIElement Contents { get; set; }
     }
 
-
+    enum Device
+    {
+        HIPC = 0,
+        Weather,
+        Safe,
+        RD
+    }
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -38,6 +44,13 @@ namespace Scada.MainVision
 		private Timer refreshDataTimer;
 
 		private bool connectedToDataBase = false;
+
+        private string[] DeviceScreenNames = { 
+                                                 "高压电离室", 
+                                                 "气象", 
+                                                 "安防", 
+                                                 "干湿沉降器", 
+                                                 "", "", "" };
 
         public MainWindow()
         {
@@ -72,19 +85,28 @@ namespace Scada.MainVision
 			// Device List
             this.DeviceList.ClickDeviceItem += this.OnDeviceItemClicked;
 
-            this.DeviceList.AddDevice("高压电离室");
-            this.DeviceList.AddDevice("气象");
+            foreach (string deviceScreenName in DeviceScreenNames)
+            {
+                this.DeviceList.AddDevice(deviceScreenName);
+            }
 
-
-            this.herePane.AddItem("高压电离室");
-            this.herePane.AddItem("气象");
-
-
-            this.herePane.AddItem("虚构设备1");
-            this.herePane.AddItem("虚构设备2");
-
-
+            this.AddDevicePanes();
             this.OnDeviceItemClicked(null, null);
+        }
+
+        private void AddDevicePanes()
+        {
+            List<HerePaneItem> panes = new List<HerePaneItem>();
+            foreach (string deviceScreenName in DeviceScreenNames)
+            {
+                HerePaneItem herePaneItem = this.herePane.AddItem(deviceScreenName);
+                panes.Add(herePaneItem);
+            }
+
+            if (true)
+            {
+                var herePaneItem = panes[0];
+            }
         }
 
 		void RefreshDataTimerTick(object sender, EventArgs e)
