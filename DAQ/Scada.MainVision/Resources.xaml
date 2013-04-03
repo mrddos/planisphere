@@ -58,5 +58,4 @@ Opacity="0.6" RenderingBias="Performance" ShadowDepth="0" />
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-
 </ResourceDictionary>
