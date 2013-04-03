@@ -88,7 +88,55 @@ namespace Scada.MainVision
 		}
         */
 
+		private RoutedEvent ScrollChangedEvent = EventManager.RegisterRoutedEvent("ScrollChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HerePane));
 
-		
+		private RoutedEvent MouseEnterEvent = EventManager.RegisterRoutedEvent("MouseEnter", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HerePane));
+
+		private RoutedEvent MouseLeaveEvent = EventManager.RegisterRoutedEvent("MouseLeave", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(HerePane));
+
+		public event RoutedEventHandler ScrollChanged
+		{
+			add
+			{
+				this.AddHandler(ScrollChangedEvent, value);
+			}
+
+			remove
+			{
+				this.RemoveHandler(ScrollChangedEvent, value);
+			}
+		}
+
+		public event RoutedEventHandler MouseEnter
+		{
+			add
+			{
+				this.AddHandler(MouseEnterEvent, value);
+			}
+
+			remove
+			{
+				this.RemoveHandler(MouseEnterEvent, value);
+			}
+		}
+
+		public event RoutedEventHandler MouseLeave
+		{
+			add
+			{
+				this.AddHandler(MouseLeaveEvent, value);
+			}
+
+			remove
+			{
+				this.RemoveHandler(MouseLeaveEvent, value);
+			}
+		}
+
+
+
+
+
+
 	}
 }

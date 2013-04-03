@@ -72,7 +72,6 @@ namespace Scada.MainVision
 
 		private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-			
 			// TODO: Window Loaded.
 			this.LoadDataProvider();
 
@@ -149,7 +148,7 @@ namespace Scada.MainVision
         void OnDeviceItemClicked(object sender, EventArgs e)
         {
             this.ShowDataViewPanel();
-            //this.ShowGraphViewPanel();
+            // this.ShowGraphViewPanel();
         }
 
 
