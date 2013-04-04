@@ -100,9 +100,7 @@ namespace Scada.MainVision
 
 		private void LoadConfig()
 		{
-			Config cfg = new Config();
-			cfg.Load("./dsm.cfg");
-
+			Config.Instance().Load("./dsm.cfg");
 		}
 
         private void AddDevicePanes()
@@ -149,7 +147,7 @@ namespace Scada.MainVision
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
-			this.ShowDataViewPanel("");
+			this.ShowDataViewPanel("Weather");
 
 		}
 
@@ -161,7 +159,7 @@ namespace Scada.MainVision
 
         void OnDeviceItemClicked(object sender, EventArgs e)
         {
-            this.ShowDataViewPanel("");
+			this.ShowDataViewPanel("Weather");
             // this.ShowGraphViewPanel();
         }
 

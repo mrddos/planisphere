@@ -41,13 +41,38 @@ namespace Scada.MainVision
 		{
 			items.Add(item);
 		}
+
+		public IEnumerable<ConfigItem> ConfigItems
+		{
+			get
+			{
+				return items;
+			}
+		}
+
 	}
 
 	class Config
 	{
+		private static Config configInstance = new Config();
+
 		private Dictionary<string, ConfigEntry> dict = new Dictionary<string, ConfigEntry>();
 
 		private string currentParsedDevice;
+
+		public static Config Instance()
+		{
+			return configInstance;
+		}
+
+
+		public ConfigEntry this[string deviceKey]
+		{
+			get
+			{
+				return dict[deviceKey];
+			}
+		}
 
 		internal void Load(string fileName)
 		{
@@ -73,7 +98,7 @@ namespace Scada.MainVision
 			if (line.StartsWith("[") && line.EndsWith("]"))
 			{
 				string deviceKey = line.Substring(1, line.Length - 2);
-				deviceKey = deviceKey.Trim();
+				deviceKey = deviceKey.Trim().ToLower();
 				this.currentParsedDevice = deviceKey;
 				dict.Add(deviceKey, new ConfigEntry());
 				return;
