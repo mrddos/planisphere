@@ -33,12 +33,18 @@ namespace Scada.MainVision
 		}
 
 
-        public ListViewPanel CreateDataViewPanel(DataListener dataListener)
+        public ListViewPanel CreateDataViewPanel(DataListener dataListener, bool showList = true)
 		{
             ListViewPanel panel = new ListViewPanel();
             panel.AddDataListener(dataListener);
-            //panel.ViewContent = this.ShowListView(panel, dataListener);
-            panel.ViewContent = this.ShowGraphView(panel, dataListener);
+			if (showList)
+			{
+				panel.ViewContent = this.ShowListView(panel, dataListener);
+			}
+			else
+			{
+				panel.ViewContent = this.ShowGraphView(panel, dataListener);
+			}
 
 			if (this.currentPanel != null)
 			{

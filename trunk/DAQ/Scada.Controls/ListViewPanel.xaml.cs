@@ -6,7 +6,8 @@ using System.Windows.Controls;
 namespace Scada.Controls
 {
 	using Scada.Controls.Data;
-using System.Collections.Generic;
+	using System.Collections.Generic;
+
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
