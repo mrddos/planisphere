@@ -10,8 +10,11 @@ namespace Scada.Declare
 	{
 		private bool isVirtual = false;
 
+		private bool isOpen = false;
+
 		private DeviceEntry entry = null;
 
+		private Timer timer = null;
 
 		private string addr = "127.0.0.1";
 
@@ -47,7 +50,7 @@ namespace Scada.Declare
 		{
 			get
 			{
-				throw new NotImplementedException();
+				return this.isOpen;
 			}
 		}
 
@@ -60,16 +63,22 @@ namespace Scada.Declare
 		private bool Connect(string address)
 		{
 			bool connected = true;
-			Thread t = new Thread(new ThreadStart(() => 
-			{
-				
-			}));
-			t.Start();
-			// t.Join(1000);
+
+			this.timer = new Timer(new TimerCallback(TimerCallback), null, 1000, 1000 * 30);
+
 			
 			return connected;
 		}
 
+		private void TimerCallback(object o)
+		{
+			// TODO: Connect to the server and fetch the Xml file.
+
+			// TODO: Parse the file.
+
+			// TODO: Post the data to UI thread.
+
+		}
 
 		public override void Start(string address)
 		{
@@ -78,7 +87,9 @@ namespace Scada.Declare
 
 		public override void Stop()
 		{
-			//throw new NotImplementedException();
+			if (this.timer != null)
+				this.timer.Dispose();
+			isOpen = false;
 		}
 
 		public override void Send(byte[] action)

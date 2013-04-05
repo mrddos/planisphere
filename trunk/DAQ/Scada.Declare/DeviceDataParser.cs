@@ -95,4 +95,24 @@ namespace Scada.Declare
 			return data;
 		}
     }
+
+
+	public class WebFileDataParser : DataParser
+	{
+		public WebFileDataParser()
+		{		
+		}
+
+		public override string[] Search(byte[] data)
+		{
+
+
+			return new string[0] { };
+		}
+
+		public override byte[] GetLineBytes(byte[] data)
+		{
+			return data;
+		}
+	}
 }
