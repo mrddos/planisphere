@@ -50,6 +50,18 @@ namespace Scada.MainVision
 			}
 		}
 
+		public string DisplayName
+		{
+			get;
+			set;
+		}
+
+		public string DeviceKey
+		{
+			get;
+			set;
+		}
+
 	}
 
 	class Config
@@ -71,6 +83,14 @@ namespace Scada.MainVision
 			get
 			{
 				return dict[deviceKey];
+			}
+		}
+
+		public string[] DeviceKeys
+		{
+			get
+			{
+				return dict.Keys.ToArray();
 			}
 		}
 
@@ -101,6 +121,16 @@ namespace Scada.MainVision
 				deviceKey = deviceKey.Trim().ToLower();
 				this.currentParsedDevice = deviceKey;
 				dict.Add(deviceKey, new ConfigEntry());
+				return;
+			}
+
+			if (line.StartsWith("{") && line.EndsWith("}"))
+			{
+				line = line.Trim('{', '}');
+
+				ConfigEntry entry = dict[this.currentParsedDevice];
+				entry.DeviceKey = this.currentParsedDevice;
+				entry.DisplayName = line.Trim();
 				return;
 			}
 
@@ -135,6 +165,9 @@ namespace Scada.MainVision
 			entry.Add(item);
 		}
 
-
+		internal string GetDisplayName(string deviceKey)
+		{
+			return this.dict[deviceKey].DisplayName;
+		}
 	}
 }

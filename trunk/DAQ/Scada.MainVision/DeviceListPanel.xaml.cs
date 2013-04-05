@@ -16,7 +16,9 @@ namespace Scada.MainVision
 {
     class DeviceItem
     {
-        public string Name { get; set; }
+        public string DisplayName { get; set; }
+
+		public string DeviceKey { get; set; }
     }
 
 	/// <summary>
@@ -43,7 +45,7 @@ namespace Scada.MainVision
 			this.DeviceList.Items.Add(deviceGroup);
 		}
 
-		public void AddDevice(string deviceName)
+		public void AddDevice(string deviceName, string deviceKey)
 		{
             //
             //ControlTemplate ct = (ControlTemplate)this.Resources[DeviceItemTemplate];
@@ -51,7 +53,7 @@ namespace Scada.MainVision
 
 			TreeViewItem tvi = new TreeViewItem();
             //tvi.Template = ct;
-            tvi.DataContext = new DeviceItem() { Name = deviceName };
+			tvi.DataContext = new DeviceItem() { DisplayName = deviceName, DeviceKey = deviceKey };
             tvi.MouseDoubleClick += OnDeviceItemClick;
 			tvi.Header = deviceName;
             tvi.FontSize = 14.0;

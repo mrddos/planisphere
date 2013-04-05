@@ -46,13 +46,6 @@ namespace Scada.MainVision
 
 		private bool connectedToDataBase = false;
 
-        private string[] DeviceScreenNames = { 
-                                                 "高压电离室", 
-                                                 "气象", 
-                                                 "安防", 
-                                                 "干湿沉降器", 
-                                                 "", "", "" };
-
         public MainWindow()
         {
             InitializeComponent();
@@ -86,11 +79,14 @@ namespace Scada.MainVision
 			// Device List
             this.DeviceList.ClickDeviceItem += this.OnDeviceItemClicked;
 
-            foreach (string deviceScreenName in DeviceScreenNames)
+			Config cfg = Config.Instance();
+			string[] deviceKeys = cfg.DeviceKeys;
+			foreach (string deviceKey in deviceKeys)
             {
-				if (!string.IsNullOrEmpty(deviceScreenName))
+				string displayName = cfg.GetDisplayName(deviceKey);
+				if (!string.IsNullOrEmpty(displayName))
 				{
-					this.DeviceList.AddDevice(deviceScreenName);
+					this.DeviceList.AddDevice(displayName, deviceKey);
 				}
             }
 
@@ -106,11 +102,14 @@ namespace Scada.MainVision
         private void AddDevicePanes()
         {
             List<HerePaneItem> panes = new List<HerePaneItem>();
-            foreach (string deviceScreenName in DeviceScreenNames)
+			Config cfg = Config.Instance();
+			string[] deviceKeys = cfg.DeviceKeys;
+			foreach (string deviceKey in deviceKeys)
             {
-				if (!string.IsNullOrEmpty(deviceScreenName))
+				string displayName = cfg.GetDisplayName(deviceKey);
+				if (!string.IsNullOrEmpty(displayName))
 				{
-					HerePaneItem herePaneItem = this.herePane.AddItem(deviceScreenName);
+					HerePaneItem herePaneItem = this.herePane.AddItem(displayName);
 					panes.Add(herePaneItem);
 				}
             }
@@ -147,7 +146,7 @@ namespace Scada.MainVision
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
-			this.ShowDataViewPanel("Weather");
+			this.ShowDataViewPanel("HIPC");
 
 		}
 
@@ -159,7 +158,7 @@ namespace Scada.MainVision
 
         void OnDeviceItemClicked(object sender, EventArgs e)
         {
-			this.ShowDataViewPanel("Weather");
+			this.ShowDataViewPanel("HIPC");
             // this.ShowGraphViewPanel();
         }
 
