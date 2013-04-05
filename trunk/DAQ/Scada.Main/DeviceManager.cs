@@ -316,9 +316,9 @@ namespace Scada.Main
             {
                 return new StandardDevice(entry);
             }
-			else if (typeof(TelnetDevice).ToString() == className)
+			else if (typeof(WebFileDevice).ToString() == className)
 			{
-				return new TelnetDevice(entry);
+				return new WebFileDevice(entry);
 			}
             else if (typeof(FormProxyDevice).ToString() == className)
             {

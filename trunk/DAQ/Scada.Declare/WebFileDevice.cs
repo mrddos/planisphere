@@ -6,25 +6,24 @@ using System.Threading;
 
 namespace Scada.Declare
 {
-	public class TelnetDevice : Device
+	public class WebFileDevice : Device
 	{
 		private bool isVirtual = false;
 
 		private DeviceEntry entry = null;
 
-		private Telnet telnet = null;
 
 		private string addr = "127.0.0.1";
 
 		private int port = 23;
 
-		public TelnetDevice(DeviceEntry entry)
+		public WebFileDevice(DeviceEntry entry)
 		{
             this.entry = entry;
 			this.Initialize(entry);
 		}
 
-        ~TelnetDevice()
+        ~WebFileDevice()
         {
         }
 
@@ -63,12 +62,7 @@ namespace Scada.Declare
 			bool connected = true;
 			Thread t = new Thread(new ThreadStart(() => 
 			{
-				telnet = new Telnet(this.addr, this.port);
-				if (!telnet.Connect())
-				{
-					string telnetFailed = string.Format("Telnet {0}:{1} Failed.", this.addr, this.port);
-					RecordManager.DoSystemEventRecord(this, telnetFailed);
-				}
+				
 			}));
 			t.Start();
 			// t.Join(1000);
@@ -89,10 +83,7 @@ namespace Scada.Declare
 
 		public override void Send(byte[] action)
 		{
-			if (telnet != null)
-			{
-				telnet.Send(action);
-			}
+
 		}
 	}
 }
