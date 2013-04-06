@@ -43,6 +43,10 @@ namespace Scada.MainVision
     {
         private HerePaneItemData data;
 
+		private static SolidColorBrush HoverColorBrush = new SolidColorBrush(Colors.White);
+
+		private static SolidColorBrush CommomColorBrush = new SolidColorBrush(Colors.AliceBlue);
+
         public HerePaneItem()
         {
             InitializeComponent();
@@ -85,12 +89,12 @@ namespace Scada.MainVision
 
         private void OnMouseEnterRect(object sender, MouseEventArgs e)
         {
-            this.Rect.Fill = new SolidColorBrush(Colors.White);
+			this.Rect.Fill = HoverColorBrush;
         }
 
         private void OnMouseLeaveRect(object sender, MouseEventArgs e)
         {
-            this.Rect.Fill = new SolidColorBrush(Colors.AliceBlue);
+			this.Rect.Fill = CommomColorBrush;
         }
 
 
