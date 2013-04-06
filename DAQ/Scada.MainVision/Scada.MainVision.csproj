@@ -69,33 +69,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="Xamls\App.xaml">
+    <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Xamls\AlertWindow.xaml">
+    <Page Include="AlertWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xamls\DeviceListPanel.xaml">
+    <Page Include="DeviceListPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xamls\GraphView.xaml">
+    <Page Include="GraphView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Xamls\HerePane.xaml">
+    <Page Include="HerePane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xamls\HerePaneItem.xaml">
+    <Page Include="HerePaneItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xamls\MainWindow.xaml">
+    <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -103,20 +103,20 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xamls\TabView.xaml">
+    <Page Include="TabView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xamls\Window1.xaml">
+    <Page Include="Window1.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Xamls\AlertWindow.xaml.cs">
+    <Compile Include="AlertWindow.xaml.cs">
       <DependentUpon>AlertWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Xamls\App.xaml.cs">
+    <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -125,27 +125,25 @@
     <Compile Include="DBDataCommonListerner.cs" />
     <Compile Include="DBDataConnector.cs" />
     <Compile Include="DBDataProvider.cs" />
-    <Compile Include="Xamls\DeviceListPanel.xaml.cs">
+    <Compile Include="DeviceListPanel.xaml.cs">
       <DependentUpon>DeviceListPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Xamls\GraphView.xaml.cs">
-      <DependentUpon>GraphView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Xamls\HerePane.xaml.cs">
+    <Compile Include="GraphView.xaml.cs" />
+    <Compile Include="HerePane.xaml.cs">
       <DependentUpon>HerePane.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Xamls\HerePaneItem.xaml.cs">
+    <Compile Include="HerePaneItem.xaml.cs">
       <DependentUpon>HerePaneItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Xamls\MainWindow.xaml.cs">
+    <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PanelManager.cs" />
-    <Compile Include="Xamls\TabView.xaml.cs">
+    <Compile Include="TabView.xaml.cs">
       <DependentUpon>TabView.xaml</DependentUpon>
     </Compile>
     <Compile Include="VirtualDataProvider.cs" />
-    <Compile Include="Xamls\Window1.xaml.cs">
+    <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -180,7 +178,6 @@
       <Name>Scada.Controls</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
