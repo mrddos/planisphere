@@ -44,7 +44,7 @@ namespace Scada.MainVision
 
 		private Timer refreshDataTimer;
 
-		private bool connectedToDataBase = false;
+		private bool connectedToDataBase = true;
 
         public MainWindow()
         {
@@ -146,7 +146,7 @@ namespace Scada.MainVision
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
-			this.ShowDataViewPanel("HIPC");
+            this.ShowDataViewPanel("Scada.HIPC");
 
 		}
 
@@ -158,7 +158,7 @@ namespace Scada.MainVision
 
         void OnDeviceItemClicked(object sender, EventArgs e)
         {
-			this.ShowDataViewPanel("HIPC");
+            this.ShowDataViewPanel("Scada.HIPC");
             // this.ShowGraphViewPanel();
         }
 

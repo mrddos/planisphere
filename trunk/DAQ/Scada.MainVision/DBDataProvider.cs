@@ -24,9 +24,12 @@ namespace Scada.MainVision
 
 		private MySqlCommand cmd = null;
 
-		private List<string> tableNames = new List<string>();
+		private List<string> deviceKeyList = new List<string>();
 
         private Dictionary<string, DBDataCommonListerner> dataListeners;
+
+
+        private List<Dictionary<string, object>> dataPool = new List<Dictionary<string, object>>();
 
 		/// <summary>
 		/// 
@@ -41,6 +44,12 @@ namespace Scada.MainVision
 		/// </summary>
 		public DBDataProvider()
 		{
+            for (int i = 0; i < 50; i++)
+            {
+                dataPool.Add(new Dictionary<string, object>(10));
+            }
+
+
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>();
             if (this.conn != null)
             {
@@ -57,27 +66,29 @@ namespace Scada.MainVision
 
 		}
 
-		public override DataListener GetDataListener(string tableName)
+		public override DataListener GetDataListener(string deviceKey)
 		{
-			this.tableNames.Add(tableName);
-            if (this.dataListeners.ContainsKey(tableName))
+            deviceKey = deviceKey.ToLower();
+			this.deviceKeyList.Add(deviceKey);
+            if (this.dataListeners.ContainsKey(deviceKey))
             {
-                return this.dataListeners[tableName];
+                return this.dataListeners[deviceKey];
             }
             else
             {
-                DBDataCommonListerner listener = new DBDataCommonListerner(tableName);
-                this.dataListeners.Add(tableName, listener);
+                DBDataCommonListerner listener = new DBDataCommonListerner(deviceKey);
+                this.dataListeners.Add(deviceKey, listener);
                 return listener;
             }
 
 		}
 
-        public override void RemoveDataListener(string tableName)
+        public override void RemoveDataListener(string deviceKey)
         {
-            if (this.tableNames.Contains(tableName))
+            deviceKey = deviceKey.ToLower();
+            if (this.deviceKeyList.Contains(deviceKey))
             {
-                this.tableNames.Remove(tableName);
+                this.deviceKeyList.Remove(deviceKey);
             }
         }
 
@@ -87,27 +98,44 @@ namespace Scada.MainVision
         /// </summary>
 		public override void Refresh()
 		{
-			foreach (string tableName in this.tableNames)
+			foreach (var item in this.deviceKeyList)
 			{
-                if (!this.dataListeners.ContainsKey(tableName))
+                string deviceKey = item.ToLower(); 
+                if (!this.dataListeners.ContainsKey(deviceKey))
                 {
                     continue;
                 }
 
-                DBDataCommonListerner listener = this.dataListeners[tableName];
+                DBDataCommonListerner listener = this.dataListeners[deviceKey];
                 if (listener != null)
                 {
 
                     int count = MaxCountFetchRecent;
-                    this.cmd.CommandText = this.GetSelectStatement(tableName, count);
-                    MySqlDataReader reader = this.cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    Config cfg = Config.Instance();
+                    ConfigEntry entry = cfg[deviceKey];
+                    this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+                    using (MySqlDataReader reader = this.cmd.ExecuteReader())
                     {
-                        // TODO: Mashal the data into Dict;
-                        string a = reader.GetString(2);
-                        
+                        listener.OnDataArrivalBegin();
+
+                        int index = 0;
+                        while (reader.Read())
+                        {
+                            Dictionary<string, object> data = this.dataPool[index];
+                            data.Clear();
+                            foreach (var i in entry.ConfigItems)
+                            {
+                                string v = reader.GetString(i.FieldIndex);
+                                data.Add(i.Key, v);
+                            }
+
+                            listener.OnDataArrival(data);
+                            index++;
+                        }
+
+                        listener.OnDataArrivalEnd();
                     }
+
                 }
                 
 			}

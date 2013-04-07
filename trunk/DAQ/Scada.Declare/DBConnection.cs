@@ -54,37 +54,43 @@ namespace Scada.Declare
 
 		public bool AddRecordData(string commandText, params object[] items)
 		{
-			try
-			{
-				if (this.cmd != null)
-				{
-					// "insert into HIPCrec(time, doserate, highvoltage ...) values(@1, @2, @3 ... )"
-					cmd.CommandText = commandText;
+            try
+            {
+                if (this.cmd != null)
+                {
+                    // "insert into HIPCrec(time, doserate, highvoltage ...) values(@1, @2, @3 ... )"
+                    cmd.CommandText = commandText;
 
-					for (int i = 0; i < items.Length; ++i)
-					{
-						string at = string.Format("@{0}", i + 1);
-						cmd.Parameters.AddWithValue(at, items[i]);
-					}
-					cmd.ExecuteNonQuery();
-                    cmd.Parameters.Clear();
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (Exception e)
-			{
-				Debug.WriteLine(e.Message);
-				return false;
-			}
+                    for (int i = 0; i < items.Length; ++i)
+                    {
+                        string at = string.Format("@{0}", i + 1);
+                        cmd.Parameters.AddWithValue(at, items[i]);
+                    }
+                    cmd.ExecuteNonQuery();
+                    // If exception, the params would NOT clear.
+                    // cmd.Parameters.Clear();
+
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                return false;
+            }
+            finally
+            {
+                cmd.Parameters.Clear();
+            }
 			return true;
 		}
 
 
 		/// <summary>
-		/// 
+		/// Maybe NO use.
 		/// </summary>
 		/// <param name="doseRate"></param>
 		/// <param name="highVoltage"></param>
