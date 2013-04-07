@@ -50,6 +50,14 @@ namespace Scada.MainVision
 			}
 		}
 
+        public int Count
+        {
+            get
+            {
+                return items.Count;
+            }
+        }
+
 		public string DisplayName
 		{
 			get;
@@ -61,6 +69,12 @@ namespace Scada.MainVision
 			get;
 			set;
 		}
+
+        public string TableName
+        {
+            get;
+            set;
+        }
 
 	}
 
@@ -129,8 +143,9 @@ namespace Scada.MainVision
 				line = line.Trim('{', '}');
 
 				ConfigEntry entry = dict[this.currentParsedDevice];
-				entry.DeviceKey = this.currentParsedDevice;
-				entry.DisplayName = line.Trim();
+                entry.DeviceKey = this.currentParsedDevice;
+                this.ParseItems(line, entry);
+				
 				return;
 			}
 
@@ -150,6 +165,23 @@ namespace Scada.MainVision
 			}
 
 		}
+
+        private void ParseItems(string keyValueItems, ConfigEntry entry)
+        {
+            string[] keyValArray = keyValueItems.Split(';').Select(x => x.Trim()).ToArray();
+            foreach (var keyValue in keyValArray)
+            {
+                string kv = keyValue.ToLower();
+                if (kv.StartsWith("displayname"))
+                {
+                    entry.DisplayName = keyValue.Substring(12);
+                }
+                else if (kv.StartsWith("tablename"))
+                {
+                    entry.TableName = keyValue.Substring(10);
+                }
+            }
+        }
 
 		private void ProcessLine(string key, string value, ConfigEntry entry)
 		{
