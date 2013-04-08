@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Scada.Controls.Data;
+using System.IO;
 
 namespace Scada.MainVision
 {
@@ -11,49 +12,128 @@ namespace Scada.MainVision
 	{
 		private DBDataCommonListerner dataListener;
 
+        private List<string> deviceKeyList = new List<string>();
+
+        private Dictionary<string, DBDataCommonListerner> dataListeners = new Dictionary<string, DBDataCommonListerner>();
+
+        private string dataProviderFile = "HIPC.log";
+
+        private List<Dictionary<string, object>> dataPool = new List<Dictionary<string, object>>();
+
+        private List<string> lists = new List<string>();
+
 		public VirtualDataProvider()
 		{
+            deviceKeyList.Add("scada.hipc");
 
+            using (FileStream fileStream = File.OpenRead(dataProviderFile))
+            {
+                using (StreamReader sr = new StreamReader(fileStream))
+                {
+                    string line = sr.ReadLine();
+                    int index = 0;
+                    while (line != null)
+                    {
+                        line = line.Trim();
+                        if (line.Length > 0)
+                        {
+                            lists.Add(line);
+                            index++;
+                        }
+
+                        if (index > 40)
+                        {
+                            break;
+                        }
+                        // Next line;
+                        line = sr.ReadLine();
+                    }
+                }
+            }
+
+            for (int i = 0; i < 50; i++)
+            {
+                dataPool.Add(new Dictionary<string, object>(10));
+            }
+            // this.dataListeners.Add("scada.hipc", new DBDataCommonListerner("scada.hipc"));
 		}
 
 		public override void Refresh()
 		{
-			if (this.dataListener != null)
-			{
-				this.dataListener.OnDataArrivalBegin();
-
-
-                Random rd = new Random();
-                for (int i = 0; i < 5; ++i)
+            foreach (var item in this.deviceKeyList)
+            {
+                string deviceKey = item.ToLower();
+                if (!this.dataListeners.ContainsKey(deviceKey))
                 {
-                    Dictionary<string, object> d = new Dictionary<string, object>(10);
-                    d["temp"] = (183.5 * rd.Next(1, 10)/10).ToString();
-                    d["press"] = (120.0 * rd.Next(1, 10)/10).ToString();
-                    d["wspeed"] = (98.5 * rd.Next(1, 10)/10).ToString();
-                    d["temp2"] = (70.5 * rd.Next(1, 10)/10).ToString();
-    
-                    
-                    this.dataListener.OnDataArrival(d);
+                    continue;
                 }
 
+                DBDataCommonListerner listener = this.dataListeners[deviceKey];
+                if (listener != null)
+                {
 
-				this.dataListener.OnDataArrivalEnd();
-			}
+                    // int count = MaxCountFetchRecent;
+                    Config cfg = Config.Instance();
+                    ConfigEntry entry = cfg[deviceKey];
+                    
+                    listener.OnDataArrivalBegin();
+                    
+                    int index = 0;
+                    foreach (string line in lists)
+                    {
+                        if (line.Length > 0)
+                        {
+                            Dictionary<string, object> data = this.dataPool[index];
+                            data.Clear();
+                            ParseLine(line, entry, data);
+                            listener.OnDataArrival(data);
+                            index++;
+                        }
+
+                    }
+
+                    listener.OnDataArrivalEnd();
+
+                }
+
+            }
+
 		}
 
-		public override DataListener GetDataListener(string tableName)
+        private void ParseLine(string line, ConfigEntry entry, Dictionary<string, object> data)
+        {
+            string[] a = line.Split(' ');
+            foreach (var i in entry.ConfigItems)
+            {
+                if (i.FieldIndex > 1)
+                {
+                    string v = a[i.FieldIndex + 1];
+                    data.Add(i.Key, v);
+                }
+                else if (i.FieldIndex == 1)
+                {
+                    string v = a[1] + " " + a[2];
+                    data.Add(i.Key, v);
+                }
+
+            }
+
+        }
+
+        public override DataListener GetDataListener(string deviceKey)
 		{
-			if (tableName.ToLower() == "weather")
-			{
-				this.dataListener = new DBDataCommonListerner(tableName);
-				return this.dataListener;
-			}
-			else
-			{
-				this.dataListener = new DBDataCommonListerner(tableName);
-				return this.dataListener;
-			}
-			return null;
+            deviceKey = deviceKey.ToLower();
+            this.deviceKeyList.Add(deviceKey);
+            if (this.dataListeners.ContainsKey(deviceKey))
+            {
+                return this.dataListeners[deviceKey];
+            }
+            else
+            {
+                DBDataCommonListerner listener = new DBDataCommonListerner(deviceKey);
+                this.dataListeners.Add(deviceKey, listener);
+                return listener;
+            }
 		}
 
 
