@@ -116,11 +116,11 @@ namespace Scada.MainVision
 				while (line != null)
 				{
 					line = line.Trim();
-					if (line.Length > 0)
+					if (line.Length > 0 && !line.StartsWith("#"))
 					{
 						this.ParseLine(line);
 					}
-					// Next
+					// Next line.
 					line = sr.ReadLine();
 				}
 			}
@@ -160,10 +160,7 @@ namespace Scada.MainVision
 
 					this.ProcessLine(key, value, entry);
 				}
-
-
 			}
-
 		}
 
         private void ParseItems(string keyValueItems, ConfigEntry entry)

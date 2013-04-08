@@ -32,7 +32,7 @@
         <ContentControl x:Name="HeaderBar" Grid.Row="0" Template="{StaticResource HeaderTemplateKey}" Margin="10,10">
         </ContentControl>
         -->
-        <Border BorderBrush="Silver" BorderThickness="1" CornerRadius="5,5,5,5" Margin="5,5,5,0" Padding="5,5,5,5" x:Name="WW">
+        <Border BorderBrush="Silver" BorderThickness="1" CornerRadius="5,5,5,5" Margin="5,5,5,5" Padding="5,8,5,5" x:Name="WW">
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"/>
@@ -44,10 +44,10 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-                    <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
-                    <c:DatePicker Margin="5, 0, 5, 0"></c:DatePicker>
-                    <ComboBox Width="100" Margin="5,0,5,0" SelectedValue="每分钟">每分钟</ComboBox>
-                    <Button Padding="3,3,3,3">打印</Button>
+                    <c:DatePicker Margin="5, 0, 5, 0" Height="25"></c:DatePicker>
+                    <c:DatePicker Margin="5, 0, 5, 0" Height="25"></c:DatePicker>
+                    <ComboBox Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟">每分钟</ComboBox>
+                    <Button Padding="3,3,3,3" Height="25">打印</Button>
                 </StackPanel>
                 
                 <Button Width="18" Height="18" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,5"
@@ -74,7 +74,7 @@
         </Border>
 
         <!-- List View as Content -->
-        <ContentControl Grid.Row="1" x:Name="ViewContainer"/>
+        <ContentControl Grid.Row="1" x:Name="ViewContainer" Margin="5,5,5,5"/>
 
         <!-- Mask MUST after the content -->
         <Grid.OpacityMask>
