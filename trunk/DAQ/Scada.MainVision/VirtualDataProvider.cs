@@ -41,7 +41,7 @@ namespace Scada.MainVision
                             index++;
                         }
 
-                        if (index > 40)
+                        if (index > 90)
                         {
                             break;
                         }
@@ -51,7 +51,7 @@ namespace Scada.MainVision
                 }
             }
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 100; i++)
             {
                 dataPool.Add(new Dictionary<string, object>(10));
             }

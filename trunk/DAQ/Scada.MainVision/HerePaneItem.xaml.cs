@@ -63,8 +63,8 @@ namespace Scada.MainVision
             this.data = new HerePaneItemData() { Title = this.Title };
             this.itemGrid.DataContext = this.data;
 
-            data.Data1 = "31.4  ℃";
-            data.Data2 = "12 m/s";
+            // data.Data1 = "31.4  ℃";
+            // data.Data2 = "12 m/s";
         }
 
         public TextBlock this[int i]

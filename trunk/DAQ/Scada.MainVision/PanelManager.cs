@@ -39,11 +39,12 @@ namespace Scada.MainVision
             panel.AddDataListener(dataListener);
 			if (showList)
 			{
-				panel.ViewContent = this.ShowListView(panel, dataListener);
+				panel.ListView = this.ShowListView(panel, dataListener);
+                panel.GraphView = this.ShowGraphView(panel, dataListener);
 			}
 			else
 			{
-				panel.ViewContent = this.ShowGraphView(panel, dataListener);
+				panel.ListView = this.ShowGraphView(panel, dataListener);
 			}
 
 			if (this.currentPanel != null)
@@ -88,7 +89,14 @@ namespace Scada.MainVision
 
             foreach (var columnInfo in columnInfoList)
             {
-                graphView.AddLineName(columnInfo.BindingName, columnInfo.Header);
+                if (columnInfo.BindingName.ToLower() == "time")
+                {
+                    continue;
+                }
+                if (columnInfo.DisplayInChart)
+                {
+                    graphView.AddLineName(columnInfo.BindingName, columnInfo.Header);
+                }
             }
 
             return graphView;

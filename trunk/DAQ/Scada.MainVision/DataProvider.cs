@@ -14,6 +14,7 @@ namespace Scada.MainVision
 		/// </summary>
 		public abstract void Refresh();
 
+
 		/// <summary>
 		/// 
 		/// </summary>

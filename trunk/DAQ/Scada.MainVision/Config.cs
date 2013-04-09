@@ -31,6 +31,12 @@ namespace Scada.MainVision
 			set;
 		}
 
+        public bool DisplayInChart
+        {
+            get;
+            set;
+        }
+
 	}
 
 	class ConfigEntry
@@ -187,10 +193,20 @@ namespace Scada.MainVision
 
 			string columnName = v[0].Trim();
 			string fieldIndex = v[1].Trim();
+            bool dynamicDataDisplay = false;
+            if (v.Length > 2)
+            {
+                string dynDataDisplay = v[2].Trim();
+                if (dynDataDisplay == "ddd")
+                {
+                    dynamicDataDisplay = true;
+                }
+            }
 
 			var item = new ConfigItem(key);
 			item.ColumnName = columnName;
 			item.FieldIndex = int.Parse(fieldIndex.TrimStart('#'));
+            item.DisplayInChart = dynamicDataDisplay;
 			entry.Add(item);
 		}
 

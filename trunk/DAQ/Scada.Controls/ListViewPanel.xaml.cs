@@ -13,7 +13,9 @@ namespace Scada.Controls
 	/// </summary>
 	public partial class ListViewPanel : UserControl
 	{
-        private Control view = null;
+        private Control listView = null;
+
+        private Control graphView = null;
 
 		private DataListener dataListener;
 
@@ -25,18 +27,34 @@ namespace Scada.Controls
 			
 		}
 
-        public Control ViewContent
+        public Control ListView
 		{
 			get
 			{
-                return this.view;
+                return this.listView;
 			}
 			set
 			{
-                this.view = value;
-                if (this.view != null)
+                this.listView = value;
+                if (this.listView != null)
                 {
-                    this.ViewContainer.Content = this.view;
+                    this.ListViewContainer.Content = this.listView;
+                }
+			}
+		}
+
+        public Control GraphView
+		{
+			get
+			{
+                return this.graphView;
+			}
+			set
+			{
+                this.graphView = value;
+                if (this.graphView != null)
+                {
+                    this.GraphViewContainer.Content = this.graphView;
                 }
 			}
 		}
@@ -53,6 +71,11 @@ namespace Scada.Controls
 
 		private void ContentLoaded(object sender, RoutedEventArgs e)
 		{
+
+            this.FrList.Items.Add("每分钟");
+            this.FrList.Items.Add("每15分钟");
+            this.FrList.Items.Add("每小时");
+            // this.FrList.Items.Add("");
             /*
 			Button closeButton = (Button)this.HeaderBar.Template.FindName("CloseButton", this.HeaderBar);
 			if (closeButton != null)
@@ -93,11 +116,11 @@ namespace Scada.Controls
 
 		private void OnDataArrivalEnd()
 		{
-            if (this.ViewContent != null)
+            if (this.ListView != null)
             {
-                if (this.ViewContent is ListView)
+                if (this.ListView is ListView)
                 {
-                    ((ListView)this.ViewContent).ItemsSource = this.dataSource;
+                    ((ListView)this.ListView).ItemsSource = this.dataSource;
                 }
             }
 			
