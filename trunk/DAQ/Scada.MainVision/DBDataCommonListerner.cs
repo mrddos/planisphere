@@ -42,7 +42,7 @@ namespace Scada.MainVision
 			List<ColumnInfo> ret = new List<ColumnInfo>();
 			foreach (ConfigItem ci in entry.ConfigItems)
 			{
-				ret.Add(new ColumnInfo() { Header = ci.ColumnName, BindingName = ci.Key, Width = 100 });
+				ret.Add(new ColumnInfo() { Header = ci.ColumnName, BindingName = ci.Key, Width = 120 });
 			}
 			return ret;
 		}
