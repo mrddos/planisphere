@@ -97,15 +97,20 @@ namespace Scada.Controls
 				this.dataListener.OnDataArrival += this.OnDataArrival;
 				this.dataListener.OnDataArrivalEnd += this.OnDataArrivalEnd;
 			}
+
+            // TODO: !!
+            this.dataSource = new List<Dictionary<string, object>>();
 		}
 
 		private void OnDataArrivalBegin()
 		{
+            /*
 			if (this.dataSource != null)
 			{
 				this.dataSource.Clear();
 			}
 			this.dataSource = new List<Dictionary<string, object>>();
+             * */
 		}
 
 
@@ -120,6 +125,7 @@ namespace Scada.Controls
             {
                 if (this.ListView is ListView)
                 {
+                    ((ListView)this.ListView).ItemsSource = null;
                     ((ListView)this.ListView).ItemsSource = this.dataSource;
                 }
             }

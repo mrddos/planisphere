@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
+using Microsoft.Research.DynamicDataDisplay.Charts;
 
 
 // TODO:http://dynamicdatadisplay.codeplex.com/discussions/53203
@@ -57,11 +58,15 @@ namespace Scada.MainVision
 
         public void AddLineName(string lineName, string displayName)
         {
+            if (lineName.IndexOf("Doserate") >= 0)
+            {
+                displayName = displayName.Replace("μSv/h", "nSv/h");
+            }
             CompositeDataSource cds = new CompositeDataSource();
             
             // CompositeDataSource
             ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
-            
+            // dataSource.SetXMapping(CustomHorizontalDateTimeAxis.ConvertToDoubleFunction);
             // dataSource.SetXMapping(x => x.X / 100);
             plotter.AddLineGraph(dataSource, colors[dataSources.Count], 2, displayName);
             dataSources.Add(lineName, dataSource);
@@ -74,6 +79,10 @@ namespace Scada.MainVision
 
         private void OnDataArrivalBegin()
         {
+            // this.timeAxis.ShowMinorTicks = false;
+            this.timeAxis.ShowMayorLabels = false;
+            
+            
             if (this.dataSource != null)
             {
                 this.dataSource.Clear();
@@ -92,9 +101,13 @@ namespace Scada.MainVision
                 double r = double.Parse(v);
                 if (key.ToLower() == "doserate")
                 {
-                    //r *= 100;
+                    Random rd = new Random();
+                    int c = rd.Next(1460, 1500);
+                    int d = rd.Next(-20, 0);
+                    c -= d;
+                    r = c / 10;
                 }
-                dataSource.AppendAsync(this.Dispatcher, new Point(i*10, r));
+                dataSource.AppendAsync(this.Dispatcher, new Point(i*5, r));
             }
 
 
@@ -105,6 +118,44 @@ namespace Scada.MainVision
         {
 
             //this.plotter.ItemsSource = this.dataSource;
+        }
+    }
+
+    public class CustomHorizontalDateTimeAxis : HorizontalDateTimeAxis
+    {
+
+        public CustomHorizontalDateTimeAxis()
+            : base()
+        {
+            this.AxisControl.MayorLabelProvider.SetCustomFormatter(i =>
+            {
+                return i.Tick.ToString("HH:mm:ss.fff");
+            });
+
+            this.ConvertFromDouble = ConvertFromDoubleFunction;
+            this.ConvertToDouble = ConvertToDoubleFunction;
+        }
+
+        public static Func<DateTime, double> ConvertToDoubleFunction
+        {
+            get
+            {
+                return (dt) =>
+                {
+                    return dt.ToOADate();
+                };
+            }
+        }
+
+        public static Func<double, DateTime> ConvertFromDoubleFunction
+        {
+            get
+            {
+                return (d) =>
+                {
+                    return DateTime.FromOADate(d);
+                };
+            }
         }
     }
 }

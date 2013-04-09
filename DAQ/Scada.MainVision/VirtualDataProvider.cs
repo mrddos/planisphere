@@ -22,6 +22,8 @@ namespace Scada.MainVision
 
         private List<string> lists = new List<string>();
 
+        int index = 0;
+
 		public VirtualDataProvider()
 		{
             deviceKeyList.Add("scada.hipc");
@@ -40,28 +42,25 @@ namespace Scada.MainVision
                             lists.Add(line);
                             index++;
                         }
-
-                        if (index > 90)
-                        {
-                            break;
-                        }
                         // Next line;
                         line = sr.ReadLine();
                     }
                 }
             }
 
-            for (int i = 0; i < 100; i++)
-            {
-                dataPool.Add(new Dictionary<string, object>(10));
-            }
             // this.dataListeners.Add("scada.hipc", new DBDataCommonListerner("scada.hipc"));
 		}
 
 		public override void Refresh()
 		{
+            bool show = false;
             foreach (var item in this.deviceKeyList)
             {
+                if (show)
+                {
+                    continue;
+                }
+                show = true;
                 string deviceKey = item.ToLower();
                 if (!this.dataListeners.ContainsKey(deviceKey))
                 {
@@ -78,19 +77,18 @@ namespace Scada.MainVision
                     
                     listener.OnDataArrivalBegin();
                     
-                    int index = 0;
-                    foreach (string line in lists)
-                    {
-                        if (line.Length > 0)
-                        {
-                            Dictionary<string, object> data = this.dataPool[index];
-                            data.Clear();
-                            ParseLine(line, entry, data);
-                            listener.OnDataArrival(data);
-                            index++;
-                        }
+                    string line = lists[this.index];
 
+                    if (line.Length > 0)
+                    {
+                        Dictionary<string, object> data = new Dictionary<string, object>(10);
+                        data.Clear();
+                        ParseLine(line, entry, data);
+                        listener.OnDataArrival(data);
+                        this.index++;
                     }
+
+                    
 
                     listener.OnDataArrivalEnd();
 
