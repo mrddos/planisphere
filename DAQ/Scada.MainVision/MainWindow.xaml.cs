@@ -42,7 +42,11 @@ namespace Scada.MainVision
 
 		private PanelManager panelManager;
 
+        private List<HerePaneItem> panes;
+
 		private Timer refreshDataTimer;
+
+        private Timer refreshPanelDataTimer;
 
 		private bool connectedToDataBase = false;
 
@@ -76,6 +80,8 @@ namespace Scada.MainVision
 
 			this.refreshDataTimer.Start();
 
+            this.SetRefreshPanelDataTimer();
+
 			// Device List
             this.DeviceList.ClickDeviceItem += this.OnDeviceItemClicked;
 
@@ -94,6 +100,15 @@ namespace Scada.MainVision
             this.OnDeviceItemClicked(null, null);
         }
 
+        private void SetRefreshPanelDataTimer()
+        {
+            this.refreshPanelDataTimer = new Timer();
+            this.refreshPanelDataTimer.Interval = 2000;
+            this.refreshPanelDataTimer.Tick += RefreshPanelDataTimerTick;
+
+            this.refreshPanelDataTimer.Start();
+        }
+
 		private void LoadConfig()
 		{
 			Config.Instance().Load("./dsm.cfg");
@@ -101,7 +116,7 @@ namespace Scada.MainVision
 
         private void AddDevicePanes()
         {
-            List<HerePaneItem> panes = new List<HerePaneItem>();
+            this.panes = new List<HerePaneItem>();
 			Config cfg = Config.Instance();
 			string[] deviceKeys = cfg.DeviceKeys;
 			foreach (string deviceKey in deviceKeys)
@@ -125,8 +140,39 @@ namespace Scada.MainVision
 			if (this.dataProvider != null)
 			{
 				this.dataProvider.Refresh();
+
+                this.refreshDataTimer.Stop();
 			}
 		}
+
+        void RefreshPanelDataTimerTick(object sender, EventArgs e)
+        {
+            // TODO: Refactor;
+            Random r = new Random();
+
+            HerePaneItem pane0 = this.panes[0];
+            TextBlock text0 = pane0[0];
+            TextBlock text1 = pane0[1];
+            
+            float a = r.Next(110, 120);
+            int b = r.Next(20, 30);
+            a += (b % 2 == 0) ? (float)b / 10 : -(float)b / 10;
+            text0.Text = string.Format("温度: {0} ℃", a / 10);
+            text1.Text = string.Format("风速: {0} m/s", a / 20);
+
+
+            HerePaneItem pane1 = this.panes[1];
+            TextBlock text2 = pane1[0];
+            TextBlock text3 = pane1[1];
+
+            float c = r.Next(500, 1500);
+            float v = r.Next(390, 410);
+            int d = r.Next(100, 200);
+            a += (b % 2 == 0) ? (float)b / 10 : -(float)b / 10;
+            text2.Text = string.Format("剂量率: {0} nSv/h", a / 10);
+            text3.Text = string.Format("高压值: {0} V", v);
+
+        }
 
 		private void ShowDataViewPanel(string tableName)
 		{

@@ -30,6 +30,12 @@ namespace Scada.Controls.Data
             get;
             set;
         }
+
+        public bool DisplayInChart
+        {
+            get;
+            set;
+        }
     }
 
 	public abstract class DataListener

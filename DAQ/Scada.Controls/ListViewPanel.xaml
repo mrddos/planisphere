@@ -46,7 +46,8 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
                     <c:DatePicker Margin="5, 0, 5, 0" Height="25"></c:DatePicker>
                     <c:DatePicker Margin="5, 0, 5, 0" Height="25"></c:DatePicker>
-                    <ComboBox Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟">每分钟</ComboBox>
+                    <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟"></ComboBox>
+
                     <Button Padding="3,3,3,3" Height="25">打印</Button>
                 </StackPanel>
                 
@@ -73,8 +74,17 @@
             
         </Border>
 
+        <TabControl Grid.Row="1" Margin="5,0,5,5">
+            <TabItem Header="列表" Width="50" >
+                <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="5,5,5,5"/>
+            </TabItem>
+            <TabItem Header="曲线" Width="50" >
+                <ContentControl Grid.Row="1" x:Name="GraphViewContainer" Margin="5,5,5,5"/>
+            </TabItem>
+        </TabControl>
+            
         <!-- List View as Content -->
-        <ContentControl Grid.Row="1" x:Name="ViewContainer" Margin="5,5,5,5"/>
+        
 
         <!-- Mask MUST after the content -->
         <Grid.OpacityMask>
