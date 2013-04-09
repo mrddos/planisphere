@@ -141,7 +141,7 @@ namespace Scada.MainVision
 			{
 				this.dataProvider.Refresh();
 
-                this.refreshDataTimer.Stop();
+                // this.refreshDataTimer.Stop();
 			}
 		}
 
@@ -150,7 +150,7 @@ namespace Scada.MainVision
             // TODO: Refactor;
             Random r = new Random();
 
-            HerePaneItem pane0 = this.panes[0];
+            HerePaneItem pane0 = this.panes[2];
             TextBlock text0 = pane0[0];
             TextBlock text1 = pane0[1];
             
@@ -161,15 +161,16 @@ namespace Scada.MainVision
             text1.Text = string.Format("风速: {0} m/s", a / 20);
 
 
-            HerePaneItem pane1 = this.panes[1];
+            HerePaneItem pane1 = this.panes[0];
             TextBlock text2 = pane1[0];
             TextBlock text3 = pane1[1];
 
-            float c = r.Next(500, 1500);
+            int c = r.Next(1460, 1500);
+            int d = r.Next(-20, 0);
+            c -= d;
             float v = r.Next(390, 410);
-            int d = r.Next(100, 200);
-            a += (b % 2 == 0) ? (float)b / 10 : -(float)b / 10;
-            text2.Text = string.Format("剂量率: {0} nSv/h", a / 10);
+            
+            text2.Text = string.Format("剂量率: {0} nSv/h", c / 10);
             text3.Text = string.Format("高压值: {0} V", v);
 
         }
