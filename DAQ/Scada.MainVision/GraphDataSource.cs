@@ -34,7 +34,7 @@ namespace Scada.MainVision
         {
 
             yAxis = new EnumerableDataSource<double>(yl);
-            yAxis.SetYMapping(_y => _y);
+            yAxis.SetYMapping(y => y);
 
             xAxis = new EnumerableDataSource<DateTime>(xl);
             xAxis.SetXMapping((DateTime dt) => { return dt.Ticks / 10000 / 1000; });
