@@ -134,14 +134,18 @@
       <DependentUpon>DeviceListPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="GraphDataSource.cs" />
-    <Compile Include="GraphView.xaml.cs" />
+    <Compile Include="GraphView.xaml.cs">
+      <DependentUpon>GraphView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HerePane.xaml.cs">
       <DependentUpon>HerePane.xaml</DependentUpon>
     </Compile>
     <Compile Include="HerePaneItem.xaml.cs">
       <DependentUpon>HerePaneItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ListViewPanel.xaml.cs" />
+    <Compile Include="ListViewPanel.xaml.cs">
+      <DependentUpon>ListViewPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
