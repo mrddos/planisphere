@@ -73,8 +73,13 @@ namespace Scada.MainVision
             
             plotter.Viewport.AutoFitToView = true;
 
+            this.timeAxis.ShowMayorLabels = true;
+
+            // this.timeAxis.AxisControl.TicksProvider
+            // this.timeAxis.AxisControl.TicksProvider = new DateTimeTicksProvider();
+
             //plotter.Viewport.Zoom(2);
-            //this.timeAxis.ShowMayorLabels = false;
+            //
             //plotter.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
         }
 
@@ -96,7 +101,11 @@ namespace Scada.MainVision
 
         private void OnDataArrival(Dictionary<string, object> entry)
         {
+            // timeAxis.SetValue(
+            // timeAxis.SetMaxDate(new DateTime(2013, 3, 10, 12, 0, 0)); 
+            // this.timeAxis.AxisControl.MayorLabelProvider.LabelStringFormat = "HH:mm:ss";
 
+            
             foreach (string key in dataSources.Keys)
             {
                 GraphDataSource dataSource = dataSources[key];
