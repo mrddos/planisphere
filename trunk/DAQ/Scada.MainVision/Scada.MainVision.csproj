@@ -95,6 +95,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ListViewPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,10 +128,12 @@
     <Compile Include="DataProvider.cs" />
     <Compile Include="DBDataCommonListerner.cs" />
     <Compile Include="DBDataConnector.cs" />
+    <Compile Include="DBDataListener.cs" />
     <Compile Include="DBDataProvider.cs" />
     <Compile Include="DeviceListPanel.xaml.cs">
       <DependentUpon>DeviceListPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GraphDataSource.cs" />
     <Compile Include="GraphView.xaml.cs" />
     <Compile Include="HerePane.xaml.cs">
       <DependentUpon>HerePane.xaml</DependentUpon>
@@ -135,6 +141,7 @@
     <Compile Include="HerePaneItem.xaml.cs">
       <DependentUpon>HerePaneItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ListViewPanel.xaml.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -142,6 +149,7 @@
     <Compile Include="TabView.xaml.cs">
       <DependentUpon>TabView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Theme.cs" />
     <Compile Include="VirtualDataProvider.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>
@@ -171,12 +179,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Scada.Controls\Scada.Controls.csproj">
-      <Project>{9d8b84e2-9872-4aef-b0a3-9bd172237a9c}</Project>
-      <Name>Scada.Controls</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
