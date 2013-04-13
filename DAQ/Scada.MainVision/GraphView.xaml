@@ -25,7 +25,7 @@
             </d3:ChartPlotter.VerticalAxis>
 
             <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalDateTimeAxis x:Name="timeAxis" ContentStringFormat="hh:mm:ss" />
+                <d3:HorizontalDateTimeAxis x:Name="timeAxis"/>
             </d3:ChartPlotter.HorizontalAxis>
 
             <d3:Header Content="实时曲线图"/>
