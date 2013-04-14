@@ -63,7 +63,7 @@ namespace Scada.Chart
 
                 Point point = e.GetPosition((UIElement)curveView.Canvas);
                 
-                curveView.UpdateTimeLine(point);
+                curveView.TrackTimeLine(point);
             }
 
             

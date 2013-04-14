@@ -45,7 +45,7 @@ namespace Scada.Controls.Data
 
 		}
 
-        public string TableName
+        public string DeviceKey
         {
             get;
             set;
