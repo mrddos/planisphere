@@ -15,7 +15,7 @@
         <Canvas x:Name="Graduation" Grid.Column="0" Background="White">
         </Canvas>
         
-        <Canvas x:Name="CanvasView" Grid.Column="1" Background="AliceBlue" MouseMove="CanvasViewMouseMove">
+        <Canvas x:Name="CanvasView" Grid.Column="1" MouseMove="CanvasViewMouseMove">
         </Canvas>
     </Grid>
 
