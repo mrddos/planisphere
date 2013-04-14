@@ -40,6 +40,8 @@ namespace Scada.Chart
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
             this.view1 = ChartView.AddCurveView("a");
+            this.view1.Max = 100;
+            this.view1.Min = 0;
             c1 = this.view1.CreateDataContext("a", "Hello");
             //view1.Height = 200;
             this.view2 = ChartView.AddCurveView("b");

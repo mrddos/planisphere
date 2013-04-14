@@ -37,6 +37,18 @@ namespace Scada.MainVision
             set;
         }
 
+        public double Max
+        {
+            get;
+            set;
+        }
+
+        public double Min
+        {
+            get; 
+            set; 
+        }
+
 	}
 
 	class ConfigEntry
@@ -48,13 +60,25 @@ namespace Scada.MainVision
 			items.Add(item);
 		}
 
-		public IEnumerable<ConfigItem> ConfigItems
+        public List<ConfigItem> ConfigItems
 		{
 			get
 			{
 				return items;
 			}
 		}
+
+        public ConfigItem GetConfigItem(string key)
+        {
+            foreach (var item in items)
+            {
+                if (item.Key == key)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
 
         public int Count
         {
@@ -194,21 +218,45 @@ namespace Scada.MainVision
 			string columnName = v[0].Trim();
 			string fieldIndex = v[1].Trim();
             bool dynamicDataDisplay = false;
+            double min = 0.0;
+            double max = 100.0;
+            double height = 100.0;
             if (v.Length > 2)
             {
                 string dynDataDisplay = v[2].Trim();
-                if (dynDataDisplay == "ddd")
+                if (dynDataDisplay.StartsWith("("))
                 {
                     dynamicDataDisplay = true;
+                    this.ParseDisplayParams(dynDataDisplay, out min, out max, out height);
                 }
             }
 
 			var item = new ConfigItem(key);
 			item.ColumnName = columnName;
+            item.Max = max;
+            item.Min = min;
 			item.FieldIndex = int.Parse(fieldIndex.TrimStart('#'));
             item.DisplayInChart = dynamicDataDisplay;
 			entry.Add(item);
 		}
+
+        internal void ParseDisplayParams(string displayParams, out double min, out double max, out double height)
+        {
+            displayParams = displayParams.Trim('(', ')');
+            string[] paramArray = displayParams.Split(',');
+
+            min = double.Parse(paramArray[0]);
+            max = double.Parse(paramArray[1]);
+
+            if (paramArray.Length > 2)
+            {
+                height = double.Parse(paramArray[2]);
+            }
+            else
+            {
+                height = 100.0;
+            }
+        }
 
 		internal string GetDisplayName(string deviceKey)
 		{

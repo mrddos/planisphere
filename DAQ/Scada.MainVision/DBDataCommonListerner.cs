@@ -13,16 +13,14 @@ namespace Scada.MainVision
     {
         static Dictionary<string, List<ColumnInfo>> columnTable = new Dictionary<string, List<ColumnInfo>>();
 
-        private string deviceKey;
-
 		public DBDataCommonListerner(string deviceKey)
         {
-			this.deviceKey = deviceKey;
+			this.DeviceKey = deviceKey;
         }
 
         public override List<ColumnInfo> GetColumnsInfo()
         {
-			string deviceKey = this.deviceKey.ToLower();
+			string deviceKey = this.DeviceKey.ToLower();
 			if (columnTable.ContainsKey(deviceKey))
             {
 				return columnTable[deviceKey];

@@ -17,9 +17,8 @@ using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
 using Microsoft.Research.DynamicDataDisplay.Charts;
+using Scada.Chart;
 
-
-// TODO:http://dynamicdatadisplay.codeplex.com/discussions/53203
 namespace Scada.MainVision
 {
     /// <summary>
@@ -36,11 +35,10 @@ namespace Scada.MainVision
         private DataListener dataListener;
 
         static Color[] colors = { Colors.Green, Colors.Red, Colors.Blue, Colors.OrangeRed, Colors.Purple };
-        // private ObservableDataSource<Point> dataSource = new ObservableDataSource<Point>();
-        
-        //private List<Dictionary<string, object>> dataSource;
 
-        private Dictionary<string, GraphDataSource> dataSources = new Dictionary<string, GraphDataSource>();
+
+
+        private Dictionary<string, CurveDataContext> dataSources = new Dictionary<string, CurveDataContext>();
 
         public GraphView()
         {
@@ -58,29 +56,23 @@ namespace Scada.MainVision
             }
         }
 
-        public void AddLineName(string lineName, string displayName)
+        public void AddLineName(string deviceKey, string lineName, string displayName)
         {
             if (lineName.IndexOf("Doserate") >= 0)
             {
                 displayName = displayName.Replace("μSv/h", "nSv/h");
             }
+            Config cfg = Config.Instance();
+            ConfigEntry entry = cfg[deviceKey];
 
-            GraphDataSource dataSource = new GraphDataSource();
+            ConfigItem item = entry.GetConfigItem(lineName);
 
-            plotter.AddLineGraph(dataSource.GetCompositeDataSource(), colors[dataSources.Count], 2, displayName);
-            dataSources.Add(lineName, dataSource);
-            plotter.Viewport.PredictFocus(FocusNavigationDirection.Right);
-            
-            plotter.Viewport.AutoFitToView = true;
+            CurveView curveView = this.ChartView.AddCurveView(lineName);
+            curveView.Max = item.Max;
+            curveView.Min = item.Min;
+            CurveDataContext dataContext = curveView.CreateDataContext(lineName, displayName);
 
-            this.timeAxis.ShowMayorLabels = true;
-
-            // this.timeAxis.AxisControl.TicksProvider
-            // this.timeAxis.AxisControl.TicksProvider = new DateTimeTicksProvider();
-
-            //plotter.Viewport.Zoom(2);
-            //
-            //plotter.MoveFocus(new TraversalRequest(FocusNavigationDirection.Right));
+            this.dataSources.Add(lineName, dataContext);
         }
 
         private void OnDataArrivalBegin()
@@ -108,7 +100,7 @@ namespace Scada.MainVision
             
             foreach (string key in dataSources.Keys)
             {
-                GraphDataSource dataSource = dataSources[key];
+                CurveDataContext dataContext = dataSources[key];
                 string v = (string)entry[key];
                 double r = double.Parse(v);
                 if (key.ToLower() == "doserate")
@@ -119,7 +111,7 @@ namespace Scada.MainVision
                     c -= d;
                     r = c / 10;
                 }
-                dataSource.AddPoint(this.now.AddSeconds((double)i), r);
+                dataContext.AddPoint(i * 5  , r);
             }
 
 

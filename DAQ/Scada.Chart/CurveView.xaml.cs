@@ -23,6 +23,8 @@ namespace Scada.Chart
 
         public const double GridViewWidth = 1000.0;
 
+        private bool init = false;
+
         private Line timeLine = new Line();
 
         private Polyline curve = new Polyline();
@@ -32,9 +34,19 @@ namespace Scada.Chart
         public CurveView()
         {
             InitializeComponent();
+            
         }
 
         private void CurveViewLoaded(object sender, RoutedEventArgs e)
+        {
+            if (!init)
+            {
+                this.Initialize();
+                init = true;
+            }
+        }
+
+        private void Initialize()
         {
             this.CanvasView.Height = this.Height;
             this.Graduation.Height = this.Height;
@@ -106,17 +118,48 @@ namespace Scada.Chart
         public long TimeScale
         {
             get;
-            set;
+            internal set;
         }
 
+        /// <summary>
+        /// H               Max
+        /// 
+        /// 
+        /// 0               Min     
+        /// 
+        /// 
+        /// 
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
         void UpdateCurveHandler(Point point)
         {
-            curve.Points.Add(point);
+            Point p;
+            this.Convert(point, out p);
+            curve.Points.Add(p);
         }
 
-        public void UpdateTimeLine(Point point)
+        public void TrackTimeLine(Point point)
         {
             timeLine.X1 = timeLine.X2 = point.X;
+        }
+
+        private void Convert(Point p, out Point po)
+        {
+            double range = this.Max - this.Min;
+            double pa = 0.0;
+            double pb = 0.0;
+            if (p.Y <= this.Max && p.Y >= this.Min)
+            {
+                pa = this.Max - p.Y;
+                pb = p.Y - this.Min;
+            }
+
+            double pos = this.Height / (pa / pb + 1);
+            double y = this.Height - pos;
+
+            po = new Point(p.X, y);
         }
 
         private void CanvasViewMouseMove(object sender, MouseEventArgs e)
@@ -131,6 +174,18 @@ namespace Scada.Chart
             {
                 return (UIElement)this.CanvasView;
             }
+        }
+
+        public double Min
+        {
+            set;
+            get;
+        }
+
+        public double Max
+        {
+            set;
+            get;
         }
 
 

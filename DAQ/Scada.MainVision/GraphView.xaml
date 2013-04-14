@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
              xmlns:local="clr-namespace:Scada.MainVision"
+             xmlns:chart="clr-namespace:Scada.Chart;assembly=Scada.Chart"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="500">
 
@@ -19,19 +20,8 @@
             <TextBlock x:Name="cpuUsageText" Margin="10,10,0,0"
                        FontSize="15"/>
         </StackPanel>
-        <d3:ChartPlotter x:Name="plotter" Margin="10,10,20,10" Grid.Row="1" Opacity="0.8">
-            <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis />
-            </d3:ChartPlotter.VerticalAxis>
 
-            <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalDateTimeAxis x:Name="timeAxis"/>
-            </d3:ChartPlotter.HorizontalAxis>
-
-            <d3:Header Content="实时曲线图"/>
-            <d3:VerticalAxisTitle Content=""/>
-            <d3:HorizontalAxisTitle Content="时间" Name="chart2Title"></d3:HorizontalAxisTitle>
-            
-        </d3:ChartPlotter>
+        <chart:ChartView x:Name="ChartView" Grid.Row="1"></chart:ChartView>
+        
     </Grid>
 </UserControl>

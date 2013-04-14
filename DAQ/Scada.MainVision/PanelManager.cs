@@ -85,7 +85,8 @@ namespace Scada.MainVision
             GraphView graphView = new GraphView();
             graphView.AddDataListener(dataListener);
 
-            var columnInfoList = dataListener.GetColumnsInfo(); 
+            var columnInfoList = dataListener.GetColumnsInfo();
+            string deviceKey = dataListener.DeviceKey;
 
             foreach (var columnInfo in columnInfoList)
             {
@@ -93,9 +94,10 @@ namespace Scada.MainVision
                 {
                     continue;
                 }
+
                 if (columnInfo.DisplayInChart)
                 {
-                    graphView.AddLineName(columnInfo.BindingName, columnInfo.Header);
+                    graphView.AddLineName(deviceKey, columnInfo.BindingName, columnInfo.Header);
                 }
             }
 
