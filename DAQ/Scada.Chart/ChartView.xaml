@@ -8,6 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300"  MouseMove="MainViewMouseMove">
     <Grid x:Name="MainView">
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -15,15 +16,12 @@
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="ChartContainer" Grid.Column="0" Grid.Row="0" 
-                    Orientation="Vertical"
+        <StackPanel x:Name="ChartContainer" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+                    Orientation="Vertical" 
                     MouseMove="MainViewMouseMove">
             
-            <local:CurveView Background="GreenYellow" Height="210"></local:CurveView>
-
-            <local:CurveView Background="AliceBlue" Height="200"></local:CurveView>
-            
         </StackPanel>
+        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="1" Background="AliceBlue" Loaded="TimeAxisLoaded"></Canvas>
         
     </Grid>
 </UserControl>

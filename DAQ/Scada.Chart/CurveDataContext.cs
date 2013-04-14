@@ -6,11 +6,15 @@ using System.Windows;
 
 namespace Scada.Chart
 {
-    public class Curve
+    public delegate void UpdateCurve(Point point);
+
+    public class CurveDataContext
     {
         private List<Point> points = new List<Point>();
 
-        public Curve(string curveName)
+        public event UpdateCurve UpdateCurve;
+
+        public CurveDataContext(string curveName)
         {
             this.CurveName = curveName;
         }
@@ -27,9 +31,17 @@ namespace Scada.Chart
             set;
         }
 
+
         public void AddPoint(double x, double y)
         {
-            points.Add(new Point(x, y));
+            var p = new Point(x, y);
+            points.Add(p);
+            this.UpdateCurve(p);
+        }
+
+        public void AddValuePair(DateTime dateTime, double value)
+        {
+
         }
     }
 }

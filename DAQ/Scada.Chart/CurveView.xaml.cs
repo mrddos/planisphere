@@ -25,7 +25,9 @@ namespace Scada.Chart
 
         private Line timeLine = new Line();
 
-        private List<Curve> curves = new List<Curve>();
+        private Polyline curve = new Polyline();
+
+        private CurveDataContext dataContext;
 
         public CurveView()
         {
@@ -34,6 +36,9 @@ namespace Scada.Chart
 
         private void CurveViewLoaded(object sender, RoutedEventArgs e)
         {
+            this.CanvasView.Height = this.Height;
+            this.Graduation.Height = this.Height;
+            // Grid Line ---
             for (int i = 0; i < 10; i++)
             {
                 Line l = new Line();
@@ -45,6 +50,7 @@ namespace Scada.Chart
                 this.CanvasView.Children.Add(l);
             }
 
+            // Grid Line |||
             for (int i = 0; i < 10; i++)
             {
                 Line l = new Line();
@@ -56,12 +62,17 @@ namespace Scada.Chart
                 this.CanvasView.Children.Add(l);
             }
 
-            for (int i = 0; i < 20; i++)
+            // Scale line
+            double height = this.Height;
+
+            double scaleWidth = 30;
+            this.Graduation.ClipToBounds = true;
+            for (int i = 0; i < 100; i++)
             {
                 Line l = new Line();
-                l.Y1 = l.Y2 = i * 10;
-                l.X1 = 25;
-                l.X2 = 30;
+                l.Y1 = l.Y2 = height - i * 10;
+                l.X1 = (i % 5 != 0) ? scaleWidth - Charts.ScaleLength : scaleWidth - Charts.MainScaleLength;
+                l.X2 = scaleWidth;
 
                 l.Stroke = new SolidColorBrush(Colors.Gray);
                 this.Graduation.Children.Add(l);
@@ -71,13 +82,36 @@ namespace Scada.Chart
             timeLine.Y2 = GridViewHeight / 2;
             timeLine.Stroke = new SolidColorBrush(Colors.Gray);
             this.CanvasView.Children.Add(timeLine);
+            this.CanvasView.ClipToBounds = true;
+
+            curve.Stroke = new SolidColorBrush(Colors.Green);
+            this.CanvasView.Children.Add(curve);
+
         }
 
-        public Curve AddCurve(string curveName, string displayName)
+        public CurveDataContext CreateDataContext(string curveName, string displayName)
         {
-            Curve curve = new Curve(curveName);
-            curves.Add(curve);
-            return curve;
+            this.dataContext = new CurveDataContext(curveName);
+            this.dataContext.UpdateCurve += UpdateCurveHandler;
+
+            return this.dataContext;
+        }
+
+        public string CurveViewName
+        {
+            get;
+            set;
+        }
+
+        public long TimeScale
+        {
+            get;
+            set;
+        }
+
+        void UpdateCurveHandler(Point point)
+        {
+            curve.Points.Add(point);
         }
 
         public void UpdateTimeLine(Point point)
@@ -98,5 +132,7 @@ namespace Scada.Chart
                 return (UIElement)this.CanvasView;
             }
         }
+
+
     }
 }

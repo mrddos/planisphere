@@ -65,13 +65,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Charts.cs" />
+    <Compile Include="CurveDataContext.cs" />
     <Compile Include="CurveView.xaml.cs">
       <DependentUpon>CurveView.xaml</DependentUpon>
     </Compile>
     <Compile Include="ChartView.xaml.cs">
       <DependentUpon>ChartView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Curve.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
