@@ -29,6 +29,8 @@ namespace Scada.Chart
 
         private Polyline curve = new Polyline();
 
+        private double i = 0;
+
         private CurveDataContext dataContext;
 
         public CurveView()
@@ -48,8 +50,8 @@ namespace Scada.Chart
 
         private void Initialize()
         {
-            this.CanvasView.Height = this.Height;
-            this.Graduation.Height = this.Height;
+            this.CanvasView.Height = this.Height - 20;
+            this.Graduation.Height = this.Height - 20;
             // Grid Line ---
             for (int i = 0; i < 10; i++)
             {
@@ -75,7 +77,7 @@ namespace Scada.Chart
             }
 
             // Scale line
-            double height = this.Height;
+            double height = this.CanvasView.Height;
 
             double scaleWidth = 30;
             this.Graduation.ClipToBounds = true;
@@ -98,7 +100,6 @@ namespace Scada.Chart
 
             curve.Stroke = new SolidColorBrush(Colors.Green);
             this.CanvasView.Children.Add(curve);
-
         }
 
         public CurveDataContext CreateDataContext(string curveName, string displayName)
@@ -138,6 +139,13 @@ namespace Scada.Chart
             Point p;
             this.Convert(point, out p);
             curve.Points.Add(p);
+
+            if (i > 20)
+            {
+                TranslateTransform tt = new TranslateTransform(-i/5, 0);
+                curve.RenderTransform = tt;
+            }
+            i += 2.0;
         }
 
         public void TrackTimeLine(Point point)
