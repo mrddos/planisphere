@@ -6,17 +6,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200" Background="White"
              Loaded="CurveViewLoaded" MouseMove="CanvasViewMouseMove">
-    <Grid x:Name="MainView" Margin="0,0,-352,10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="30"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <!-- Canvas -->
-        <Canvas x:Name="Graduation" Grid.Column="0" Background="White">
-        </Canvas>
-        
-        <Canvas x:Name="CanvasView" Grid.Column="1" MouseMove="CanvasViewMouseMove">
-        </Canvas>
-    </Grid>
+    <Border BorderBrush="Gray" BorderThickness="0.5">
+        <Grid x:Name="MainView" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="10"></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="30"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <!-- Canvas -->
+            <Canvas x:Name="Graduation" Grid.Row="1" Grid.Column="0" Background="White">
+            </Canvas>
 
+            <Canvas x:Name="CanvasView" Grid.Row="1" Grid.Column="1" MouseMove="CanvasViewMouseMove">
+            </Canvas>
+        </Grid>
+    </Border>
 </UserControl>
