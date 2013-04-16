@@ -123,14 +123,6 @@ namespace Scada.Chart
         }
 
         /// <summary>
-        /// H               Max
-        /// 
-        /// 
-        /// 0               Min     
-        /// 
-        /// 
-        /// 
-        /// 
         /// 
         /// </summary>
         /// <param name="point"></param>
