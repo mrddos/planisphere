@@ -85,12 +85,14 @@
     <Compile Include="MainApplication.cs" />
     <Compile Include="Declare.cs" />
     <Compile Include="LogEvent.cs" />
+    <Compile Include="NuclideData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordManager.cs" />
     <Compile Include="Records.cs" />
     <Compile Include="ScadaReader.cs" />
     <Compile Include="StandardDevice.cs" />
     <Compile Include="WebFileDevice.cs" />
+    <Compile Include="XmlExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

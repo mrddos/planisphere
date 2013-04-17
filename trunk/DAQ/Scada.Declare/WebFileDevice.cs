@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Xml;
+using System.Xml.Linq;
 
 namespace Scada.Declare
 {
@@ -76,7 +77,7 @@ namespace Scada.Declare
 		{
 			bool connected = true;
 
-			this.timer = new Timer(new TimerCallback(TimerCallback), null, 1000, 1000 * 5);
+			this.timer = new Timer(new TimerCallback(TimerCallback), null, 1000, 1000 * 50);
 
 			
 			return connected;
@@ -119,13 +120,15 @@ namespace Scada.Declare
                 {
                     XmlDocument doc = new XmlDocument();
                     doc.Load(filePath);
+                    // XmlElement root = doc.DocumentElement;
+                    var nsmgr = new XmlNamespaceManager(doc.NameTable);
+                    nsmgr.AddNamespace("a", "http://physics.nist.gov/Divisions/Div846/Gp4/ANSIN4242/2005/ANSIN4242");
+                    nsmgr.AddNamespace("s", "http://www.technidata.com/ENVINET/SARA");
+                    nsmgr.AddNamespace("e", "http://www.technidata.com/ENVINET");
 
-
-
-                    // TODO: Post the data to UI thread.
-                    
+                    this.ParseData(doc, nsmgr);                    
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
 
                 }
@@ -167,5 +170,67 @@ namespace Scada.Declare
                 sn, t.Year, t.Month, t.Day, t.Hour, index * 5);
             return fileName;
         }
+
+        private NuclideDataSet ParseData(XmlDocument doc, XmlNamespaceManager nsmgr)
+        {
+            
+            string st = doc.Value("//a:Spectrum/a:StartTime", nsmgr);
+            string et = doc.Value("//s:EndTime", nsmgr);
+
+            string co = doc.Value("//a:Coefficients", nsmgr);
+
+            string cd = doc.Value("//a:ChannelData", nsmgr);
+
+            string dr = doc.Value("//a:DoseRate", nsmgr);
+
+            string tp = doc.Value("//s:Temperature", nsmgr);
+            string hv = doc.Value("//s:HighVoltage", nsmgr);
+
+            NuclideDataSet set = new NuclideDataSet();
+
+            XmlNodeList list = doc.SelectNodes("//a:Nuclide", nsmgr);
+
+            foreach (XmlNode n in list)
+            {
+                string nn = n.Value("a:NuclideName", nsmgr);
+
+                string ni = n.Value("a:NuclideIDConfidenceIndication", nsmgr);
+
+                string na = n.Value("a:NuclideActivity", nsmgr);
+
+                string nd = n.Value("s:DoseRate", nsmgr);
+
+                string ch = string.Empty;
+                string en = string.Empty;
+
+                var peak = n.SelectSingleNode("s:Peak", nsmgr);
+                if (peak != null)
+                {
+                    foreach (XmlAttribute attr in peak.Attributes)
+                    {
+                        string attrName = attr.Name.ToLower();
+                        if (attrName == "channel")
+                        {
+                            ch = attr.Value;
+                        }
+                        else if (attrName == "energy")
+                        {
+                            en = attr.Value;
+                        }
+                    }
+                }
+
+                NuclideData data = new NuclideData() { 
+                    Name = nn, Activity = na, Indication = ni, DoseRate = nd,
+                    Channel = ch, Energy = en
+                };
+                set.AddNuclideData(data);
+            }
+
+            return set;
+        }
+
+
+
 	}
 }
