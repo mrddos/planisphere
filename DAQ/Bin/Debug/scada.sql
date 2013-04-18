@@ -96,3 +96,32 @@ CREATE TABLE `Environment_rec` (
 `Alarm` bit, /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
 PRIMARY KEY (`Id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+
+DROP TABLE IF EXISTS `NaI_Rec`;
+CREATE TABLE `NaI_Rec` (
+`Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
+`StartTime` datetime, 
+`EndTime` datetime, 
+`Coefficients` varchar(16), 
+`ChannelData` varchar(10000), 
+`DoseRate` varchar(16), 
+`Temperature` varchar(16), 
+`HighVoltage` varchar(16),
+PRIMARY KEY (`Id`)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `NaINuclide_Rec`;
+CREATE TABLE `NaINuclide_Rec` (
+`Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
+`time` datetime,
+`Name` varchar(16),
+`Activity` varchar(16),
+`Indication` varchar(16),
+`DoseRate` varchar(16),
+`Channel` varchar(16), 
+`Energy` varchar(16),
+PRIMARY KEY (`Id`)
+)ENGINE=MyISAM DEFAULT CHARSET=utf8;
