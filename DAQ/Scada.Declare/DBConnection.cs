@@ -83,7 +83,10 @@ namespace Scada.Declare
             }
             finally
             {
-                cmd.Parameters.Clear();
+                if (cmd != null)
+                {
+                    cmd.Parameters.Clear();
+                }
             }
 			return true;
 		}
