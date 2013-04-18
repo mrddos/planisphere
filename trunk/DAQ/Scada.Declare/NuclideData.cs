@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Scada.Declare
 {
-    class NuclideData
+    struct NuclideData
     {
         public string Name
         {
@@ -55,6 +55,20 @@ namespace Scada.Declare
         {
             sets.Add(nd);
         }
+
+        public string StartTime { get; set; }
+
+        public string EndTime { get; set; }
+
+        public string Coefficients { get; set; }
+
+        public string ChannelData { get; set; }
+
+        public string DoseRate { get; set; }
+
+        public string Temperature { get; set; }
+
+        public string HighVoltage { get; set; }
     }
 
 }

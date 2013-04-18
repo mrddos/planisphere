@@ -126,7 +126,6 @@
     </Compile>
     <Compile Include="Config.cs" />
     <Compile Include="DataProvider.cs" />
-    <Compile Include="DateTimeLabelProvider.cs" />
     <Compile Include="DBDataCommonListerner.cs" />
     <Compile Include="DBDataConnector.cs" />
     <Compile Include="DBDataListener.cs" />

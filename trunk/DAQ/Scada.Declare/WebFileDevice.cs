@@ -22,10 +22,13 @@ namespace Scada.Declare
 
 		private string addr = "127.0.0.1";
 
+        private string insertIntoCommand;
+
+        private string insertIntoCommand2;
 
         private string sn = "sara0240";
 
-        private int index = 0;
+        // private int index = 0;
 
 		public WebFileDevice(DeviceEntry entry)
 		{
@@ -43,8 +46,19 @@ namespace Scada.Declare
 			this.Name = entry[DeviceEntry.Name].ToString();
 			this.Path = entry[DeviceEntry.Path].ToString();
 			this.Version = entry[DeviceEntry.Version].ToString();
+            this.Id = entry[DeviceEntry.Identity].ToString();
 
 			this.addr = (StringValue)entry[DeviceEntry.IPAddress];
+
+
+            string tableName = (StringValue)entry[DeviceEntry.TableName];
+            string tableFields = (StringValue)entry[DeviceEntry.TableFields];
+            this.InitializeNaITable(tableName, tableFields, out this.insertIntoCommand);
+
+            string tableName2 = (StringValue)entry["TableName2"];
+            string tableFields2 = (StringValue)entry["TableFields2"];
+            this.InitializeNaITable(tableName2, tableFields2, out this.insertIntoCommand2);
+
 
             // Virtual On
             string isVirtual = (StringValue)entry[DeviceEntry.Virtual];
@@ -53,6 +67,20 @@ namespace Scada.Declare
                 this.isVirtual = true;
             }
 		}
+
+        private void InitializeNaITable(string tableName, string tableFields, out string insertIntoCommand)
+        {
+            string[] fields = tableFields.Split(',');
+            string atList = string.Empty;
+            for (int i = 0; i < fields.Length; ++i)
+            {
+                string at = string.Format("@{0}, ", i + 1);
+                atList += at;
+            }
+            atList = atList.TrimEnd(',', ' ');
+            string cmd = string.Format("insert into {0}({1}) values({2})", tableName, tableFields, atList);
+            insertIntoCommand = cmd;
+        }
 
 		public bool IsVirtual
 		{
@@ -77,7 +105,7 @@ namespace Scada.Declare
 		{
 			bool connected = true;
 
-			this.timer = new Timer(new TimerCallback(TimerCallback), null, 1000, 1000 * 50);
+			this.timer = new Timer(new TimerCallback(TimerCallback), null, 1000, 1000 * 30);
 
 			
 			return connected;
@@ -89,7 +117,6 @@ namespace Scada.Declare
         /// <param name="o"></param>
 		private void TimerCallback(object o)
 		{
-            string fileName = GetFileName(index);
             string filePath = string.Empty;
             if (this.IsVirtual)
             {
@@ -97,10 +124,18 @@ namespace Scada.Declare
             }
             else
             {
-                // TODO: Download the file.
-                string address = this.addr + fileName;
+                // Start download ...
+                int min = DateTime.Now.Minute;
+                int i = min / 5;
+                string fileName = GetFileName(i);
                 string localPath = this.Path + "\\" + fileName;
-  
+                if (File.Exists(localPath))
+                {
+                    return;
+                }
+
+                // Download the file.
+                string address = this.addr + fileName;
                 using (WebClient client = new WebClient())
                 {
                     try
@@ -126,7 +161,8 @@ namespace Scada.Declare
                     nsmgr.AddNamespace("s", "http://www.technidata.com/ENVINET/SARA");
                     nsmgr.AddNamespace("e", "http://www.technidata.com/ENVINET");
 
-                    this.ParseData(doc, nsmgr);                    
+                    NuclideDataSet set = this.ParseData(doc, nsmgr);
+                    this.Record(set);
                 }
                 catch (Exception e)
                 {
@@ -151,6 +187,38 @@ namespace Scada.Declare
 		{
             
 		}
+
+        private void Record(NuclideDataSet set)
+        {
+            var dd = this.ParseNaI(set);
+            this.SynchronizationContext.Post(this.DataReceived, dd);
+            foreach (var nd in set.sets)
+            {
+                var dd2 = this.ParseNuclideData(set.EndTime, nd);
+                this.SynchronizationContext.Post(this.DataReceived, dd2);
+            }
+        }
+
+        private DeviceData ParseNaI(NuclideDataSet s)
+        {
+            object[] data = new object[]{ 
+                s.StartTime, s.EndTime, s.Coefficients, 
+                s.ChannelData, s.DoseRate, s.Temperature, s.HighVoltage
+            };
+            DeviceData dd = new DeviceData(this, data);
+            dd.InsertIntoCommand = this.insertIntoCommand;
+            return dd;
+        }
+
+        private DeviceData ParseNuclideData(string time, NuclideData nd)
+        {
+            object[] data = new object[]{
+                time, nd.Name, nd.Activity, nd.Indication, nd.DoseRate, nd.Channel, nd.Energy
+            };
+            DeviceData dd = new DeviceData(this, data);
+            dd.InsertIntoCommand = this.insertIntoCommand2;
+            return dd;
+        }
 
         /// <summary>
         /// index = 0, min = 0
@@ -187,6 +255,13 @@ namespace Scada.Declare
             string hv = doc.Value("//s:HighVoltage", nsmgr);
 
             NuclideDataSet set = new NuclideDataSet();
+            set.StartTime = st;
+            set.EndTime = et;
+            set.Coefficients = co;
+            set.ChannelData = cd;
+            set.DoseRate = dr;
+            set.Temperature = tp;
+            set.HighVoltage = hv;
 
             XmlNodeList list = doc.SelectNodes("//a:Nuclide", nsmgr);
 
