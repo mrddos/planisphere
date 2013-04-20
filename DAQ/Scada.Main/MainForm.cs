@@ -255,8 +255,7 @@ namespace Scada.Main
 
         private void settingClick(object sender, EventArgs e)
         {
-            var form = new SettingsForm();
-            form.ShowDialog();
+
         }
 
     }
