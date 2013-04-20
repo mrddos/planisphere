@@ -61,8 +61,12 @@ namespace Scada.Declare
 
 		public bool DoRecord(DeviceData data)
 		{
-			bool ret = this.conn.AddRecordData(data.InsertIntoCommand, data.Data);
-			return ret;
+			if (data.Data != null)
+			{
+				bool ret = this.conn.AddRecordData(data.InsertIntoCommand, data.Data);
+				return ret;
+			}
+			return false;
 		}
 	}
 }

@@ -26,7 +26,9 @@ namespace Scada.Declare
 
         private string insertIntoCommand2;
 
-        private string sn = "sara0240";
+		private string deviceSn = string.Empty;
+
+		private int minuteAdjust = 0;
 
         // private int index = 0;
 
@@ -48,7 +50,16 @@ namespace Scada.Declare
 			this.Version = entry[DeviceEntry.Version].ToString();
             this.Id = entry[DeviceEntry.Identity].ToString();
 
+			string deviceSn = entry[DeviceEntry.DeviceSn].ToString();
+			if (string.IsNullOrEmpty(deviceSn))
+			{
+				throw new Exception("Config Error: No Device SN");
+			}
+			this.deviceSn = deviceSn.Trim();
+
 			this.addr = (StringValue)entry[DeviceEntry.IPAddress];
+
+			this.minuteAdjust = (StringValue)entry["MinuteAdjust"];
 
 
             string tableName = (StringValue)entry[DeviceEntry.TableName];
@@ -128,8 +139,8 @@ namespace Scada.Declare
                 int min = DateTime.Now.Minute;
                 int i = min / 5;
                 string fileName = GetFileName(i);
-                string localPath = this.Path + "\\" + fileName;
-                if (File.Exists(localPath))
+				filePath = this.Path + "\\" + fileName;
+				if (File.Exists(filePath))
                 {
                     return;
                 }
@@ -140,15 +151,15 @@ namespace Scada.Declare
                 {
                     try
                     {
-                        client.DownloadFile(address, localPath);
+						client.DownloadFile(address, filePath);
                     }
                     catch (Exception e)
                     {
-
+						string msg = e.Message;
                     }
                 }
             }
-
+			Thread.Sleep(1000);
             if (File.Exists(filePath))
             {
                 try
@@ -234,11 +245,13 @@ namespace Scada.Declare
         {
             string fileName;
             DateTime t = DateTime.Now;
+			t = t.AddHours(-8).AddMinutes(this.minuteAdjust);
             fileName = string.Format("{0}_{1}-{2:D2}-{3:D2}T{4:D2}_{5:D2}_00Z-5min.n42",
-                sn, t.Year, t.Month, t.Day, t.Hour, index * 5);
+				this.deviceSn, t.Year, t.Month, t.Day, t.Hour, index * 5);
             return fileName;
         }
 
+		// TODO: CalibrationNuclideFound and ReferencePeakEnergyFromPosition
         private NuclideDataSet ParseData(XmlDocument doc, XmlNamespaceManager nsmgr)
         {
             

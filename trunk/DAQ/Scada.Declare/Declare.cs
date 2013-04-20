@@ -292,6 +292,8 @@ namespace Scada.Declare
 
 		public const string IPPort = "IPPort";
 
+		public const string DeviceSn = "DeviceSn";
+
 
         public const string ReadTimeout = "ReadTimeout";
 

@@ -147,7 +147,8 @@ namespace Scada.Declare
                 string e1 = GetText(hWnd, this.nEditId1);
                 string e2 = GetText(hWnd, this.nEditId2);
                 string e3 = GetText(hWnd, this.nEditId3);
-                ret = new string[] { e1, e2, e3 };
+				string e4 = GetText(hWnd, this.nEditId4);
+                ret = new string[] { e1, e2, e3, e4 };
             }
             return ret;
         }
