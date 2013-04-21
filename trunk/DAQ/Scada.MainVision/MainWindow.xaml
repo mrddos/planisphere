@@ -15,6 +15,7 @@
         </Grid.Resources>
         <!-- Definitions -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -42,10 +43,10 @@
         -->
         
         <!-- Here Pane as the Header -->
-        <m:HerePane x:Name="herePane" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" ></m:HerePane>
+        <m:HerePane x:Name="herePane" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ></m:HerePane>
         
         <!-- Device List -->
-        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="1" Grid.Column="0" Padding="5,5,5,5" >
+        <m:DeviceListPanel x:Name="DeviceList" Grid.Row="2" Grid.Column="0" Padding="5,5,5,5" >
         </m:DeviceListPanel>
 
         <!-- Buuton for testing -->

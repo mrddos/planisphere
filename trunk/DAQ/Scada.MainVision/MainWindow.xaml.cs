@@ -186,7 +186,7 @@ namespace Scada.MainVision
 			// Manage
 			this.Grid.Children.Add(panel);
 
-			this.panelManager.SetListViewPanelPos(panel, 1, 1);
+			this.panelManager.SetListViewPanelPos(panel, 2, 1);
 		}
 
       
