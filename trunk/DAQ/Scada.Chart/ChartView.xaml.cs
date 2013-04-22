@@ -41,6 +41,19 @@ namespace Scada.Chart
                 scaleLine.Y2 = (i % 5 != 0) ? Charts.ScaleLength : Charts.MainScaleLength;
                 scaleLine.Stroke = new SolidColorBrush(Colors.Gray);
                 this.TimeAxis.Children.Add(scaleLine);
+
+                TextBlock t = new TextBlock();
+                t.Foreground = new SolidColorBrush(Colors.Gray);
+                t.FontWeight = FontWeights.Light;
+                t.FontSize = 9;
+                if (i % 5 == 0)
+                {
+                    t.Text = string.Format("16:{0:d2}", i);
+                    t.SetValue(Canvas.LeftProperty, (double)i * 10 - 10);
+                    t.SetValue(Canvas.TopProperty, (double)10);
+                    this.TimeAxis.Children.Add(t);
+                }
+                
             }
         }
 
@@ -61,7 +74,7 @@ namespace Scada.Chart
             {
                 CurveView curveView = (CurveView)view;
 
-                Point point = e.GetPosition((UIElement)curveView.Canvas);
+                Point point = e.GetPosition((UIElement)curveView.View);
                 
                 curveView.TrackTimeLine(point);
             }

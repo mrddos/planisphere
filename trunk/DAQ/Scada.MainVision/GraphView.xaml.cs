@@ -71,6 +71,7 @@ namespace Scada.MainVision
             CurveView curveView = this.ChartView.AddCurveView(lineName);
             curveView.Max = item.Max;
             curveView.Min = item.Min;
+            curveView.Height = item.Height;
             CurveDataContext dataContext = curveView.CreateDataContext(lineName, displayName);
 
             this.dataSources.Add(lineName, dataContext);

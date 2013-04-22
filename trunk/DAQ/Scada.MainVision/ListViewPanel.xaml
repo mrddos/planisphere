@@ -21,7 +21,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Black" RadiusX="6" RadiusY="6" Grid.RowSpan="2">
+        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Gray" StrokeThickness="2"  RadiusX="6" RadiusY="6" Grid.RowSpan="2">
             <Rectangle.Effect>
                 <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
             </Rectangle.Effect>

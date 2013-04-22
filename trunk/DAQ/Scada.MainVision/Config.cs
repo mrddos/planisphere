@@ -49,7 +49,12 @@ namespace Scada.MainVision
             set; 
         }
 
-	}
+        public double Height
+        {
+            get;
+            set;
+        }
+    }
 
 	class ConfigEntry
 	{
@@ -235,6 +240,8 @@ namespace Scada.MainVision
 			item.ColumnName = columnName;
             item.Max = max;
             item.Min = min;
+            item.Height = height;
+
 			item.FieldIndex = int.Parse(fieldIndex.TrimStart('#'));
             item.DisplayInChart = dynamicDataDisplay;
 			entry.Add(item);
