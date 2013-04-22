@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.MainSettings", "Scada
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Auth", "Scada.Auth\Scada.Auth.csproj", "{0DE23F9D-BAD7-4547-AFDD-3D270A797E59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Chart", "Scada.Chart\Scada.Chart.csproj", "{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +145,16 @@ Global
 		{0DE23F9D-BAD7-4547-AFDD-3D270A797E59}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0DE23F9D-BAD7-4547-AFDD-3D270A797E59}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0DE23F9D-BAD7-4547-AFDD-3D270A797E59}.Release|Win32.ActiveCfg = Release|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{B6AF3022-1BA4-4F1F-A7A3-35ECE6D5D5F4}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

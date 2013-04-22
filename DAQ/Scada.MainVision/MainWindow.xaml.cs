@@ -145,33 +145,46 @@ namespace Scada.MainVision
 			}
 		}
 
+        private void DisplayPanelData(HerePaneItem panel, string data1, string data2)
+        {
+            TextBlock text2 = panel[0];
+            TextBlock text3 = panel[1];
+
+            text2.Text = data1;
+            text3.Text = data2;
+        }
+
         void RefreshPanelDataTimerTick(object sender, EventArgs e)
         {
-            // TODO: Refactor;
             Random r = new Random();
 
-            HerePaneItem pane0 = this.panes[2];
-            TextBlock text0 = pane0[0];
-            TextBlock text1 = pane0[1];
-            
-            float a = r.Next(110, 120);
-            int b = r.Next(20, 30);
-            a += (b % 2 == 0) ? (float)b / 10 : -(float)b / 10;
-            text0.Text = string.Format("温度: {0} ℃", a / 10);
-            text1.Text = string.Format("风速: {0} m/s", a / 20);
+            int c1 = r.Next(146, 150);
+            int c2 = r.Next(450, 550);
+            int c3 = r.Next(1460, 1500);
+            int c4 = r.Next(1460, 1500);
 
+            int c5 = r.Next(20, 30);
+            int c6 = r.Next(13, 22);
 
-            HerePaneItem pane1 = this.panes[0];
-            TextBlock text2 = pane1[0];
-            TextBlock text3 = pane1[1];
+            int c7 = r.Next(1460, 1500);
+            int c8 = r.Next(10, 20);
 
-            int c = r.Next(1460, 1500);
-            int d = r.Next(-20, 0);
-            c -= d;
-            float v = r.Next(390, 410);
-            
-            text2.Text = string.Format("剂量率: {0} nSv/h", c / 10);
-            text3.Text = string.Format("高压值: {0} V", v);
+            string d01 = string.Format("剂量率: {0} nSv/h", c1);
+            string d02 = string.Format("高压值: {0} nSv/h", c2);
+
+            string d11 = string.Format("剂量率: {0} nSv/h", c3);
+            string d12 = "";
+
+            string d21 = string.Format("温度: {0} ℃", c5);
+            string d22 = string.Format("风速: {0} m/s", c6);
+
+            string d31 = string.Format("流量: {0}", c7);
+            string d32 = "";
+
+            this.DisplayPanelData(this.panes[0], d01, d02);
+            this.DisplayPanelData(this.panes[1], d11, d12);
+            this.DisplayPanelData(this.panes[2], d21, d22);
+            this.DisplayPanelData(this.panes[3], d31, d32);
 
         }
 
