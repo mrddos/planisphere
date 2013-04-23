@@ -32,6 +32,8 @@ namespace Scada.Chart
 
         private double i = 0;
 
+        private double currentScale;
+
         private CurveDataContext dataContext;
 
         public CurveView()
@@ -161,8 +163,27 @@ namespace Scada.Chart
             {
                 TranslateTransform tt = new TranslateTransform(-i/5, 0);
                 curve.RenderTransform = tt;
+                curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale);
             }
             i += 2.0;
+        }
+
+        /// <summary>
+        /// Scale [1.0, 3.0]
+        /// </summary>
+        /// <param name="scale"></param>
+        public void UpdateCurveScale(double scale)
+        {
+            if (scale < 1.0 || scale > 3.0)
+            {
+                return;
+            }
+            this.currentScale = scale;
+
+            if (curve != null)
+            {
+                curve.RenderTransform = new ScaleTransform(scale, scale);
+            }
         }
 
         public void TrackTimeLine(Point point)

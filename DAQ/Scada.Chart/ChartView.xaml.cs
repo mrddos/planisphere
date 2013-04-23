@@ -21,7 +21,7 @@ namespace Scada.Chart
     {
 
 
-        //private long timeScale;
+        private double scale = 1.0;
 
         public ChartView()
         {
@@ -96,6 +96,32 @@ namespace Scada.Chart
             set
             {
                 this.SetValue(TimeScaleProperty, (long)value);
+            }
+        }
+
+        private void ZoomHandler(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+
+            int a = e.Delta;
+            if (a > 0)
+            {
+                this.scale += 0.1;
+            }
+            else if (a < 0)
+            {
+                this.scale -= 0.1;
+            }
+
+            this.ZoomChartView(this.scale);
+        }
+
+        private void ZoomChartView(double scale)
+        {
+            foreach (var view in this.ChartContainer.Children)
+            {
+                CurveView curveView = (CurveView)view;
+                curveView.UpdateCurveScale(scale);
             }
         }
 
