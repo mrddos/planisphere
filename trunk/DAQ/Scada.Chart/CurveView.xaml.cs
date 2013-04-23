@@ -54,6 +54,7 @@ namespace Scada.Chart
             this.CanvasView.Height = this.Height - 20;
             this.Graduation.Height = this.Height - 20;
             // Grid Line |||
+            double canvasHeight = this.CanvasView.Height;
             for (int i = 0; i < 15; i++)
             {
                 Line l = new Line();
@@ -69,7 +70,7 @@ namespace Scada.Chart
             for (int i = 0; i < 20; i++)
             {
                 Line l = new Line();
-                l.Y1 = l.Y2 = i * 30;
+                l.Y1 = l.Y2 = canvasHeight - i * 30;
                 l.X1 = 0;
                 l.X2 = GridViewWidth;
 
