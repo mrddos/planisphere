@@ -132,11 +132,5 @@ namespace Scada.MainVision
 				this.RemoveHandler(MouseLeaveEvent, value);
 			}
 		}
-
-
-
-
-
-
 	}
 }

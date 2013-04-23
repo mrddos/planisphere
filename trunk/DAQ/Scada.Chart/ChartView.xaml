@@ -24,7 +24,7 @@
         <ScrollViewer x:Name="panelScrollViewer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" >
             <StackPanel x:Name="ChartContainer" 
                         Orientation="Vertical" VerticalAlignment="Bottom"
-                        MouseMove="MainViewMouseMove" >
+                        MouseMove="MainViewMouseMove" MouseWheel="ZoomHandler" >
             
             </StackPanel>
         </ScrollViewer>
