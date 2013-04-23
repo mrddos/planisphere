@@ -12,16 +12,23 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-
-        <StackPanel x:Name="ChartContainer" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
-                    Orientation="Vertical" 
-                    MouseMove="MainViewMouseMove">
-            
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <CheckBox Margin="5,0,5,0">剂量率</CheckBox>
+            <CheckBox Margin="5,0,5,0">高压值</CheckBox>
         </StackPanel>
-        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="1" Background="AliceBlue" Loaded="TimeAxisLoaded"></Canvas>
+        
+        <ScrollViewer x:Name="panelScrollViewer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" >
+            <StackPanel x:Name="ChartContainer" 
+                        Orientation="Vertical" VerticalAlignment="Bottom"
+                        MouseMove="MainViewMouseMove" >
+            
+            </StackPanel>
+        </ScrollViewer>
+        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="2" Background="AliceBlue" Loaded="TimeAxisLoaded"></Canvas>
         
     </Grid>
 </UserControl>

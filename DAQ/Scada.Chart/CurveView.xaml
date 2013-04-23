@@ -22,7 +22,7 @@
             <Canvas x:Name="Graduation" Grid.Row="1" Grid.Column="0" Background="White">
             </Canvas>
 
-            <Canvas x:Name="CanvasView" Grid.Row="1" Grid.Column="1" MouseMove="CanvasViewMouseMove">
+            <Canvas x:Name="CanvasView" Background="AliceBlue" Grid.Row="1" Grid.Column="1" MouseMove="CanvasViewMouseMove">
             </Canvas>
         </Grid>
     </Border>
