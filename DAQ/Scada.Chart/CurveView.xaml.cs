@@ -20,6 +20,21 @@ namespace Scada.Chart
     /// </summary>
     public partial class CurveView : UserControl
     {
+        struct GraduationLine
+        {
+            public Line Line
+            {
+                get;
+                set;
+            }
+
+            public double Pos
+            {
+                get;
+                set;
+            }
+        }
+
         public const double GridViewHeight = 1000.0;
 
         public const double GridViewWidth = 1000.0;
@@ -32,13 +47,22 @@ namespace Scada.Chart
 
         private double i = 0;
 
-        private double currentScale;
+        private double currentScale = 1.0;
 
         private CurveDataContext dataContext;
+
+        private double centerY = 75.0;
+
+        private Dictionary<int, GraduationLine> Graduations
+        {
+            get;
+            set;
+        }
 
         public CurveView()
         {
             InitializeComponent();
+            this.Graduations = new Dictionary<int, GraduationLine>();
             
         }
 
@@ -85,10 +109,17 @@ namespace Scada.Chart
 
             double scaleWidth = 30;
             this.Graduation.ClipToBounds = true;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
                 double y = height - i * 10;
+
+                if (y < 0)
+                {
+                    break;
+                }
+                
                 Line l = new Line();
+                this.Graduations.Add(i, new GraduationLine() { Line = l, Pos = y});
                 l.Y1 = l.Y2 = y;
                 l.X1 = (i % 5 != 0) ? scaleWidth - Charts.ScaleLength : scaleWidth - Charts.MainScaleLength;
                 l.X2 = scaleWidth;
@@ -163,7 +194,7 @@ namespace Scada.Chart
             {
                 TranslateTransform tt = new TranslateTransform(-i/5, 0);
                 curve.RenderTransform = tt;
-                curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale);
+                curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale, 0.0, centerY);
             }
             i += 2.0;
         }
@@ -178,11 +209,23 @@ namespace Scada.Chart
             {
                 return;
             }
+
+            if (Math.Abs( this.currentScale - scale) < double.Epsilon)
+            {
+                return;
+            }
             this.currentScale = scale;
 
             if (curve != null)
             {
-                curve.RenderTransform = new ScaleTransform(scale, scale);
+                curve.RenderTransform = new ScaleTransform(scale, scale, 0.0, centerY);
+            }
+
+            //int i = 0;
+            foreach (var g in this.Graduations)
+            {
+                Line l = g.Value.Line;
+                l.Y1 = l.Y2 = (g.Value.Pos - centerY) * this.currentScale + centerY;
             }
         }
 
