@@ -13,10 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Research.DynamicDataDisplay;
-using Microsoft.Research.DynamicDataDisplay.DataSources;
-using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
-using Microsoft.Research.DynamicDataDisplay.Charts;
 using Scada.Chart;
 
 namespace Scada.MainVision
