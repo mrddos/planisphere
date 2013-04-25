@@ -19,13 +19,35 @@ namespace Scada.Chart
     /// </summary>
     public partial class ChartView : UserControl
     {
+        struct GraduationLine
+        {
+            public Line Line
+            {
+                get;
+                set;
+            }
 
+            public double Pos
+            {
+                get;
+                set;
+            }
+        }
 
         private double scale = 1.0;
+
+        private bool init = false;
+
+        private Dictionary<int, GraduationLine> Graduations
+        {
+            get;
+            set;
+        }
 
         public ChartView()
         {
             InitializeComponent();
+            this.Graduations = new Dictionary<int, GraduationLine>();
         }
 
         public static readonly DependencyProperty TimeScaleProperty =
@@ -33,10 +55,19 @@ namespace Scada.Chart
 
         private void TimeAxisLoaded(object sender, RoutedEventArgs e)
         {
+            if (init)
+            {
+                return;
+            }
+            this.init = true;
             for (int i = 0; i < 100; i++)
             {
+                double x = i * 10;
                 Line scaleLine = new Line();
-                scaleLine.X1 = scaleLine.X2 = i * 10;
+
+                this.Graduations.Add(i, new GraduationLine() { Line = scaleLine, Pos = x });
+
+                scaleLine.X1 = scaleLine.X2 = x;
                 scaleLine.Y1 = 0;
                 scaleLine.Y2 = (i % 5 != 0) ? Charts.ScaleLength : Charts.MainScaleLength;
                 scaleLine.Stroke = new SolidColorBrush(Colors.Gray);
@@ -118,10 +149,38 @@ namespace Scada.Chart
 
         private void ZoomChartView(double scale)
         {
+            this.UpdateTimeAxisScale(scale);
             foreach (var view in this.ChartContainer.Children)
             {
                 CurveView curveView = (CurveView)view;
                 curveView.UpdateCurveScale(scale);
+            }
+        }
+
+        private void UpdateTimeAxisScale(double scale)
+        {
+            if (scale < 1.0 || scale > 3.0)
+            {
+                return;
+            }
+
+            /*
+            if (Math.Abs(this.currentScale - scale) < double.Epsilon)
+            {
+                return;
+            }
+            this.currentScale = scale;
+
+            if (curve != null)
+            {
+                curve.RenderTransform = new ScaleTransform(scale, scale, 0.0, centerY);
+            }
+            */
+            //int i = 0;
+            foreach (var g in this.Graduations)
+            {
+                Line l = g.Value.Line;
+                l.X1 = l.X2 = (g.Value.Pos - 0) * scale + 0;
             }
         }
 
