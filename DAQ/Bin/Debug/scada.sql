@@ -41,13 +41,14 @@ DROP TABLE IF EXISTS `HVSampler_rec`;
 CREATE TABLE `HVSampler_rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
-`Flowrate` varchar(8), /*瞬时流速，单位：m/s，数据格式：N8*/
-`Volume` varchar(8), /*总采样体积，单位：m3，数据格式：N8*/
-`Status` bit, /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
-`Alarm` bit, /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
-`FilterId` int, /*滤膜ID，保留字段*/
-`Begintime` datetime DEFAULT NULL,
-`Endtime` datetime, /*开始时间，保留字段*/
+`PresetFlow` varchar(8),
+`PresetTime` varchar(8),
+`ActualVolume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
+`ActualFlow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
+`ActualTimer` varchar(8),
+`Alarm1` bit,
+`Alarm2` bit,
+`Alarm3` bit,
 PRIMARY KEY (`Id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -56,14 +57,14 @@ DROP TABLE IF EXISTS `ISampler_rec`;
 CREATE TABLE `ISampler_rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
-`Flowrate` varchar(8), /*瞬时流速，单位：m/s，数据格式：N8*/
-`Volume` varchar(8), /*总采样体积，单位：m3，数据格式：N8*/
-`Status` bit, /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
-`Alarm` bit, /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
-`FilterId1` int, /*滤膜ID，保留字段*/
-`FilterId2` int, /*滤膜ID，保留字段*/
-`Begintime` datetime DEFAULT NULL,
-`Endtime` datetime, /*开始时间，保留字段*/
+`PresetFlow` varchar(8),
+`PresetTime` varchar(8),
+`ActualVolume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
+`ActualFlow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
+`ActualTimer` varchar(8),
+`Alarm1` bit,
+`Alarm2` bit,
+`Alarm3` bit,
 PRIMARY KEY (`Id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

@@ -42,10 +42,7 @@ namespace Scada.Declare
 
         private FieldConfig[] fieldsConfig = null;
 
-        int nEditId1 = 0;
-        int nEditId2 = 0;
-        int nEditId3 = 0;
-        int nEditId4 = 0;
+        private List<int> elemIdList = new List<int>();
 
 		public FormProxyDevice(DeviceEntry entry)
 		{
@@ -66,10 +63,20 @@ namespace Scada.Declare
 
             this.processName = (StringValue)entry[ProcessName];
 
-            this.nEditId1 = (StringValue)entry["EditId1"];
-            this.nEditId2 = (StringValue)entry["EditId2"];
-            this.nEditId3 = (StringValue)entry["EditId3"];
-            this.nEditId4 = (StringValue)entry["EditId4"];
+            for (int i = 1; i < 50; i++)
+            {
+                string elemId = string.Format("ElemId{0}", i);
+                if (!entry.Contains(elemId))
+                {
+                    break;
+                }
+                string controlIdStr = (StringValue)entry[elemId];
+                int controlId = 0;
+                if (int.TryParse(controlIdStr, out controlId))
+                {
+                    this.elemIdList.Add(controlId);
+                }
+            }
 
             string tableName = (StringValue)entry[DeviceEntry.TableName];
             string tableFields = (StringValue)entry[DeviceEntry.TableFields];
@@ -144,11 +151,13 @@ namespace Scada.Declare
             string[] ret = EmptyStringArray;
             if (hWnd != IntPtr.Zero)
             {
-                string e1 = GetText(hWnd, this.nEditId1);
-                string e2 = GetText(hWnd, this.nEditId2);
-                string e3 = GetText(hWnd, this.nEditId3);
-				string e4 = GetText(hWnd, this.nEditId4);
-                ret = new string[] { e1, e2, e3, e4 };
+                int i = 0;
+                ret = new string[this.elemIdList.Count];
+                foreach (int elemId in this.elemIdList)
+                {
+                    ret[i] = GetText(hWnd, elemId);
+                    i++;
+                }
             }
             return ret;
         }

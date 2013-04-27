@@ -332,7 +332,6 @@ namespace Scada.Declare
         {
         }
 
-
         public IValue this[string name]
         {
             get
@@ -344,6 +343,11 @@ namespace Scada.Declare
             {
                 dict.Add(name, value);
             }
+        }
+
+        public bool Contains(string name)
+        {
+            return dict.ContainsKey(name);
         }
         
         

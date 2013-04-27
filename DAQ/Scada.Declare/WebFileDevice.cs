@@ -117,7 +117,7 @@ namespace Scada.Declare
 			bool connected = true;
 
 			this.timer = new Timer(new TimerCallback(TimerCallback), null, 1000, 1000 * 30);
-
+            this.isOpen = true;
 			
 			return connected;
 		}
