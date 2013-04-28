@@ -34,6 +34,21 @@ namespace Scada.Chart
             }
         }
 
+        struct GraduationTime
+        {
+            public TextBlock Text
+            {
+                get;
+                set;
+            }
+
+            public double Pos
+            {
+                get;
+                set;
+            }
+        }
+
         private double scale = 1.0;
 
         private bool init = false;
@@ -44,10 +59,17 @@ namespace Scada.Chart
             set;
         }
 
+        private Dictionary<int, GraduationTime> GraduationTimes
+        {
+            get;
+            set;
+        }
+
         public ChartView()
         {
             InitializeComponent();
             this.Graduations = new Dictionary<int, GraduationLine>();
+            this.GraduationTimes = new Dictionary<int, GraduationTime>();
         }
 
         public static readonly DependencyProperty TimeScaleProperty =
@@ -60,6 +82,8 @@ namespace Scada.Chart
                 return;
             }
             this.init = true;
+
+            int timeTextCount = 0;
             for (int i = 0; i < 100; i++)
             {
                 double x = i * 10;
@@ -73,14 +97,20 @@ namespace Scada.Chart
                 scaleLine.Stroke = new SolidColorBrush(Colors.Gray);
                 this.TimeAxis.Children.Add(scaleLine);
 
-                TextBlock t = new TextBlock();
-                t.Foreground = new SolidColorBrush(Colors.Gray);
-                t.FontWeight = FontWeights.Light;
-                t.FontSize = 9;
                 if (i % 5 == 0)
                 {
+                    TextBlock t = new TextBlock();
+                    t.Foreground = new SolidColorBrush(Colors.Gray);
+                    t.FontWeight = FontWeights.Light;
+                    t.FontSize = 9;
+                    int pos = i * 10 + 10;
+                    GraduationTimes.Add(timeTextCount, new GraduationTime() 
+                    {
+                        Text = t, Pos = pos
+                    });
+                    timeTextCount++;
                     t.Text = string.Format("16:{0:d2}", i);
-                    t.SetValue(Canvas.LeftProperty, (double)i * 10 - 10);
+                    t.SetValue(Canvas.LeftProperty, (double)pos);
                     t.SetValue(Canvas.TopProperty, (double)10);
                     this.TimeAxis.Children.Add(t);
                 }
@@ -88,14 +118,45 @@ namespace Scada.Chart
             }
         }
 
-        public CurveView AddCurveView(string curveViewName, double height = 200.0)
+        public CurveView AddCurveView(string curveViewName, string displayName, double height = 200.0)
         {
             CurveView curveView = new CurveView();
             curveView.CurveViewName = curveViewName;
             curveView.TimeScale = this.TimeScale;
             curveView.Height = height;
             this.ChartContainer.Children.Add(curveView);
+            this.AddCurveViewCheckItem(curveViewName, displayName);
             return curveView;
+        }
+
+        private void AddCurveViewCheckItem(string curveViewName, string displayName)
+        {
+            CheckBox cb = new CheckBox();
+            cb.IsChecked = true;
+            cb.Content = displayName;
+            cb.Margin = new Thickness(5, 0, 5, 0);
+            cb.Checked += (object sender, RoutedEventArgs e) => 
+            {
+                this.OnItemChecked(curveViewName, true);
+            };
+            cb.Unchecked += (object sender, RoutedEventArgs e) =>
+            {
+                this.OnItemChecked(curveViewName, false);
+            };
+            this.SelectedItems.Children.Add(cb);
+        }
+
+        private void OnItemChecked(string curveViewName, bool itemChecked)
+        {
+            foreach (var cv in this.ChartContainer.Children)
+            {
+                CurveView curveView = (CurveView)cv;
+                if (curveView.CurveViewName == curveViewName)
+                {
+                    curveView.Visibility = itemChecked ? Visibility.Visible : Visibility.Collapsed;
+                    break;
+                }
+            }
         }
 
         private void MainViewMouseMove(object sender, MouseEventArgs e)
@@ -181,6 +242,14 @@ namespace Scada.Chart
             {
                 Line l = g.Value.Line;
                 l.X1 = l.X2 = (g.Value.Pos - 0) * scale + 0;
+            }
+
+
+            foreach (var t in this.GraduationTimes)
+            {
+                TextBlock b = t.Value.Text;
+                double pos = (t.Value.Pos - 0) * scale + 0;
+                b.SetValue(Canvas.LeftProperty, (double)pos);
             }
         }
 
