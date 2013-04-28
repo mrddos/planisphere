@@ -64,7 +64,8 @@ namespace Scada.MainVision
 
             ConfigItem item = entry.GetConfigItem(lineName);
 
-            CurveView curveView = this.ChartView.AddCurveView(lineName);
+            CurveView curveView = this.ChartView.AddCurveView(lineName, displayName);
+            
             curveView.Max = item.Max;
             curveView.Min = item.Min;
             curveView.Height = item.Height;

@@ -16,9 +16,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <CheckBox Margin="5,0,5,0">剂量率</CheckBox>
-            <CheckBox Margin="5,0,5,0">高压值</CheckBox>
+        <StackPanel x:Name="SelectedItems" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
         </StackPanel>
         
         <ScrollViewer x:Name="panelScrollViewer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" >
