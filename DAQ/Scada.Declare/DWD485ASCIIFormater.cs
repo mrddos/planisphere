@@ -57,7 +57,7 @@ namespace Scada.Declare
 		{
 		}
 
-		public byte[] LineBreak
+		public override byte[] LineBreak
 		{
 			get { return this.lineBreak; }
 			set { this.lineBreak = value; }
