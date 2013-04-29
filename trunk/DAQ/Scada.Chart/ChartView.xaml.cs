@@ -135,6 +135,7 @@ namespace Scada.Chart
             cb.IsChecked = true;
             cb.Content = displayName;
             cb.Margin = new Thickness(5, 0, 5, 0);
+            
             cb.Checked += (object sender, RoutedEventArgs e) => 
             {
                 this.OnItemChecked(curveViewName, true);
@@ -161,7 +162,6 @@ namespace Scada.Chart
 
         private void MainViewMouseMove(object sender, MouseEventArgs e)
         {
-            
             foreach (var view in this.ChartContainer.Children)
             {
                 CurveView curveView = (CurveView)view;
@@ -170,9 +170,6 @@ namespace Scada.Chart
                 
                 curveView.TrackTimeLine(point);
             }
-
-            
-
         }
 
 
@@ -225,19 +222,6 @@ namespace Scada.Chart
                 return;
             }
 
-            /*
-            if (Math.Abs(this.currentScale - scale) < double.Epsilon)
-            {
-                return;
-            }
-            this.currentScale = scale;
-
-            if (curve != null)
-            {
-                curve.RenderTransform = new ScaleTransform(scale, scale, 0.0, centerY);
-            }
-            */
-            //int i = 0;
             foreach (var g in this.Graduations)
             {
                 Line l = g.Value.Line;

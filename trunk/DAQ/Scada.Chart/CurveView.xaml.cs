@@ -35,6 +35,21 @@ namespace Scada.Chart
             }
         }
 
+        struct GraduationText
+        {
+            public TextBlock Text
+            {
+                get;
+                set;
+            }
+
+            public double Pos
+            {
+                get;
+                set;
+            }
+        }
+
         public const double GridViewHeight = 1000.0;
 
         public const double GridViewWidth = 1000.0;
@@ -59,11 +74,17 @@ namespace Scada.Chart
             set;
         }
 
+        private Dictionary<int, GraduationText> GraduationTexts
+        {
+            get;
+            set;
+        }
+
         public CurveView()
         {
             InitializeComponent();
             this.Graduations = new Dictionary<int, GraduationLine>();
-            
+            this.GraduationTexts = new Dictionary<int, GraduationText>();
         }
 
         private void CurveViewLoaded(object sender, RoutedEventArgs e)
@@ -109,6 +130,7 @@ namespace Scada.Chart
 
             double scaleWidth = 30;
             this.Graduation.ClipToBounds = true;
+            int textCount = 0;
             for (int i = 0; i < 50; i++)
             {
                 double y = height - i * 10;
@@ -127,16 +149,25 @@ namespace Scada.Chart
                 l.Stroke = new SolidColorBrush(Colors.Gray);
                 this.Graduation.Children.Add(l);
 
-                TextBlock t = new TextBlock();
-                t.Foreground = new SolidColorBrush(Colors.Gray);
-                t.FontSize = 9;
+
 
                 if (i % 5 == 0)
                 {
+                    TextBlock t = new TextBlock();
+                    t.Foreground = new SolidColorBrush(Colors.Gray);
+                    t.FontSize = 9;
+                    double pos = (double )y - 10;
+                    this.GraduationTexts.Add(textCount, new GraduationText()
+                    {
+                        Text = t, Pos = pos
+                    });
+
                     t.Text = string.Format("{0}", this.Min + i);
                     t.SetValue(Canvas.RightProperty, (double)10.0);
-                    t.SetValue(Canvas.TopProperty, (double)y - 10);
+                    t.SetValue(Canvas.TopProperty, (double)pos);
                     this.Graduation.Children.Add(t);
+
+                    textCount++;
                 }
             }
 
@@ -226,6 +257,14 @@ namespace Scada.Chart
             {
                 Line l = g.Value.Line;
                 l.Y1 = l.Y2 = (g.Value.Pos - centerY) * this.currentScale + centerY;
+            }
+
+            foreach (var g in this.GraduationTexts)
+            {
+                TextBlock l = g.Value.Text;
+                
+                double pos = (g.Value.Pos - centerY) * this.currentScale + centerY;
+                l.SetValue(Canvas.TopProperty, (double)pos);
             }
         }
 
