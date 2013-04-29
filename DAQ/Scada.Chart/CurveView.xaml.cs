@@ -20,6 +20,7 @@ namespace Scada.Chart
     /// </summary>
     public partial class CurveView : UserControl
     {
+        // Graduation Line
         struct GraduationLine
         {
             public Line Line
@@ -35,6 +36,7 @@ namespace Scada.Chart
             }
         }
 
+        // Graduation Label Text
         struct GraduationText
         {
             public TextBlock Text
