@@ -15,7 +15,7 @@ namespace Scada.Declare
 		{
 		}
 
-		public byte[] LineBreak
+		public virtual byte[] LineBreak
 		{
 			get { return this.lineBreak; }
 			set { this.lineBreak = value; }
