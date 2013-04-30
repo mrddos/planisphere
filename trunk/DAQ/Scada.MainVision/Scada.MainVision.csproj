@@ -121,6 +121,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config.cs" />
+    <Compile Include="Converters.cs" />
     <Compile Include="DataProvider.cs" />
     <Compile Include="DBDataCommonListerner.cs" />
     <Compile Include="DBDataConnector.cs" />

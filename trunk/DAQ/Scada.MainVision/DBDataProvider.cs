@@ -10,7 +10,6 @@ namespace Scada.MainVision
 	using MySql.Data.MySqlClient;
 
 
-
 	/// <summary>
 	/// Each Device has a Listener.
 	/// </summary>

@@ -50,6 +50,10 @@ namespace Scada.MainVision
 
 		private bool connectedToDataBase = false;
 
+        private bool loaded = false;
+
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -98,6 +102,7 @@ namespace Scada.MainVision
 
             this.AddDevicePanes();
             this.OnDeviceItemClicked(null, null);
+            this.loaded = true;
         }
 
         private void SetRefreshPanelDataTimer()
@@ -144,6 +149,18 @@ namespace Scada.MainVision
                 // this.refreshDataTimer.Stop();
 			}
 		}
+
+        private string HeaderContent
+        {
+            get;
+            set;
+        }
+
+        private object ExpanderContent
+        {
+            get;
+            set;
+        }
 
         private void DisplayPanelData(HerePaneItem panel, string data1, string data2)
         {
@@ -222,7 +239,48 @@ namespace Scada.MainVision
             // this.ShowGraphViewPanel();
         }
 
+        private void OnExpanded(object sender, RoutedEventArgs e)
+        {
+            if (!this.loaded)
+            {
+                return;
+            }
+            Expander expander = sender as Expander;
+            if (expander != null)
+            {
+                bool expanded = expander.IsExpanded;
 
+                if (expanded)
+                {
+                    this.DeviceListColumn.Width = new GridLength(300.0);
+                    this.Expander.Content = this.ExpanderContent;
+                    this.DeviceList.Visibility = Visibility.Visible;
+                    /*
+                    this.Expander.Header = this.HeaderContent;
+                    this.Expander.Width = 300;
+                     * */
+                    //this.DeviceList.Margin = new Thickness(5, 0, 5, 0);
+                    //this.Expander.Margin = new Thickness(3, 3, 3, 3);
+                }
+                else
+                {
+                    this.Expander.Header = string.Empty;
+                    this.ExpanderContent = this.Expander.Content;
+                    this.Expander.Content = null;
+                    this.DeviceListColumn.Width = new GridLength(40.0);
+                    
+                    this.DeviceList.Visibility = Visibility.Hidden;
+                    /*
+                    this.HeaderContent = (string)this.Expander.Header;
+                    
+                    this.Expander.Width = 30;
+                     * */
+                    //this.DeviceList.Margin = default(Thickness);
+                    //this.Expander.Margin = default(Thickness);
+                }
+
+            }
+        }
 
 
     }

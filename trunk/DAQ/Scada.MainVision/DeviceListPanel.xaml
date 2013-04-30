@@ -13,33 +13,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Grid >
-        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Gray" RadiusX="6" RadiusY="6" Grid.RowSpan="2" StrokeThickness="2" >
-
-            <Rectangle.Effect>
-                <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
-            </Rectangle.Effect>
-        </Rectangle>
-        <!--
-        <Border CornerRadius="5,5,5,5" BorderThickness="0" BorderBrush="{TemplateBinding Control.BorderBrush}">
-            <Border.Background>
-                <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                    <GradientStop Color="Silver" Offset="0.0" />
-                    <GradientStop Color="Silver" Offset="0.5" />
-                    <GradientStop Color="White" Offset="0.0" />
-                </LinearGradientBrush>
-            </Border.Background>
-            
-            
-        </Border>
-        -->
-        <Border BorderBrush="Silver" BorderThickness="1" CornerRadius="5,5,5,5" Margin="5,5,5,0" Padding="5,5,5,5" x:Name="WW">
-            <TreeView x:Name="DeviceList" Margin="3,3,3,3" BorderBrush="White"/>
-        </Border>
-        <Grid.OpacityMask>
-            <VisualBrush Visual="{Binding ElementName=Rect}"/>
-        </Grid.OpacityMask>
-        
-        
+    <Grid>
+        <TreeView x:Name="DeviceList" Margin="3,3,3,3" BorderBrush="White"/>
     </Grid>
 </UserControl>
