@@ -12,7 +12,7 @@ typedef struct tagWNDINFO
     HWND	hWnd;
 } WNDINFO, *LPWNDINFO;
 
- 
+
 
 BOOL CALLBACK EnumProc(HWND hWnd, LPARAM lParam)
 {
