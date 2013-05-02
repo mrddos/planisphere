@@ -20,6 +20,8 @@ namespace Scada.MainVision
 
 		private List<ListViewPanel> panelList = new List<ListViewPanel>();
 
+        private Dictionary<string, ListViewPanel> panelDict = new Dictionary<string, ListViewPanel>();
+
 		private ListViewPanel currentPanel;
 
 		public PanelManager(Window window)
@@ -33,28 +35,38 @@ namespace Scada.MainVision
 		}
 
 
-        public ListViewPanel CreateDataViewPanel(DataListener dataListener, bool showList = true)
+        public ListViewPanel CreateDataViewPanel(DataListener dataListener, string displayName, bool showList = true)
 		{
-            ListViewPanel panel = new ListViewPanel();
-            panel.AddDataListener(dataListener);
-			if (showList)
-			{
-				panel.ListView = this.ShowListView(panel, dataListener);
-                panel.GraphView = this.ShowGraphView(panel, dataListener);
-			}
-			else
-			{
-				panel.ListView = this.ShowGraphView(panel, dataListener);
-			}
+            string deviceKey = dataListener.DeviceKey;
 
-			if (this.currentPanel != null)
-			{
-			}
-			this.currentPanel = panel;
-			
+            if (this.panelDict.ContainsKey(deviceKey))
+            {
+                ListViewPanel panel = this.panelDict[deviceKey];
+                panel.Visibility = Visibility.Visible;
+                return panel;
+            }
+            else
+            {
+                ListViewPanel panel = new ListViewPanel(displayName);
+                panel.AddDataListener(dataListener);
+                if (showList)
+                {
+                    panel.ListView = this.ShowListView(panel, dataListener);
+                    panel.GraphView = this.ShowGraphView(panel, dataListener);
+                }
+                else
+                {
+                    panel.ListView = this.ShowGraphView(panel, dataListener);
+                }
 
-			this.panelList.Add(panel);
-			return panel;
+                if (this.currentPanel != null)
+                {
+                }
+                this.currentPanel = panel;
+
+                this.panelDict.Add(deviceKey, panel);
+                return panel;
+            }
 		}
 
         public ListView ShowListView(ListViewPanel panel, DataListener dataListener)
@@ -124,7 +136,7 @@ namespace Scada.MainVision
 		public void CloseListViewPanel(ListViewPanel listViewPanel)
 		{
 			listViewPanel.Visibility = Visibility.Hidden;
-			this.panelList.Remove(listViewPanel);
+			
 		}
 	}
 }

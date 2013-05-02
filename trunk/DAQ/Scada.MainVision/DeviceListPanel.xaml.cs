@@ -51,10 +51,13 @@ namespace Scada.MainVision
             //
             //ControlTemplate ct = (ControlTemplate)this.Resources[DeviceItemTemplate];
 
-
 			TreeViewItem tvi = new TreeViewItem();
             //tvi.Template = ct;
-			tvi.DataContext = new DeviceItem() { DisplayName = deviceName, DeviceKey = deviceKey };
+			tvi.DataContext = new DeviceItem()
+            { 
+                DisplayName = deviceName, 
+                DeviceKey = deviceKey 
+            };
             tvi.MouseDoubleClick += OnDeviceItemClick;
 			tvi.Header = deviceName;
             tvi.FontSize = 14.0;
@@ -66,7 +69,8 @@ namespace Scada.MainVision
 
 		private void OnDeviceItemClick(object sender, RoutedEventArgs args)
 		{
-            this.ClickDeviceItem(sender, args);
+            TreeViewItem tvi = (TreeViewItem)sender;
+            this.ClickDeviceItem(tvi.DataContext, args);
 		}
 
 		private void DeviceListLoaded(object sender, RoutedEventArgs e)
