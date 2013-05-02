@@ -101,7 +101,8 @@ namespace Scada.MainVision
             }
 
             this.AddDevicePanes();
-            this.OnDeviceItemClicked(null, null);
+            this.ShowDataViewPanel("scada.hipc");
+            ////this.OnDeviceItemClicked(null, null);
             this.loaded = true;
         }
 
@@ -207,14 +208,20 @@ namespace Scada.MainVision
 
 		private void ShowDataViewPanel(string tableName)
 		{
+            Config cfg = Config.Instance();
             DataListener dl = this.dataProvider.GetDataListener(tableName);
-            ListViewPanel panel = this.panelManager.CreateDataViewPanel(dl);
+            string displayName = cfg[tableName.ToLower()].DisplayName;
+            ListViewPanel panel = this.panelManager.CreateDataViewPanel(dl, displayName);
 			// panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
+            
 			panel.CloseClick += this.ClosePanelButtonClick;
 
 
 			// Manage
-			this.Grid.Children.Add(panel);
+            if (!this.Grid.Children.Contains(panel))
+            {
+                this.Grid.Children.Add(panel);
+            }
 
 			this.panelManager.SetListViewPanelPos(panel, 2, 1);
 		}
@@ -223,7 +230,8 @@ namespace Scada.MainVision
 
 		private void Button_Click_1(object sender, RoutedEventArgs e)
 		{
-            this.ShowDataViewPanel("Scada.HIPC");
+            DeviceItem di = (DeviceItem)sender;
+            this.ShowDataViewPanel(di.DeviceKey);
 
 		}
 
@@ -235,8 +243,11 @@ namespace Scada.MainVision
 
         void OnDeviceItemClicked(object sender, EventArgs e)
         {
-            this.ShowDataViewPanel("Scada.HIPC");
-            // this.ShowGraphViewPanel();
+            DeviceItem di = sender as DeviceItem;
+            if (di != null)
+            {
+                this.ShowDataViewPanel(di.DeviceKey);
+            }
         }
 
         private void OnExpanded(object sender, RoutedEventArgs e)

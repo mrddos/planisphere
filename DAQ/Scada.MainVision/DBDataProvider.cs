@@ -99,7 +99,7 @@ namespace Scada.MainVision
 		{
 			foreach (var item in this.deviceKeyList)
 			{
-                string deviceKey = item.ToLower(); 
+                string deviceKey = item.ToLower();
                 if (!this.dataListeners.ContainsKey(deviceKey))
                 {
                     continue;
@@ -108,7 +108,6 @@ namespace Scada.MainVision
                 DBDataCommonListerner listener = this.dataListeners[deviceKey];
                 if (listener != null)
                 {
-
                     int count = MaxCountFetchRecent;
                     Config cfg = Config.Instance();
                     ConfigEntry entry = cfg[deviceKey];

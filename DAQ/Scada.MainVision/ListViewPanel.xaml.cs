@@ -19,12 +19,14 @@ namespace Scada.Controls
 
 		private DataListener dataListener;
 
+        private string displayName;
+
 		private List<Dictionary<string, object>> dataSource;
 
-		public ListViewPanel()
+        public ListViewPanel(string displayName)
 		{
 			InitializeComponent();
-			
+            this.DisplayName = displayName;
 		}
 
         public Control ListView
@@ -59,6 +61,19 @@ namespace Scada.Controls
 			}
 		}
 
+        public string DisplayName
+        {
+            get 
+            {
+                return this.displayName;
+            }
+
+            set 
+            {
+                this.displayName = value;
+            }
+        }
+
 		[Category("Behavior")]
 		public event RoutedEventHandler CloseClick;
 
@@ -71,21 +86,15 @@ namespace Scada.Controls
 
 		private void ContentLoaded(object sender, RoutedEventArgs e)
 		{
+            this.Title.Text = this.DisplayName;
 
             this.FrList.Items.Add("每分钟");
-            this.FrList.Items.Add("每15分钟");
             this.FrList.Items.Add("每小时");
-            // this.FrList.Items.Add("");
-            /*
-			Button closeButton = (Button)this.HeaderBar.Template.FindName("CloseButton", this.HeaderBar);
-			if (closeButton != null)
-			{
-				closeButton.Click += (s, c) => 
+            
+            this.CloseButton.Click += (s, c) => 
 				{
 					this.CloseClick(this, c);
 				};
-			}
-             * */
 		}
 
 		public void AddDataListener(DataListener listener)
