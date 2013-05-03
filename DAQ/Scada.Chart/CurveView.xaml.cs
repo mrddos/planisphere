@@ -100,8 +100,8 @@ namespace Scada.Chart
 
         private void Initialize()
         {
-            this.CanvasView.Height = this.Height - 20;
-            this.Graduation.Height = this.Height - 20;
+            this.CanvasView.Height = this.Height - ChartView.ViewGap;
+            this.Graduation.Height = this.Height - ChartView.ViewGap;
             // Grid Line |||
             double canvasHeight = this.CanvasView.Height;
             for (int i = 0; i < 15; i++)
@@ -133,6 +133,10 @@ namespace Scada.Chart
             double scaleWidth = 30;
             this.Graduation.ClipToBounds = true;
             int textCount = 0;
+
+            // TODO: !~~~~~
+            double d = height / (this.Max - this.Min);
+
             for (int i = 0; i < 50; i++)
             {
                 double y = height - i * 10;

@@ -19,6 +19,8 @@ namespace Scada.Chart
     /// </summary>
     public partial class ChartView : UserControl
     {
+        public const double ViewGap = 10.0;
+
         struct GraduationLine
         {
             public Line Line
@@ -123,7 +125,7 @@ namespace Scada.Chart
             CurveView curveView = new CurveView();
             curveView.CurveViewName = curveViewName;
             curveView.TimeScale = this.TimeScale;
-            curveView.Height = height;
+            curveView.Height = height + ChartView.ViewGap;
             this.ChartContainer.Children.Add(curveView);
             this.AddCurveViewCheckItem(curveViewName, displayName);
             return curveView;
