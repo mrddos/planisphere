@@ -123,7 +123,7 @@ namespace Scada.MainVision
                             data.Clear();
                             foreach (var i in entry.ConfigItems)
                             {
-                                string v = reader.GetString(i.FieldIndex);
+                                string v = reader.GetString(i.Key);
                                 data.Add(i.Key, v);
                             }
 

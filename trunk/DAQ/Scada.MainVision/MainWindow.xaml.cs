@@ -48,7 +48,7 @@ namespace Scada.MainVision
 
         private Timer refreshPanelDataTimer;
 
-		private bool connectedToDataBase = false;
+		private bool connectedToDataBase = true;
 
         private bool loaded = false;
 
@@ -101,8 +101,8 @@ namespace Scada.MainVision
             }
 
             this.AddDevicePanes();
-            this.ShowDataViewPanel("scada.hipc");
-            ////this.OnDeviceItemClicked(null, null);
+            // this.ShowDataViewPanel("scada.hipc");
+            // this.OnDeviceItemClicked(null, null);
             this.loaded = true;
         }
 
