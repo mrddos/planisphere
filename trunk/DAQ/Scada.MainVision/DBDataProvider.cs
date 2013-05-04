@@ -19,6 +19,8 @@ namespace Scada.MainVision
 
         private const int MaxCountFetchRecent = 10;
 
+        private const string Id = "Id";
+
 		private MySqlConnection conn = new MySqlConnection(ConnectionString);
 
 		private MySqlCommand cmd = null;
@@ -27,8 +29,11 @@ namespace Scada.MainVision
 
         private Dictionary<string, DBDataCommonListerner> dataListeners;
 
+        private Dictionary<string, object> filters = new Dictionary<string, object>();
 
-        private List<Dictionary<string, object>> dataPool = new List<Dictionary<string, object>>();
+        // private List<Dictionary<string, object>> dataPool = new List<Dictionary<string, object>>();
+
+        private Dictionary<string, object> dataCache = new Dictionary<string, object>();
 
 		/// <summary>
 		/// 
@@ -43,11 +48,6 @@ namespace Scada.MainVision
 		/// </summary>
 		public DBDataProvider()
 		{
-            for (int i = 0; i < 50; i++)
-            {
-                dataPool.Add(new Dictionary<string, object>(10));
-            }
-
 
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>();
             if (this.conn != null)
@@ -91,6 +91,19 @@ namespace Scada.MainVision
             }
         }
 
+        public override void RemoveFilters()
+        {
+            this.filters.Clear();
+        }
+
+        public override void SetFilter(string key, object value)
+        {
+            if (!this.filters.ContainsKey(key))
+            {
+                this.filters.Add(key, value);
+            }
+        }
+
         /// <summary>
         /// If no listener, provider would not query the database.
         /// 
@@ -105,43 +118,58 @@ namespace Scada.MainVision
                     continue;
                 }
 
-                DBDataCommonListerner listener = this.dataListeners[deviceKey];
-                if (listener != null)
-                {
-                    int count = MaxCountFetchRecent;
-                    Config cfg = Config.Instance();
-                    ConfigEntry entry = cfg[deviceKey];
-                    this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
-                    using (MySqlDataReader reader = this.cmd.ExecuteReader())
-                    {
-                        listener.OnDataArrivalBegin();
-
-                        int index = 0;
-                        while (reader.Read())
-                        {
-                            Dictionary<string, object> data = this.dataPool[index];
-                            data.Clear();
-                            foreach (var i in entry.ConfigItems)
-                            {
-                                string v = reader.GetString(i.Key);
-                                data.Add(i.Key, v);
-                            }
-
-                            listener.OnDataArrival(data);
-                            index++;
-                        }
-
-                        listener.OnDataArrivalEnd();
-                    }
-
-                }
-                
+                this.Refresh(deviceKey);
 			}
 		}
 
+        public override void Refresh(string deviceKey)
+        {
+            DBDataCommonListerner listener = this.dataListeners[deviceKey];
+            if (listener != null)
+            {
+                int count = 4;// MaxCountFetchRecent;
+                Config cfg = Config.Instance();
+                ConfigEntry entry = cfg[deviceKey];
+                this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+                using (MySqlDataReader reader = this.cmd.ExecuteReader())
+                {
+                    listener.OnDataArrivalBegin();
+
+                    int index = 0;
+                    while (reader.Read())
+                    {
+                        string id = reader.GetString(Id);
+                        if (string.IsNullOrEmpty(id))
+                        {
+                            continue;
+                        }
+                        id = id.Trim();
+                        if (this.dataCache.ContainsKey(id))
+                        {
+                            continue;
+                        }
+                        Dictionary<string, object> data = new Dictionary<string, object>(10);
+                        data.Add("Id", id);
+                        foreach (var i in entry.ConfigItems)
+                        {
+                            string v = reader.GetString(i.Key);
+                            data.Add(i.Key, v);
+                        }
+                        this.dataCache.Add(id, data);
+                        listener.OnDataArrival(data);
+                        index++;
+                    }
+
+                    listener.OnDataArrivalEnd();
+                }
+
+            }
+
+        }
+
         private string GetSelectStatement(string tableName, int count)
         {
-            string format = "select * from {0} order by Id DESC limit {1}";
+            string format = "select * from {0} order by Time DESC limit {1}";
             return string.Format(format, tableName, count);
         }
 

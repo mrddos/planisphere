@@ -38,7 +38,7 @@
             </Rectangle>
 
             <Expander x:Name="Expander" Margin="3, 3, 3, 3" Expanded="OnExpanded" Collapsed="OnExpanded" 
-                      Header="设备列表" IsExpanded="True" >
+                      Header="设备列表" IsExpanded="False" >
                 <!-- Device List -->
                 <m:DeviceListPanel x:Name="DeviceList" Margin="5, 0, 5, 0">
                 </m:DeviceListPanel>

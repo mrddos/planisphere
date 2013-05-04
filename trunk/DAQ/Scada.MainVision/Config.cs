@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Scada.MainVision
 {
-	class ConfigItem
+	public class ConfigItem
 	{
 		public ConfigItem(string key)
 		{
@@ -57,7 +57,7 @@ namespace Scada.MainVision
         }
     }
 
-	class ConfigEntry
+	public class ConfigEntry
 	{
 		private List<ConfigItem> items = new List<ConfigItem>();
 
@@ -116,6 +116,12 @@ namespace Scada.MainVision
         {
             get;
             set;
+        }
+
+        public int Interval
+        {
+            set;
+            get;
         }
 
 	}
@@ -213,7 +219,7 @@ namespace Scada.MainVision
                 string[] kv = keyValue.Split('=');
                 if (kv.Length == 2)
                 {
-                    string key = kv[0].ToLower();
+                    string key = kv[0].Trim().ToLower();
                     string val = kv[1];
                     if (key == "displayname")
                     {
@@ -222,6 +228,11 @@ namespace Scada.MainVision
                     else if (key == "tablename")
                     {
                         entry.TableName = val;
+                    }
+                    else if (key == "interval")
+                    {
+                        int interval = int.Parse(val);
+                        entry.Interval = interval;
                     }
                     else if (key == "datafilter")
                     {
