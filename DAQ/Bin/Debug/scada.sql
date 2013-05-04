@@ -21,9 +21,6 @@ CREATE TABLE `weather` (
   PRIMARY KEY (`Id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-#
-# Data for table "weather"
-#
 
 DROP TABLE IF EXISTS `hipc_rec`;
 CREATE TABLE `hipc_rec` (
@@ -37,18 +34,19 @@ CREATE TABLE `hipc_rec` (
 PRIMARY KEY (`Id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+
 DROP TABLE IF EXISTS `HVSampler_rec`;
 CREATE TABLE `HVSampler_rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
-`PresetFlow` varchar(8),
-`PresetTime` varchar(8),
-`ActualVolume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
-`ActualFlow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
-`ActualTimer` varchar(8),
-`Alarm1` bit,
-`Alarm2` bit,
-`Alarm3` bit,
+`Volume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
+`Flow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
+`Hours` varchar(8),
+`BeginTime` datetime,
+`EndTime` datetime,
+`Alarm1` bit, /*滤纸*/
+`Alarm2` bit, /*流量*/
+`Alarm3` bit, /*主电源*/
 PRIMARY KEY (`Id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -57,11 +55,11 @@ DROP TABLE IF EXISTS `ISampler_rec`;
 CREATE TABLE `ISampler_rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
-`PresetFlow` varchar(8),
-`PresetTime` varchar(8),
-`ActualVolume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
-`ActualFlow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
-`ActualTimer` varchar(8),
+`Volume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
+`Flow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
+`Hours` varchar(8),
+`BeginTime` datetime,
+`EndTime` datetime,
 `Alarm1` bit,
 `Alarm2` bit,
 `Alarm3` bit,
@@ -91,6 +89,8 @@ CREATE TABLE `Environment_rec` (
 `Time` datetime DEFAULT NULL,
 `Temperature` varchar(8), /*温度，单位：℃，数据格式：N8*/
 `Humidity` varchar(8), /*湿度，单位：%，数据格式：N8*/
+`IfMainPowerOff` bit,
+`BatteryHours` varchar(10),
 `IfSmoke` bit, /*烟感报警，单位：无，数据格式：0或1表示是否报警*/
 `IfWater` bit, /*浸水报警，单位：无，数据格式：0或1表示是否报警*/
 `IfDoorOpen` bit, /*门禁报警，单位：无，数据格式：0或1表示是否报警*/
