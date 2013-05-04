@@ -35,10 +35,10 @@ namespace Scada.MainVision
 		}
 
 
-        public ListViewPanel CreateDataViewPanel(DataListener dataListener, string displayName, bool showList = true)
+        public ListViewPanel CreateDataViewPanel(DataProvider dataProvider, ConfigEntry entry, bool showList = true)
 		{
-            string deviceKey = dataListener.DeviceKey;
-
+            string deviceKey = entry.DeviceKey;
+            string displayName = entry.DisplayName;
             if (this.panelDict.ContainsKey(deviceKey))
             {
                 ListViewPanel panel = this.panelDict[deviceKey];
@@ -47,7 +47,9 @@ namespace Scada.MainVision
             }
             else
             {
-                ListViewPanel panel = new ListViewPanel(displayName);
+
+                ListViewPanel panel = new ListViewPanel(dataProvider, entry);
+                DataListener dataListener = dataProvider.GetDataListener(deviceKey);
                 panel.AddDataListener(dataListener);
                 if (showList)
                 {

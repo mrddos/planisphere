@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Scada.MainVision
 {
-    abstract class DataFilter
+    public abstract class DataFilter
     {
         public string Parameter
         {

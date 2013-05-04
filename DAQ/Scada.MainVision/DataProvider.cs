@@ -14,7 +14,15 @@ namespace Scada.MainVision
 		/// </summary>
 		public abstract void Refresh();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="deviceKey"></param>
+        public abstract void Refresh(string deviceKey);
 
+        public abstract void RemoveFilters();
+
+        public abstract void SetFilter(string key, object value);
 		/// <summary>
 		/// 
 		/// </summary>
@@ -30,5 +38,7 @@ namespace Scada.MainVision
         /// <returns></returns>
         public abstract void RemoveDataListener(string tableName);
 
-	}
+
+
+    }
 }

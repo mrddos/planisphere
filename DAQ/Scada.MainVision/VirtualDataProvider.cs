@@ -66,37 +66,36 @@ namespace Scada.MainVision
                 {
                     continue;
                 }
-
-                DBDataCommonListerner listener = this.dataListeners[deviceKey];
-                if (listener != null)
-                {
-
-                    // int count = MaxCountFetchRecent;
-                    Config cfg = Config.Instance();
-                    ConfigEntry entry = cfg[deviceKey];
-                    
-                    listener.OnDataArrivalBegin();
-                    
-                    string line = lists[this.index];
-
-                    if (line.Length > 0)
-                    {
-                        Dictionary<string, object> data = new Dictionary<string, object>(10);
-                        data.Clear();
-                        ParseLine(line, entry, data);
-                        listener.OnDataArrival(data);
-                        this.index++;
-                    }
-
-                    
-
-                    listener.OnDataArrivalEnd();
-
-                }
-
+                this.Refresh(deviceKey);
             }
-
 		}
+
+        public override void Refresh(string deviceKey)
+        {
+            DBDataCommonListerner listener = this.dataListeners[deviceKey];
+            if (listener != null)
+            {
+
+                // int count = MaxCountFetchRecent;
+                Config cfg = Config.Instance();
+                ConfigEntry entry = cfg[deviceKey];
+
+                listener.OnDataArrivalBegin();
+
+                string line = lists[this.index];
+
+                if (line.Length > 0)
+                {
+                    Dictionary<string, object> data = new Dictionary<string, object>(10);
+                    data.Clear();
+                    ParseLine(line, entry, data);
+                    listener.OnDataArrival(data);
+                    this.index++;
+                }
+                listener.OnDataArrivalEnd();
+            }
+        }
+
 
         private void ParseLine(string line, ConfigEntry entry, Dictionary<string, object> data)
         {
@@ -144,5 +143,15 @@ namespace Scada.MainVision
         {
             // Do nothing.
         }
-	}
+
+        public override void RemoveFilters()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SetFilter(string key, object value)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

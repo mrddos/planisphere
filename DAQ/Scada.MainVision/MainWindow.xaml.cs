@@ -44,8 +44,6 @@ namespace Scada.MainVision
 
         private List<HerePaneItem> panes;
 
-		private Timer refreshDataTimer;
-
         private Timer refreshPanelDataTimer;
 
 		private bool connectedToDataBase = true;
@@ -60,6 +58,9 @@ namespace Scada.MainVision
 			this.panelManager = new PanelManager(this);
         }
 
+        /// <summary>
+        /// Load data Provider, and would set the provider into every ListViewPanel instance.
+        /// </summary>
 		private void LoadDataProvider()
 		{
 			if (connectedToDataBase)
@@ -78,11 +79,6 @@ namespace Scada.MainVision
 			this.LoadConfig();
 			this.LoadDataProvider();
 
-			this.refreshDataTimer = new Timer();
-			this.refreshDataTimer.Interval = 2000;
-			this.refreshDataTimer.Tick += RefreshDataTimerTick;
-
-			this.refreshDataTimer.Start();
 
             this.SetRefreshPanelDataTimer();
 
@@ -141,6 +137,7 @@ namespace Scada.MainVision
             }
         }
 
+        /*
 		void RefreshDataTimerTick(object sender, EventArgs e)
 		{
 			if (this.dataProvider != null)
@@ -150,6 +147,7 @@ namespace Scada.MainVision
                 // this.refreshDataTimer.Stop();
 			}
 		}
+        */
 
         private string HeaderContent
         {
@@ -206,12 +204,13 @@ namespace Scada.MainVision
 
         }
 
-		private void ShowDataViewPanel(string tableName)
+		private void ShowDataViewPanel(string deviceKey)
 		{
             Config cfg = Config.Instance();
-            DataListener dl = this.dataProvider.GetDataListener(tableName);
-            string displayName = cfg[tableName.ToLower()].DisplayName;
-            ListViewPanel panel = this.panelManager.CreateDataViewPanel(dl, displayName);
+            var entry = cfg[deviceKey];
+
+
+            ListViewPanel panel = this.panelManager.CreateDataViewPanel(this.dataProvider, entry);
 			// panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
             
 			panel.CloseClick += this.ClosePanelButtonClick;
@@ -256,6 +255,12 @@ namespace Scada.MainVision
             {
                 return;
             }
+
+            if (this.ExpanderContent == null)
+            {
+                this.ExpanderContent = this.Expander.Content;
+            }
+
             Expander expander = sender as Expander;
             if (expander != null)
             {
@@ -276,7 +281,6 @@ namespace Scada.MainVision
                 else
                 {
                     this.Expander.Header = string.Empty;
-                    this.ExpanderContent = this.Expander.Content;
                     this.Expander.Content = null;
                     this.DeviceListColumn.Width = new GridLength(40.0);
                     

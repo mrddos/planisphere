@@ -1,13 +1,14 @@
 ﻿
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-
 namespace Scada.Controls
 {
-	using Scada.Controls.Data;
-	using System.Collections.Generic;
+    using System;
+    using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Collections.Generic;
 
+    using Scada.Controls.Data;
+    using Scada.MainVision;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -19,15 +20,48 @@ namespace Scada.Controls
 
 		private DataListener dataListener;
 
-        private string displayName;
+        private DataProvider dataProvider;
+
+        private string deviceKey;
 
 		private List<Dictionary<string, object>> dataSource;
 
-        public ListViewPanel(string displayName)
+
+
+
+
+        // Must Use the <Full Name>
+        private System.Windows.Forms.Timer refreshDataTimer;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="displayName">Display Name</param>
+        /// <param name="interval">In Seconds</param>
+        public ListViewPanel(DataProvider dataProvider, ConfigEntry entry)
 		{
 			InitializeComponent();
-            this.DisplayName = displayName;
+            this.deviceKey = entry.DeviceKey;
+            this.DisplayName = entry.DisplayName;
+            this.dataProvider = dataProvider;
+
+            this.refreshDataTimer = new System.Windows.Forms.Timer();
+            this.refreshDataTimer.Interval = (entry.Interval * 1000);
+            this.refreshDataTimer.Tick += RefreshDataTimerTick;
+            this.refreshDataTimer.Start();
 		}
+
+        private void RefreshDataTimerTick(object sender, EventArgs e)
+        {
+            // TODO: Current settings? if show current, continue.
+            // If filter by start -> end time, returns.
+
+            // TODO: Check Whether the DeviceKey is in current...
+            if (this.deviceKey != null)
+            {
+                this.dataProvider.Refresh(this.deviceKey);
+            }
+        }
 
         public Control ListView
 		{
@@ -63,15 +97,8 @@ namespace Scada.Controls
 
         public string DisplayName
         {
-            get 
-            {
-                return this.displayName;
-            }
-
-            set 
-            {
-                this.displayName = value;
-            }
+            get;
+            set;
         }
 
 		[Category("Behavior")]
@@ -120,16 +147,36 @@ namespace Scada.Controls
 			}
 			this.dataSource = new List<Dictionary<string, object>>();
              * */
+            
+            //this.dataSource.Clear();
+
+            
 		}
+
 
 
 		private void OnDataArrival(Dictionary<string, object> entry)
 		{
 			this.dataSource.Add(entry);
+            // Sort ...
+            // Insert to the Top.
+            this.dataSource.Sort(this.DateTimeCompare);
 		}
+
+        private int DateTimeCompare(Dictionary<string, object> a, Dictionary<string, object> b)
+        {
+            DateTime adt = DateTime.Parse((string)a["Time"]);
+            DateTime bdt = DateTime.Parse((string)b["Time"]);
+            if (adt > bdt)
+            {
+                return -1;
+            }
+            return 1;
+        }
 
 		private void OnDataArrivalEnd()
 		{
+            // TODO: Chekc the data source?
             if (this.ListView != null)
             {
                 if (this.ListView is ListView)
