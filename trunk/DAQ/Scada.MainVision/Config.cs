@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Scada.MainVision
@@ -111,6 +112,12 @@ namespace Scada.MainVision
             set;
         }
 
+        public DataFilter DataFilter
+        {
+            get;
+            set;
+        }
+
 	}
 
 	class Config
@@ -203,15 +210,39 @@ namespace Scada.MainVision
             string[] keyValArray = keyValueItems.Split(';').Select(x => x.Trim()).ToArray();
             foreach (var keyValue in keyValArray)
             {
-                string kv = keyValue.ToLower();
-                if (kv.StartsWith("displayname"))
+                string[] kv = keyValue.Split('=');
+                if (kv.Length == 2)
                 {
-                    entry.DisplayName = keyValue.Substring(12);
+                    string key = kv[0].ToLower();
+                    string val = kv[1];
+                    if (key == "displayname")
+                    {
+                        entry.DisplayName = val;
+                    }
+                    else if (key == "tablename")
+                    {
+                        entry.TableName = val;
+                    }
+                    else if (key == "datafilter")
+                    {
+                        Assembly assembly = Assembly.Load("Scada.MainVision");
+                        Type dataFilterType = assembly.GetType("Scada.MainVision." + val);
+
+                        entry.DataFilter = (DataFilter)Activator.CreateInstance(dataFilterType, new object[] { });
+                    }
+                    else if (key == "datafilterparam")
+                    {
+                        if (entry.DataFilter != null)
+                        {
+                            entry.DataFilter.Parameter = val;
+                        }
+                        else
+                        {
+                            throw new Exception("DataFilter should be set first!");
+                        }
+                    }
                 }
-                else if (kv.StartsWith("tablename"))
-                {
-                    entry.TableName = keyValue.Substring(10);
-                }
+
             }
         }
 
@@ -221,14 +252,14 @@ namespace Scada.MainVision
 			int c = v.Length;
 
 			string columnName = v[0].Trim();
-			string fieldIndex = v[1].Trim();
+
             bool dynamicDataDisplay = false;
             double min = 0.0;
             double max = 100.0;
             double height = 100.0;
-            if (v.Length > 2)
+            if (v.Length > 1)
             {
-                string dynDataDisplay = v[2].Trim();
+                string dynDataDisplay = v[1].Trim();
                 if (dynDataDisplay.StartsWith("("))
                 {
                     dynamicDataDisplay = true;
@@ -242,7 +273,6 @@ namespace Scada.MainVision
             item.Min = min;
             item.Height = height;
 
-			item.FieldIndex = int.Parse(fieldIndex.TrimStart('#'));
             item.DisplayInChart = dynamicDataDisplay;
 			entry.Add(item);
 		}

@@ -58,7 +58,6 @@ namespace Scada.Declare
             {
                 if (this.cmd != null)
                 {
-                    // "insert into HIPCrec(time, doserate, highvoltage ...) values(@1, @2, @3 ... )"
                     cmd.CommandText = commandText;
 
                     for (int i = 0; i < items.Length; ++i)
