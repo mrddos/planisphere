@@ -59,7 +59,14 @@ namespace Scada.Controls
             // TODO: Check Whether the DeviceKey is in current...
             if (this.deviceKey != null)
             {
-                this.dataProvider.Refresh(this.deviceKey);
+                if (this.deviceKey == this.dataProvider.CurrentDeviceKey)
+                {
+                    this.dataProvider.Refresh(this.deviceKey);
+                }
+                else
+                {
+                    string msg = "Not current device key.";
+                }
             }
         }
 
@@ -149,8 +156,6 @@ namespace Scada.Controls
              * */
             
             //this.dataSource.Clear();
-
-            
 		}
 
 
@@ -165,9 +170,20 @@ namespace Scada.Controls
 
         private int DateTimeCompare(Dictionary<string, object> a, Dictionary<string, object> b)
         {
-            DateTime adt = DateTime.Parse((string)a["Time"]);
-            DateTime bdt = DateTime.Parse((string)b["Time"]);
-            if (adt > bdt)
+            object t1 = a["time"];
+            object t2 = b["time"];
+            DateTime dt1 = DateTime.MinValue;
+            DateTime dt2 = DateTime.MinValue;
+            if (t1 != null)
+            {
+                dt1 = DateTime.Parse((string)t1);
+            }
+            if (t2 != null)
+            {
+                dt2 = DateTime.Parse((string)t2);
+            }
+
+            if (dt1 > dt2)
             {
                 return -1;
             }

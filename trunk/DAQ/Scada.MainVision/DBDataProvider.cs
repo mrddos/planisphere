@@ -1,31 +1,35 @@
 ﻿
 namespace Scada.MainVision
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Text;
-	using Scada.Controls;
-	using Scada.Controls.Data;
-	using MySql.Data.MySqlClient;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Scada.Controls;
+    using Scada.Controls.Data;
+    using MySql.Data.MySqlClient;
+    using System.Data.SqlTypes;
 
 
-	/// <summary>
-	/// Each Device has a Listener.
-	/// </summary>
-	internal class DBDataProvider : DataProvider
-	{
-		private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
+    /// <summary>
+    /// Each Device has a Listener.
+    /// </summary>
+    internal class DBDataProvider : DataProvider
+    {
+        private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
 
         private const int MaxCountFetchRecent = 10;
 
         private const string Id = "Id";
 
-		private MySqlConnection conn = new MySqlConnection(ConnectionString);
+        private MySqlConnection conn = new MySqlConnection(ConnectionString);
 
-		private MySqlCommand cmd = null;
+        private MySqlCommand cmd = null;
 
-		private List<string> deviceKeyList = new List<string>();
+
+        private List<string> allDeviceKeys = new List<string>();
+
+        private List<string> deviceKeyList = new List<string>();
 
         private Dictionary<string, DBDataCommonListerner> dataListeners;
 
@@ -35,19 +39,28 @@ namespace Scada.MainVision
 
         private Dictionary<string, object> dataCache = new Dictionary<string, object>();
 
-		/// <summary>
-		/// 
-		/// </summary>
-		static DBDataProvider()
-		{
+        private Dictionary<string, object> latestData = new Dictionary<string, object>();
 
-		}
+        /// <summary>
+        /// 
+        /// </summary>
+        static DBDataProvider()
+        {
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public DBDataProvider()
-		{
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public DBDataProvider()
+        {
+            this.allDeviceKeys.Add(DeviceKey_Hipc);
+            this.allDeviceKeys.Add(DeviceKey_Dwd);
+            this.allDeviceKeys.Add(DeviceKey_HvSampler);
+            this.allDeviceKeys.Add(DeviceKey_ISampler);
+            this.allDeviceKeys.Add(DeviceKey_NaI);
+            this.allDeviceKeys.Add(DeviceKey_Shelter);
+            this.allDeviceKeys.Add(DeviceKey_Weather);
 
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>();
             if (this.conn != null)
@@ -63,12 +76,12 @@ namespace Scada.MainVision
                 }
             }
 
-		}
+        }
 
-		public override DataListener GetDataListener(string deviceKey)
-		{
+        public override DataListener GetDataListener(string deviceKey)
+        {
             deviceKey = deviceKey.ToLower();
-			this.deviceKeyList.Add(deviceKey);
+            this.deviceKeyList.Add(deviceKey);
             if (this.dataListeners.ContainsKey(deviceKey))
             {
                 return this.dataListeners[deviceKey];
@@ -80,7 +93,7 @@ namespace Scada.MainVision
                 return listener;
             }
 
-		}
+        }
 
         public override void RemoveDataListener(string deviceKey)
         {
@@ -104,82 +117,151 @@ namespace Scada.MainVision
             }
         }
 
-        /// <summary>
-        /// If no listener, provider would not query the database.
-        /// 
-        /// </summary>
-		public override void Refresh()
-		{
-			foreach (var item in this.deviceKeyList)
-			{
+        // For Panels.
+        // Use this to get the latest data
+        public override void RefreshCurrentData()
+        {
+            this.latestData.Clear();
+            foreach (var item in this.allDeviceKeys)
+            {
                 string deviceKey = item.ToLower();
-                if (!this.dataListeners.ContainsKey(deviceKey))
+                // Would use listener to notify, panel would get the lastest data.
+                var dataList = this.Refresh(deviceKey, true, 1, DateTime.MinValue, DateTime.MinValue);
+                if (dataList.Count > 0)
                 {
-                    continue;
+                    this.latestData.Add(deviceKey, dataList[0]);
                 }
-
-                this.Refresh(deviceKey);
-			}
-		}
+            }
+        }
 
         public override void Refresh(string deviceKey)
         {
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
-            if (listener != null)
+
+            var result = this.Refresh(deviceKey, true, 10, DateTime.MinValue, DateTime.MinValue);
+            listener.OnDataArrivalBegin();
+            foreach (var data in result)
             {
-                int count = 4;// MaxCountFetchRecent;
-                Config cfg = Config.Instance();
-                ConfigEntry entry = cfg[deviceKey];
-                this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
-                using (MySqlDataReader reader = this.cmd.ExecuteReader())
+                listener.OnDataArrival(data);
+            }
+            listener.OnDataArrivalEnd();
+        }
+
+        public override void RefreshTimeRange(string deviceKey, string from, string to)
+        {
+            try
+            {
+                DateTime fromTime = DateTime.Parse(from);
+                DateTime toTime = DateTime.Parse(to);
+
+                DBDataCommonListerner listener = this.dataListeners[deviceKey];
+
+                var result = this.Refresh(deviceKey, false, -1, fromTime, toTime);
+                listener.OnDataArrivalBegin();
+                foreach (var data in result)
                 {
-                    listener.OnDataArrivalBegin();
-
-                    int index = 0;
-                    while (reader.Read())
-                    {
-                        string id = reader.GetString(Id);
-                        if (string.IsNullOrEmpty(id))
-                        {
-                            continue;
-                        }
-                        id = id.Trim();
-                        if (this.dataCache.ContainsKey(id))
-                        {
-                            continue;
-                        }
-                        Dictionary<string, object> data = new Dictionary<string, object>(10);
-                        data.Add("Id", id);
-                        foreach (var i in entry.ConfigItems)
-                        {
-                            string v = reader.GetString(i.Key);
-                            data.Add(i.Key, v);
-                        }
-                        this.dataCache.Add(id, data);
-                        listener.OnDataArrival(data);
-                        index++;
-                    }
-
-                    listener.OnDataArrivalEnd();
+                    listener.OnDataArrival(data);
                 }
-
+                listener.OnDataArrivalEnd();
+            }
+            catch (Exception)
+            {
             }
 
         }
 
+        /// <summary>
+        /// Implements 
+        /// </summary>
+        /// <param name="deviceKey"></param>
+        /// <param name="current"></param>
+        /// <param name="count"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        private List<Dictionary<string, object>> Refresh(string deviceKey, bool current, int count, DateTime from, DateTime to)
+        {
+            // Return values
+            var ret = new List<Dictionary<string, object>>();
+
+            // Cache 
+            if (this.CurrentDeviceKey != deviceKey)
+            {
+                this.dataCache.Clear();
+            }
+
+            Config cfg = Config.Instance();
+            ConfigEntry entry = cfg[deviceKey];
+            this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+            using (MySqlDataReader reader = this.cmd.ExecuteReader())
+            {
+                int index = 0;
+                while (reader.Read())
+                {
+                    // Must Has an Id.
+                    string id = reader.GetString(Id);
+                    id = id.Trim();
+
+                    if (string.IsNullOrEmpty(id) || this.dataCache.ContainsKey(id)) { continue; }
+                    
+                    Dictionary<string, object> data = new Dictionary<string, object>(10);
+                    data.Add("Id", id);
+
+                    foreach (var i in entry.ConfigItems)
+                    {
+                        string key = i.Key.ToLower();
+                        try
+                        {
+                            string v = reader.GetString(key);
+                            data.Add(key, v);
+                        }
+                        catch (SqlNullValueException)
+                        {
+                            // TODO: Has Null Value
+                            data.Add(key, null);
+                        }
+                        catch (Exception)
+                        {
+                            // No this field.
+                        }
+                    }
+
+                    if (entry.DataFilter != null)
+                    {
+                        entry.DataFilter.Fill(data);
+                    }
+                    ret.Add(data);
+                    this.dataCache.Add(id, data);
+
+                    index++;
+                }
+            }
+
+            return ret;
+        }
+
         private string GetSelectStatement(string tableName, int count)
         {
-            string format = "select * from {0} order by Time DESC limit {1}";
+            // Get the recent <count> entries.
+            string format = "select * from {0} order by Id DESC limit {1}";
             return string.Format(format, tableName, count);
         }
 
-		private DataListener GetDataListenerByTableName(string tableName)
-		{
+        private DataListener GetDataListenerByTableName(string tableName)
+        {
             if (!this.dataListeners.ContainsKey(tableName))
             {
                 return null;
             }
             return this.dataListeners[tableName];
-		}
-	}
+        }
+
+        public override Dictionary<string, object> GetLatestData(string deviceKey)
+        {
+            if (this.latestData.ContainsKey(deviceKey))
+            {
+                return (Dictionary<string, object>)this.latestData[deviceKey];
+            }
+            return null;
+        }
+    }
 }
