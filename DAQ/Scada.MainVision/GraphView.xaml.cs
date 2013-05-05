@@ -71,7 +71,7 @@ namespace Scada.MainVision
             curveView.Height = item.Height;
             CurveDataContext dataContext = curveView.CreateDataContext(lineName, displayName);
 
-            this.dataSources.Add(lineName, dataContext);
+            this.dataSources.Add(lineName.ToLower(), dataContext);
         }
 
         private void OnDataArrivalBegin()
@@ -97,7 +97,12 @@ namespace Scada.MainVision
             {
                 CurveDataContext dataContext = dataSources[key];
                 string v = (string)entry[key];
-                double r = double.Parse(v);
+                double r = 0.0;
+                if (v.Length > 0)
+                {
+                    r = double.Parse(v);
+                }
+                
                 if (key.ToLower() == "doserate")
                 {
                     Random rd = new Random();

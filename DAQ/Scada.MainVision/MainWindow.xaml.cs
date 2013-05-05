@@ -79,7 +79,6 @@ namespace Scada.MainVision
 			this.LoadConfig();
 			this.LoadDataProvider();
 
-
             this.SetRefreshPanelDataTimer();
 
 			// Device List
@@ -161,7 +160,7 @@ namespace Scada.MainVision
             set;
         }
 
-        private void DisplayPanelData(HerePaneItem panel, string data1, string data2)
+        private void DisplayPanelData(HerePaneItem panel, string data1, string data2 = "", string data3 = "")
         {
             TextBlock text2 = panel[0];
             TextBlock text3 = panel[1];
@@ -170,8 +169,59 @@ namespace Scada.MainVision
             text3.Text = data2;
         }
 
+        // 1
+        private void UpdatePanel_HIPC(HerePaneItem panel, string doserate)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Hipc);
+        }
+        // 2
+        private void UpdatePanel_NaI(HerePaneItem panel, string data1)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_NaI);
+        }
+        // 3 // 风速、风向、雨量
+        private void UpdatePanel_Weather(HerePaneItem panel, string windspeed, string winddir, string raingauge)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Weather);
+        }
+        // 4
+        private void UpdatePanel_HV(HerePaneItem panel, string data1)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_HvSampler);
+        }
+        // 5
+        private void UpdatePanel_I(HerePaneItem panel, string data1)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_ISampler);
+        }
+        // 6
+        private void UpdatePanel_Shelter(HerePaneItem panel, string data1)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Shelter);
+        }
+        // 7
+        private void UpdatePanel_DWD(HerePaneItem panel, string data1)
+        {
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Dwd);
+        }
+
         void RefreshPanelDataTimerTick(object sender, EventArgs e)
         {
+
+            this.dataProvider.RefreshCurrentData();
+
+            this.UpdatePanel_HIPC(this.panes[0], "");
+            this.UpdatePanel_NaI(this.panes[1], "");
+            this.UpdatePanel_Weather(this.panes[2], "", "", "");
+
+            this.UpdatePanel_HV(this.panes[3], "");
+            this.UpdatePanel_I(this.panes[4], "");
+
+            this.UpdatePanel_Shelter(this.panes[5], "");
+            this.UpdatePanel_DWD(this.panes[6], "");
+
+
+            /*
             Random r = new Random();
 
             int c1 = r.Next(146, 150);
@@ -201,6 +251,7 @@ namespace Scada.MainVision
             this.DisplayPanelData(this.panes[1], d11, d12);
             this.DisplayPanelData(this.panes[2], d21, d22);
             this.DisplayPanelData(this.panes[3], d31, d32);
+             * */
 
         }
 
@@ -211,7 +262,7 @@ namespace Scada.MainVision
 
 
             ListViewPanel panel = this.panelManager.CreateDataViewPanel(this.dataProvider, entry);
-			// panel.AddDataListener(this.dataProvider.GetDataListener(tableName));
+            this.dataProvider.CurrentDeviceKey = deviceKey;
             
 			panel.CloseClick += this.ClosePanelButtonClick;
 

@@ -51,6 +51,7 @@ namespace Scada.MainVision
             // this.dataListeners.Add("scada.hipc", new DBDataCommonListerner("scada.hipc"));
 		}
 
+        /*
 		public override void Refresh()
 		{
             bool show = false;
@@ -69,6 +70,7 @@ namespace Scada.MainVision
                 this.Refresh(deviceKey);
             }
 		}
+        */
 
         public override void Refresh(string deviceKey)
         {
@@ -150,6 +152,21 @@ namespace Scada.MainVision
         }
 
         public override void SetFilter(string key, object value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void RefreshCurrentData()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void RefreshTimeRange(string deviceKey, string from, string to)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Dictionary<string, object> GetLatestData(string deviceKey)
         {
             throw new NotImplementedException();
         }

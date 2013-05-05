@@ -13,5 +13,7 @@ namespace Scada.MainVision
             set;
         }
 
+        public abstract void Fill(Dictionary<string, object> data, params object[] parameters);
+
     }
 }

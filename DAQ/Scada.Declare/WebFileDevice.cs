@@ -212,9 +212,11 @@ namespace Scada.Declare
 
         private DeviceData ParseNaI(NuclideDataSet s)
         {
-            object[] data = new object[]{ 
+            string time = s.EndTime;
+            object[] data = new object[]{ time,
                 s.StartTime, s.EndTime, s.Coefficients, 
-                s.ChannelData, s.DoseRate, s.Temperature, s.HighVoltage
+                s.ChannelData, s.DoseRate, s.Temperature, s.HighVoltage, 
+                s.CalibrationNuclideFound, s.ReferencePeakEnergyFromPosition
             };
             DeviceData dd = new DeviceData(this, data);
             dd.InsertIntoCommand = this.insertIntoCommand;
@@ -267,6 +269,9 @@ namespace Scada.Declare
             string tp = doc.Value("//s:Temperature", nsmgr);
             string hv = doc.Value("//s:HighVoltage", nsmgr);
 
+            string ns = doc.Value("//s:CalibrationNuclideFound", nsmgr);
+            string ne = doc.Value("//s:ReferencePeakEnergyFromPosition", nsmgr);
+
             NuclideDataSet set = new NuclideDataSet();
             set.StartTime = st;
             set.EndTime = et;
@@ -275,6 +280,8 @@ namespace Scada.Declare
             set.DoseRate = dr;
             set.Temperature = tp;
             set.HighVoltage = hv;
+            set.CalibrationNuclideFound = ns;
+            set.ReferencePeakEnergyFromPosition = ne;
 
             XmlNodeList list = doc.SelectNodes("//a:Nuclide", nsmgr);
 

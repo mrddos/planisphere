@@ -42,6 +42,7 @@ CREATE TABLE `HVSampler_rec` (
 `Volume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
 `Flow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
 `Hours` varchar(8),
+`Status` bit,
 `BeginTime` datetime,
 `EndTime` datetime,
 `Alarm1` bit, /*滤纸*/
@@ -58,6 +59,7 @@ CREATE TABLE `ISampler_rec` (
 `Volume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
 `Flow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
 `Hours` varchar(8),
+`Status` bit,
 `BeginTime` datetime,
 `EndTime` datetime,
 `Alarm1` bit,
@@ -103,6 +105,7 @@ PRIMARY KEY (`Id`)
 DROP TABLE IF EXISTS `NaI_Rec`;
 CREATE TABLE `NaI_Rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
+`Time` datetime, 
 `StartTime` datetime, 
 `EndTime` datetime, 
 `Coefficients` varchar(16), 
@@ -110,6 +113,8 @@ CREATE TABLE `NaI_Rec` (
 `DoseRate` varchar(16), 
 `Temperature` varchar(16), 
 `HighVoltage` varchar(16),
+`NuclideFound` bit,
+`EnergyFromPosition` varchar(16),
 PRIMARY KEY (`Id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -117,7 +122,7 @@ PRIMARY KEY (`Id`)
 DROP TABLE IF EXISTS `NaINuclide_Rec`;
 CREATE TABLE `NaINuclide_Rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
-`time` datetime,
+`Time` datetime,
 `Name` varchar(16),
 `Activity` varchar(16),
 `Indication` varchar(16),

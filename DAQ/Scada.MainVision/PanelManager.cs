@@ -24,6 +24,8 @@ namespace Scada.MainVision
 
 		private ListViewPanel currentPanel;
 
+        
+
 		public PanelManager(Window window)
 		{
 			this.window = window;
@@ -42,6 +44,10 @@ namespace Scada.MainVision
             if (this.panelDict.ContainsKey(deviceKey))
             {
                 ListViewPanel panel = this.panelDict[deviceKey];
+                if (this.currentPanel != panel)
+                {
+                    this.currentPanel.Visibility = Visibility.Hidden;
+                }
                 panel.Visibility = Visibility.Visible;
                 return panel;
             }
@@ -85,7 +91,7 @@ namespace Scada.MainVision
                 GridViewColumn col = new GridViewColumn();
                 col.Header = columnInfo.Header;
                 string bindingName = string.Format("[{0}]", columnInfo.BindingName);
-                col.DisplayMemberBinding = new Binding(bindingName);
+                col.DisplayMemberBinding = new Binding(bindingName.ToLower());
                 col.Width = columnInfo.Width;
                 gridView.Columns.Add(col);
             }

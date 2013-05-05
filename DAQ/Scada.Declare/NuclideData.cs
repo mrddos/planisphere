@@ -69,6 +69,10 @@ namespace Scada.Declare
         public string Temperature { get; set; }
 
         public string HighVoltage { get; set; }
+
+        public string CalibrationNuclideFound { get; set; }
+
+        public string ReferencePeakEnergyFromPosition { get; set; }
     }
 
 }
