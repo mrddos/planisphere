@@ -2,5 +2,5 @@
 
 Scada.HIPC : COM1
 Scada.Weather : COM2
-Scada.Shelter : COM1
-Scada.DWD : COM1
+Scada.Shelter : COM3
+Scada.DWD : COM4
