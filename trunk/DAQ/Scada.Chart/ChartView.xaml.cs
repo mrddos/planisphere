@@ -86,6 +86,9 @@ namespace Scada.Chart
             this.init = true;
 
             int timeTextCount = 0;
+            DateTime now = DateTime.Now;
+            int min = now.Minute / 5 * 5;
+            DateTime baseTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, min, 0);
             for (int i = 0; i < 100; i++)
             {
                 double x = i * 10;
@@ -105,13 +108,13 @@ namespace Scada.Chart
                     t.Foreground = new SolidColorBrush(Colors.Gray);
                     t.FontWeight = FontWeights.Light;
                     t.FontSize = 9;
-                    int pos = i * 10 + 10;
+                    int pos = i * 10;
                     GraduationTimes.Add(timeTextCount, new GraduationTime() 
                     {
                         Text = t, Pos = pos
                     });
                     timeTextCount++;
-                    t.Text = string.Format("16:{0:d2}", i);
+                    t.Text = this.GetFormatTime(baseTime, i);
                     t.SetValue(Canvas.LeftProperty, (double)pos);
                     t.SetValue(Canvas.TopProperty, (double)10);
                     this.TimeAxis.Children.Add(t);
@@ -169,7 +172,8 @@ namespace Scada.Chart
                 CurveView curveView = (CurveView)view;
 
                 Point point = e.GetPosition((UIElement)curveView.View);
-                
+                double x = point.X;
+
                 curveView.TrackTimeLine(point);
             }
         }
@@ -239,6 +243,11 @@ namespace Scada.Chart
             }
         }
 
+        private string GetFormatTime(DateTime baseTime, int i)
+        {
+            DateTime dt = baseTime.AddMinutes(i);
+            return string.Format("{0:d2}:{1:d2}", dt.Hour, dt.Minute);
+        }
 
     }
 }

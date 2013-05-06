@@ -259,6 +259,11 @@ namespace Scada.MainVision
 
 		private void ProcessLine(string key, string value, ConfigEntry entry)
 		{
+            int cp = value.IndexOf('#');
+            if (cp > 0)
+            {
+                value = value.Substring(0, cp - 1);
+            }
 			string[] v = value.Split(';');
 			int c = v.Length;
 

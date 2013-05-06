@@ -179,6 +179,11 @@ namespace Scada.Declare
                 {
 
                 }
+                finally
+                {
+                    // TODO: Gzip the file, put it into the Date-folder, then delete this xml file.
+ 
+                }
             }
 		}
 
@@ -256,8 +261,9 @@ namespace Scada.Declare
 		// TODO: CalibrationNuclideFound and ReferencePeakEnergyFromPosition
         private NuclideDataSet ParseData(XmlDocument doc, XmlNamespaceManager nsmgr)
         {
-            
+            // 
             string st = doc.Value("//a:Spectrum/a:StartTime", nsmgr);
+            // Basicly, we use the EndTime.
             string et = doc.Value("//s:EndTime", nsmgr);
 
             string co = doc.Value("//a:Coefficients", nsmgr);
@@ -269,7 +275,9 @@ namespace Scada.Declare
             string tp = doc.Value("//s:Temperature", nsmgr);
             string hv = doc.Value("//s:HighVoltage", nsmgr);
 
+            // 参考核素状态
             string ns = doc.Value("//s:CalibrationNuclideFound", nsmgr);
+            // 参考核素能量
             string ne = doc.Value("//s:ReferencePeakEnergyFromPosition", nsmgr);
 
             NuclideDataSet set = new NuclideDataSet();

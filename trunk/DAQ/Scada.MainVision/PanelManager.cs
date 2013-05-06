@@ -49,6 +49,7 @@ namespace Scada.MainVision
                     this.currentPanel.Visibility = Visibility.Hidden;
                 }
                 panel.Visibility = Visibility.Visible;
+                this.currentPanel = panel;
                 return panel;
             }
             else
@@ -69,6 +70,7 @@ namespace Scada.MainVision
 
                 if (this.currentPanel != null)
                 {
+                    this.currentPanel.Visibility = Visibility.Hidden;
                 }
                 this.currentPanel = panel;
 

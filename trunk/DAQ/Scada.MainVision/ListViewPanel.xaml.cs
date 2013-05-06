@@ -155,7 +155,7 @@ namespace Scada.Controls
 			this.dataSource = new List<Dictionary<string, object>>();
              * */
             
-            //this.dataSource.Clear();
+            this.dataSource.Clear();
 		}
 
 
@@ -203,6 +203,12 @@ namespace Scada.Controls
             }
 			
 		}
+        
+        // TODO:
+        private void SearchByDateRange(object sender, RoutedEventArgs e)
+        {
+
+        }
 
 
 	}
