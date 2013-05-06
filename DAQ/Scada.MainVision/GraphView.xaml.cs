@@ -96,22 +96,18 @@ namespace Scada.MainVision
             foreach (string key in dataSources.Keys)
             {
                 CurveDataContext dataContext = dataSources[key];
-                string v = (string)entry[key];
-                double r = 0.0;
-                if (v.Length > 0)
+                if (entry.ContainsKey(key))
                 {
-                    r = double.Parse(v);
+                    string v = (string)entry[key];
+                    double r = 0.0;
+                    if (v.Length > 0)
+                    {
+                        r = double.Parse(v);
+                    }
+
+
+                    dataContext.AddPoint(i * 5, r);
                 }
-                
-                if (key.ToLower() == "doserate")
-                {
-                    Random rd = new Random();
-                    int c = rd.Next(1460, 1500);
-                    int d = rd.Next(-20, 0);
-                    c -= d;
-                    r = c / 10;
-                }
-                dataContext.AddPoint(i * 5  , r);
             }
             i++;
         }

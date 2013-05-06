@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -68,7 +69,11 @@ namespace Scada.Chart
 
         private CurveDataContext dataContext;
 
-        private double centerY = 75.0;
+        private double centerX = 0.0;
+
+        private double centerY = 0.0;
+
+        private TextBlock valueLabel;
 
         private Dictionary<int, GraduationLine> Graduations
         {
@@ -134,8 +139,11 @@ namespace Scada.Chart
             this.Graduation.ClipToBounds = true;
             int textCount = 0;
 
-            // TODO: !~~~~~
             double d = height / (this.Max - this.Min);
+            // How many graduation?
+            int dc = (int)height / 10;
+            // What's the value aach graduation 
+            double ev = (this.Max - this.Min) / dc;
 
             for (int i = 0; i < 50; i++)
             {
@@ -155,20 +163,27 @@ namespace Scada.Chart
                 l.Stroke = new SolidColorBrush(Colors.Gray);
                 this.Graduation.Children.Add(l);
 
-
+                double value = this.Min + i * ev;
 
                 if (i % 5 == 0)
                 {
                     TextBlock t = new TextBlock();
                     t.Foreground = new SolidColorBrush(Colors.Gray);
                     t.FontSize = 9;
-                    double pos = (double )y - 10;
+                    double pos = (double)y - 10;
                     this.GraduationTexts.Add(textCount, new GraduationText()
                     {
                         Text = t, Pos = pos
                     });
 
-                    t.Text = string.Format("{0}", this.Min + i);
+                    if (value > 0)
+                    {
+                        t.Text = string.Format("{0}", (int)value);
+                    }
+                    else
+                    {
+                        t.Text = string.Format(".{0:00}", (double)value);
+                    }
                     t.SetValue(Canvas.RightProperty, (double)10.0);
                     t.SetValue(Canvas.TopProperty, (double)pos);
                     this.Graduation.Children.Add(t);
@@ -227,13 +242,15 @@ namespace Scada.Chart
             this.Convert(point, out p);
             curve.Points.Add(p);
 
-            if (i > 20)
+            double aw = this.ActualWidth;
+            if (p.X > aw * 3 / 4) 
             {
-                TranslateTransform tt = new TranslateTransform(-i/5, 0);
+                TranslateTransform tt = new TranslateTransform(aw * 3 / 4 - p.X, 0);
+                // tt.BeginAnimation(TranslateTransform.XProperty, AnimationTimeline.
                 curve.RenderTransform = tt;
-                curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale, 0.0, centerY);
+                // curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale, centerX, centerY);
             }
-            i += 2.0;
+            
         }
 
         /// <summary>
@@ -247,7 +264,7 @@ namespace Scada.Chart
                 return;
             }
 
-            if (Math.Abs( this.currentScale - scale) < double.Epsilon)
+            if (Math.Abs(this.currentScale - scale) < double.Epsilon)
             {
                 return;
             }
@@ -255,7 +272,9 @@ namespace Scada.Chart
 
             if (curve != null)
             {
-                curve.RenderTransform = new ScaleTransform(scale, scale, 0.0, centerY);
+                this.centerX = timeLine.X1;
+                this.centerY = this.GetY(this.centerX);
+                curve.RenderTransform = new ScaleTransform(scale, scale, this.centerX, this.centerY);
             }
 
             //int i = 0;
@@ -277,6 +296,21 @@ namespace Scada.Chart
         public void TrackTimeLine(Point point)
         {
             timeLine.X1 = timeLine.X2 = point.X;
+            // this.centerX = point.X;
+            this.UpdateValue(point);
+        }
+
+        private void UpdateValue(Point point)
+        {
+            double x = point.X;
+
+            double xo = (x - this.centerX) / this.currentScale + this.centerX;
+
+            double y = this.GetY(xo);
+            double v = this.GetValue(y);
+            // TODO: Optimize.
+
+            this.valueLabel.Text = string.Format("{0}", v);
         }
 
         private double Convert(double v)
@@ -289,10 +323,45 @@ namespace Scada.Chart
                 pa = this.Max - v;
                 pb = v - this.Min;
             }
+            else
+            {
+                return 0.0;
+            }
 
             double pos = this.Height / (pa / pb + 1);
             double y = this.Height - pos;
             return y;
+        }
+
+        private double GetY(double x)
+        {
+            Point a = default(Point);
+            Point b = default(Point);
+            foreach (var p in curve.Points)
+            {
+                if (p.X > x)
+                {
+                    b = p;
+                    break;
+                }
+                a = p;
+            }
+
+            double v = 0.0;
+            if (x - a.X < b.X - x)
+            {
+                return a.Y;
+            }
+            else
+            {
+                return b.Y;
+            }
+        }
+
+        private double GetValue(double y)
+        {
+            double v = this.Max - (this.Max - this.Min) * y / this.Height;
+            return v;
         }
 
         private void Convert(Point p, out Point po)
@@ -346,6 +415,13 @@ namespace Scada.Chart
 
             this.CanvasView.Children.Add(labelBorder);
             labelBorder.Child = displayLabel;
+
+
+            // Value text Label.
+            this.valueLabel = new TextBlock();
+            this.valueLabel.SetValue(Canvas.RightProperty, 120.0);
+            this.valueLabel.SetValue(Canvas.TopProperty, 12.0);
+            this.CanvasView.Children.Add(this.valueLabel);
         }
 
 

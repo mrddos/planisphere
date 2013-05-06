@@ -126,8 +126,8 @@ namespace Scada.MainVision
             {
                 string deviceKey = item.ToLower();
                 // Would use listener to notify, panel would get the lastest data.
-                var dataList = this.Refresh(deviceKey, true, 1, DateTime.MinValue, DateTime.MinValue);
-                if (dataList.Count > 0)
+                var dataList = this.RefreshCurrentData(deviceKey, true, 1);
+                if (dataList != null && dataList.Count > 0)
                 {
                     this.latestData.Add(deviceKey, dataList[0]);
                 }
@@ -139,6 +139,10 @@ namespace Scada.MainVision
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
 
             var result = this.Refresh(deviceKey, true, 10, DateTime.MinValue, DateTime.MinValue);
+            if (result == null)
+            {
+                return;
+            }
             listener.OnDataArrivalBegin();
             foreach (var data in result)
             {
@@ -170,6 +174,62 @@ namespace Scada.MainVision
 
         }
 
+        private List<Dictionary<string, object>> RefreshCurrentData(string deviceKey, bool current, int count)
+        {
+            if (this.cmd == null)
+            {
+                return null;
+            }
+            // Return values
+            var ret = new List<Dictionary<string, object>>();
+
+            Config cfg = Config.Instance();
+            ConfigEntry entry = cfg[deviceKey];
+            this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+            using (MySqlDataReader reader = this.cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    // Must Has an Id.
+                    string id = reader.GetString(Id);
+                    id = id.Trim();
+
+                    if (string.IsNullOrEmpty(id)) { continue; }
+
+                    Dictionary<string, object> data = new Dictionary<string, object>(10);
+                    data.Add("Id", id);
+
+                    foreach (var i in entry.ConfigItems)
+                    {
+                        string key = i.Key.ToLower();
+                        try
+                        {
+                            string v = reader.GetString(key);
+                            data.Add(key, v);
+                        }
+                        catch (SqlNullValueException)
+                        {
+                            // TODO: Has Null Value
+                            data.Add(key, null);
+                        }
+                        catch (Exception)
+                        {
+                            // No this field.
+                        }
+                    }
+
+                    if (entry.DataFilter != null)
+                    {
+                        entry.DataFilter.Fill(data);
+                    }
+                    ret.Add(data);
+                }
+            }
+
+            return ret;
+        }
+
+
         /// <summary>
         /// Implements 
         /// </summary>
@@ -180,14 +240,12 @@ namespace Scada.MainVision
         /// <param name="to"></param>
         private List<Dictionary<string, object>> Refresh(string deviceKey, bool current, int count, DateTime from, DateTime to)
         {
+            if (this.cmd == null)
+            {
+                return null;
+            }
             // Return values
             var ret = new List<Dictionary<string, object>>();
-
-            // Cache 
-            if (this.CurrentDeviceKey != deviceKey)
-            {
-                this.dataCache.Clear();
-            }
 
             Config cfg = Config.Instance();
             ConfigEntry entry = cfg[deviceKey];
@@ -230,7 +288,7 @@ namespace Scada.MainVision
                         entry.DataFilter.Fill(data);
                     }
                     ret.Add(data);
-                    this.dataCache.Add(id, data);
+                    // this.dataCache.Add(id, data);
 
                     index++;
                 }

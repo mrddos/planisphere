@@ -48,9 +48,10 @@
                     
                     <c:DatePicker Margin="5, 0, 5, 0" Height="25"></c:DatePicker>
                     <c:DatePicker Margin="5, 0, 5, 0" Height="25"></c:DatePicker>
-                    <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟"></ComboBox>
+                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Click="SearchByDateRange">查询</Button>
+                    <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟" Visibility="Collapsed"></ComboBox>
 
-                    <Button Padding="3,3,3,3" Height="25">打印</Button>
+                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0">打印</Button>
                 </StackPanel>
                 
                 <Button x:Name="CloseButton" Width="18" Height="18" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
