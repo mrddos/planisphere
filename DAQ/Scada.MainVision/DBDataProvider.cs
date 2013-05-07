@@ -22,25 +22,35 @@ namespace Scada.MainVision
 
         private const string Id = "Id";
 
+        private const string Time = "time";
+
         private MySqlConnection conn = new MySqlConnection(ConnectionString);
 
         private MySqlCommand cmd = null;
+
+        // private bool isRealTime = true;
 
 
         private List<string> allDeviceKeys = new List<string>();
 
         private List<string> deviceKeyList = new List<string>();
 
+
         private Dictionary<string, DBDataCommonListerner> dataListeners;
 
-        private Dictionary<string, object> filters = new Dictionary<string, object>();
+        // ?? What's filter.
+        private Dictionary<string, object> filters = new Dictionary<string, object>(10);
 
-        // private List<Dictionary<string, object>> dataPool = new List<Dictionary<string, object>>();
 
+        // ?
         private Dictionary<string, object> dataCache = new Dictionary<string, object>();
 
+
+        // <DeviceKey, dict[data]>
         private Dictionary<string, object> latestData = new Dictionary<string, object>();
 
+
+        private List<Dictionary<string, object>> timelineSource;
         /// <summary>
         /// 
         /// </summary>
@@ -62,7 +72,9 @@ namespace Scada.MainVision
             this.allDeviceKeys.Add(DeviceKey_Shelter);
             this.allDeviceKeys.Add(DeviceKey_Weather);
 
-            this.dataListeners = new Dictionary<string, DBDataCommonListerner>();
+            this.FetchCount = 20;
+
+            this.dataListeners = new Dictionary<string, DBDataCommonListerner>(30);
             if (this.conn != null)
             {
                 try
@@ -76,6 +88,8 @@ namespace Scada.MainVision
                 }
             }
 
+
+            this.timelineSource = new List<Dictionary<string, object>>();
         }
 
         public override DataListener GetDataListener(string deviceKey)
@@ -118,39 +132,80 @@ namespace Scada.MainVision
         }
 
         // For Panels.
-        // Use this to get the latest data
-        public override void RefreshCurrentData()
+        // Get Latest data,
+        // No Notify.
+        public override void RefreshTimeNow()
         {
             this.latestData.Clear();
             foreach (var item in this.allDeviceKeys)
             {
                 string deviceKey = item.ToLower();
                 // Would use listener to notify, panel would get the lastest data.
-                var dataList = this.RefreshCurrentData(deviceKey, true, 1);
-                if (dataList != null && dataList.Count > 0)
+                var data = this.RefreshTimeNow(deviceKey);
+                if (data != null)
                 {
-                    this.latestData.Add(deviceKey, dataList[0]);
+                    this.latestData.Add(deviceKey, data);
                 }
             }
         }
 
-        public override void Refresh(string deviceKey)
+        public int FetchCount
+        {
+            get;
+            set;
+        }
+
+        // Get Recent data
+        // Notify the new 
+        public override void RefreshTimeline(string deviceKey)
         {
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
+            if (listener == null)
+            {
+                return;
+            }
 
-            var result = this.Refresh(deviceKey, true, 10, DateTime.MinValue, DateTime.MinValue);
+            var result = this.Refresh(deviceKey, true, this.FetchCount, DateTime.MinValue, DateTime.MinValue);
             if (result == null)
             {
                 return;
             }
-            listener.OnDataArrivalBegin();
-            foreach (var data in result)
+            List<Dictionary<string, object>> recent = new List<Dictionary<string, object>>();
+            DateTime latestDateTime = DateTime.MinValue;
+            if (this.timelineSource.Count > 0)
+            {
+                var last = this.timelineSource.First();
+                latestDateTime = DateTime.Parse((string)last["time"]);
+            }
+            foreach (var item in result)
+            {
+                DateTime dt = DateTime.Parse((string)item["time"]);
+                if (dt > latestDateTime)
+                {
+                    recent.Add(item);
+                }
+            }
+
+            if (recent.Count == 0)
+            {
+                return;
+            }
+            recent.Sort(DBDataProvider.DateTimeCompare);
+
+            this.timelineSource.AddRange(recent);
+            this.timelineSource.Sort(DBDataProvider.DateTimeCompare);
+
+
+            listener.OnDataArrivalBegin(DataArrivalConfig.TimeRecent);
+            foreach (var data in recent)
             {
                 listener.OnDataArrival(data);
             }
             listener.OnDataArrivalEnd();
         }
 
+        // Get time-range data,
+        // Notify with all the result.
         public override void RefreshTimeRange(string deviceKey, string from, string to)
         {
             try
@@ -161,7 +216,7 @@ namespace Scada.MainVision
                 DBDataCommonListerner listener = this.dataListeners[deviceKey];
 
                 var result = this.Refresh(deviceKey, false, -1, fromTime, toTime);
-                listener.OnDataArrivalBegin();
+                listener.OnDataArrivalBegin(DataArrivalConfig.TimeRange);
                 foreach (var data in result)
                 {
                     listener.OnDataArrival(data);
@@ -174,30 +229,33 @@ namespace Scada.MainVision
 
         }
 
-        private List<Dictionary<string, object>> RefreshCurrentData(string deviceKey, bool current, int count)
+        private Dictionary<string, object> RefreshTimeNow(string deviceKey)
         {
             if (this.cmd == null)
             {
                 return null;
             }
             // Return values
-            var ret = new List<Dictionary<string, object>>();
+            const int MaxItemCount = 20;
+            var ret = new Dictionary<string, object>(MaxItemCount);
 
             Config cfg = Config.Instance();
             ConfigEntry entry = cfg[deviceKey];
-            this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+            this.cmd.CommandText = this.GetSelectStatement(entry.TableName, 1);
             using (MySqlDataReader reader = this.cmd.ExecuteReader())
             {
-                while (reader.Read())
+                if (reader.Read())
                 {
                     // Must Has an Id.
                     string id = reader.GetString(Id);
                     id = id.Trim();
 
-                    if (string.IsNullOrEmpty(id)) { continue; }
+                    if (string.IsNullOrEmpty(id))
+                    {
+                        return null;
+                    }
 
-                    Dictionary<string, object> data = new Dictionary<string, object>(10);
-                    data.Add("Id", id);
+                    ret.Add(Id, id);
 
                     foreach (var i in entry.ConfigItems)
                     {
@@ -205,12 +263,12 @@ namespace Scada.MainVision
                         try
                         {
                             string v = reader.GetString(key);
-                            data.Add(key, v);
+                            ret.Add(key, v);
                         }
                         catch (SqlNullValueException)
                         {
                             // TODO: Has Null Value
-                            data.Add(key, null);
+                            ret.Add(key, null);
                         }
                         catch (Exception)
                         {
@@ -220,9 +278,8 @@ namespace Scada.MainVision
 
                     if (entry.DataFilter != null)
                     {
-                        entry.DataFilter.Fill(data);
+                        entry.DataFilter.Fill(ret);
                     }
-                    ret.Add(data);
                 }
             }
 
@@ -320,6 +377,28 @@ namespace Scada.MainVision
                 return (Dictionary<string, object>)this.latestData[deviceKey];
             }
             return null;
+        }
+
+        public static int DateTimeCompare(Dictionary<string, object> a, Dictionary<string, object> b)
+        {
+            object t1 = a[Time];
+            object t2 = b[Time];
+            DateTime dt1 = DateTime.MinValue;
+            DateTime dt2 = DateTime.MinValue;
+            if (t1 != null)
+            {
+                dt1 = DateTime.Parse((string)t1);
+            }
+            if (t2 != null)
+            {
+                dt2 = DateTime.Parse((string)t2);
+            }
+
+            if (dt1 > dt2)
+            {
+                return -1;
+            }
+            return 1;
         }
     }
 }

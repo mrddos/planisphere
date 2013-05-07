@@ -26,8 +26,11 @@ namespace Scada.Controls
 
 		private List<Dictionary<string, object>> dataSource;
 
+        private DataArrivalConfig config;
 
+        private const string Time = "time";
 
+        private bool readTimeMode = true;
 
 
         // Must Use the <Full Name>
@@ -53,6 +56,10 @@ namespace Scada.Controls
 
         private void RefreshDataTimerTick(object sender, EventArgs e)
         {
+            if (!this.readTimeMode)
+            {
+                return;
+            }
             // TODO: Current settings? if show current, continue.
             // If filter by start -> end time, returns.
 
@@ -61,7 +68,7 @@ namespace Scada.Controls
             {
                 if (this.deviceKey == this.dataProvider.CurrentDeviceKey)
                 {
-                    this.dataProvider.Refresh(this.deviceKey);
+                    this.dataProvider.RefreshTimeline(this.deviceKey);
                 }
                 else
                 {
@@ -145,51 +152,39 @@ namespace Scada.Controls
             this.dataSource = new List<Dictionary<string, object>>();
 		}
 
-		private void OnDataArrivalBegin()
+        // BEGIN
+        private void OnDataArrivalBegin(DataArrivalConfig config)
 		{
-            /*
-			if (this.dataSource != null)
-			{
-				this.dataSource.Clear();
-			}
-			this.dataSource = new List<Dictionary<string, object>>();
-             * */
-            
-            this.dataSource.Clear();
+            this.config = config;
+            if (config == DataArrivalConfig.TimeRange)
+            {
+                // For show new data source, so clear the old data source.
+                this.dataSource.Clear();
+            }
+            else if (config == DataArrivalConfig.TimeRecent)
+            {
+
+            }
 		}
 
 
-
+        // ARRIVAL
 		private void OnDataArrival(Dictionary<string, object> entry)
 		{
-			this.dataSource.Add(entry);
+            if (this.config == DataArrivalConfig.TimeRecent)
+            {
+                this.dataSource.Add(entry); 
+            }
+            else
+            {
+                this.dataSource.Add(entry);
+            }
             // Sort ...
             // Insert to the Top.
-            this.dataSource.Sort(this.DateTimeCompare);
+            
 		}
 
-        private int DateTimeCompare(Dictionary<string, object> a, Dictionary<string, object> b)
-        {
-            object t1 = a["time"];
-            object t2 = b["time"];
-            DateTime dt1 = DateTime.MinValue;
-            DateTime dt2 = DateTime.MinValue;
-            if (t1 != null)
-            {
-                dt1 = DateTime.Parse((string)t1);
-            }
-            if (t2 != null)
-            {
-                dt2 = DateTime.Parse((string)t2);
-            }
-
-            if (dt1 > dt2)
-            {
-                return -1;
-            }
-            return 1;
-        }
-
+        // END
 		private void OnDataArrivalEnd()
 		{
             // TODO: Chekc the data source?
@@ -197,6 +192,8 @@ namespace Scada.Controls
             {
                 if (this.ListView is ListView)
                 {
+                    this.dataSource.Sort(DBDataProvider.DateTimeCompare);
+
                     ((ListView)this.ListView).ItemsSource = null;
                     ((ListView)this.ListView).ItemsSource = this.dataSource;
                 }
@@ -207,7 +204,7 @@ namespace Scada.Controls
         // TODO:
         private void SearchByDateRange(object sender, RoutedEventArgs e)
         {
-
+            this.readTimeMode = false;
         }
 
 

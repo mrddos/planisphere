@@ -72,7 +72,7 @@ namespace Scada.MainVision
 		}
         */
 
-        public override void Refresh(string deviceKey)
+        public override void RefreshTimeline(string deviceKey)
         {
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
             if (listener != null)
@@ -82,7 +82,7 @@ namespace Scada.MainVision
                 Config cfg = Config.Instance();
                 ConfigEntry entry = cfg[deviceKey];
 
-                listener.OnDataArrivalBegin();
+                listener.OnDataArrivalBegin(DataArrivalConfig.TimeRecent);
 
                 string line = lists[this.index];
 
@@ -156,7 +156,7 @@ namespace Scada.MainVision
             throw new NotImplementedException();
         }
 
-        public override void RefreshCurrentData()
+        public override void RefreshTimeNow()
         {
             throw new NotImplementedException();
         }

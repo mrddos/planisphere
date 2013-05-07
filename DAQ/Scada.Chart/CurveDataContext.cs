@@ -6,13 +6,21 @@ using System.Windows;
 
 namespace Scada.Chart
 {
+    public delegate void UpdateView();
+
     public delegate void UpdateCurve(Point point);
+
+    public delegate void ClearCurve();
 
     public class CurveDataContext
     {
         private List<Point> points = new List<Point>();
 
+        public event UpdateView UpdateView;
+
         public event UpdateCurve UpdateCurve;
+
+        public event ClearCurve ClearCurve;
 
         public CurveDataContext(string curveName)
         {
@@ -31,6 +39,10 @@ namespace Scada.Chart
             set;
         }
 
+        public void UpdateCurves()
+        {
+            this.UpdateView();
+        }
 
         public void AddPoint(double x, double y)
         {
@@ -42,6 +54,12 @@ namespace Scada.Chart
         public void AddValuePair(DateTime dateTime, double value)
         {
 
+        }
+
+        public void Clear()
+        {
+            points.Clear();
+            this.ClearCurve();
         }
     }
 }
