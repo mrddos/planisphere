@@ -5,7 +5,14 @@ using System.Text;
 
 namespace Scada.Controls.Data
 {
-	public delegate void OnDataArrivalBegin();
+    public enum DataArrivalConfig
+    {
+        TimeNew,
+        TimeRecent,
+        TimeRange,
+    }
+
+	public delegate void OnDataArrivalBegin(DataArrivalConfig config);
 
 	public delegate void OnDataArrival(Dictionary<string, object> data);
 

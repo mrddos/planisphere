@@ -27,7 +27,7 @@ namespace Scada.MainVision
         /// <summary>
         /// 
         /// </summary>
-        public abstract void RefreshCurrentData();
+        public abstract void RefreshTimeNow();
 
         public abstract void RefreshTimeRange(string deviceKey, string from, string to);
 
@@ -35,7 +35,7 @@ namespace Scada.MainVision
         /// 
         /// </summary>
         /// <param name="deviceKey"></param>
-        public abstract void Refresh(string deviceKey);
+        public abstract void RefreshTimeline(string deviceKey);
 
         public string CurrentDeviceKey { set; get; }
 

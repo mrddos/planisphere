@@ -61,7 +61,7 @@ namespace Scada.Chart
 
         private Line timeLine = new Line();
 
-        private Polyline curve = new Polyline();
+        private Polyline curve = null;
 
         private double i = 0;
 
@@ -198,17 +198,26 @@ namespace Scada.Chart
             this.CanvasView.Children.Add(timeLine);
             this.CanvasView.ClipToBounds = true;
 
-            curve.Stroke = new SolidColorBrush(Colors.Green);
-            this.CanvasView.Children.Add(curve);
+            this.AddCurveLine();
 
             this.SetDisplayName(this.DisplayName);
 
         }
 
+        private void AddCurveLine()
+        {
+            this.curve = new Polyline();
+            this.curve.Stroke = new SolidColorBrush(Colors.Green);
+            
+            this.CanvasView.Children.Add(this.curve);
+        }
+
         public CurveDataContext CreateDataContext(string curveName, string displayName)
         {
             this.dataContext = new CurveDataContext(curveName);
-            this.dataContext.UpdateCurve += UpdateCurveHandler;
+            this.dataContext.UpdateView += this.UpdateViewHandler;
+            this.dataContext.UpdateCurve += this.UpdateCurveHandler;
+            this.dataContext.ClearCurve += this.ClearCurveHandler;
 
             this.DisplayName = displayName;
             return this.dataContext;
@@ -232,11 +241,18 @@ namespace Scada.Chart
             internal set;
         }
 
+        private void UpdateViewHandler()
+        {
+            TranslateTransform tt = new TranslateTransform(0, 0);
+            // tt.BeginAnimation(TranslateTransform.XProperty, AnimationTimeline.
+            curve.RenderTransform = tt;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="point"></param>
-        void UpdateCurveHandler(Point point)
+        private void UpdateCurveHandler(Point point)
         {
             Point p;
             this.Convert(point, out p);
@@ -251,6 +267,15 @@ namespace Scada.Chart
                 // curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale, centerX, centerY);
             }
             
+        }
+
+        private void ClearCurveHandler()
+        {
+            if (this.curve != null)
+            {
+                this.curve.Points.Clear();
+                /// this.CanvasView.Children.Remove(this.curve);
+            }
         }
 
         /// <summary>

@@ -202,10 +202,18 @@ namespace Scada.Chart
             if (a > 0)
             {
                 this.scale += 0.1;
+                if (this.scale > 3.0)
+                {
+                    this.scale = 3.0;
+                }
             }
             else if (a < 0)
             {
                 this.scale -= 0.1;
+                if (this.scale < 1.0)
+                {
+                    this.scale = 1.0;
+                }
             }
 
             this.ZoomChartView(this.scale);

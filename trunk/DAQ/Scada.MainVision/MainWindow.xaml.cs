@@ -208,7 +208,7 @@ namespace Scada.MainVision
         void RefreshPanelDataTimerTick(object sender, EventArgs e)
         {
 
-            this.dataProvider.RefreshCurrentData();
+            this.dataProvider.RefreshTimeNow();
 
             this.UpdatePanel_HIPC(this.panes[0], "");
             this.UpdatePanel_NaI(this.panes[1], "");

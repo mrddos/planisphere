@@ -33,8 +33,11 @@ namespace Scada.MainVision
         static Color[] colors = { Colors.Green, Colors.Red, Colors.Blue, Colors.OrangeRed, Colors.Purple };
 
 
+        private List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
 
         private Dictionary<string, CurveDataContext> dataSources = new Dictionary<string, CurveDataContext>();
+        
+        private DataArrivalConfig config;
 
         public GraphView()
         {
@@ -74,49 +77,67 @@ namespace Scada.MainVision
             this.dataSources.Add(lineName.ToLower(), dataContext);
         }
 
-        private void OnDataArrivalBegin()
-        {
-            // this.timeAxis.ShowMinorTicks = false;
-            
 
-            
-            //if (this.dataSource != null)
-            //{
-            //    this.dataSource.Clear();
-            //}
-            //this.dataSource = new List<Dictionary<string, object>>();
-            
+        private void OnDataArrivalBegin(DataArrivalConfig config)
+        {
+            this.config = config;
+            if (config == DataArrivalConfig.TimeRange)
+            {
+                // For show new data source, so clear the old data source.
+                foreach (string key in dataSources.Keys)
+                {
+                    CurveDataContext dataContext = dataSources[key];
+                    dataContext.Clear();
+                }
+            }
+            else if (config == DataArrivalConfig.TimeRecent)
+            {
+
+            }
         }
 
 
 
         private void OnDataArrival(Dictionary<string, object> entry)
         {
-                        
-            foreach (string key in dataSources.Keys)
+            if (this.config == DataArrivalConfig.TimeRecent)
             {
-                CurveDataContext dataContext = dataSources[key];
-                if (entry.ContainsKey(key))
+                // Add new data into the datasource.
+                foreach (string key in dataSources.Keys)
                 {
-                    string v = (string)entry[key];
-                    double r = 0.0;
-                    if (v.Length > 0)
+                    CurveDataContext dataContext = dataSources[key];
+                    if (entry.ContainsKey(key))
                     {
-                        r = double.Parse(v);
+                        string v = (string)entry[key];
+                        double r = 0.0;
+                        if (v.Length > 0)
+                        {
+                            r = double.Parse(v);
+                        }
+
+
+                        dataContext.AddPoint(i * 5, r);
                     }
-
-
-                    dataContext.AddPoint(i * 5, r);
                 }
+                i++;
             }
-            i++;
+
         }
 
         private void OnDataArrivalEnd()
         {
 
-            //this.plotter.ItemsSource = this.dataSource;
         }
+
+        private void ChartView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            foreach (string key in dataSources.Keys)
+            {
+                CurveDataContext dataContext = dataSources[key];
+                dataContext.UpdateCurves();
+            }
+        }
+
     }
 
 }
