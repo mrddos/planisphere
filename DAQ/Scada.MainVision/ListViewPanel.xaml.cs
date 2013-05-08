@@ -228,12 +228,20 @@ namespace Scada.Controls
                 {
                     if (!this.ToDate.SelectedDate.HasValue)
                     {
-                        this.ToDate.SelectedDate = dt.Value;
+                        this.ToDate.SelectedDate = dt.Value.AddDays(1);
                     }
                 }
             }
             else if (picker.Name == "ToDate")
             {
+                DateTime? dt = picker.SelectedDate;
+                if (dt.HasValue)
+                {
+                    if (!this.FromDate.SelectedDate.HasValue)
+                    {
+                        this.FromDate.SelectedDate = dt.Value.AddDays(-1);
+                    }
+                }
                 if (this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
                 {
 
