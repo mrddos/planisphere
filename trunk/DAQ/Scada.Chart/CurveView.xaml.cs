@@ -73,6 +73,8 @@ namespace Scada.Chart
 
         private double centerY = 0.0;
 
+        private Border valueBorder;
+
         private TextBlock valueLabel;
 
         public double CenterX
@@ -303,12 +305,22 @@ namespace Scada.Chart
             }
             this.currentScale = scale;
 
-            if (curve != null)
+            if (curve == null)
             {
-                this.centerX = timeLine.X1;
-                this.centerY = this.GetY(this.centerX);
-                curve.RenderTransform = new ScaleTransform(scale, scale, this.centerX, this.centerY);
+                return;
             }
+            this.centerX = timeLine.X1;
+            double y = double.NaN;
+            if (this.GetY(this.centerX, out y))
+            {
+                this.centerY = y;
+            }
+            else
+            {
+                this.centerY = this.Height / 2;
+            }
+            curve.RenderTransform = new ScaleTransform(scale, scale, this.centerX, this.centerY);
+            
 
             //int i = 0;
             foreach (var g in this.Graduations)
@@ -339,11 +351,19 @@ namespace Scada.Chart
 
             double xo = (x - this.centerX) / this.currentScale + this.centerX;
 
-            double y = this.GetY(xo);
-            double v = this.GetValue(y);
-            // TODO: Optimize.
+            double y = double.NaN;
+            if (this.GetY(xo, out y))
+            {
+                double v = this.GetValue(y);
+                // TODO: Optimize.
 
-            this.valueLabel.Text = string.Format("{0}", v);
+                this.valueBorder.Visibility = Visibility.Visible;
+                this.valueLabel.Text = string.Format("{0}", v);
+            }
+            else
+            {
+                this.valueBorder.Visibility = Visibility.Collapsed;
+            }
         }
 
         private double Convert(double v)
@@ -366,28 +386,38 @@ namespace Scada.Chart
             return y;
         }
 
-        private double GetY(double x)
+        private bool GetY(double x, out double y)
         {
             Point a = default(Point);
             Point b = default(Point);
+            bool found = false;
             foreach (var p in curve.Points)
             {
                 if (p.X > x)
                 {
                     b = p;
+                    found = true;
                     break;
                 }
                 a = p;
             }
 
-            double v = 0.0;
-            if (x - a.X < b.X - x)
+            if (found)
             {
-                return a.Y;
+                if (x - a.X < b.X - x)
+                {
+                    y = a.Y;
+                }
+                else
+                {
+                    y = b.Y;
+                }
+                return true;
             }
             else
             {
-                return b.Y;
+                y = double.NaN;
+                return false;
             }
         }
 
@@ -451,10 +481,18 @@ namespace Scada.Chart
 
 
             // Value text Label.
+            this.valueBorder = new Border();
+            valueBorder.Background = Brushes.AliceBlue;
+            valueBorder.SetValue(Canvas.RightProperty, 120.0);
+            
+            valueBorder.SetValue(Canvas.TopProperty, 12.0);
             this.valueLabel = new TextBlock();
-            this.valueLabel.SetValue(Canvas.RightProperty, 120.0);
-            this.valueLabel.SetValue(Canvas.TopProperty, 12.0);
-            this.CanvasView.Children.Add(this.valueLabel);
+            this.valueLabel.FontSize *= 1.5;
+            this.valueLabel.Foreground = new SolidColorBrush(Colors.Green);
+
+
+            valueBorder.Child = valueLabel;
+            this.CanvasView.Children.Add(valueBorder);
         }
 
 
