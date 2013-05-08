@@ -161,7 +161,7 @@ namespace Scada.MainVision
             throw new NotImplementedException();
         }
 
-        public override void RefreshTimeRange(string deviceKey, string from, string to)
+        public override void RefreshTimeRange(string deviceKey, DateTime from, DateTime to)
         {
             throw new NotImplementedException();
         }

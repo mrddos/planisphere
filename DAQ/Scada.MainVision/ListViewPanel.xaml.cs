@@ -9,6 +9,7 @@ namespace Scada.Controls
 
     using Scada.Controls.Data;
     using Scada.MainVision;
+    using Microsoft.Windows.Controls;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -201,10 +202,43 @@ namespace Scada.Controls
 			
 		}
         
-        // TODO:
+        // When click the Search Button.
         private void SearchByDateRange(object sender, RoutedEventArgs e)
         {
             this.readTimeMode = false;
+            var dt1 = this.FromDate.SelectedDate.Value;
+            var dt2 = this.ToDate.SelectedDate.Value;
+
+            this.dataProvider.RefreshTimeRange(this.deviceKey, dt1, dt2);
+
+        }
+
+        private bool ValidTimeRange(DateTime fromDate, DateTime toDate)
+        {
+            return true;
+        }
+
+        private void DatePickerCalendarClosed(object sender, RoutedEventArgs e)
+        {
+            DatePicker picker = (DatePicker)sender;
+            if (picker.Name == "FromDate")
+            {
+                DateTime? dt = picker.SelectedDate;
+                if (dt.HasValue)
+                {
+                    if (!this.ToDate.SelectedDate.HasValue)
+                    {
+                        this.ToDate.SelectedDate = dt.Value;
+                    }
+                }
+            }
+            else if (picker.Name == "ToDate")
+            {
+                if (this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
+                {
+
+                }
+            }
         }
 
 
