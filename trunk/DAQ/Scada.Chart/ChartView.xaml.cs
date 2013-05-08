@@ -221,15 +221,17 @@ namespace Scada.Chart
 
         private void ZoomChartView(double scale)
         {
-            this.UpdateTimeAxisScale(scale);
+            double centerX = 0.0;
             foreach (var view in this.ChartContainer.Children)
             {
                 CurveView curveView = (CurveView)view;
                 curveView.UpdateCurveScale(scale);
+                centerX = curveView.CenterX;
             }
+            this.UpdateTimeAxisScale(scale, centerX);
         }
 
-        private void UpdateTimeAxisScale(double scale)
+        private void UpdateTimeAxisScale(double scale, double centerX)
         {
             if (scale < 1.0 || scale > 3.0)
             {
@@ -246,7 +248,8 @@ namespace Scada.Chart
             foreach (var t in this.GraduationTimes)
             {
                 TextBlock b = t.Value.Text;
-                double pos = (t.Value.Pos - 0) * scale + 0;
+                // double pos = (g.Value.Pos - centerY) * scale + centerY;
+                double pos = (t.Value.Pos - centerX) * scale + centerX;
                 b.SetValue(Canvas.LeftProperty, (double)pos);
             }
         }
