@@ -87,6 +87,7 @@ namespace Scada.MainVision
                 foreach (string key in dataSources.Keys)
                 {
                     CurveDataContext dataContext = dataSources[key];
+                    i = 0;
                     dataContext.Clear();
                 }
             }
@@ -103,6 +104,26 @@ namespace Scada.MainVision
             if (this.config == DataArrivalConfig.TimeRecent)
             {
                 // Add new data into the datasource.
+                foreach (string key in dataSources.Keys)
+                {
+                    CurveDataContext dataContext = dataSources[key];
+                    if (entry.ContainsKey(key))
+                    {
+                        string v = (string)entry[key];
+                        double r = 0.0;
+                        if (v.Length > 0)
+                        {
+                            r = double.Parse(v);
+                        }
+
+
+                        dataContext.AddPoint(i * 5, r);
+                    }
+                }
+                i++;
+            }
+            else if (this.config == DataArrivalConfig.TimeRange)
+            {
                 foreach (string key in dataSources.Keys)
                 {
                     CurveDataContext dataContext = dataSources[key];

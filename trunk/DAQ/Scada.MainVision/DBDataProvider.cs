@@ -206,12 +206,11 @@ namespace Scada.MainVision
 
         // Get time-range data,
         // Notify with all the result.
-        public override void RefreshTimeRange(string deviceKey, string from, string to)
+        public override void RefreshTimeRange(string deviceKey, DateTime fromTime, DateTime toTime)
         {
             try
             {
-                DateTime fromTime = DateTime.Parse(from);
-                DateTime toTime = DateTime.Parse(to);
+
 
                 DBDataCommonListerner listener = this.dataListeners[deviceKey];
 
@@ -223,10 +222,10 @@ namespace Scada.MainVision
                 }
                 listener.OnDataArrivalEnd();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-            }
 
+            }
         }
 
         private Dictionary<string, object> RefreshTimeNow(string deviceKey)
@@ -295,7 +294,7 @@ namespace Scada.MainVision
         /// <param name="count"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        private List<Dictionary<string, object>> Refresh(string deviceKey, bool current, int count, DateTime from, DateTime to)
+        private List<Dictionary<string, object>> Refresh(string deviceKey, bool current, int count, DateTime fromTime, DateTime toTime)
         {
             if (this.cmd == null)
             {
@@ -306,7 +305,14 @@ namespace Scada.MainVision
 
             Config cfg = Config.Instance();
             ConfigEntry entry = cfg[deviceKey];
-            this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+            if (current)
+            {
+                this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+            }
+            else
+            {
+                this.cmd.CommandText = this.GetSelectStatement(entry.TableName, fromTime, toTime);
+            }
             using (MySqlDataReader reader = this.cmd.ExecuteReader())
             {
                 int index = 0;
@@ -359,6 +365,14 @@ namespace Scada.MainVision
             // Get the recent <count> entries.
             string format = "select * from {0} order by Id DESC limit {1}";
             return string.Format(format, tableName, count);
+        }
+
+        private string GetSelectStatement(string tableName, DateTime fromTime, DateTime toTime)
+        {
+            // Get the recent <count> entries.
+            string format = "select * from {0}  where time<'{1}' and time>'{2}' order by Id DESC";
+            string sql = string.Format(format, tableName, toTime, fromTime);
+            return sql;
         }
 
         private DataListener GetDataListenerByTableName(string tableName)
