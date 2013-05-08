@@ -75,6 +75,14 @@ namespace Scada.Chart
 
         private TextBlock valueLabel;
 
+        public double CenterX
+        {
+            get
+            {
+                return this.centerX;
+            }
+        }
+
         private Dictionary<int, GraduationLine> Graduations
         {
             get;
