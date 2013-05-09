@@ -169,40 +169,80 @@ namespace Scada.MainVision
             text3.Text = data2;
         }
 
-        // 1
-        private void UpdatePanel_HIPC(HerePaneItem panel, string doserate)
+        // 1 剂量率
+        private void UpdatePanel_HIPC(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Hipc);
+            string doserate = d["doserate"] as string;
+            
         }
-        // 2
-        private void UpdatePanel_NaI(HerePaneItem panel, string data1)
+        // 2 总剂量率、发现核素（置信度=100，剂量率>5nSv/h，最好可以设置剂量率的阈值）
+        /*
+         *  K-40 = K-40; (0, 100, 100) 
+            I-131 = I-131; (0, 100, 100)
+            Bi-214 = Bi-214; (0, 100, 100)
+            Pb-214 = Pb-214; (0, 100, 100)
+            Cs-137 = Cs-137; (0, 100, 100)
+            Co-60 = Co-60; (0, 100, 100)
+            Am-241 = Am-241; (0, 100, 100)
+            Ba-140 = Ba-140;(0, 100, 100)
+            Cs-134 = Cs-134;(0, 100, 100)
+            I-133 = I-133; (0, 100, 100)
+            Rh-106m = Rh-106m;(0, 100, 100)
+            Ru-103 = Ru-103; (0, 100, 100)
+            Te-129 = Te-129;(0, 100, 100)
+         */
+        private void UpdatePanel_NaI(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_NaI);
+            string doserate = d["doserate"] as string;
+            string[] nuclides = { "K-40", "I-131", "Bi-214", "Pb-214", "Cs-137", "Co-60", "Am-241", "Ba-140", "Cs-134", "I-133", "Rh-106m", "Ru-103", "Te-129" };
+            foreach (string nuclide in nuclides)
+            {
+                string nuclideKey = nuclide.ToLower();
+                if (d.ContainsKey(nuclideKey))
+                {
+                    string indicationKey = string.Format("Ind({0})", nuclideKey);
+                    string indication = (string)d[indicationKey];
+                    if (indication == "100")
+                    {
+                        string nuclideDoserate = (string)d[nuclide.ToLower()];
+                        if (nuclideDoserate.Length > 0)
+                        {
+                        }
+                    }
+                }
+
+            }
         }
         // 3 // 风速、风向、雨量
-        private void UpdatePanel_Weather(HerePaneItem panel, string windspeed, string winddir, string raingauge)
+        private void UpdatePanel_Weather(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Weather);
+            string windspeed = (string)d["windspeed"];
+            string direction = (string)d["direction"];
+            string raingauge = (string)d["raingauge"];
         }
-        // 4
-        private void UpdatePanel_HV(HerePaneItem panel, string data1)
+        // 4 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
+        private void UpdatePanel_HV(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_HvSampler);
         }
-        // 5
-        private void UpdatePanel_I(HerePaneItem panel, string data1)
+        // 5 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
+        private void UpdatePanel_I(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_ISampler);
         }
-        // 6
-        private void UpdatePanel_Shelter(HerePaneItem panel, string data1)
+        // 6 市电状态、备电时间、舱内温度、门禁报警、烟感报警、浸水报警
+        private void UpdatePanel_Shelter(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Shelter);
         }
-        // 7
-        private void UpdatePanel_DWD(HerePaneItem panel, string data1)
+        // 7 仅工作状态
+        private void UpdatePanel_DWD(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Dwd);
+            string isLidOpen = (string)d["islidopen"];
         }
 
         void RefreshPanelDataTimerTick(object sender, EventArgs e)
@@ -210,48 +250,15 @@ namespace Scada.MainVision
 
             this.dataProvider.RefreshTimeNow();
 
-            this.UpdatePanel_HIPC(this.panes[0], "");
-            this.UpdatePanel_NaI(this.panes[1], "");
-            this.UpdatePanel_Weather(this.panes[2], "", "", "");
+            this.UpdatePanel_HIPC(this.panes[0]);
+            this.UpdatePanel_NaI(this.panes[1]);
+            this.UpdatePanel_Weather(this.panes[2]);
 
-            this.UpdatePanel_HV(this.panes[3], "");
-            this.UpdatePanel_I(this.panes[4], "");
+            this.UpdatePanel_HV(this.panes[3]);
+            this.UpdatePanel_I(this.panes[4]);
 
-            this.UpdatePanel_Shelter(this.panes[5], "");
-            this.UpdatePanel_DWD(this.panes[6], "");
-
-
-            /*
-            Random r = new Random();
-
-            int c1 = r.Next(146, 150);
-            int c2 = r.Next(450, 550);
-            int c3 = r.Next(1460, 1500);
-            int c4 = r.Next(1460, 1500);
-
-            int c5 = r.Next(20, 30);
-            int c6 = r.Next(13, 22);
-
-            int c7 = r.Next(1460, 1500);
-            int c8 = r.Next(10, 20);
-
-            string d01 = string.Format("剂量率: {0} nSv/h", c1);
-            string d02 = string.Format("高压值: {0} nSv/h", c2);
-
-            string d11 = string.Format("剂量率: {0} nSv/h", c3);
-            string d12 = "";
-
-            string d21 = string.Format("温度: {0} ℃", c5);
-            string d22 = string.Format("风速: {0} m/s", c6);
-
-            string d31 = string.Format("流量: {0}", c7);
-            string d32 = "";
-
-            this.DisplayPanelData(this.panes[0], d01, d02);
-            this.DisplayPanelData(this.panes[1], d11, d12);
-            this.DisplayPanelData(this.panes[2], d21, d22);
-            this.DisplayPanelData(this.panes[3], d31, d32);
-             * */
+            this.UpdatePanel_Shelter(this.panes[5]);
+            this.UpdatePanel_DWD(this.panes[6]);
 
         }
 
