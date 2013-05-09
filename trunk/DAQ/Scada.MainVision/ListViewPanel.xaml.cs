@@ -195,8 +195,12 @@ namespace Scada.Controls
                 {
                     this.dataSource.Sort(DBDataProvider.DateTimeCompare);
 
-                    ((ListView)this.ListView).ItemsSource = null;
-                    ((ListView)this.ListView).ItemsSource = this.dataSource;
+                    ListView listView = (ListView)this.ListView;
+                    // Remember the Selected item.
+                    int selected = listView.SelectedIndex;
+                    listView.ItemsSource = null;
+                    listView.ItemsSource = this.dataSource;
+                    listView.SelectedIndex = selected;
                 }
             }
 			

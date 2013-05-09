@@ -42,8 +42,12 @@ namespace Scada.MainVision
                 {
                     string nuclname = reader.GetString("name");
                     string doserate = reader.GetString("Doserate");
+                    string indication = reader.GetString("Indication");
 
-                    data.Add(nuclname.ToLower(), doserate);
+                    string nuclideKey = nuclname.ToLower();
+                    string indicationKey = string.Format("Ind({0})", nuclideKey);
+                    data.Add(nuclideKey, doserate);
+                    data.Add(indicationKey, indication);
                 }
             }
         }
