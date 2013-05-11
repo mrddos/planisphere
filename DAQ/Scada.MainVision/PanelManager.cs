@@ -62,6 +62,15 @@ namespace Scada.MainVision
                 {
                     panel.ListView = this.ShowListView(panel, dataListener);
                     panel.GraphView = this.ShowGraphView(panel, dataListener);
+                    
+                    if (deviceKey == DataProvider.DeviceKey_HvSampler)
+                    {
+                        panel.ControlPanel = this.ShowControlView();
+                    }
+                    else if (deviceKey == DataProvider.DeviceKey_ISampler)
+                    {
+                        panel.ControlPanel = this.ShowControlView();
+                    }
                 }
                 else
                 {
@@ -78,6 +87,7 @@ namespace Scada.MainVision
                 return panel;
             }
 		}
+
 
         public ListView ShowListView(ListViewPanel panel, DataListener dataListener)
         {
@@ -124,6 +134,12 @@ namespace Scada.MainVision
             }
 
             return graphView;
+        }
+
+        private Control ShowControlView()
+        {
+            SamplerControlPanel panel = new SamplerControlPanel();
+            return panel;
         }
 
 		public void SetListViewPanelPos(ListViewPanel listViewPanel, int row, int column)

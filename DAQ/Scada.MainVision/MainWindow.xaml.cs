@@ -173,6 +173,10 @@ namespace Scada.MainVision
         private void UpdatePanel_HIPC(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Hipc);
+            if (d == null)
+            {
+                return;
+            }
             string doserate = d["doserate"] as string;
             
         }
@@ -195,6 +199,10 @@ namespace Scada.MainVision
         private void UpdatePanel_NaI(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_NaI);
+            if (d == null)
+            {
+                return;
+            }
             string doserate = d["doserate"] as string;
             string[] nuclides = { "K-40", "I-131", "Bi-214", "Pb-214", "Cs-137", "Co-60", "Am-241", "Ba-140", "Cs-134", "I-133", "Rh-106m", "Ru-103", "Te-129" };
             foreach (string nuclide in nuclides)
@@ -219,6 +227,10 @@ namespace Scada.MainVision
         private void UpdatePanel_Weather(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Weather);
+            if (d == null)
+            {
+                return;
+            }
             string windspeed = (string)d["windspeed"];
             string direction = (string)d["direction"];
             string raingauge = (string)d["raingauge"];
@@ -227,21 +239,37 @@ namespace Scada.MainVision
         private void UpdatePanel_HV(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_HvSampler);
+            if (d == null)
+            {
+                return;
+            }
         }
         // 5 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
         private void UpdatePanel_I(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_ISampler);
+            if (d == null)
+            {
+                return;
+            }
         }
         // 6 市电状态、备电时间、舱内温度、门禁报警、烟感报警、浸水报警
         private void UpdatePanel_Shelter(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Shelter);
+            if (d == null)
+            {
+                return;
+            }
         }
         // 7 仅工作状态
         private void UpdatePanel_DWD(HerePaneItem panel)
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Dwd);
+            if (d == null)
+            {
+                return;
+            }
             string isLidOpen = (string)d["islidopen"];
         }
 
@@ -353,6 +381,30 @@ namespace Scada.MainVision
                 }
 
             }
+        }
+
+
+        // Move the window by mouse-press-down.
+        private void WindowMoveHandler(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
+        }
+
+        /// System Menu
+        // Close the Window.
+        private void OnCloseButton(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void OnMaxButton(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Maximized;
+        }
+
+        private void OnMinButton(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
         }
 
 

@@ -15,14 +15,14 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid Background="AliceBlue">
+    <Grid Background="LightGray">
         
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <Rectangle Name="Rect" Fill="AliceBlue" Stroke="Gray" StrokeThickness="2"  RadiusX="6" RadiusY="6" Grid.RowSpan="2">
+
+        <Rectangle Name="Rect" Fill="LightGray" Stroke="Gray" StrokeThickness="2"  RadiusX="0" RadiusY="6" Grid.RowSpan="2">
             <Rectangle.Effect>
                 <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
             </Rectangle.Effect>
@@ -81,11 +81,15 @@
         </Border>
 
         <TabControl Grid.Row="1" Margin="5,0,5,5">
-            <TabItem Header="列表" Width="50" >
+            <TabItem Header="实时列表" Width="80" >
                 <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="5,5,5,5"/>
             </TabItem>
-            <TabItem Header="曲线" Width="50" >
+            <TabItem Header="实时曲线" Width="80" >
                 <ContentControl Grid.Row="1" x:Name="GraphViewContainer" Margin="5,5,5,5"/>
+            </TabItem>
+
+            <TabItem Header="控制面板" Width="80" x:Name="ControlPanelTabItem" Visibility="Collapsed">
+                <ContentControl Grid.Row="1" x:Name="ControlPanelContainer" Margin="5,5,5,5"/>
             </TabItem>
         </TabControl>
             
