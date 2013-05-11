@@ -19,6 +19,8 @@ namespace Scada.Controls
 
         private Control graphView = null;
 
+        private Control ctrlView = null;
+
 		private DataListener dataListener;
 
         private DataProvider dataProvider;
@@ -110,6 +112,24 @@ namespace Scada.Controls
 			}
 		}
 
+        public Control ControlPanel
+        {
+            get
+            {
+                return this.ctrlView;
+            }
+
+            set
+            {
+                this.ctrlView = value;
+                if (this.ctrlView != null)
+                {
+                    this.ControlPanelTabItem.Visibility = Visibility.Visible;
+                    this.GraphViewContainer.Content = this.ctrlView;
+                }
+            }
+        }
+
         public string DisplayName
         {
             get;
@@ -123,6 +143,10 @@ namespace Scada.Controls
 		public override void OnApplyTemplate()
 		{
 			base.OnApplyTemplate();
+
+            DateTime now = DateTime.Now;
+            this.FromDate.SelectedDate = now.AddDays(-2);
+            this.ToDate.SelectedDate = now.AddDays(-1);
 			// Can NOT Find Element in Template;
 		}
 
@@ -219,7 +243,7 @@ namespace Scada.Controls
 
         private bool ValidTimeRange(DateTime fromDate, DateTime toDate)
         {
-            return true;
+            return fromDate <= toDate;
         }
 
         private void DatePickerCalendarClosed(object sender, RoutedEventArgs e)
@@ -235,6 +259,11 @@ namespace Scada.Controls
                         this.ToDate.SelectedDate = dt.Value.AddDays(1);
                     }
                 }
+
+                if (!this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
+                {
+
+                }
             }
             else if (picker.Name == "ToDate")
             {
@@ -246,7 +275,8 @@ namespace Scada.Controls
                         this.FromDate.SelectedDate = dt.Value.AddDays(-1);
                     }
                 }
-                if (this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
+
+                if (!this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
                 {
 
                 }
