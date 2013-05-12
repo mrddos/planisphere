@@ -259,9 +259,11 @@ namespace Scada.Declare
         {
             if (MainApplication.TimerCreator != null)
             {
+                // TODO: the Interval would be 1 second;
                 this.senderTimer = MainApplication.TimerCreator.CreateTimer(interval);
                 this.senderTimer.Start(() => 
                 {
+                    // TODO: ~~~~~ % 30s == 0?
                     this.Send(this.actionSend);
                 });
 
@@ -380,7 +382,7 @@ namespace Scada.Declare
 				return false;
 			}
 
-			object[] fields = GetFieldsData(data, this.fieldsConfig);
+            object[] fields = Device.GetFieldsData(data, dd.Time, this.fieldsConfig);
 			dd = new DeviceData(this, fields);
 			dd.InsertIntoCommand = this.insertIntoCommand;
 			// deviceData.FieldsConfig = this.fieldsConfig;

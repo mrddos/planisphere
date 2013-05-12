@@ -34,6 +34,8 @@ namespace Scada.Declare
 
         private const int BufferLength = 1024;
 
+        private const int MaxDelay = 10;
+
         StringBuilder sb = new StringBuilder(BufferLength);
 
         private readonly string[] EmptyStringArray = new string[0];
@@ -43,6 +45,8 @@ namespace Scada.Declare
         private FieldConfig[] fieldsConfig = null;
 
         private List<int> elemIdList = new List<int>();
+
+        private DateTime lastDateTime = default(DateTime);
 
 		public FormProxyDevice(DeviceEntry entry)
 		{
@@ -162,15 +166,15 @@ namespace Scada.Declare
             return ret;
         }
 
-        private bool GetDeviceData(string[] data, out DeviceData deviceData)
+        private bool GetDeviceData(string[] data, DateTime time, out DeviceData deviceData)
         {
             deviceData = default(DeviceData);
             if (data == null || data.Length == 0)
             {
                 return false;
             }
-
-            object[] fields = GetFieldsData(data, this.fieldsConfig);
+            deviceData.Time = time;
+            object[] fields = Device.GetFieldsData(data, time, this.fieldsConfig);
             deviceData = new DeviceData(this, fields);
             deviceData.InsertIntoCommand = this.insertIntoCommand;
             //deviceData.FieldsConfig = this.fieldsConfig;
@@ -185,18 +189,33 @@ namespace Scada.Declare
 
                 this.hWnd = FetchWindowHandle(this.processName);
 
+                // 
                 timer = new Timer(new TimerCallback((object o) => {
 
+                    DateTime now = DateTime.Now;
+                    if (!this.IsRightTime(now))
+                    {
+                        return;
+                    }
+
+                    int second = (now.Second < 30) ? 0 : 30;
+                    DateTime rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
+                    if (rightTime == this.lastDateTime)
+                    {
+                        return;
+                    }
+                    // this.lastDateTime = rightTime;
                     string[] dataSet = GetData(hWnd);
 
-                    DeviceData dd;
-                    bool got = this.GetDeviceData(dataSet, out dd);
+                    DeviceData dd = default(DeviceData);
+                    bool got = this.GetDeviceData(dataSet, rightTime, out dd);
                     if (got)
                     {
+                        this.lastDateTime = rightTime;
                         this.SynchronizationContext.Post(this.DataReceived, dd);
                     }
 
-                }), null, 1000, 10000);
+                }), null, 1000, 1000);
                 
             }));
 
@@ -212,5 +231,20 @@ namespace Scada.Declare
 		{
 			throw new NotImplementedException();
 		}
+
+        // VB form data every 30 sec.
+        // Verify the time (second) is the right time.
+        private bool IsRightTime(DateTime now)
+        {
+            if (now.Second >= 0 && now.Second <= MaxDelay)
+            {
+                return true;
+            }
+            else if (now.Second >= 30 && now.Second <= (30 + MaxDelay))
+            {
+                return true;
+            }
+            return false;
+        }
 	}
 }

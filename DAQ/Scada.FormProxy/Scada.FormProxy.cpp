@@ -24,9 +24,19 @@ BOOL CALLBACK EnumProc(HWND hWnd, LPARAM lParam)
         // !!! first is not main
         HWND hParentWnd = NULL;
         while ((hParentWnd = GetParent(hWnd)) != NULL)
-			hParentWnd = hWnd;
-        pInfo->hWnd = hWnd;
-        return FALSE;
+		{
+			MessageBox(NULL, L"@", L"Get Form Handle Failed.", 0);
+			hWnd = hParentWnd;
+		}
+		WCHAR title[MAX_PATH] = {};
+		GetWindowText(hWnd, title, MAX_PATH);
+		CString strTitle(title);
+		strTitle = strTitle.Trim();
+		if (strTitle.CompareNoCase(L"TRACERLAB") == 0)
+        {
+			pInfo->hWnd = hWnd;
+			return FALSE;
+		}
     }
     return TRUE;
 }
@@ -93,7 +103,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// MessageBox(NULL, strProcName, strPathName, 0);
 	if (strProcName.GetLength() == 0)
 	{
-		strProcName = L"Scada.DAQ.DataForm.exe";
+		strProcName = L"AIS.exe";
 	}
 
 	if (strPathName.GetLength() == 0)
