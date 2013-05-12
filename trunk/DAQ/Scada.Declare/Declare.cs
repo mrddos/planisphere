@@ -49,6 +49,8 @@ namespace Scada.Declare
 
 		private Action action;
 
+        private DateTime time;
+
 		private string insertIntoCommand;
 
 		// private FieldConfig[] fieldsConfig;
@@ -59,7 +61,9 @@ namespace Scada.Declare
 			this.data = data;
 			this.delay = 0;
 			this.action = null;
-			this.insertIntoCommand = string.Empty;
+            this.time = default(DateTime);
+            this.insertIntoCommand = string.Empty;
+            
 			// this.fieldsConfig = null;
 		}
 
@@ -78,6 +82,18 @@ namespace Scada.Declare
 			get { return this.delay; }
 			set { this.delay = value; }
 		}
+
+        public DateTime Time
+        {
+            get
+            {
+                return this.time;
+            }
+            set
+            {
+                this.time = value;
+            }
+        }
 
 		public Action Action
 		{
@@ -172,7 +188,7 @@ namespace Scada.Declare
 		public abstract void Send(byte[] action);
 
 
-        public static object[] GetFieldsData(string[] data, FieldConfig[] fieldsConfig)
+        public static object[] GetFieldsData(string[] data, DateTime now, FieldConfig[] fieldsConfig)
         {
             int count = fieldsConfig.Length;
             object[] ret = new object[count];
@@ -180,7 +196,7 @@ namespace Scada.Declare
             {
                 if (fieldsConfig[i].type == FieldType.TimeNow)
                 {
-                    ret[i] = DateTime.Now;
+                    ret[i] = now;
                 }
                 else if (fieldsConfig[i].type == FieldType.Null)
                 {

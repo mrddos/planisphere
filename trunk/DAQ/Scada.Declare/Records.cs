@@ -63,7 +63,7 @@ namespace Scada.Declare
 		{
 			if (data.Data != null)
 			{
-				bool ret = this.conn.AddRecordData(data.InsertIntoCommand, data.Data);
+				bool ret = this.conn.AddRecordData(data.InsertIntoCommand, data.Time, data.Data);
 				return ret;
 			}
 			return false;

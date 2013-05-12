@@ -391,7 +391,7 @@ namespace Scada.MainVision
         }
 
         /// System Menu
-        // Close the Window.
+        /// Close the Window.
         private void OnCloseButton(object sender, RoutedEventArgs e)
         {
             this.Close();

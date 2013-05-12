@@ -52,7 +52,7 @@ namespace Scada.Declare
         }
 
 
-		public bool AddRecordData(string commandText, params object[] items)
+		public bool AddRecordData(string commandText, DateTime time, params object[] items)
 		{
             try
             {
