@@ -185,7 +185,7 @@ namespace Scada.Declare
 
 		public abstract void Stop();
 
-		public abstract void Send(byte[] action);
+		public abstract void Send(byte[] action, DateTime time);
 
 
         public static object[] GetFieldsData(string[] data, DateTime now, FieldConfig[] fieldsConfig)

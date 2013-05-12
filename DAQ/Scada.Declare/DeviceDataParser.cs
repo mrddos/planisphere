@@ -30,10 +30,16 @@ namespace Scada.Declare
 
 		public override byte[] GetLineBytes(byte[] data)
 		{
-            if (this.lineParser != null)
+            int len = data.Length;
+            if (data[len - 2] == (byte)0x0d && data[len - 1] == (byte)0x0a)
+            {
+                return data;
+            }
+            else if (this.lineParser != null)
             {
                 return this.lineParser.ContinueWith(data);
             }
+            
             return data;
 		}
 	}

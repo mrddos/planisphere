@@ -23,7 +23,8 @@ namespace Scada.Declare
 
 		private int IndexLineBreak()
 		{
-			int index = -1;
+
+            int index = -1;
 			int count = list.Count;
 			for (int i = 0; i < count; ++i)
 			{
@@ -72,5 +73,6 @@ namespace Scada.Declare
 
 			return line;
 		}
-	}
+
+    }
 }

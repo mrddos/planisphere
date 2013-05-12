@@ -19,5 +19,6 @@ namespace Scada.Declare
 		public abstract byte[] GetLineBytes(byte[] data);
 
 		public abstract string[] Search(byte[] data);
+
 	}
 }

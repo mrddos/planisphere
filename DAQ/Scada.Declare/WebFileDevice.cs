@@ -199,9 +199,8 @@ namespace Scada.Declare
 			isOpen = false;
 		}
 
-		public override void Send(byte[] action)
+		public override void Send(byte[] action, DateTime time)
 		{
-            
 		}
 
         private void Record(NuclideDataSet set)

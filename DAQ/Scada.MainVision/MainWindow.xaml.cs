@@ -177,7 +177,10 @@ namespace Scada.MainVision
             {
                 return;
             }
-            string doserate = d["doserate"] as string;
+            if (d.ContainsKey("doserate"))
+            {
+                string doserate = d["doserate"] as string;
+            }
             
         }
         // 2 总剂量率、发现核素（置信度=100，剂量率>5nSv/h，最好可以设置剂量率的阈值）
@@ -203,7 +206,12 @@ namespace Scada.MainVision
             {
                 return;
             }
-            string doserate = d["doserate"] as string;
+            if (!d.ContainsKey("doserate"))
+            {
+                return;
+            }
+
+            string doserate = (string)d["doserate"];
             string[] nuclides = { "K-40", "I-131", "Bi-214", "Pb-214", "Cs-137", "Co-60", "Am-241", "Ba-140", "Cs-134", "I-133", "Rh-106m", "Ru-103", "Te-129" };
             foreach (string nuclide in nuclides)
             {
@@ -228,6 +236,10 @@ namespace Scada.MainVision
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Weather);
             if (d == null)
+            {
+                return;
+            }
+            if (!d.ContainsKey("windspeed"))
             {
                 return;
             }
@@ -267,6 +279,10 @@ namespace Scada.MainVision
         {
             var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Dwd);
             if (d == null)
+            {
+                return;
+            }
+            if (!d.ContainsKey("islidopen"))
             {
                 return;
             }
