@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Scada.DAQ.Tools
@@ -41,36 +43,92 @@ namespace Scada.DAQ.Tools
 
             this.serialPort.Open();
 
-            string s = textBox1.Text;
-            s = s.Replace("\\r", "\r");
-            byte[] bytes = Encoding.ASCII.GetBytes(s);
-            this.serialPort.Write(bytes, 0, bytes.Length);
 
         }
 
+        private byte[] GetBytes(string s)
+        {
+            if (this.checkBox1.Checked)
+            {
+                string[] bs = s.Split(' ');
+                List<byte> a = new List<byte>();
+                foreach (string b in bs)
+                {
+                    if (b.Length > 0)
+                    {
+                        byte bt = (byte)int.Parse(b, NumberStyles.AllowHexSpecifier);
+                        a.Add(bt);
+                    }
+                }
+                return a.ToArray<byte>();
+            }
+            else
+            {
+                return Encoding.ASCII.GetBytes(s);
+            }
+        }
+
+        private void Close()
+        {
+            this.serialPort.Close();
+        }
+
+        private delegate void AddDataDelegate(string data);
+
         void serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
+            Thread.Sleep(200);
             int n = this.serialPort.BytesToRead;
             byte[] buffer = new byte[n];
 
             int r = this.serialPort.Read(buffer, 0, n);
 
-            string a = Encoding.ASCII.GetString(buffer);
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in buffer)
+            {
+                //Convert.ToString(b, 16);
+                string s = string.Format("{0} ", Convert.ToString(b, 16));
+                sb.Append(s);
+            }
 
+            this.listBox1.Invoke(new AddDataDelegate(this.AddData), sb.ToString());
+        }
+
+        private void AddData(string data)
+        {
+            MessageBox.Show(data);
+            this.listBox1.Items.Add(data);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            string[] ps = SerialPort.GetPortNames();
-            foreach (string port in ps)
-            {
-                comboBox1.Items.Add(port);
-            }
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Open();
+            // MessageBox.Show("O");
+        }
+
+        private void SendClick(object sender, EventArgs e)
+        {
+
+            string s = this.comboBox2.Text;
+
+            byte[] bytes = this.GetBytes(s);
+            this.serialPort.Write(bytes, 0, bytes.Length);
+            // MessageBox.Show("Send");
+        }
+
+        private void StopClick(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void comboBox1_SelectedValueChanged(object sender, EventArgs e)
+        {
+            this.com = this.comboBox2.Text;
         }
 
 

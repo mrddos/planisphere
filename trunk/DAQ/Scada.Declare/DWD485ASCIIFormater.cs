@@ -18,7 +18,7 @@ namespace Scada.Declare
 			// 32 CD A0 
 			// 3B 
 			// 32 
-			// 30 30 31 30 33 30 30 30 30 30 02 51 01 1A 
+			// 30 30 31 30 33 30 30 30 30 30 02 57? 01 [1A] Seems No 1A 
 			
 			// Skip 0 123 4
 			
@@ -42,9 +42,20 @@ namespace Scada.Declare
 
 		public override byte[] GetLineBytes(byte[] data)
 		{
-			return this.lineParser.ContinueWith(data);;
+            // !
+            if (data.Length == 19)
+            {
+                // 1 Completed Data Frame.
+                return data;
+            }
+            else
+            {
+                // Not Completed.
+                return this.lineParser.ContinueWith(data);
+            }
 		}
-	}
+
+    }
 
 
 	class DWD485ASCIILineParser : LineParser
@@ -59,8 +70,15 @@ namespace Scada.Declare
 
 		public override byte[] LineBreak
 		{
-			get { return this.lineBreak; }
-			set { this.lineBreak = value; }
+			get 
+            { 
+                return this.lineBreak; 
+            }
+			
+            set
+            {
+                this.lineBreak = value;
+            }
 		}
 
 		private int IndexLineBreak()
@@ -99,11 +117,13 @@ namespace Scada.Declare
 
 			int p = this.IndexLineBreak();
 
+            int len = this.LineBreak.Length;
 			if (p > 0)
 			{
-				byte[] ret = new byte[p];
-				list.CopyTo(0, ret, 0, p);
-				list.RemoveRange(0, p);
+                byte[] ret = new byte[p + len];
+				list.CopyTo(0, ret, 0, p + len);
+
+				list.RemoveRange(0, p + len);
 				return ret;
 			}
 			else if (p == 0)

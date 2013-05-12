@@ -49,6 +49,10 @@ namespace Scada.DAQ.Installer
                 this.conn.Open();
 
                 MySqlCommand cmd = this.conn.CreateCommand();
+                if (cmd != null)
+                {
+                    Console.WriteLine("DB Connected");
+                }
 
                 string line = sr.ReadLine();
                 while (line != null)
@@ -62,6 +66,9 @@ namespace Scada.DAQ.Installer
                         }
                         else
                         {
+                            string log = string.Format("Execute SQL: {0}", statement);
+                            Console.WriteLine(log);
+
                             this.ExecuteSQL(cmd, statement);
                         }
                     }
@@ -73,8 +80,7 @@ namespace Scada.DAQ.Installer
 
         internal void ExecuteSQL(MySqlCommand cmd, string statement)
         {
-            string log = string.Format("Execute SQL: {0}", statement);
-            Console.WriteLine(log);
+
             cmd.CommandText = statement;
             cmd.ExecuteNonQuery();
             // cmd.ExecuteScalar();

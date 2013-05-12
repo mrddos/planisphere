@@ -60,12 +60,17 @@ namespace Scada.Declare
 		private bool handled = true;
 
         private string exampleLine;
+
 		private List<byte> exampleBuffer = new List<byte>();
 
 
 		private string error = "No Error";
 
 		private const string ScadaDeclare = "Scada.Declare.";
+
+        private int MaxDelay = 10;
+
+        private DateTime currentActionTime = default(DateTime);
 
 
 		public StandardDevice(DeviceEntry entry)
@@ -134,6 +139,7 @@ namespace Scada.Declare
 			{
 				this.actionSendInHex = true;
 				string hexes = (StringValue)entry[DeviceEntry.ActionSend];
+                hexes = hexes.Trim();
 				this.actionSend = ParseHex(hexes);
 			}
 
@@ -199,13 +205,13 @@ namespace Scada.Declare
 
                 this.serialPort.BaudRate = this.baudRate;
 
-                this.serialPort.Parity = this.parity; //Parity none
-                this.serialPort.StopBits = StopBits.One; //(StopBits)this.stopBits;    //StopBits 1
-                this.serialPort.DataBits = 8;// this.dataBits;   // DataBits 8bit
-                this.serialPort.ReadTimeout = 10000;// this.readTimeout;
+                this.serialPort.Parity = this.parity;       //Parity none
+                this.serialPort.StopBits = StopBits.One;    //(StopBits)this.stopBits;    //StopBits 1
+                this.serialPort.DataBits = 8;               // this.dataBits;   // DataBits 8bit
+                this.serialPort.ReadTimeout = 10000;        // this.readTimeout;
 
                 this.serialPort.RtsEnable = true;
-                this.serialPort.NewLine = "/r/n";	//?
+                this.serialPort.NewLine = "/r/n";	        //?
                 this.serialPort.DataReceived += this.SerialPortDataReceived;
                 // Real Devie begins here.
 				if (!this.IsVirtual)
@@ -220,7 +226,7 @@ namespace Scada.Declare
 					{
                         if (this.actionSend != null && this.actionSend.Length > 0)
                         {
-                            this.Send(this.actionSend);
+                            this.Send(this.actionSend, default(DateTime));
                         }
 					}
                     SetStartStatus();
@@ -259,12 +265,24 @@ namespace Scada.Declare
         {
             if (MainApplication.TimerCreator != null)
             {
-                // TODO: the Interval would be 1 second;
-                this.senderTimer = MainApplication.TimerCreator.CreateTimer(interval);
+                // Trigger every 1s. 
+                this.senderTimer = MainApplication.TimerCreator.CreateTimer(1);
                 this.senderTimer.Start(() => 
                 {
-                    // TODO: ~~~~~ % 30s == 0?
-                    this.Send(this.actionSend);
+                    DateTime now = DateTime.Now;
+                    if (!this.IsRightTime(now))
+                    {
+                        return;
+                    }
+
+                    int second = (now.Second < 30) ? 0 : 30;
+                    DateTime rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
+                    if (rightTime == this.currentActionTime)
+                    {
+                        return;
+                    }
+
+                    this.Send(this.actionSend, rightTime);
                 });
 
             }
@@ -292,6 +310,9 @@ namespace Scada.Declare
 		{
 			if (!this.isVirtual)
 			{
+                // Try to Sleep 100ms and make one time callback.
+                // 200 ms is enough for BoudRate 9600
+                Thread.Sleep(200);
 				int n = this.serialPort.BytesToRead;
 				byte[] buffer = new byte[n];
 
@@ -348,7 +369,7 @@ namespace Scada.Declare
 				if (line.Length > 0)
 				{
 					DeviceData dd;
-					bool got = this.GetDeviceData(line, out dd);
+					bool got = this.GetDeviceData(line, this.currentActionTime, out dd);
 					if (got)
 					{
 						this.SynchronizationContext.Post(this.DataReceived, dd);
@@ -373,7 +394,7 @@ namespace Scada.Declare
         }
 
 
-		private bool GetDeviceData(byte[] line, out DeviceData dd)
+		private bool GetDeviceData(byte[] line, DateTime time, out DeviceData dd)
 		{
 			string[] data = this.dataParser.Search(line);
 			dd = default(DeviceData);
@@ -381,8 +402,8 @@ namespace Scada.Declare
 			{
 				return false;
 			}
-
-            object[] fields = Device.GetFieldsData(data, dd.Time, this.fieldsConfig);
+            dd.Time = time;
+            object[] fields = Device.GetFieldsData(data, time, this.fieldsConfig);
 			dd = new DeviceData(this, fields);
 			dd.InsertIntoCommand = this.insertIntoCommand;
 			// deviceData.FieldsConfig = this.fieldsConfig;
@@ -425,23 +446,26 @@ namespace Scada.Declare
 			// 
 		}
 
-		public override void Send(byte[] action)
+		public override void Send(byte[] action, DateTime time)
 		{
 			if (this.serialPort != null && this.IsOpen)
 			{
 				if (!this.IsVirtual)
 				{
                     // RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(action));
+                    this.currentActionTime = time;
 					this.serialPort.Write(action, 0, action.Length);
 				}
 				else
 				{
+                    this.currentActionTime = time;
                     this.OnSendDataToVirtualDevice(action);					
 				}
 			}
 
 		}
 
+        // Virtual !!
 		private void OnSendDataToVirtualDevice(byte[] action)
         {
             if (Bytes.Equals(action, this.actionSend))
@@ -503,6 +527,20 @@ namespace Scada.Declare
 			}
 		}
 
+        // VB form data every 30 sec.
+        // Verify the time (second) is the right time.
+        private bool IsRightTime(DateTime now)
+        {
+            if (now.Second >= 0 && now.Second <= MaxDelay)
+            {
+                return true;
+            }
+            else if (now.Second >= 30 && now.Second <= (30 + MaxDelay))
+            {
+                return true;
+            }
+            return false;
+        }
 		
 	}
 }

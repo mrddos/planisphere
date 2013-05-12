@@ -187,9 +187,10 @@ namespace Scada.Declare
 
             Thread thread = new Thread(new ThreadStart(() => {
 
+                // Fetch Window Handle from HWND.r file.
                 this.hWnd = FetchWindowHandle(this.processName);
 
-                // 
+                // Start timer to work.
                 timer = new Timer(new TimerCallback((object o) => {
 
                     DateTime now = DateTime.Now;
@@ -227,7 +228,7 @@ namespace Scada.Declare
 			throw new NotImplementedException();
 		}
 
-		public override void Send(byte[] action)
+		public override void Send(byte[] action, DateTime time)
 		{
 			throw new NotImplementedException();
 		}
