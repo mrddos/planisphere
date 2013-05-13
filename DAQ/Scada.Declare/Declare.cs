@@ -218,6 +218,13 @@ namespace Scada.Declare
                         ret[i] = item;
                     }
                 }
+                else if (fieldsConfig[i].index < 0)
+                {
+                    if (fieldsConfig[i].type == FieldType.Bit)
+                    {
+                        ret[i] = false;
+                    }
+                }
             }
             return ret;
         }
