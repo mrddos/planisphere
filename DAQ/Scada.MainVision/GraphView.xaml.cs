@@ -113,7 +113,10 @@ namespace Scada.MainVision
                         double r = 0.0;
                         if (v.Length > 0)
                         {
-                            r = double.Parse(v);
+                            if (double.TryParse(v, out r))
+                            {
+                                return;
+                            }
                         }
 
 

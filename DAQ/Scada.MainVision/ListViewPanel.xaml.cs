@@ -127,7 +127,7 @@ namespace Scada.Controls
                 if (this.ctrlView != null)
                 {
                     this.ControlPanelTabItem.Visibility = Visibility.Visible;
-                    this.GraphViewContainer.Content = this.ctrlView;
+                    this.ControlPanelContainer.Content = this.ctrlView;
                 }
             }
         }
