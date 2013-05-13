@@ -35,6 +35,8 @@ namespace Scada.Controls
 
         private bool readTimeMode = true;
 
+        private const int MaxListCount = 100;
+
 
         // Must Use the <Full Name>
         private System.Windows.Forms.Timer refreshDataTimer;
@@ -223,6 +225,13 @@ namespace Scada.Controls
                     // Remember the Selected item.
                     int selected = listView.SelectedIndex;
                     listView.ItemsSource = null;
+                    // List can only hold 100 items.
+                    if (this.dataSource.Count > MaxListCount)
+                    {
+                        int p = 100;
+                        int l = this.dataSource.Count - p;
+                        this.dataSource.RemoveRange(p, l);
+                    }
                     listView.ItemsSource = this.dataSource;
                     listView.SelectedIndex = selected;
                 }

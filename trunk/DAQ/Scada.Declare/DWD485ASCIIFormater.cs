@@ -18,26 +18,32 @@ namespace Scada.Declare
 			// 32 CD A0 
 			// 3B 
 			// 32 
-			// 30 30 31 30 33 30 30 30 30 30 02 57? 01 [1A] Seems No 1A 
+			// 30 30 31 30 33 [Barrel]
+            // 30 30 30 30 30 [Time] 02 57? 01 [1A] Seems No 1A 
 			
 			// Skip 0 123 4
 			
 			bool open = (bytes[5] == 0x31);
-            string opens = string.Format("{0}", open ? 1 : 0);
+            string ifOpen = string.Format("{0}", open ? 1 : 0);
 
-			// Skip
-			int a = bytes[6];
-			int b = bytes[7];
-			int c = bytes[8];
+			// Skip, File number.
+			int s1 = bytes[6];
+			int s2 = bytes[7];
+			int s3 = bytes[8];
 
-			bool rain = bytes[9] == 0x30;
-            string rains = string.Format("{0}", rain ? 1 : 0);
+            // If Rain.
+			bool rain = bytes[9] == 0x31;
+            string ifRain = string.Format("{0}", rain ? 1 : 0);
 
-			bool full = bytes[10] == 0x33;
-            string fulls = string.Format("{0}", full ? 1 : 0);
-			string time = Encoding.ASCII.GetString(bytes, 11, 5);	// in minutes;
+            // 桶状态(0x31  0x32  0x33)
+            int iBarrelState = bytes[10] - 0x30;    //[10]
+            string barrelState = string.Format("{0}", iBarrelState);
+            // 降雨总时间  [11 - (5)]
+			string rainTime = Encoding.ASCII.GetString(bytes, 11, 5);	// in minutes;
 
-			return new string[] { opens, rains, fulls, time };
+            // IfRain, Barrel, Alarm, IsLidOpen, CurrentRainTime
+            // 0, 1, 2, 3
+            return new string[] { ifRain, barrelState, ifOpen, rainTime };
 		}
 
 		public override byte[] GetLineBytes(byte[] data)
