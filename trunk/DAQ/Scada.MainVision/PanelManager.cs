@@ -65,11 +65,11 @@ namespace Scada.MainVision
                     
                     if (deviceKey == DataProvider.DeviceKey_HvSampler)
                     {
-                        panel.ControlPanel = this.ShowControlView();
+                        panel.ControlPanel = this.ShowControlView(DataProvider.DeviceKey_HvSampler);
                     }
                     else if (deviceKey == DataProvider.DeviceKey_ISampler)
                     {
-                        panel.ControlPanel = this.ShowControlView();
+                        panel.ControlPanel = this.ShowControlView(DataProvider.DeviceKey_ISampler);
                     }
                 }
                 else
@@ -136,9 +136,9 @@ namespace Scada.MainVision
             return graphView;
         }
 
-        private Control ShowControlView()
+        private Control ShowControlView(string deviceKey)
         {
-            SamplerControlPanel panel = new SamplerControlPanel();
+            SamplerControlPanel panel = new SamplerControlPanel(deviceKey);
             return panel;
         }
 
