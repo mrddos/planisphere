@@ -8,9 +8,8 @@
     <Window.Background>
         <LinearGradientBrush>
             <LinearGradientBrush.GradientStops>
-                <GradientStop Offset="0.00" Color="LightGray" />
-                <GradientStop Offset="0.8" Color="White" />
-               
+                <GradientStop Color="#D2D2D2" Offset="0.0" />
+                <GradientStop Color="#D2D2D2" Offset="1.0" />
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
     </Window.Background>
@@ -27,8 +26,8 @@
         </Grid.Resources>
         <!-- Definitions -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="37"/>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
