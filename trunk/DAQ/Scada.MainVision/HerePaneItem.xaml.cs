@@ -86,12 +86,12 @@ namespace Scada.MainVision
 
         private void OnMouseEnterRect(object sender, MouseEventArgs e)
         {
-			this.Rect.Fill = Brushes.AliceBlue;
+			// this.Rect.Fill = Brushes.AliceBlue;
         }
 
         private void OnMouseLeaveRect(object sender, MouseEventArgs e)
         {
-            this.Rect.Fill = Brushes.LightGray;
+            // this.Rect.Fill = Brushes.LightGray;
         }
 
 
