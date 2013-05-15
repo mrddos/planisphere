@@ -61,6 +61,7 @@ namespace Scada.MainVision
                 if (showList)
                 {
                     panel.ListView = this.ShowListView(panel, dataListener);
+                    panel.SearchView = this.ShowListView(panel, dataListener);
                     panel.GraphView = this.ShowGraphView(panel, dataListener);
                     
                     if (deviceKey == DataProvider.DeviceKey_HvSampler)
