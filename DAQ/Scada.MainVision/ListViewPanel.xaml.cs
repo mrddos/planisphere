@@ -10,12 +10,15 @@ namespace Scada.Controls
     using Scada.Controls.Data;
     using Scada.MainVision;
     using Microsoft.Windows.Controls;
+    using System.Windows.Controls.Primitives;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
 	public partial class ListViewPanel : UserControl
 	{
         private Control listView = null;
+
+        private Control searchView = null;
 
         private Control graphView = null;
 
@@ -97,6 +100,23 @@ namespace Scada.Controls
                 }
 			}
 		}
+
+        public Control SearchView
+        {
+            get
+            {
+                return this.searchView;
+            }
+
+            set
+            {
+                this.searchView = value;
+                if (this.listView != null)
+                {
+                    this.SearchViewContainer.Content = this.searchView;
+                }
+            }
+        }
 
         public Control GraphView
 		{
@@ -290,6 +310,12 @@ namespace Scada.Controls
 
                 }
             }
+        }
+
+        // Select the ChartView shown.
+        private void ShowChartView(object sender, RoutedEventArgs e)
+        {
+            this.TabCtrl.SelectedItem = this.ChartViewTabItem;
         }
 
 

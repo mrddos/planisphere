@@ -191,5 +191,111 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    
+
+    <Style TargetType="{x:Type TabItem}" x:Key="TabItemKey">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TabItem}">
+                    <Grid>
+                        <Border Name="Border" Height="30" Margin="-1,-2,0,0"
+                                BorderBrush="#707070"
+                                BorderThickness="0,1,0,0">
+                            <Border Name="Border2" BorderBrush="#282828"
+                                BorderThickness="0,0,1,0">
+                                <ContentPresenter x:Name="ContentSite"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Center"
+                                      ContentSource="Header"
+                                      Margin="0"
+                                      RecognizesAccessKey="True"/>
+                            </Border>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Panel.ZIndex" Value="100" />
+                            <Setter TargetName="Border" Property="Background" Value="#535353" />
+                            <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
+                            <Setter Property="Foreground" Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="False">
+                            <Setter TargetName="Border" Property="Background" Value="#3A3A3A" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#3A3A3A" />
+                            <Setter Property="Foreground" Value="#919191" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style TargetType="Button" x:Key="ButtonKey">
+        <Setter Property="SnapsToDevicePixels" Value="true"/>
+        <Setter Property="OverridesDefaultStyle" Value="true"/>
+        <!--
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+        -->
+        <Setter Property="MinHeight" Value="23"/>
+        <Setter Property="MinWidth" Value="75"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Border0" CornerRadius="1" BorderThickness="1" BorderBrush="#464646">
+                    <Border x:Name="Border" CornerRadius="1" BorderThickness="1" BorderBrush="Gray">
+                        
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#6f6f6f" Offset="0.0" />
+                                <GradientStop Color="#6f6f6f" Offset="0.5" />
+                                <GradientStop Color="#393939" Offset="0.55" />
+                                <GradientStop Color="#393939" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <ContentPresenter Grid.RowSpan="2"
+                            Margin="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True">
+
+                            </ContentPresenter>
+                            <!--
+                            <Rectangle Grid.Row="1" Fill="Black" Opacity="0.6"></Rectangle>
+                            -->
+                        </Grid>
+
+                    </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused" Value="true">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
+                        </Trigger>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="#464646" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="Border" Property="Background" Value="#464646" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="Border" Property="Background" Value="#464646" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
+                            <Setter Property="Foreground" Value="#464646"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 </ResourceDictionary>
