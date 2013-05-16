@@ -11,6 +11,7 @@ namespace Scada.Controls
     using Scada.MainVision;
     using Microsoft.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Media;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -97,6 +98,7 @@ namespace Scada.Controls
                 if (this.listView != null)
                 {
                     this.ListViewContainer.Content = this.listView;
+                    this.ApplyListStyle((ListView)this.listView);
                 }
 			}
 		}
@@ -114,6 +116,7 @@ namespace Scada.Controls
                 if (this.listView != null)
                 {
                     this.SearchViewContainer.Content = this.searchView;
+                    this.ApplyListStyle((ListView)this.searchView);
                 }
             }
         }
@@ -161,6 +164,14 @@ namespace Scada.Controls
 		[Category("Behavior")]
 		public event RoutedEventHandler CloseClick;
 
+        private void ApplyListStyle(ListView listView)
+        {
+            Color c = Color.FromRgb(83, 83, 83);
+            listView.Background = new SolidColorBrush(c);
+            var d = listView.ItemTemplate;
+
+            listView.Style = (Style)this.Resources["ListViewKey"];
+        }
 
 		public override void OnApplyTemplate()
 		{
