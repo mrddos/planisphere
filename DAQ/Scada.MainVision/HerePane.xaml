@@ -220,8 +220,10 @@
     
     <!-- Control -->
 
-    <ScrollViewer x:Name="panelScrollViewer" Style="{StaticResource for_scrollviewer}" Height="190" Margin="15,0" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Visible">
-        <StackPanel x:Name="Panel" Orientation="Horizontal" Height="160">
+    <ScrollViewer x:Name="panelScrollViewer" VerticalAlignment="Top" Style="{StaticResource for_scrollviewer}"
+                  VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Visible"
+                  Height="175" >
+        <StackPanel x:Name="Panel" Orientation="Horizontal" Height="162">
 
         </StackPanel>
     </ScrollViewer>
