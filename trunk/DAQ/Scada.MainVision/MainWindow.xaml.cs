@@ -415,6 +415,8 @@ namespace Scada.MainVision
 
         private void OnMaxButton(object sender, RoutedEventArgs e)
         {
+            // TODO: 8?
+            this.MaxHeight = SystemParameters.WorkArea.Height + 8;
             this.WindowState = WindowState.Maximized;
         }
 

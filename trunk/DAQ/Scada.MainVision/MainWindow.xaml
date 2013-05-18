@@ -26,8 +26,8 @@
         </Grid.Resources>
         <!-- Definitions -->
         <Grid.RowDefinitions>
-            <RowDefinition Height="37"/>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="175"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -36,47 +36,30 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Button Width="38" Height="18" Grid.Row="0" Grid.Column="2" Click="OnMaxButton">最大化</Button>
-        
-        <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" 
-                HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5,5,5,5"
+        <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="#535353">
+            <Image Source="Images/logo.png" Stretch="None" HorizontalAlignment="Left" Margin="5, 0, 0, 0"></Image>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!-- Max -->
+                <Button Width="38" Height="18" Click="OnMaxButton">最大化</Button>
+
+                <!-- Close -->
+                <Button Width="18" Height="18" HorizontalAlignment="Right" 
+                    VerticalAlignment="Top" Margin="5,5,5,5"
                 Click="OnCloseButton"
                 Template="{StaticResource CloseButtonTemplateKey}"/>
+            </StackPanel>
+        </Grid>
+
+
+
 
         <!-- UIElements -->
         <!-- Here Pane as the Header -->
         <m:HerePane x:Name="herePane" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ></m:HerePane>
         
         <!-- Device List -->
-        <Grid Grid.Row="2" Grid.Column="0" Margin="5,5,5,5">
-
-            <Rectangle Name="Rect" Fill="LightGray" Stroke="Gray" StrokeThickness="2"  RadiusX="0" RadiusY="6">
-                <Rectangle.Effect>
-                    <DropShadowEffect Direction="320" ShadowDepth="10" Opacity=".5"></DropShadowEffect>
-                </Rectangle.Effect>
-            </Rectangle>
-
-            <m:DeviceListPanel x:Name="DeviceList" >
-            </m:DeviceListPanel>
-            <!--
-            <Expander x:Name="Expander" Margin="3, 3, 3, 3" Expanded="OnExpanded" Collapsed="OnExpanded" 
-                      Header="设备列表" IsExpanded="False" >
-                
- 
-            </Expander>
-            -->
-
-            <!-- Mask MUST after the content -->
-            <Grid.OpacityMask>
-                <VisualBrush Visual="{Binding ElementName=Rect}"/>
-            </Grid.OpacityMask>
-        </Grid>
-
-
-
-
-
-
+        <m:DeviceListPanel Grid.Row="2" Grid.Column="0" x:Name="DeviceList" Margin="5,5,5,5" />
 
         <!-- End -->
     </Grid>
