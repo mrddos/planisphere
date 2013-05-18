@@ -6,14 +6,136 @@
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="280" Loaded="DeviceListLoaded">
     <UserControl.Resources>
-        <ResourceDictionary x:Name="Resources">
-            <ControlTemplate x:Key="DeviceItemTemplate" TargetType="TreeViewItem">
-                <ToggleButton Height="40" Content="{Binding Name}"></ToggleButton>
-            </ControlTemplate>
-        </ResourceDictionary>
+        <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Width="15" Height="30" Background="Transparent">
+                            <Path x:Name="ExpandPath" HorizontalAlignment="Left" 
+                                VerticalAlignment="Center" 
+                                Margin="1,1,1,1"
+                                Fill="Black"
+                                Data="M 4 0 L 8 4 L 4 8 Z"/>
+                        </Grid>
+                        <!--
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Data" TargetName="ExpandPath"
+                                    Value="M 0 4 L 8 4 L 4 8 Z"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                        -->
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="TreeViewItemFocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border>
+                            <Rectangle Margin="0,0,0,0"
+                 StrokeThickness="5"
+                 Stroke="Black"
+                 StrokeDashArray="1 2"
+                 Opacity="0"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- dd -->
+        <Style x:Key="DeviceTreeViewItem" TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" 
+                    Value="{Binding Path=HorizontalContentAlignment,
+                        RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="VerticalContentAlignment"
+                    Value="{Binding Path=VerticalContentAlignment,
+                        RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
+            <Setter Property="Padding" Value="1,0,0,0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <!-- Full Row -->
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+      
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ToggleButton x:Name="Expander" 
+                                            Style="{StaticResource ExpandCollapseToggleStyle}"
+                                            IsChecked="{Binding Path=IsExpanded,
+                                            RelativeSource={RelativeSource TemplatedParent}}"
+                                            ClickMode="Press"/>
+                            <Border x:Name="Bd" Grid.Column="0" Grid.ColumnSpan="2"
+                                      Background="{TemplateBinding Background}"
+                                      BorderBrush="#8D8D8D"
+                                      BorderThickness="0,0,0,1"
+                                      Padding="{TemplateBinding Padding}">
+                                <Border BorderThickness="0,0,0,1" BorderBrush="#363636">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Foreground="Crimson">></Label>
+                                        <ContentPresenter x:Name="PART_Header" ContentSource="Header"
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                                    </StackPanel>
+                                </Border>
+                            </Border>
+                            <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="false">
+                                <Setter TargetName="ItemsHost" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="Expander" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="HasHeader" Value="false"/>
+                                    <Condition Property="Width" Value="Auto"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Header" Property="MinWidth" Value="75"/>
+                            </MultiTrigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="HasHeader" Value="false"/>
+                                    <Condition Property="Height" Value="Auto"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Header" Property="MinHeight" Value="19"/>
+                            </MultiTrigger>
+                            
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter TargetName="Bd" Property="Background" Value="#676767"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="true"/>
+                                    <Condition Property="IsSelectionActive" Value="false"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="Bd" Property="Background" Value="#676767"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </MultiTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     
     <Grid>
-        <TreeView x:Name="DeviceList" Margin="3,3,3,3" BorderBrush="White"/>
+        <TreeView x:Name="DeviceList" Background="#535353" Margin="0" BorderBrush="Transparent"/>
     </Grid>
 </UserControl>

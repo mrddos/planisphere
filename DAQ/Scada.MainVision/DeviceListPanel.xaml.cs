@@ -26,7 +26,7 @@ namespace Scada.MainVision
 	/// </summary>
 	public partial class DeviceListPanel : UserControl
 	{
-        private const string DeviceItemTemplate = "DeviceItemTemplate";
+        private const string DeviceItemTemplate = "DeviceTreeViewItem";
 
 		private TreeViewItem deviceGroup;
 
@@ -39,20 +39,22 @@ namespace Scada.MainVision
 
 		public void AddDeviceGroup()
 		{
+            /*
 			this.deviceGroup = new TreeViewItem();
 			deviceGroup.Header = "设备列表";
 			deviceGroup.IsExpanded = true;
 
 			this.DeviceList.Items.Add(deviceGroup);
+             * */
 		}
 
 		public void AddDevice(string deviceName, string deviceKey)
 		{
             //
-            //ControlTemplate ct = (ControlTemplate)this.Resources[DeviceItemTemplate];
+            Style ct = (Style)this.Resources[DeviceItemTemplate];
 
 			TreeViewItem tvi = new TreeViewItem();
-            //tvi.Template = ct;
+            tvi.Style = ct;
 			tvi.DataContext = new DeviceItem()
             { 
                 DisplayName = deviceName, 
@@ -61,9 +63,9 @@ namespace Scada.MainVision
             tvi.MouseDoubleClick += OnDeviceItemClick;
 			tvi.Header = deviceName;
             tvi.FontSize = 14.0;
-            
 
-			this.deviceGroup.Items.Add(tvi);
+
+            this.DeviceList.Items.Add(tvi);
 
 		}
 
