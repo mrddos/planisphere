@@ -360,7 +360,7 @@ namespace Scada.MainVision
 
             if (this.ExpanderContent == null)
             {
-                this.ExpanderContent = this.Expander.Content;
+                //this.ExpanderContent = this.Expander.Content;
             }
 
             Expander expander = sender as Expander;
@@ -371,7 +371,7 @@ namespace Scada.MainVision
                 if (expanded)
                 {
                     this.DeviceListColumn.Width = new GridLength(300.0);
-                    this.Expander.Content = this.ExpanderContent;
+                    //this.Expander.Content = this.ExpanderContent;
                     this.DeviceList.Visibility = Visibility.Visible;
                     /*
                     this.Expander.Header = this.HeaderContent;
@@ -382,8 +382,8 @@ namespace Scada.MainVision
                 }
                 else
                 {
-                    this.Expander.Header = string.Empty;
-                    this.Expander.Content = null;
+                    //this.Expander.Header = string.Empty;
+                    //this.Expander.Content = null;
                     this.DeviceListColumn.Width = new GridLength(40.0);
                     
                     this.DeviceList.Visibility = Visibility.Hidden;

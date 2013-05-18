@@ -265,6 +265,7 @@ namespace Scada.Controls
                     }
                     listView.ItemsSource = this.dataSource;
                     listView.SelectedIndex = selected;
+                    
                 }
             }
 			
