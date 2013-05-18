@@ -6,7 +6,7 @@
              xmlns:sys="clr-namespace:System"
              xmlns:c="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600" Loaded="ContentLoaded" Margin="5,5,5,5">
+             d:DesignHeight="300" d:DesignWidth="600" Loaded="ContentLoaded" Margin="5,0,5,5">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
