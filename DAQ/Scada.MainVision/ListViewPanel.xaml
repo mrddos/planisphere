@@ -50,7 +50,7 @@
 
         
         <!-- Row 1 -->
-        <Border Grid.Row="1" Background="#3A3A3A" BorderBrush="#282828" BorderThickness="1,1,1,1">
+        <Border Grid.Row="1" Background="#3A3A3A" BorderBrush="#282828" BorderThickness="0, 0, 0, 0">
         <TabControl x:Name="TabCtrl" Background="#535353" BorderBrush="#535353">
             
             <TabItem Header="实时列表" Width="80" Background="#535353" Style="{StaticResource TabItemKey}" >
@@ -67,7 +67,7 @@
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">打印</Button>
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowChartView">显示曲线</Button>
                         </StackPanel>
-                        <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="0">
+                        <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="-5">
 
                         </ContentControl>
 

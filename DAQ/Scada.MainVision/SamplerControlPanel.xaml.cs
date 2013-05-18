@@ -96,11 +96,13 @@ namespace Scada.MainVision
         {
             if (IsStarted())
             {
-                this.controlButton.Content = "关闭";
+                this.StartButton.IsEnabled = false;
+                this.StopButton.IsEnabled = true;
             }
             else
             {
-                this.controlButton.Content = "启动";
+                this.StartButton.IsEnabled = true;
+                this.StopButton.IsEnabled = false;
             }
         }
 
