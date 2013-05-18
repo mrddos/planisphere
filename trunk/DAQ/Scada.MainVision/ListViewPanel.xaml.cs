@@ -168,8 +168,8 @@ namespace Scada.Controls
         {
             Color c = Color.FromRgb(83, 83, 83);
             listView.Background = new SolidColorBrush(c);
-            var d = listView.ItemTemplate;
 
+            // listView.ItemContainerStyle = (Style)this.Resources["ListViewItemKey"];
             listView.Style = (Style)this.Resources["ListViewKey"];
         }
 
