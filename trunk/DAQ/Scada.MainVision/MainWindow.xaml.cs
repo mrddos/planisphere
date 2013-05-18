@@ -96,9 +96,12 @@ namespace Scada.MainVision
             }
 
             this.AddDevicePanes();
-            // this.ShowDataViewPanel("scada.hipc");
+            this.ShowDataViewPanel("scada.hipc");
             // this.OnDeviceItemClicked(null, null);
             this.loaded = true;
+
+            // Max when startup;
+            this.OnMaxButton(null, null);
         }
 
         private void SetRefreshPanelDataTimer()
@@ -415,13 +418,21 @@ namespace Scada.MainVision
 
         private void OnMaxButton(object sender, RoutedEventArgs e)
         {
-            // TODO: 8?
+            this.MaxWidth = SystemParameters.WorkArea.Width + 8;
             this.MaxHeight = SystemParameters.WorkArea.Height + 8;
-            this.WindowState = WindowState.Maximized;
+            if (this.WindowState == WindowState.Normal)
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = WindowState.Normal;
+            }
         }
 
         private void OnMinButton(object sender, RoutedEventArgs e)
         {
+            // TODO: ? Ask?
             this.WindowState = WindowState.Minimized;
         }
 

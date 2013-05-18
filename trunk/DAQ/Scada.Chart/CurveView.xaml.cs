@@ -119,14 +119,16 @@ namespace Scada.Chart
             this.Graduation.Height = this.Height - ChartView.ViewGap;
             // Grid Line |||
             double canvasHeight = this.CanvasView.Height;
+            Color gridLineColor = Color.FromRgb(150, 150, 150);
+
             for (int i = 0; i < 15; i++)
             {
                 Line l = new Line();
                 l.X1 = l.X2 = i * 30;
                 l.Y1 = 0;
                 l.Y2 = GridViewHeight;
-                
-                l.Stroke = new SolidColorBrush(Colors.LightGray);
+
+                l.Stroke = new SolidColorBrush(gridLineColor);
                 this.CanvasView.Children.Add(l);
             }
 
@@ -138,7 +140,7 @@ namespace Scada.Chart
                 l.X1 = 0;
                 l.X2 = GridViewWidth;
 
-                l.Stroke = new SolidColorBrush(Colors.LightGray);
+                l.Stroke = new SolidColorBrush(gridLineColor);
                 this.CanvasView.Children.Add(l);
             }
 
@@ -178,7 +180,7 @@ namespace Scada.Chart
                 if (i % 5 == 0)
                 {
                     TextBlock t = new TextBlock();
-                    t.Foreground = new SolidColorBrush(Colors.Gray);
+                    t.Foreground = Brushes.White;
                     t.FontSize = 9;
                     double pos = (double)y - 10;
                     this.GraduationTexts.Add(textCount, new GraduationText()
@@ -217,7 +219,8 @@ namespace Scada.Chart
         private void AddCurveLine()
         {
             this.curve = new Polyline();
-            this.curve.Stroke = new SolidColorBrush(Colors.Green);
+            Color curveColor = Color.FromRgb(200, 255, 200);
+            this.curve.Stroke = new SolidColorBrush(curveColor);
             
             this.CanvasView.Children.Add(this.curve);
         }
@@ -460,21 +463,23 @@ namespace Scada.Chart
 
         private void SetDisplayName(string displayName)
         {
+            SolidColorBrush labelBrush = new SolidColorBrush(Color.FromRgb(58, 58, 58));
             Border labelBorder = new Border();
-            labelBorder.CornerRadius = new CornerRadius(3.0);
-            labelBorder.Background = Brushes.White;
-            labelBorder.BorderBrush = Brushes.Gray;
-            labelBorder.Padding = new Thickness(3.0, 2.0, 3.0, 2.0);
+            labelBorder.CornerRadius = new CornerRadius(1.0);
+            labelBorder.Background = labelBrush;
+            labelBorder.BorderBrush = labelBrush;
+            labelBorder.Padding = new Thickness(4.0, 3.0, 4.0, 3.0);
             labelBorder.BorderThickness = new Thickness(1);
-            labelBorder.Effect = new DropShadowEffect() { Direction = 300.0, Opacity= 0.5};
+            labelBorder.Effect = new DropShadowEffect() { Direction = 320.0, Opacity= 0.5};
 
             labelBorder.SetValue(Canvas.RightProperty, 12.0);
             labelBorder.SetValue(Canvas.TopProperty, 12.0);
 
             TextBlock displayLabel = new TextBlock();
             displayLabel.Text = displayName;
-            displayLabel.Background = Brushes.White;
-            displayLabel.Foreground = new SolidColorBrush(Colors.OrangeRed);
+            displayLabel.Background = labelBrush;
+            
+            displayLabel.Foreground = Brushes.White;
 
             this.CanvasView.Children.Add(labelBorder);
             labelBorder.Child = displayLabel;

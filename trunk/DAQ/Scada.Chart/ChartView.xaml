@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Scada.Chart"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"  MouseMove="MainViewMouseMove">
-    <Grid x:Name="MainView">
+    <Grid x:Name="MainView" Background="#535353">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -26,7 +26,7 @@
             
             </StackPanel>
         </ScrollViewer>
-        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="2" Background="AliceBlue" Loaded="TimeAxisLoaded"></Canvas>
+        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="2" Background="#535353" Loaded="TimeAxisLoaded"></Canvas>
         
     </Grid>
 </UserControl>

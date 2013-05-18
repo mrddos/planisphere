@@ -105,7 +105,7 @@ namespace Scada.Chart
                 if (i % 5 == 0)
                 {
                     TextBlock t = new TextBlock();
-                    t.Foreground = new SolidColorBrush(Colors.Gray);
+                    t.Foreground = Brushes.White;
                     t.FontWeight = FontWeights.Light;
                     t.FontSize = 9;
                     int pos = i * 10;
@@ -139,6 +139,7 @@ namespace Scada.Chart
             CheckBox cb = new CheckBox();
             cb.IsChecked = true;
             cb.Content = displayName;
+            cb.Foreground = Brushes.White;
             cb.Margin = new Thickness(5, 0, 5, 0);
             
             cb.Checked += (object sender, RoutedEventArgs e) => 

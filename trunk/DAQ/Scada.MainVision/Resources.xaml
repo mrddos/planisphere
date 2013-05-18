@@ -60,6 +60,40 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <!-- System Button -->
+    <Style x:Key="SystemButton" TargetType="Button" >
+        <!--修改模板属性-->
+        <Setter Property="Template">
+            <Setter.Value>
+                <!--控件模板-->
+                <ControlTemplate TargetType="Button">
+                    <!-- 只有Grid才能装下这么多Child -->
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}" Width="34" Height="30">
+                        
+                        </Border>
+                    </Grid>
+                    <!--触发器-->
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsMouseOver" Value="True">
+                            
+                        </Trigger>
+                        <Trigger Property="Button.IsPressed" Value="True">
+                            <Setter Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX=".9" ScaleY=".9"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="RenderTransformOrigin" Value=".5,.5"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
 
     <ControlTemplate x:Key="AnimatedExpanderButtonTemp"
                          TargetType="{x:Type ToggleButton}">

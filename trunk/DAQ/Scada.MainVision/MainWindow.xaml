@@ -39,15 +39,28 @@
         <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Background="#535353">
             <Image Source="Images/logo.png" Stretch="None" HorizontalAlignment="Left" Margin="5, 0, 0, 0"></Image>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <!-- Max -->
-                <Button Width="38" Height="18" Click="OnMaxButton">最大化</Button>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Button BorderThickness="0" BorderBrush="Transparent" Click="OnMinButton"
+                        Style="{StaticResource SystemButton}" Opacity="0.4">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Images/Min.png"></ImageBrush>
+                    </Button.Background>
+                </Button>
 
-                <!-- Close -->
-                <Button Width="18" Height="18" HorizontalAlignment="Right" 
-                    VerticalAlignment="Top" Margin="5,5,5,5"
-                Click="OnCloseButton"
-                Template="{StaticResource CloseButtonTemplateKey}"/>
+                <Button BorderThickness="0" BorderBrush="Transparent" Click="OnMaxButton"
+                        Style="{StaticResource SystemButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Images/Max.png"></ImageBrush>
+                    </Button.Background>
+                </Button>
+
+                <Button BorderThickness="0" BorderBrush="Transparent" Click="OnCloseButton"
+                        Style="{StaticResource SystemButton}">
+                    <Button.Background>
+                        <ImageBrush ImageSource="Images/Close.png"></ImageBrush>
+                    </Button.Background>
+                </Button>
+
             </StackPanel>
         </Grid>
 
@@ -56,10 +69,10 @@
 
         <!-- UIElements -->
         <!-- Here Pane as the Header -->
-        <m:HerePane x:Name="herePane" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ></m:HerePane>
+        <m:HerePane x:Name="herePane" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, -5, 0, 0"></m:HerePane>
         
         <!-- Device List -->
-        <m:DeviceListPanel Grid.Row="2" Grid.Column="0" x:Name="DeviceList" Margin="5,5,5,5" />
+        <m:DeviceListPanel Grid.Row="2" Grid.Column="0" x:Name="DeviceList" Margin="10,0,5,5" />
 
         <!-- End -->
     </Grid>
