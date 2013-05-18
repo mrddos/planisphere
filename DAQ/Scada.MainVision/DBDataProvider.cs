@@ -199,9 +199,9 @@ namespace Scada.MainVision
             listener.OnDataArrivalBegin(DataArrivalConfig.TimeRecent);
             foreach (var data in recent)
             {
-                listener.OnDataArrival(data);
+                listener.OnDataArrival(DataArrivalConfig.TimeRecent, data);
             }
-            listener.OnDataArrivalEnd();
+            listener.OnDataArrivalEnd(DataArrivalConfig.TimeRecent);
         }
 
         // Get time-range data,
@@ -218,9 +218,9 @@ namespace Scada.MainVision
                 listener.OnDataArrivalBegin(DataArrivalConfig.TimeRange);
                 foreach (var data in result)
                 {
-                    listener.OnDataArrival(data);
+                    listener.OnDataArrival(DataArrivalConfig.TimeRange, data);
                 }
-                listener.OnDataArrivalEnd();
+                listener.OnDataArrivalEnd(DataArrivalConfig.TimeRange);
             }
             catch (Exception e)
             {

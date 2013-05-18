@@ -72,6 +72,7 @@ namespace Scada.MainVision
 		}
         */
 
+        // Get DataArrivalConfig.TimeRecent Data.
         public override void RefreshTimeline(string deviceKey)
         {
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
@@ -91,10 +92,10 @@ namespace Scada.MainVision
                     Dictionary<string, object> data = new Dictionary<string, object>(10);
                     data.Clear();
                     ParseLine(line, entry, data);
-                    listener.OnDataArrival(data);
+                    listener.OnDataArrival(DataArrivalConfig.TimeRecent, data);
                     this.index++;
                 }
-                listener.OnDataArrivalEnd();
+                listener.OnDataArrivalEnd(DataArrivalConfig.TimeRecent);
             }
         }
 

@@ -14,9 +14,9 @@ namespace Scada.Controls.Data
 
 	public delegate void OnDataArrivalBegin(DataArrivalConfig config);
 
-	public delegate void OnDataArrival(Dictionary<string, object> data);
+	public delegate void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> data);
 
-	public delegate void OnDataArrivalEnd();
+    public delegate void OnDataArrivalEnd(DataArrivalConfig config);
 
     public class ColumnInfo
     {
