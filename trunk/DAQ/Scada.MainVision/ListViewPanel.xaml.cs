@@ -33,11 +33,12 @@ namespace Scada.Controls
 
 		private List<Dictionary<string, object>> dataSource;
 
+        private List<Dictionary<string, object>> searchDataSource;
+
         private DataArrivalConfig config;
 
         private const string Time = "time";
 
-        private bool readTimeMode = true;
 
         private const int MaxListCount = 100;
 
@@ -65,10 +66,6 @@ namespace Scada.Controls
 
         private void RefreshDataTimerTick(object sender, EventArgs e)
         {
-            if (!this.readTimeMode)
-            {
-                return;
-            }
             // TODO: Current settings? if show current, continue.
             // If filter by start -> end time, returns.
 
@@ -208,65 +205,75 @@ namespace Scada.Controls
 
             // TODO: !!
             this.dataSource = new List<Dictionary<string, object>>();
+
+            this.searchDataSource = new List<Dictionary<string, object>>();
 		}
 
         // BEGIN
         private void OnDataArrivalBegin(DataArrivalConfig config)
 		{
-            this.config = config;
-            if (config == DataArrivalConfig.TimeRange)
+            //this.config = config;
+            if (config == DataArrivalConfig.TimeRecent)
+            {
+                // DO nothing for the realtime data-source
+            }
+            else if (config == DataArrivalConfig.TimeRange)
             {
                 // For show new data source, so clear the old data source.
-                this.dataSource.Clear();
-            }
-            else if (config == DataArrivalConfig.TimeRecent)
-            {
-
+                this.searchDataSource.Clear();
             }
 		}
 
 
         // ARRIVAL
-		private void OnDataArrival(Dictionary<string, object> entry)
+		private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
 		{
-            if (this.config == DataArrivalConfig.TimeRecent)
+            if (config == DataArrivalConfig.TimeRecent)
             {
                 this.dataSource.Add(entry); 
             }
-            else
+            else if (config == DataArrivalConfig.TimeRange)
             {
-                this.dataSource.Add(entry);
+                this.searchDataSource.Add(entry);
             }
-            // Sort ...
-            // Insert to the Top.
-            
 		}
 
         // END
-		private void OnDataArrivalEnd()
+        private void OnDataArrivalEnd(DataArrivalConfig config)
 		{
-            // TODO: Chekc the data source?
-            if (this.ListView != null)
+            if (config == DataArrivalConfig.TimeRecent)
             {
-                if (this.ListView is ListView)
-                {
-                    this.dataSource.Sort(DBDataProvider.DateTimeCompare);
+                if (this.ListView == null || !(this.ListView is ListView))
+                    return;
 
-                    ListView listView = (ListView)this.ListView;
-                    // Remember the Selected item.
-                    int selected = listView.SelectedIndex;
-                    listView.ItemsSource = null;
-                    // List can only hold 100 items.
-                    if (this.dataSource.Count > MaxListCount)
-                    {
-                        int p = 100;
-                        int l = this.dataSource.Count - p;
-                        this.dataSource.RemoveRange(p, l);
-                    }
-                    listView.ItemsSource = this.dataSource;
-                    listView.SelectedIndex = selected;
-                    
+                this.dataSource.Sort(DBDataProvider.DateTimeCompare);
+
+                ListView listView = (ListView)this.ListView;
+                // Remember the Selected item.
+                int selected = listView.SelectedIndex;
+                listView.ItemsSource = null;
+                // List can only hold 100 items.
+                if (this.dataSource.Count > MaxListCount)
+                {
+                    int p = 100;
+                    int l = this.dataSource.Count - p;
+                    this.dataSource.RemoveRange(p, l);
                 }
+                listView.ItemsSource = this.dataSource;
+                listView.SelectedIndex = selected;
+
+            }
+            else if (config == DataArrivalConfig.TimeRange)
+            {
+                if (this.SearchView == null || !(this.SearchView is ListView))
+                    return;
+
+                this.searchDataSource.Sort(DBDataProvider.DateTimeCompare);
+
+                ListView searchListView = (ListView)this.SearchView;
+                searchListView.ItemsSource = null;
+                searchListView.ItemsSource = this.searchDataSource;
+
             }
 			
 		}
@@ -274,7 +281,6 @@ namespace Scada.Controls
         // When click the Search Button.
         private void SearchByDateRange(object sender, RoutedEventArgs e)
         {
-            this.readTimeMode = false;
             var dt1 = this.FromDate.SelectedDate.Value;
             var dt2 = this.ToDate.SelectedDate.Value;
 

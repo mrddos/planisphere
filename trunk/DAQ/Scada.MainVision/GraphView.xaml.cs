@@ -99,7 +99,7 @@ namespace Scada.MainVision
 
 
 
-        private void OnDataArrival(Dictionary<string, object> entry)
+        private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
         {
             if (this.config == DataArrivalConfig.TimeRecent)
             {
@@ -136,7 +136,10 @@ namespace Scada.MainVision
                         double r = 0.0;
                         if (v.Length > 0)
                         {
-                            r = double.Parse(v);
+                            if (double.TryParse(v, out r))
+                            {
+                                return;
+                            }
                         }
 
 
@@ -148,7 +151,7 @@ namespace Scada.MainVision
 
         }
 
-        private void OnDataArrivalEnd()
+        private void OnDataArrivalEnd(DataArrivalConfig config)
         {
 
         }

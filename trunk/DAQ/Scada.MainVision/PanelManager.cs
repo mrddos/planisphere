@@ -64,6 +64,7 @@ namespace Scada.MainVision
                     panel.SearchView = this.ShowListView(panel, dataListener);
                     panel.GraphView = this.ShowGraphView(panel, dataListener);
                     
+                    // 是否显示 控制面板
                     if (deviceKey == DataProvider.DeviceKey_HvSampler)
                     {
                         panel.ControlPanel = this.ShowControlView(DataProvider.DeviceKey_HvSampler);
@@ -97,7 +98,7 @@ namespace Scada.MainVision
             GridView gridView = new GridView();
             listView.View = gridView;
 
-
+            // 
             var columnInfoList = dataListener.GetColumnsInfo(); // new List<ColumnInfo>();
 
             foreach (var columnInfo in columnInfoList)
