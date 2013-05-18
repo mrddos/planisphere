@@ -396,6 +396,11 @@ namespace Scada.Declare
 
 		private bool GetDeviceData(byte[] line, DateTime time, out DeviceData dd)
 		{
+            if (time == default(DateTime))
+            {
+                time = DateTime.Now;
+            }
+
 			string[] data = this.dataParser.Search(line);
 			dd = default(DeviceData);
 			if (data == null || data.Length == 0)
