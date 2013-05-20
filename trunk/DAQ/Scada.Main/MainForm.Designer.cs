@@ -56,10 +56,11 @@
             this.LeftToolStripPanel = new System.Windows.Forms.ToolStripPanel();
             this.ContentPanel = new System.Windows.Forms.ToolStripContentPanel();
             this.toolBar = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.startToolBarButton = new System.Windows.Forms.ToolStripButton();
+            this.stopToolBarButton = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.deviceListView = new System.Windows.Forms.ListView();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.menuBar.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.SuspendLayout();
@@ -257,7 +258,8 @@
             // toolBar
             // 
             this.toolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton1,
+            this.startToolBarButton,
+            this.stopToolBarButton,
             this.toolStripButton2});
             this.toolBar.Location = new System.Drawing.Point(0, 24);
             this.toolBar.Name = "toolBar";
@@ -265,14 +267,33 @@
             this.toolBar.TabIndex = 3;
             this.toolBar.Text = "toolStrip1";
             // 
-            // toolStripButton1
+            // startToolBarButton
             // 
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(53, 25);
-            this.toolStripButton1.Text = "启动";
-            this.toolStripButton1.Click += new System.EventHandler(this.startMenuItem_Click);
+            this.startToolBarButton.Image = ((System.Drawing.Image)(resources.GetObject("startToolBarButton.Image")));
+            this.startToolBarButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.startToolBarButton.Name = "startToolBarButton";
+            this.startToolBarButton.Size = new System.Drawing.Size(53, 25);
+            this.startToolBarButton.Text = "启动";
+            this.startToolBarButton.Click += new System.EventHandler(this.startMenuItem_Click);
+            // 
+            // stopToolBarButton
+            // 
+            this.stopToolBarButton.Image = ((System.Drawing.Image)(resources.GetObject("stopToolBarButton.Image")));
+            this.stopToolBarButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stopToolBarButton.Name = "stopToolBarButton";
+            this.stopToolBarButton.Size = new System.Drawing.Size(53, 25);
+            this.stopToolBarButton.Text = "停止";
+            this.stopToolBarButton.Click += new System.EventHandler(this.stopMenuItem_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Margin = new System.Windows.Forms.Padding(4);
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(53, 20);
+            this.toolStripButton2.Text = "设置";
+            this.toolStripButton2.Click += new System.EventHandler(this.settingClick);
             // 
             // statusBar
             // 
@@ -297,18 +318,9 @@
             this.deviceListView.TabIndex = 0;
             this.deviceListView.UseCompatibleStateImageBehavior = false;
             this.deviceListView.View = System.Windows.Forms.View.Details;
+            this.deviceListView.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.deviceListView_ItemCheck);
             this.deviceListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.deviceListView_ItemChecked);
             this.deviceListView.SelectedIndexChanged += new System.EventHandler(this.deviceListView_SelectedIndexChanged);
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Margin = new System.Windows.Forms.Padding(4);
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(53, 20);
-            this.toolStripButton2.Text = "设置";
-            this.toolStripButton2.Click += new System.EventHandler(this.settingClick);
             // 
             // MainForm
             // 
@@ -361,10 +373,11 @@
 		private System.Windows.Forms.ToolStripPanel LeftToolStripPanel;
 		private System.Windows.Forms.ToolStripContentPanel ContentPanel;
 		private System.Windows.Forms.ToolStrip toolBar;
-		private System.Windows.Forms.ToolStripButton toolStripButton1;
+		private System.Windows.Forms.ToolStripButton startToolBarButton;
 		private System.Windows.Forms.StatusStrip statusBar;
 		private System.Windows.Forms.ToolStripMenuItem dataCenterSetMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripButton stopToolBarButton;
     }
 }
 

@@ -124,7 +124,7 @@ namespace Scada.Chart
             for (int i = 0; i < 15; i++)
             {
                 Line l = new Line();
-                l.X1 = l.X2 = i * 30;
+                l.X1 = l.X2 = i * 40;
                 l.Y1 = 0;
                 l.Y2 = GridViewHeight;
 
@@ -136,7 +136,7 @@ namespace Scada.Chart
             for (int i = 0; i < 20; i++)
             {
                 Line l = new Line();
-                l.Y1 = l.Y2 = canvasHeight - i * 30;
+                l.Y1 = l.Y2 = canvasHeight - i * 40;
                 l.X1 = 0;
                 l.X2 = GridViewWidth;
 
@@ -470,7 +470,8 @@ namespace Scada.Chart
             labelBorder.BorderBrush = labelBrush;
             labelBorder.Padding = new Thickness(4.0, 3.0, 4.0, 3.0);
             labelBorder.BorderThickness = new Thickness(1);
-            labelBorder.Effect = new DropShadowEffect() { Direction = 320.0, Opacity= 0.5};
+            // No need effect. 
+            // labelBorder.Effect = new DropShadowEffect() { Direction = 320.0, Opacity= 0.5};
 
             labelBorder.SetValue(Canvas.RightProperty, 12.0);
             labelBorder.SetValue(Canvas.TopProperty, 12.0);

@@ -403,12 +403,14 @@ namespace Scada.Main
 
 		public void ShutdownDeviceConnection()
 		{
-            /*
-			foreach (Device device in this.devices)
-			{
-				device.Stop();
-			}
-             * */
+            // Running Devices...
+            foreach (string deviceName in selectedDevices.Keys)
+            {
+                
+
+                // this.RunDevice(context);
+
+            }
 		}
 
         private string GetCOMPort(string deviceName)

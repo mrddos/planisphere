@@ -68,19 +68,19 @@ namespace Scada.MainVision
         {
             get
             {
-                if (i == 0)
+                switch (i)
                 {
-                    return this.data1;
+                    case 0:
+                        return this.data1;
+                    case 1:
+                        return this.data2;
+                    case 2:
+                        return this.data3;
+                    case 3:
+                        return this.data4;
+                    default:
+                        return this.data1;
                 }
-                else if (i == 1)
-                {
-                    return this.data2;
-                }
-                else if (i == 2)
-                {
-                    return null;
-                }
-                return null;
             }
         }
 

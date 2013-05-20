@@ -30,6 +30,8 @@ namespace Scada.Declare
 
 		private int minuteAdjust = 0;
 
+        private int timeZone = 8;
+
         // private int index = 0;
 
 		public WebFileDevice(DeviceEntry entry)
@@ -205,20 +207,21 @@ namespace Scada.Declare
 
         private void Record(NuclideDataSet set)
         {
-            var dd = this.ParseNaI(set);
+            DateTime time = DateTime.Parse(set.EndTime);
+
+            var dd = this.ParseNaI(set, time);
             this.SynchronizationContext.Post(this.DataReceived, dd);
             foreach (var nd in set.sets)
             {
-                var dd2 = this.ParseNuclideData(set.EndTime, nd);
+                var dd2 = this.ParseNuclideData(nd, time);
                 this.SynchronizationContext.Post(this.DataReceived, dd2);
             }
         }
 
-        private DeviceData ParseNaI(NuclideDataSet s)
+        private DeviceData ParseNaI(NuclideDataSet s, DateTime time)
         {
-            string time = s.EndTime;
             object[] data = new object[]{ time,
-                s.StartTime, s.EndTime, s.Coefficients, 
+                time.AddMinutes(-5) , time, s.Coefficients, 
                 s.ChannelData, s.DoseRate, s.Temperature, s.HighVoltage, 
                 s.CalibrationNuclideFound, s.ReferencePeakEnergyFromPosition
             };
@@ -227,7 +230,7 @@ namespace Scada.Declare
             return dd;
         }
 
-        private DeviceData ParseNuclideData(string time, NuclideData nd)
+        private DeviceData ParseNuclideData(NuclideData nd, DateTime time)
         {
             object[] data = new object[]{
                 time, nd.Name, nd.Activity, nd.Indication, nd.DoseRate, nd.Channel, nd.Energy
@@ -251,7 +254,7 @@ namespace Scada.Declare
         {
             string fileName;
             DateTime t = DateTime.Now;
-			t = t.AddHours(-8).AddMinutes(this.minuteAdjust);
+            t = t.AddHours(-this.timeZone).AddMinutes(this.minuteAdjust);
             fileName = string.Format("{0}_{1}-{2:D2}-{3:D2}T{4:D2}_{5:D2}_00Z-5min.n42",
 				this.deviceSn, t.Year, t.Month, t.Day, t.Hour, index * 5);
             return fileName;

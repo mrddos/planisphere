@@ -64,7 +64,7 @@
 
 
 
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">打印</Button>
+                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">导出</Button>
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowChartView">显示曲线</Button>
                         </StackPanel>
                         <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="-5">
@@ -91,7 +91,7 @@
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="SearchByDateRange">查询</Button>
                             <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟" Visibility="Collapsed"></ComboBox>
 
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">打印</Button>
+                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">导出</Button>
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowChartView">显示曲线</Button>
                         </StackPanel>
 

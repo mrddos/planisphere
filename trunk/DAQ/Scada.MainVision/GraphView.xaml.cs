@@ -55,6 +55,19 @@ namespace Scada.MainVision
             }
         }
 
+        public int Interval
+        {
+            get
+            {
+                return this.ChartView.Interval;
+            }
+
+            set
+            {
+                this.ChartView.Interval = value;
+            }
+        }
+
         public void AddLineName(string deviceKey, string lineName, string displayName)
         {
             if (lineName.IndexOf("Doserate") >= 0)
@@ -113,12 +126,11 @@ namespace Scada.MainVision
                         double r = 0.0;
                         if (v.Length > 0)
                         {
-                            if (double.TryParse(v, out r))
+                            if (!double.TryParse(v, out r))
                             {
                                 return;
                             }
                         }
-
 
                         dataContext.AddPoint(i * 5, r);
                     }
@@ -136,12 +148,11 @@ namespace Scada.MainVision
                         double r = 0.0;
                         if (v.Length > 0)
                         {
-                            if (double.TryParse(v, out r))
+                            if (!double.TryParse(v, out r))
                             {
                                 return;
                             }
                         }
-
 
                         dataContext.AddPoint(i * 5, r);
                     }

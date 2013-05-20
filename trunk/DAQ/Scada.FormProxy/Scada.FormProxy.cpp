@@ -103,12 +103,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	// MessageBox(NULL, strProcName, strPathName, 0);
 	if (strProcName.GetLength() == 0)
 	{
-		strProcName = L"AIS.exe";
+		strProcName = L"MDS.exe";
 	}
 
 	if (strPathName.GetLength() == 0)
 	{
-		strPathName = L"C:\\Users\\HealerKx\\Projects\\DAQ-Proj\\DAQ\\Bin\\Debug\\devices\\Scada.FormProxy\\0.9\\HWND.r";
+		strPathName = L"C:\\HWND.r";
 	}
 
 	DWORD dwProcId = GetProcessID(strProcName);

@@ -163,13 +163,29 @@ namespace Scada.MainVision
             set;
         }
 
-        private void DisplayPanelData(HerePaneItem panel, string data1, string data2 = "", string data3 = "")
+        private void DisplayPanelData(HerePaneItem panel, string data1, string data2 = "", string data3 = "", string data4 = "")
         {
-            TextBlock text2 = panel[0];
-            TextBlock text3 = panel[1];
+            TextBlock text1 = panel[0];
+            TextBlock text2 = panel[1];
+            TextBlock text3 = panel[2];
+            TextBlock text4 = panel[3];
 
-            text2.Text = data1;
-            text3.Text = data2;
+            if (data1 != null && data1.Length > 0)
+            {
+                text1.Text = data1;
+            }
+            if (data2 != null && data2.Length > 0)
+            {
+                text2.Text = data2;
+            }
+            if (data3 != null && data3.Length > 0)
+            {
+                text3.Text = data3;
+            }
+            if (data4 != null && data4.Length > 0)
+            {
+                text4.Text = data4;
+            }
         }
 
         // 1 剂量率
@@ -183,6 +199,9 @@ namespace Scada.MainVision
             if (d.ContainsKey("doserate"))
             {
                 string doserate = d["doserate"] as string;
+
+                string doserateMsg = "剂量率: " + doserate + "uGy/h";
+                this.DisplayPanelData(panel, doserateMsg);
             }
             
         }
@@ -216,6 +235,8 @@ namespace Scada.MainVision
 
             string doserate = (string)d["doserate"];
             string[] nuclides = { "K-40", "I-131", "Bi-214", "Pb-214", "Cs-137", "Co-60", "Am-241", "Ba-140", "Cs-134", "I-133", "Rh-106m", "Ru-103", "Te-129" };
+            string[] nuclideMsgs = new string[3];
+            int i = 0;
             foreach (string nuclide in nuclides)
             {
                 string nuclideKey = nuclide.ToLower();
@@ -228,11 +249,21 @@ namespace Scada.MainVision
                         string nuclideDoserate = (string)d[nuclide.ToLower()];
                         if (nuclideDoserate.Length > 0)
                         {
+                            nuclideMsgs[i] = string.Format("{0}: {1}nSv/h", nuclide, nuclideDoserate);
+                            i++;
+                            if (i >= 3)
+                            {
+                                break;
+                            }
                         }
                     }
                 }
 
             }
+
+            string doserateMsg = "总剂量率: " + doserate + "uSv/h";
+            this.DisplayPanelData(panel, doserateMsg, 
+                nuclideMsgs[0], nuclideMsgs[1], nuclideMsgs[2]);
         }
         // 3 // 风速、风向、雨量
         private void UpdatePanel_Weather(HerePaneItem panel)
@@ -249,6 +280,13 @@ namespace Scada.MainVision
             string windspeed = (string)d["windspeed"];
             string direction = (string)d["direction"];
             string raingauge = (string)d["raingauge"];
+
+            string windspeedMsg = string.Format("风速: {0}", windspeed);
+            string directionMsg = string.Format("风向: {0}", direction);
+            string raingaugeMsg = string.Format("雨量: {0}", raingauge);
+
+            this.DisplayPanelData(panel, windspeedMsg, directionMsg, raingaugeMsg);
+   
         }
         // 4 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
         private void UpdatePanel_HV(HerePaneItem panel)
@@ -276,6 +314,34 @@ namespace Scada.MainVision
             {
                 return;
             }
+
+            string batteryHours = "";
+            string mainPowerOff = "";
+            string temperature = "";
+
+            const string MainPowKey = "ifmainpoweroff";
+            const string BatteryHoursKey = "batteryhours";
+            const string TemperatureKey = "temperature";
+            if (d.ContainsKey(MainPowKey))
+            {
+                mainPowerOff = (string)d[MainPowKey];
+            }
+
+            if (d.ContainsKey(BatteryHoursKey))
+            {
+                batteryHours = (string)d[BatteryHoursKey];
+            }
+
+            if (d.ContainsKey(TemperatureKey))
+            {
+                temperature = (string)d[TemperatureKey];
+            }
+
+            string mainPowMsg = string.Format("市电状态: {0}", mainPowerOff);
+            string batteryHoursMsg = string.Format("备电时间: {0}", batteryHours);
+            string tempMsg = string.Format("舱内温度: {0}", temperature);
+
+            this.DisplayPanelData(panel, mainPowMsg, batteryHoursMsg, tempMsg);
         }
         // 7 仅工作状态
         private void UpdatePanel_DWD(HerePaneItem panel)
@@ -290,11 +356,12 @@ namespace Scada.MainVision
                 return;
             }
             string isLidOpen = (string)d["islidopen"];
+            string LidOpenMsg = (isLidOpen == "1") ? "盖子打开" : "盖子关闭";
+            this.DisplayPanelData(panel, LidOpenMsg);
         }
 
         void RefreshPanelDataTimerTick(object sender, EventArgs e)
         {
-
             this.dataProvider.RefreshTimeNow();
 
             this.UpdatePanel_HIPC(this.panes[0]);
@@ -306,7 +373,6 @@ namespace Scada.MainVision
 
             this.UpdatePanel_Shelter(this.panes[5]);
             this.UpdatePanel_DWD(this.panes[6]);
-
         }
 
 		private void ShowDataViewPanel(string deviceKey)
@@ -435,6 +501,12 @@ namespace Scada.MainVision
             // TODO: ? Ask?
             this.WindowState = WindowState.Minimized;
         }
+
+        private void OnHideDeviceButton(object sender, RoutedEventArgs e)
+        {
+      
+        }
+
 
 
     }
