@@ -270,13 +270,12 @@ namespace Scada.Declare
                 this.senderTimer.Start(() => 
                 {
                     DateTime now = DateTime.Now;
-                    if (!this.IsRightTime(now))
+                    DateTime rightTime = default(DateTime);
+                    if (!this.IsRightTime(now, out rightTime))
                     {
                         return;
                     }
 
-                    int second = (now.Second < 30) ? 0 : 30;
-                    DateTime rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
                     if (rightTime == this.currentActionTime)
                     {
                         return;
@@ -288,6 +287,7 @@ namespace Scada.Declare
             }
         }
 
+        // Virtual-Device.
         private void StartVirtualDevice()
         {
             if (this.actionInterval > 0)
@@ -313,6 +313,7 @@ namespace Scada.Declare
                 // Try to Sleep 100ms and make one time callback.
                 // 200 ms is enough for BoudRate 9600
                 Thread.Sleep(200);
+
 				int n = this.serialPort.BytesToRead;
 				byte[] buffer = new byte[n];
 
@@ -320,7 +321,7 @@ namespace Scada.Declare
 
 				return buffer;
 			}
-			else
+			else // Virtual Device~!
 			{
 				if (this.actionInterval > 1)
 				{
@@ -368,6 +369,24 @@ namespace Scada.Declare
 
 				if (line.Length > 0)
 				{
+                    // Defect: HIPC need check the time.
+                    if (this.actionInterval == 0)
+                    {
+                        DateTime now = DateTime.Now;
+                        DateTime rightTime = default(DateTime);
+                        if (!this.IsRightTime(now, out rightTime))
+                        {
+                            return;
+                        }
+
+                        if (this.currentActionTime == rightTime)
+                        {
+                            return;
+                        }
+
+                        this.currentActionTime = rightTime;
+                    }
+
 					DeviceData dd;
 					bool got = this.GetDeviceData(line, this.currentActionTime, out dd);
 					if (got)
@@ -461,6 +480,7 @@ namespace Scada.Declare
                     this.currentActionTime = time;
 					this.serialPort.Write(action, 0, action.Length);
 				}
+                // Virtual-Device~!
 				else
 				{
                     this.currentActionTime = time;
@@ -534,14 +554,18 @@ namespace Scada.Declare
 
         // VB form data every 30 sec.
         // Verify the time (second) is the right time.
-        private bool IsRightTime(DateTime now)
+        private bool IsRightTime(DateTime now, out DateTime rightTime)
         {
+            int second = (now.Second < 30) ? 0 : 30;
+            rightTime = default(DateTime);
             if (now.Second >= 0 && now.Second <= MaxDelay)
             {
+                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
                 return true;
             }
             else if (now.Second >= 30 && now.Second <= (30 + MaxDelay))
             {
+                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
                 return true;
             }
             return false;

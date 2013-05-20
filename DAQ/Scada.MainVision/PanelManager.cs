@@ -118,6 +118,11 @@ namespace Scada.MainVision
         public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener)
         {
             GraphView graphView = new GraphView();
+            graphView.Interval = 30;
+            if (dataListener.DeviceKey == "scada.naidevice")
+            {
+                graphView.Interval = 60 * 5;
+            }
             graphView.AddDataListener(dataListener);
 
             var columnInfoList = dataListener.GetColumnsInfo();

@@ -19,6 +19,8 @@ namespace Scada.Main
     {
 		private System.Windows.Forms.Timer timer = null;
 
+        private bool started = false;
+
         //private Process mainVisionProcess;
 
         public MainForm()
@@ -74,7 +76,7 @@ namespace Scada.Main
                     ListViewGroup g = deviceListView.Groups.Add(deviceKey, displayName);
 
                     List<string> versions = Program.DeviceManager.GetVersions(deviceKey);
-                    ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Wait");
+                    ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Waiting");
 
                     g.Items.Add(lvi);
                 }
@@ -100,10 +102,16 @@ namespace Scada.Main
 
         private void RunDevices()
         {
-            deviceListView.Enabled = false;
+            // Update 
+            this.UpdateDevicesRunningStatus();
+            this.started = true;
+            this.startToolBarButton.Enabled = false;
+            // deviceListView.Enabled = false;
             RecordManager.Initialize();
             Program.DeviceManager.DataReceived = this.OnDataReceived;
             Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
+
+            this.WindowState = FormWindowState.Minimized;
         }
 
         private ListViewItem AddDeviceToList(string deviceName, string version, string status)
@@ -180,6 +188,10 @@ namespace Scada.Main
 
 		private void stopMenuItem_Click(object sender, EventArgs e)
 		{
+            this.started = false;
+            this.startToolBarButton.Enabled = true;
+            // deviceListView.Enabled = true;
+            this.UpdateDevicesWaitStatus();
 			Program.DeviceManager.ShutdownDeviceConnection();
 		}
 
@@ -243,12 +255,43 @@ namespace Scada.Main
             }
         }
 
+        private void UpdateDevicesRunningStatus()
+        {
+            foreach (ListViewItem item in this.deviceListView.Items)
+            {
+                if (item.Checked)
+                {
+                    
+                    item.SubItems[2].Text = "Running";
+                }
+            }
+        }
+
+        private void UpdateDevicesWaitStatus()
+        {
+            foreach (ListViewItem item in this.deviceListView.Items)
+            {
+                item.SubItems[2].Text = "Waiting";
+            }
+        }
+
+        private void deviceListView_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            if (this.started)
+            {
+                e.NewValue = e.CurrentValue;
+            }
+        }
+
         private void deviceListView_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            bool itemChecked = e.Item.Checked;
-            if (itemChecked)
+            if (!this.started)
             {
-                // TODO: If there are multi-items, only one can be selected.    
+                bool itemChecked = e.Item.Checked;
+                if (itemChecked)
+                {
+                    // TODO: If there are multi-items, only one can be selected.    
+                }
             }
 
         }
@@ -257,6 +300,10 @@ namespace Scada.Main
         {
 
         }
+
+
+
+
 
     }
 }

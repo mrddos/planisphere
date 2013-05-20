@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 
 namespace Scada.MainVision
 {
@@ -46,8 +47,16 @@ namespace Scada.MainVision
 
                     string nuclideKey = nuclname.ToLower();
                     string indicationKey = string.Format("Ind({0})", nuclideKey);
-                    data.Add(nuclideKey, doserate);
-                    data.Add(indicationKey, indication);
+
+                    if (!data.ContainsKey(nuclideKey))
+                    {
+                        data.Add(nuclideKey, doserate);
+                        data.Add(indicationKey, indication);
+                    }
+                    else
+                    {
+                        // MessageBox.Show(nuclideKey);
+                    }
                 }
             }
         }

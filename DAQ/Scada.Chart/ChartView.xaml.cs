@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -20,6 +21,10 @@ namespace Scada.Chart
     public partial class ChartView : UserControl
     {
         public const double ViewGap = 10.0;
+
+        public const double Graduation = 8.0;
+
+        public const double Offset = 8.0;
 
         struct GraduationLine
         {
@@ -53,7 +58,7 @@ namespace Scada.Chart
 
         private double scale = 1.0;
 
-        private bool init = false;
+        private bool initialized = false;
 
         private Dictionary<int, GraduationLine> Graduations
         {
@@ -79,48 +84,71 @@ namespace Scada.Chart
 
         private void TimeAxisLoaded(object sender, RoutedEventArgs e)
         {
-            if (init)
+            if (this.initialized)
             {
                 return;
             }
-            this.init = true;
+            this.initialized = true;
 
+            this.UpdateTimeAxis(DateTime.Now, this.Interval);
+        }
+
+        public void UpdateTimeAxis(DateTime startTime, int interval)
+        {
+            // 目前只支持30秒 和 5分钟两种间隔
+            Debug.Assert(interval == 30 || interval == 60 * 5);
+
+            DateTime baseTime = default(DateTime);
+            if (interval == 30)
+            {
+                int second = startTime.Second / 30 * 30;
+                baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, startTime.Minute, second);
+            }
+            else if (interval == 60 * 5)
+            {
+                int min = startTime.Minute / 5 * 5;
+                baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, min, 0);
+            }
+            // 100
             int timeTextCount = 0;
-            DateTime now = DateTime.Now;
-            int min = now.Minute / 5 * 5;
-            DateTime baseTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, min, 0);
             for (int i = 0; i < 100; i++)
             {
-                double x = i * 10;
+                // One interval per 5px
+                double x = i * Graduation;
                 Line scaleLine = new Line();
 
                 this.Graduations.Add(i, new GraduationLine() { Line = scaleLine, Pos = x });
 
+                bool isWholePoint = (i % 5 == 0);
                 scaleLine.X1 = scaleLine.X2 = x;
                 scaleLine.Y1 = 0;
-                scaleLine.Y2 = (i % 5 != 0) ? Charts.ScaleLength : Charts.MainScaleLength;
-                scaleLine.Stroke = new SolidColorBrush(Colors.Gray);
+                scaleLine.Y2 = isWholePoint ? Charts.MainScaleLength : Charts.ScaleLength;
+                scaleLine.Stroke = isWholePoint ? Brushes.LightGray : Brushes.Gray;
                 this.TimeAxis.Children.Add(scaleLine);
 
-                if (i % 5 == 0)
+                if (isWholePoint)
                 {
                     TextBlock t = new TextBlock();
                     t.Foreground = Brushes.White;
                     t.FontWeight = FontWeights.Light;
                     t.FontSize = 9;
-                    int pos = i * 10;
-                    GraduationTimes.Add(timeTextCount, new GraduationTime() 
+                    double pos = i * Graduation;
+                    GraduationTimes.Add(timeTextCount, new GraduationTime()
                     {
-                        Text = t, Pos = pos
+                        Text = t,
+                        Pos = pos
                     });
                     timeTextCount++;
-                    t.Text = this.GetFormatTime(baseTime, i);
-                    t.SetValue(Canvas.LeftProperty, (double)pos);
+                    t.Text = this.GetFormatTime(baseTime, timeTextCount, interval);
+                    t.SetValue(Canvas.LeftProperty, (double)pos - Offset);
                     t.SetValue(Canvas.TopProperty, (double)10);
                     this.TimeAxis.Children.Add(t);
                 }
-                
+
             }
+
+
+
         }
 
         public CurveView AddCurveView(string curveViewName, string displayName, double height = 200.0)
@@ -239,27 +267,49 @@ namespace Scada.Chart
                 return;
             }
 
+            // Update Time graduation lines.
             foreach (var g in this.Graduations)
             {
                 Line l = g.Value.Line;
-                l.X1 = l.X2 = (g.Value.Pos - 0) * scale + 0;
+                l.X1 = l.X2 = (g.Value.Pos - centerX) * scale + centerX;
             }
 
-
+            // Update Time Label
             foreach (var t in this.GraduationTimes)
             {
                 TextBlock b = t.Value.Text;
                 // double pos = (g.Value.Pos - centerY) * scale + centerY;
                 double pos = (t.Value.Pos - centerX) * scale + centerX;
-                b.SetValue(Canvas.LeftProperty, (double)pos);
+                b.SetValue(Canvas.LeftProperty, (double)pos - Offset);
             }
         }
 
-        private string GetFormatTime(DateTime baseTime, int i)
+        private string GetFormatTime(DateTime baseTime, int index, int interval)
         {
-            DateTime dt = baseTime.AddMinutes(i);
-            return string.Format("{0:d2}:{1:d2}", dt.Hour, dt.Minute);
+            DateTime dt = baseTime.AddSeconds(index * interval);
+            if (interval == 60 * 5)
+            {
+                return string.Format("{0:d2}:{1:d2}", dt.Hour, dt.Minute);
+            }
+            else if (interval == 30)
+            {
+                if (dt.Minute == 0 && dt.Second == 0)
+                {
+                    return string.Format("{0:d2}:{1:d2}\n[{2:d2}时]", dt.Minute, dt.Second, dt.Hour);
+                }
+                else
+                {
+                    return string.Format("{0:d2}:{1:d2}", dt.Minute, dt.Second);
+                }
+            }
+            return "";
         }
 
+
+        public int Interval
+        {
+            get;
+            set;
+        }
     }
 }
