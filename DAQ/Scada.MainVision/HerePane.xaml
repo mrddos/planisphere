@@ -222,8 +222,9 @@
 
     <ScrollViewer x:Name="panelScrollViewer" VerticalAlignment="Top" Style="{StaticResource for_scrollviewer}"
                   VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Visible"
-                  Height="175" >
-        <StackPanel x:Name="Panel" Orientation="Horizontal" Height="162">
+                  Background="Transparent" 
+                  Height="170" >
+        <StackPanel x:Name="Panel" Orientation="Horizontal" Height="162" VerticalAlignment="Top">
 
         </StackPanel>
     </ScrollViewer>

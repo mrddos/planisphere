@@ -92,7 +92,7 @@
                             <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟" Visibility="Collapsed"></ComboBox>
 
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">导出</Button>
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowChartView">显示曲线</Button>
+                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowSearchChartView">显示曲线</Button>
                         </StackPanel>
 
                         <!-- Contains ListView -->
@@ -102,16 +102,23 @@
                     </Grid>
                 </ContentControl>
             </TabItem>
-
+            <!-- 实时曲线 -->
             <TabItem Header="曲线图" Width="80" x:Name="ChartViewTabItem" Style="{StaticResource TabItemKey}">
-                <ContentControl Grid.Row="1" x:Name="GraphViewContainer" Margin="5,5,5,5"
-                                >
+                <ContentControl Grid.Row="1" x:Name="GraphViewContainer" Margin="5,5,5,5">
                     <Grid>
                         <Grid.RowDefinitions>
 
                         </Grid.RowDefinitions>
+                    </Grid>
+                </ContentControl>
+            </TabItem>
+            <!-- 查询曲线 -->
+            <TabItem Header="曲线图" Width="80" x:Name="SearchChartViewTabItem" Style="{StaticResource TabItemKey}">
+                <ContentControl Grid.Row="1" x:Name="SearchGraphViewContainer" Margin="5,5,5,5">
+                    <Grid>
+                        <Grid.RowDefinitions>
 
-
+                        </Grid.RowDefinitions>
                     </Grid>
                 </ContentControl>
             </TabItem>

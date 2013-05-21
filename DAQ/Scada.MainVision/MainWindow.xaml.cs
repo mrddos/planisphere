@@ -393,7 +393,7 @@ namespace Scada.MainVision
                 this.Grid.Children.Add(panel);
             }
 
-			this.panelManager.SetListViewPanelPos(panel, 2, 1);
+			this.panelManager.SetListViewPanelPos(panel, 3, 1);
 		}
 
       
@@ -502,9 +502,43 @@ namespace Scada.MainVision
             this.WindowState = WindowState.Minimized;
         }
 
+        /// <summary>
+        /// /////////////////////////////////////////////////////////////////////////////////
+        /// </summary>
+        private bool dataPanelHide = false;
+
+        private bool devicePanelHide = false;
+
+        private void OnHideDataPanelButton(object sender, RoutedEventArgs e)
+        {
+            if (this.dataPanelHide)
+            {
+                this.dataPanelHide = false;
+                this.DataPanelRow.Height = new GridLength(172.0);
+                this.herePane.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.dataPanelHide = true;
+                this.DataPanelRow.Height = new GridLength(15.0);
+                this.herePane.Visibility = Visibility.Collapsed;
+            }
+        }
+
         private void OnHideDeviceButton(object sender, RoutedEventArgs e)
         {
-      
+            if (this.devicePanelHide)
+            {
+                this.devicePanelHide = false;
+                this.DeviceListColumn.Width = new GridLength(300.0);
+                this.DeviceList.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                this.devicePanelHide = true;
+                this.DeviceListColumn.Width = new GridLength(15.0);
+                this.DeviceList.Visibility = Visibility.Collapsed;
+            }
         }
 
 

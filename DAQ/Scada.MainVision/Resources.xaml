@@ -69,8 +69,8 @@
                 <ControlTemplate TargetType="Button">
                     <!-- 只有Grid才能装下这么多Child -->
                     <Grid>
-                        <Border Background="{TemplateBinding Background}" Width="34" Height="30">
-                        
+                        <Border Background="{TemplateBinding Background}" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}">
+                            <ContentPresenter></ContentPresenter>
                         </Border>
                     </Grid>
                     <!--触发器-->
@@ -171,6 +171,7 @@
 
     <local:MultiplyConverter x:Key="multiplyConverter" />
     <!-- Expander -->
+    <!--
     <ControlTemplate x:Key="RevealExpanderTemp"
                          TargetType="{x:Type Expander}">
         <DockPanel>
@@ -224,6 +225,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    -->
 
 
     <Style TargetType="{x:Type TabItem}" x:Key="TabItemKey">
