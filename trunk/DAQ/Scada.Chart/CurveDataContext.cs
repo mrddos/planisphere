@@ -44,8 +44,10 @@ namespace Scada.Chart
             this.UpdateView();
         }
 
-        public void AddPoint(double x, double y)
+        public void AddTimeValuePair(int index, double value)
         {
+            double x = index * ChartView.Graduation;
+            double y = value;
             var p = new Point(x, y);
             points.Add(p);
             this.UpdateCurve(p);
@@ -53,7 +55,6 @@ namespace Scada.Chart
 
         public void AddValuePair(DateTime dateTime, double value)
         {
-
         }
 
         public void Clear()

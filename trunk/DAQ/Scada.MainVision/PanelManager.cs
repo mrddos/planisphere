@@ -54,7 +54,7 @@ namespace Scada.MainVision
             }
             else
             {
-
+                // !
                 ListViewPanel panel = new ListViewPanel(dataProvider, entry);
                 DataListener dataListener = dataProvider.GetDataListener(deviceKey);
                 panel.AddDataListener(dataListener);
@@ -62,8 +62,9 @@ namespace Scada.MainVision
                 {
                     panel.ListView = this.ShowListView(panel, dataListener);
                     panel.SearchView = this.ShowListView(panel, dataListener);
-                    panel.GraphView = this.ShowGraphView(panel, dataListener);
-                    
+                    panel.GraphView = this.ShowGraphView(panel, dataListener, true);
+                    panel.GraphSearchView = this.ShowGraphView(panel, dataListener, false);
+
                     // 是否显示 控制面板
                     if (deviceKey == DataProvider.DeviceKey_HvSampler)
                     {
@@ -73,10 +74,6 @@ namespace Scada.MainVision
                     {
                         panel.ControlPanel = this.ShowControlView(DataProvider.DeviceKey_ISampler);
                     }
-                }
-                else
-                {
-                    panel.ListView = this.ShowGraphView(panel, dataListener);
                 }
 
                 if (this.currentPanel != null)
@@ -115,9 +112,9 @@ namespace Scada.MainVision
         }
 
 
-        public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener)
+        public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener, bool realTime)
         {
-            GraphView graphView = new GraphView();
+            GraphView graphView = new GraphView(realTime);
             graphView.Interval = 30;
             if (dataListener.DeviceKey == "scada.naidevice")
             {
@@ -130,6 +127,7 @@ namespace Scada.MainVision
 
             foreach (var columnInfo in columnInfoList)
             {
+                // Time would be deal as a Chart.
                 if (columnInfo.BindingName.ToLower() == "time")
                 {
                     continue;

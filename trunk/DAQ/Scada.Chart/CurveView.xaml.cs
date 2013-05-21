@@ -121,7 +121,7 @@ namespace Scada.Chart
             double canvasHeight = this.CanvasView.Height;
             Color gridLineColor = Color.FromRgb(150, 150, 150);
 
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < 20; i++)
             {
                 Line l = new Line();
                 l.X1 = l.X2 = i * 40;
@@ -138,7 +138,7 @@ namespace Scada.Chart
                 Line l = new Line();
                 l.Y1 = l.Y2 = canvasHeight - i * 40;
                 l.X1 = 0;
-                l.X2 = GridViewWidth;
+                l.X2 = 1900;
 
                 l.Stroke = new SolidColorBrush(gridLineColor);
                 this.CanvasView.Children.Add(l);
@@ -228,6 +228,7 @@ namespace Scada.Chart
         public CurveDataContext CreateDataContext(string curveName, string displayName)
         {
             this.dataContext = new CurveDataContext(curveName);
+            // Delegates
             this.dataContext.UpdateView += this.UpdateViewHandler;
             this.dataContext.UpdateCurve += this.UpdateCurveHandler;
             this.dataContext.ClearCurve += this.ClearCurveHandler;

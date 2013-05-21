@@ -30,6 +30,8 @@ namespace Scada.MainVision
 
         private DataListener dataListener;
 
+        private bool realTime = true;
+
         static Color[] colors = { Colors.Green, Colors.Red, Colors.Blue, Colors.OrangeRed, Colors.Purple };
 
 
@@ -37,11 +39,12 @@ namespace Scada.MainVision
 
         private Dictionary<string, CurveDataContext> dataSources = new Dictionary<string, CurveDataContext>();
         
-        private DataArrivalConfig config;
+        // private DataArrivalConfig config;
 
-        public GraphView()
+        public GraphView(bool realTime)
         {
             InitializeComponent();
+            this.realTime = realTime;
         }
 
         public void AddDataListener(DataListener listener)
@@ -70,6 +73,7 @@ namespace Scada.MainVision
 
         public void AddLineName(string deviceKey, string lineName, string displayName)
         {
+            // TODO:
             if (lineName.IndexOf("Doserate") >= 0)
             {
                 displayName = displayName.Replace("μSv/h", "nSv/h");
@@ -93,20 +97,25 @@ namespace Scada.MainVision
 
         private void OnDataArrivalBegin(DataArrivalConfig config)
         {
-            this.config = config;
             if (config == DataArrivalConfig.TimeRange)
             {
-                // For show new data source, so clear the old data source.
-                foreach (string key in dataSources.Keys)
+                if (!this.realTime)
                 {
-                    CurveDataContext dataContext = dataSources[key];
-                    i = 0;
-                    dataContext.Clear();
+                    // Clear
+                    foreach (string key in dataSources.Keys)
+                    {
+                        CurveDataContext dataContext = dataSources[key];
+                        i = 0;
+                        dataContext.Clear();
+                    }
                 }
             }
             else if (config == DataArrivalConfig.TimeRecent)
             {
-
+                if (this.realTime)
+                {
+                    // Do nothing with dataContext
+                }
             }
         }
 
@@ -114,57 +123,44 @@ namespace Scada.MainVision
 
         private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
         {
-            if (this.config == DataArrivalConfig.TimeRecent)
+            if (config == DataArrivalConfig.TimeRecent)
             {
-                // Add new data into the datasource.
-                foreach (string key in dataSources.Keys)
-                {
-                    CurveDataContext dataContext = dataSources[key];
-                    if (entry.ContainsKey(key))
-                    {
-                        string v = (string)entry[key];
-                        double r = 0.0;
-                        if (v.Length > 0)
-                        {
-                            if (!double.TryParse(v, out r))
-                            {
-                                return;
-                            }
-                        }
-
-                        dataContext.AddPoint(i * 5, r);
-                    }
-                }
+                this.AddTimePoint(i, entry);
                 i++;
             }
-            else if (this.config == DataArrivalConfig.TimeRange)
+            else if (config == DataArrivalConfig.TimeRange)
             {
-                foreach (string key in dataSources.Keys)
-                {
-                    CurveDataContext dataContext = dataSources[key];
-                    if (entry.ContainsKey(key))
-                    {
-                        string v = (string)entry[key];
-                        double r = 0.0;
-                        if (v.Length > 0)
-                        {
-                            if (!double.TryParse(v, out r))
-                            {
-                                return;
-                            }
-                        }
-
-                        dataContext.AddPoint(i * 5, r);
-                    }
-                }
+                this.AddTimePoint(i, entry);
                 i++;
             }
 
         }
 
+        private void AddTimePoint(int index, Dictionary<string, object> entry)
+        {
+            foreach (string key in dataSources.Keys)
+            {
+                // 存在这条曲线
+                if (entry.ContainsKey(key))
+                {
+                    string v = (string)entry[key];
+                    double r = 0.0;
+                    if (v.Length > 0)
+                    {
+                        if (!double.TryParse(v, out r))
+                        {
+                            return;
+                        }
+                    }
+
+                    CurveDataContext dataContext = dataSources[key];
+                    dataContext.AddTimeValuePair(index * 5, r);
+                }
+            }
+        }
+
         private void OnDataArrivalEnd(DataArrivalConfig config)
         {
-
         }
 
         private void ChartView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)

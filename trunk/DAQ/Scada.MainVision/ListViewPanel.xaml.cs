@@ -23,6 +23,8 @@ namespace Scada.Controls
 
         private Control graphView = null;
 
+        private Control graphSearchView = null;
+
         private Control ctrlView = null;
 
 		private DataListener dataListener;
@@ -42,6 +44,7 @@ namespace Scada.Controls
 
         private const int MaxListCount = 100;
 
+        private bool ShowChartViewBySearch = true;
 
         // Must Use the <Full Name>
         private System.Windows.Forms.Timer refreshDataTimer;
@@ -133,6 +136,23 @@ namespace Scada.Controls
                 }
 			}
 		}
+
+        public Control GraphSearchView
+        {
+            get
+            {
+                return this.graphSearchView;
+            }
+            set
+            {
+                this.graphSearchView = value;
+                if (this.graphSearchView != null)
+                {
+                    this.SearchGraphViewContainer.Content = this.graphSearchView;
+                }
+            }
+        }
+
 
         public Control ControlPanel
         {
@@ -334,8 +354,16 @@ namespace Scada.Controls
         private void ShowChartView(object sender, RoutedEventArgs e)
         {
             this.TabCtrl.SelectedItem = this.ChartViewTabItem;
+            this.ShowChartViewBySearch = false;
+
         }
 
+        private void ShowSearchChartView(object sender, RoutedEventArgs e)
+        {
+            this.TabCtrl.SelectedItem = this.SearchChartViewTabItem;
+            this.ShowChartViewBySearch = true;
+
+        }
 
 	}
 }
