@@ -125,13 +125,19 @@ namespace Scada.MainVision
         {
             if (config == DataArrivalConfig.TimeRecent)
             {
-                this.AddTimePoint(i, entry);
-                i++;
+                if (this.realTime)
+                {
+                    this.AddTimePoint(i, entry);
+                    i++;
+                }
             }
             else if (config == DataArrivalConfig.TimeRange)
             {
-                this.AddTimePoint(i, entry);
-                i++;
+                if (!this.realTime)
+                {
+                    this.AddTimePoint(i, entry);
+                    i++;
+                }
             }
 
         }

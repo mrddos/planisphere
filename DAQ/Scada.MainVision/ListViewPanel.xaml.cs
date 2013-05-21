@@ -350,19 +350,21 @@ namespace Scada.Controls
             }
         }
 
-        // Select the ChartView shown.
+        // Select the ChartView to show.
         private void ShowChartView(object sender, RoutedEventArgs e)
         {
+            this.ChartViewTabItem.Visibility = Visibility.Visible;
+            this.SearchChartViewTabItem.Visibility = Visibility.Collapsed;
             this.TabCtrl.SelectedItem = this.ChartViewTabItem;
             this.ShowChartViewBySearch = false;
-
         }
 
         private void ShowSearchChartView(object sender, RoutedEventArgs e)
         {
+            this.SearchChartViewTabItem.Visibility = Visibility.Visible;
+            this.ChartViewTabItem.Visibility = Visibility.Collapsed;
             this.TabCtrl.SelectedItem = this.SearchChartViewTabItem;
             this.ShowChartViewBySearch = true;
-
         }
 
 	}

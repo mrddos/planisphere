@@ -296,6 +296,28 @@ namespace Scada.MainVision
             {
                 return;
             }
+
+            string status = this.GetDisplayString(d, "status");
+            string volume = this.GetDisplayString(d, "volume");
+            string hours = this.GetDisplayString(d, "hours");
+            string flow = this.GetDisplayString(d, "flow");
+
+            string statusMsg;
+            if (status == "1")
+            {
+                statusMsg = string.Format("采样状态: 运行"); 
+            }
+            else
+            {
+                statusMsg = string.Format("采样状态: 停止"); 
+            }
+
+            string volumeMsg = string.Format("累计采样体积: {0}", volume);
+            string hoursMsg = string.Format("累计采样时间: {0}", hours);
+            string flowMsg = string.Format("瞬时采样流量: {0}", flow);
+
+            this.DisplayPanelData(panel, statusMsg, volumeMsg, hoursMsg, flowMsg);
+
         }
         // 5 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
         private void UpdatePanel_I(HerePaneItem panel)
@@ -305,6 +327,26 @@ namespace Scada.MainVision
             {
                 return;
             }
+            string status = this.GetDisplayString(d, "status");
+            string volume = this.GetDisplayString(d, "volume");
+            string hours = this.GetDisplayString(d, "hours");
+            string flow = this.GetDisplayString(d, "flow");
+
+            string statusMsg;
+            if (status == "1")
+            {
+                statusMsg = string.Format("采样状态: 运行");
+            }
+            else
+            {
+                statusMsg = string.Format("采样状态: 停止");
+            }
+
+            string volumeMsg = string.Format("累计采样体积: {0}", volume);
+            string hoursMsg = string.Format("累计采样时间: {0}", hours);
+            string flowMsg = string.Format("瞬时采样流量: {0}", flow);
+
+            this.DisplayPanelData(panel, statusMsg, volumeMsg, hoursMsg, flowMsg);
         }
         // 6 市电状态、备电时间、舱内温度、门禁报警、烟感报警、浸水报警
         private void UpdatePanel_Shelter(HerePaneItem panel)
@@ -373,6 +415,15 @@ namespace Scada.MainVision
 
             this.UpdatePanel_Shelter(this.panes[5]);
             this.UpdatePanel_DWD(this.panes[6]);
+        }
+
+        private string GetDisplayString(Dictionary<string, object> d, string key)
+        {
+            if (d.ContainsKey(key))
+            {
+                return (string)d[key];
+            }
+            return string.Empty;
         }
 
 		private void ShowDataViewPanel(string deviceKey)
