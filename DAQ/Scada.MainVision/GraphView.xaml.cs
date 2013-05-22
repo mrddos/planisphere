@@ -178,6 +178,11 @@ namespace Scada.MainVision
             }
         }
 
+
+        internal void SaveChart()
+        {
+            this.ChartView.SaveChart();
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -60,6 +61,8 @@ namespace Scada.Chart
 
         private bool initialized = false;
 
+        private DateTime currentBaseTime = default(DateTime);
+
         private Dictionary<int, GraduationLine> Graduations
         {
             get;
@@ -96,7 +99,7 @@ namespace Scada.Chart
         public void UpdateTimeAxis(DateTime startTime, int interval)
         {
             // 目前只支持30秒 和 5分钟两种间隔
-            Debug.Assert(interval == 30 || interval == 60 * 5);
+            Debug.Assert(interval == 30 || interval == 60 * 5 || interval == 0);
 
             DateTime baseTime = default(DateTime);
             if (interval == 30)
@@ -109,6 +112,7 @@ namespace Scada.Chart
                 int min = startTime.Minute / 5 * 5;
                 baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, min, 0);
             }
+            this.currentBaseTime = baseTime;
             // 100
             int timeTextCount = 0;
             for (int i = 0; i < 100; i++)
@@ -196,14 +200,24 @@ namespace Scada.Chart
 
         private void MainViewMouseMove(object sender, MouseEventArgs e)
         {
+            bool timed = false;
+            string timeLabel = string.Empty;
             foreach (var view in this.ChartContainer.Children)
             {
                 CurveView curveView = (CurveView)view;
 
                 Point point = e.GetPosition((UIElement)curveView.View);
                 double x = point.X;
+                double centerX = curveView.CenterX;
+                if (!timed && x >= 0)
+                {
+                    double v = (x - centerX) / scale + centerX;
 
-                curveView.TrackTimeLine(point);
+                    double index = v / Graduation / 5;
+                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, (int)index + 1, this.Interval);
+                }
+
+                curveView.TrackTimeLine(point, timeLabel);
             }
         }
 
@@ -306,10 +320,42 @@ namespace Scada.Chart
         }
 
 
+        private string GetFormatDateTime(DateTime baseTime, int index, int interval)
+        {
+            DateTime dt = baseTime.AddSeconds(index * interval);
+            string time = string.Empty;
+            if (interval == 30)
+            {
+                time = string.Format("{0}-{1:d2}-{2:d2} {3:d2}:{4:d2}:{5:d2}", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+            }
+            else if (interval == 60 * 5)
+            {
+                time = string.Format("{0}-{1:d2}-{2:d2} {3:d2}:{4:d2}", dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute);
+            }
+            return time;
+        }
+
+
         public int Interval
         {
             get;
             set;
+        }
+
+        public void SaveChart()
+        {
+            DateTime now = DateTime.Now;
+            string fileName = string.Format("{0}-{1}-{2}-{3}.bmp", now.Year, now.Month, now.Day, now.Ticks);
+            string filePath = string.Format("./captures/{0}", fileName);
+            FileStream ms = new FileStream(filePath, FileMode.CreateNew);
+            double width = this.MainView.ActualWidth;
+            double height = this.MainView.ActualHeight;
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)width, (int)height, 96d, 96d, PixelFormats.Pbgra32);
+            bmp.Render(this.MainView);
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bmp));
+            encoder.Save(ms);
+            ms.Close();
         }
     }
 }
