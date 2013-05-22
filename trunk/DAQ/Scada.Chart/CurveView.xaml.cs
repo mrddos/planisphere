@@ -342,14 +342,14 @@ namespace Scada.Chart
             }
         }
 
-        public void TrackTimeLine(Point point)
+        public void TrackTimeLine(Point point, string timeLabel)
         {
             timeLine.X1 = timeLine.X2 = point.X;
             // this.centerX = point.X;
-            this.UpdateValue(point);
+            this.UpdateValue(point, timeLabel);
         }
 
-        private void UpdateValue(Point point)
+        private void UpdateValue(Point point, string timeLabel)
         {
             double x = point.X;
 
@@ -362,7 +362,8 @@ namespace Scada.Chart
                 // TODO: Optimize.
 
                 this.valueBorder.Visibility = Visibility.Visible;
-                this.valueLabel.Text = string.Format("{0}", v);
+                string t;
+                this.valueLabel.Text = string.Format("[{0}]     {1}", timeLabel, v);
             }
             else
             {
@@ -489,14 +490,15 @@ namespace Scada.Chart
 
             // Value text Label.
             this.valueBorder = new Border();
-            valueBorder.Background = Brushes.AliceBlue;
+            // valueBorder.Background = labelBrush;
+            valueBorder.CornerRadius = new CornerRadius(1.0);
+            valueBorder.BorderBrush = labelBrush;
+            valueBorder.Padding = new Thickness(4.0, 3.0, 4.0, 3.0);
             valueBorder.SetValue(Canvas.RightProperty, 120.0);
             
             valueBorder.SetValue(Canvas.TopProperty, 12.0);
             this.valueLabel = new TextBlock();
-            this.valueLabel.FontSize *= 1.5;
-            this.valueLabel.Foreground = new SolidColorBrush(Colors.Green);
-
+            this.valueLabel.Foreground = Brushes.White;
 
             valueBorder.Child = valueLabel;
             this.CanvasView.Children.Add(valueBorder);

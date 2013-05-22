@@ -367,5 +367,31 @@ namespace Scada.Controls
             this.ShowChartViewBySearch = true;
         }
 
+        private void ExportDataList(object sender, RoutedEventArgs e)
+        {
+            this.ExportDataListToFile(this.dataSource);
+        }
+
+        private void ExportSearchDataList(object sender, RoutedEventArgs e)
+        {
+            this.ExportDataListToFile(this.searchDataSource);
+        }
+
+        private void ExportDataListToFile(List<Dictionary<string, object>> dataList)
+        {
+
+        }
+
+        private void SaveChart(object sender, RoutedEventArgs e)
+        {
+            ((GraphView)this.GraphView).SaveChart();
+        }
+
+        private void SaveSearchChart(object sender, RoutedEventArgs e)
+        {
+            ((GraphView)this.GraphSearchView).SaveChart();
+        }
+
+
 	}
 }

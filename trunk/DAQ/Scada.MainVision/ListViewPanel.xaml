@@ -52,20 +52,17 @@
         <!-- Row 1 -->
         <Border Grid.Row="1" Background="#3A3A3A" BorderBrush="#282828" BorderThickness="0, 0, 0, 0">
         <TabControl x:Name="TabCtrl" Background="#535353" BorderBrush="#535353">
-            
+            <!-- 实时列表 -->
             <TabItem Header="实时列表" Width="80" Background="#535353" Style="{StaticResource TabItemKey}" >
                 <ContentControl Grid.Row="1" Margin="0">
                     <Grid >
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="35"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
-
-
-
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">导出</Button>
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowChartView">显示曲线</Button>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ExportDataList">导出</Button>
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowChartView">显示曲线</Button>
                         </StackPanel>
                         <ContentControl Grid.Row="1" x:Name="ListViewContainer" Margin="-5">
 
@@ -74,16 +71,17 @@
                     </Grid>
                 </ContentControl>
             </TabItem>
-
+            
+            <!-- 查询列表 -->
             <TabItem Header="查询列表" Width="80" Style="{StaticResource TabItemKey}">
                 <ContentControl Grid.Row="1" Margin="0">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="40"></RowDefinition>
+                            <RowDefinition Height="35"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
 
-                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0">
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
 
                             <c:DatePicker x:Name="FromDate" Margin="5, 0, 5, 0" Height="25" CalendarClosed="DatePickerCalendarClosed"></c:DatePicker>
 
@@ -91,7 +89,7 @@
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="SearchByDateRange">查询</Button>
                             <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟" Visibility="Collapsed"></ComboBox>
 
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}">导出</Button>
+                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ExportSearchDataList">导出</Button>
                                     <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowSearchChartView">显示曲线</Button>
                         </StackPanel>
 
@@ -104,20 +102,38 @@
             </TabItem>
             <!-- 实时曲线 -->
             <TabItem Header="实时曲线" Width="80" x:Name="ChartViewTabItem" Style="{StaticResource TabItemKey}">
-                <ContentControl Grid.Row="1" x:Name="GraphViewContainer" Margin="5,5,5,5">
+                <ContentControl Grid.Row="1" x:Name="GraphViewContainerOuter" Margin="5,5,5,5">
                     <Grid>
+                        
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="35"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="SaveChart">保存曲线</Button>
+                        </StackPanel>
+
+                        <ContentControl Grid.Row="1" x:Name="GraphViewContainer" Margin="-5">
+                        </ContentControl>
+
                     </Grid>
                 </ContentControl>
             </TabItem>
             <!-- 查询曲线 -->
             <TabItem Header="查询曲线" Width="80" x:Name="SearchChartViewTabItem" 
                      Style="{StaticResource TabItemKey}" Visibility="Collapsed">
-                <ContentControl Grid.Row="1" x:Name="SearchGraphViewContainer" Margin="5,5,5,5">
+                <ContentControl Grid.Row="1" x:Name="SearchGraphViewContainerOuter" Margin="5,5,5,5">
                     <Grid>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="35"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="SaveSearchChart">保存曲线</Button>
+                        </StackPanel>
+                        <ContentControl Grid.Row="1" x:Name="SearchGraphViewContainer" Margin="-5">
+                        </ContentControl>
                     </Grid>
                 </ContentControl>
             </TabItem>
