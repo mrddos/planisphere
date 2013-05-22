@@ -93,28 +93,33 @@ namespace Scada.Chart
             }
             this.initialized = true;
 
-            this.UpdateTimeAxis(DateTime.Now, this.Interval);
+            this.InitTimeAxis(DateTime.Now);
         }
 
-        public void UpdateTimeAxis(DateTime startTime, int interval)
+        private DateTime GetBaseTime(DateTime startTime)
         {
             // 目前只支持30秒 和 5分钟两种间隔
-            Debug.Assert(interval == 30 || interval == 60 * 5 || interval == 0);
+            Debug.Assert(this.Interval == 30 || this.Interval == 60 * 5 || this.Interval == 0);
 
             DateTime baseTime = default(DateTime);
-            if (interval == 30)
+            if (this.Interval == 30)
             {
                 int second = startTime.Second / 30 * 30;
                 baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, startTime.Minute, second);
             }
-            else if (interval == 60 * 5)
+            else if (this.Interval == 60 * 5)
             {
                 int min = startTime.Minute / 5 * 5;
                 baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, min, 0);
             }
-            this.currentBaseTime = baseTime;
-            // 100
-            int timeTextCount = 0;
+            return baseTime;
+        }
+
+        private void InitTimeAxis(DateTime startTime)
+        {
+            // Base Time;   
+            // this.currentBaseTime = this.GetBaseTime(startTime);
+
             for (int i = 0; i < 100; i++)
             {
                 // One interval per 5px
@@ -129,35 +134,66 @@ namespace Scada.Chart
                 scaleLine.Y2 = isWholePoint ? Charts.MainScaleLength : Charts.ScaleLength;
                 scaleLine.Stroke = isWholePoint ? Brushes.LightGray : Brushes.Gray;
                 this.TimeAxis.Children.Add(scaleLine);
-
-                if (isWholePoint)
-                {
-                    TextBlock t = new TextBlock();
-                    t.Foreground = Brushes.White;
-                    t.FontWeight = FontWeights.Light;
-                    t.FontSize = 9;
-                    double pos = i * Graduation;
-                    GraduationTimes.Add(timeTextCount, new GraduationTime()
-                    {
-                        Text = t,
-                        Pos = pos
-                    });
-                    timeTextCount++;
-                    t.Text = this.GetFormatTime(baseTime, timeTextCount, interval);
-                    t.SetValue(Canvas.LeftProperty, (double)pos - Offset);
-                    t.SetValue(Canvas.TopProperty, (double)10);
-                    this.TimeAxis.Children.Add(t);
-                }
-
             }
 
+            this.UpdateTimeAxis(startTime);
+        }
 
+        public void UpdateTimeAxis(int offset)
+        {
+            var newDateTime = this.currentBaseTime.AddSeconds(offset * this.Interval);
+            this.UpdateTimeAxis(newDateTime);
+        }
+
+        public void UpdateTimeAxis(DateTime startTime)
+        {
+            DateTime baseTime = this.GetBaseTime(startTime);
+            if (this.currentBaseTime == baseTime)
+            {
+                return;
+            }
+            this.currentBaseTime = baseTime;
+
+
+            for (int i = 0; i < 20; i++)
+            {
+                TextBlock timeLabel = null;
+                if (this.GraduationTimes.ContainsKey(i))
+                {
+                    timeLabel = this.GraduationTimes[i].Text;
+                }
+                else
+                {
+                    timeLabel = new TextBlock();
+                    timeLabel.Foreground = Brushes.White;
+                    timeLabel.FontWeight = FontWeights.Light;
+                    timeLabel.FontSize = 9;
+
+                    double pos = i * 5 * Graduation;
+                    GraduationTimes.Add(i, new GraduationTime()
+                    {
+                        Text = timeLabel, Pos = pos
+                    });
+
+                    timeLabel.SetValue(Canvas.LeftProperty, (double)pos - Offset);
+                    timeLabel.SetValue(Canvas.TopProperty, (double)10);
+
+                    this.TimeAxis.Children.Add(timeLabel);
+                }
+
+                string displayTime = this.GetFormatTime(this.currentBaseTime, i, this.Interval);
+                if (timeLabel != null)
+                {
+                    timeLabel.Text = displayTime;
+                }
+                
+            }
 
         }
 
         public CurveView AddCurveView(string curveViewName, string displayName, double height = 200.0)
         {
-            CurveView curveView = new CurveView();
+            CurveView curveView = new CurveView(this);
             curveView.CurveViewName = curveViewName;
             curveView.TimeScale = this.TimeScale;
             curveView.Height = height + ChartView.ViewGap;
@@ -214,7 +250,7 @@ namespace Scada.Chart
                     double v = (x - centerX) / scale + centerX;
 
                     double index = v / Graduation / 5;
-                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, (int)index + 1, this.Interval);
+                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, (int)index, this.Interval);
                 }
 
                 curveView.TrackTimeLine(point, timeLabel);
@@ -341,6 +377,8 @@ namespace Scada.Chart
             get;
             set;
         }
+
+
 
         public void SaveChart()
         {

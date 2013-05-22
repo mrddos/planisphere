@@ -77,6 +77,9 @@ namespace Scada.Chart
 
         private TextBlock valueLabel;
 
+        private ChartView chartView;
+
+
         public double CenterX
         {
             get
@@ -97,9 +100,10 @@ namespace Scada.Chart
             set;
         }
 
-        public CurveView()
+        public CurveView(ChartView chartView)
         {
             InitializeComponent();
+            this.chartView = chartView;
             this.Graduations = new Dictionary<int, GraduationLine>();
             this.GraduationTexts = new Dictionary<int, GraduationText>();
         }
@@ -266,21 +270,23 @@ namespace Scada.Chart
         /// 
         /// </summary>
         /// <param name="point"></param>
-        private void UpdateCurveHandler(Point point)
+        private UpdateResult UpdateCurveHandler(Point point)
         {
             Point p;
             this.Convert(point, out p);
             curve.Points.Add(p);
 
             double aw = this.ActualWidth;
-            if (p.X > aw * 3 / 4) 
+            double curvePercent = 0.25;
+            if (p.X > aw * curvePercent) 
             {
-                TranslateTransform tt = new TranslateTransform(aw * 3 / 4 - p.X, 0);
-                // tt.BeginAnimation(TranslateTransform.XProperty, AnimationTimeline.
+                TranslateTransform tt = new TranslateTransform(aw * curvePercent - p.X, 0);
+                
                 curve.RenderTransform = tt;
-                // curve.RenderTransform = new ScaleTransform(this.currentScale, this.currentScale, centerX, centerY);
+                // TODO: 
+                return UpdateResult.Overflow;
             }
-            
+            return UpdateResult.None;
         }
 
         private void ClearCurveHandler()

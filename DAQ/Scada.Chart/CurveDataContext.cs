@@ -6,9 +6,15 @@ using System.Windows;
 
 namespace Scada.Chart
 {
+    public enum UpdateResult
+    {
+        None,
+        Overflow
+    }
+
     public delegate void UpdateView();
 
-    public delegate void UpdateCurve(Point point);
+    public delegate UpdateResult UpdateCurve(Point point);
 
     public delegate void ClearCurve();
 
@@ -44,13 +50,14 @@ namespace Scada.Chart
             this.UpdateView();
         }
 
-        public void AddTimeValuePair(int index, double value)
+        public UpdateResult AddTimeValuePair(int index, double value)
         {
             double x = index * ChartView.Graduation;
             double y = value;
             var p = new Point(x, y);
             points.Add(p);
-            this.UpdateCurve(p);
+            UpdateResult result = this.UpdateCurve(p);
+            return result;
         }
 
         public void AddValuePair(DateTime dateTime, double value)

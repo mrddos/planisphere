@@ -146,6 +146,15 @@ namespace Scada.MainVision
                 {
                     this.latestData.Add(deviceKey, data);
                 }
+
+                if (this.dataListeners.ContainsKey(deviceKey))
+                {
+                    DBDataCommonListerner listener = this.dataListeners[deviceKey];
+                    if (listener != null)
+                    {
+                        listener.OnDataArrival(DataArrivalConfig.TimeNew, data);
+                    }
+                }
             }
         }
 

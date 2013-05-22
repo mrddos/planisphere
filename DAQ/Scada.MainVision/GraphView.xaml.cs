@@ -41,6 +41,8 @@ namespace Scada.MainVision
         
         // private DataArrivalConfig config;
 
+        private Dictionary<string, object> lastEntry;
+
         public GraphView(bool realTime)
         {
             InitializeComponent();
@@ -110,7 +112,7 @@ namespace Scada.MainVision
                     }
                 }
             }
-            else if (config == DataArrivalConfig.TimeRecent)
+            else if (config == DataArrivalConfig.TimeNew)
             {
                 if (this.realTime)
                 {
@@ -123,11 +125,23 @@ namespace Scada.MainVision
 
         private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
         {
-            if (config == DataArrivalConfig.TimeRecent)
+            if (config == DataArrivalConfig.TimeNew)
             {
                 if (this.realTime)
                 {
+                    if (this.lastEntry != null)
+                    {
+                        string a = (string)this.lastEntry["time"];
+                        string b = (string)entry["time"];
+                        if (a == b)
+                        {
+                            return;
+                        }
+                    }
+
+                    
                     this.AddTimePoint(i, entry);
+                    this.lastEntry = entry;
                     i++;
                 }
             }
@@ -144,6 +158,7 @@ namespace Scada.MainVision
 
         private void AddTimePoint(int index, Dictionary<string, object> entry)
         {
+            UpdateResult result = UpdateResult.None;
             foreach (string key in dataSources.Keys)
             {
                 // 存在这条曲线
@@ -160,10 +175,16 @@ namespace Scada.MainVision
                     }
 
                     CurveDataContext dataContext = dataSources[key];
-                    dataContext.AddTimeValuePair(index * 5, r);
+                    result = dataContext.AddTimeValuePair(index * 5, r);
                 }
             }
+
+            if (UpdateResult.Overflow == result)
+            {
+                this.ChartView.UpdateTimeAxis(1);
+            }
         }
+
 
         private void OnDataArrivalEnd(DataArrivalConfig config)
         {
