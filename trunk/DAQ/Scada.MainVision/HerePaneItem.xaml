@@ -64,7 +64,7 @@
                 -->
             </Rectangle>
 
-            <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,5"
+            <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" 
                 Template="{StaticResource CloseButtonTemplateKey}"/>
 
             <!-- Title -->

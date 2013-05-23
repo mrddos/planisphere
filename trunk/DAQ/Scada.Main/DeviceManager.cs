@@ -1,6 +1,7 @@
 ﻿using Scada.Declare;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -260,11 +261,11 @@ namespace Scada.Main
             string deviceKey = deviceName.ToLower();
             if (selected)
             {
-                selectedDevices.Add(deviceKey, new DeviceRunContext(deviceName, version));
+                this.selectedDevices.Add(deviceKey, new DeviceRunContext(deviceName, version));
             }
             else
             {
-                selectedDevices.Remove(deviceKey);
+                this.selectedDevices.Remove(deviceKey);
             }
         }
 
@@ -406,11 +407,16 @@ namespace Scada.Main
             // Running Devices...
             foreach (string deviceName in selectedDevices.Keys)
             {
-                
-
-                // this.RunDevice(context);
-
+                DeviceRunContext context = this.selectedDevices[deviceName];
+                if (context != null)
+                {
+                    Device device = context.Device;
+                    device.Stop();
+                }
             }
+
+            this.selectedDevices.Clear();
+            OpenMainProgram();
 		}
 
         private string GetCOMPort(string deviceName)
@@ -472,6 +478,21 @@ namespace Scada.Main
                     badDevice.Stop();
                 }
                 this.RunDevice(context);
+            }
+        }
+
+        private void OpenMainProgram()
+        {
+            const string ScadaMainExe = "Scada.Main.exe";
+            using (Process process = new Process())
+            {
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = ScadaMainExe;      //设定程序名  
+                process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
+                process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
+                process.StartInfo.RedirectStandardError = true;//重定向错误输出
+                process.Start();
             }
         }
     }

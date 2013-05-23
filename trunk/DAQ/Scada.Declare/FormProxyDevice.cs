@@ -29,6 +29,9 @@ namespace Scada.Declare
 
         private IntPtr hWnd = IntPtr.Zero;
 
+        private Thread thread = null;
+
+        private Timer timer = null;
 
         private const int WM_GETTEXT = 0x000D;
 
@@ -183,15 +186,13 @@ namespace Scada.Declare
 
 		public override void Start(string address)
 		{
-            Timer timer = null;
-
-            Thread thread = new Thread(new ThreadStart(() => {
+            this.thread = new Thread(new ThreadStart(() => {
 
                 // Fetch Window Handle from HWND.r file.
                 this.hWnd = FetchWindowHandle(this.processName);
 
                 // Start timer to work.
-                timer = new Timer(new TimerCallback((object o) => {
+                this.timer = new Timer(new TimerCallback((object o) => {
 
                     DateTime now = DateTime.Now;
                     if (!this.IsRightTime(now))
@@ -225,7 +226,22 @@ namespace Scada.Declare
 
 		public override void Stop()
 		{
-			throw new NotImplementedException();
+            if (this.timer != null)
+            {
+                this.timer.Dispose();
+                this.timer = null;
+            }
+            if (this.thread != null)
+            {
+                try
+                {
+                    this.thread.Abort();
+                }
+                catch (ThreadAbortException)
+                {
+                    this.thread = null;
+                }
+            }
 		}
 
 		public override void Send(byte[] action, DateTime time)

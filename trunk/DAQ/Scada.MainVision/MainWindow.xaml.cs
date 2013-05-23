@@ -83,6 +83,7 @@ namespace Scada.MainVision
 
 			// Device List
             this.DeviceList.ClickDeviceItem += this.OnDeviceItemClicked;
+            this.DeviceList.MainWindow = this;
 
 			Config cfg = Config.Instance();
 			string[] deviceKeys = cfg.DeviceKeys;
@@ -576,7 +577,7 @@ namespace Scada.MainVision
             }
         }
 
-        private void OnHideDeviceButton(object sender, RoutedEventArgs e)
+        public void OnHideDeviceButton(object sender, RoutedEventArgs e)
         {
             if (this.devicePanelHide)
             {

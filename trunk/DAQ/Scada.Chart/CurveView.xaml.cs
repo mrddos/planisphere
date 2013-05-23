@@ -63,7 +63,7 @@ namespace Scada.Chart
 
         private Polyline curve = null;
 
-        private double i = 0;
+        //private double i = 0;
 
         private double currentScale = 1.0;
 
@@ -124,6 +124,7 @@ namespace Scada.Chart
             // Grid Line |||
             double canvasHeight = this.CanvasView.Height;
             Color gridLineColor = Color.FromRgb(150, 150, 150);
+            SolidColorBrush gridLineBrush = new SolidColorBrush(gridLineColor);
 
             for (int i = 0; i < 20; i++)
             {
@@ -132,7 +133,7 @@ namespace Scada.Chart
                 l.Y1 = 0;
                 l.Y2 = GridViewHeight;
 
-                l.Stroke = new SolidColorBrush(gridLineColor);
+                l.Stroke = gridLineBrush;
                 this.CanvasView.Children.Add(l);
             }
 
@@ -144,7 +145,7 @@ namespace Scada.Chart
                 l.X1 = 0;
                 l.X2 = 1900;
 
-                l.Stroke = new SolidColorBrush(gridLineColor);
+                l.Stroke = gridLineBrush;
                 this.CanvasView.Children.Add(l);
             }
 
@@ -277,7 +278,7 @@ namespace Scada.Chart
             curve.Points.Add(p);
 
             double aw = this.ActualWidth;
-            double curvePercent = 0.25;
+            double curvePercent = 0.75;
             if (p.X > aw * curvePercent) 
             {
                 TranslateTransform tt = new TranslateTransform(aw * curvePercent - p.X, 0);

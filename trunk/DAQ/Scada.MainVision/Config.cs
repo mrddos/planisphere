@@ -26,6 +26,12 @@ namespace Scada.MainVision
 			set;
 		}
 
+        public string Unit
+        {
+            get;
+            set;
+        }
+
 		public int FieldIndex
 		{
 			get;
@@ -285,6 +291,7 @@ namespace Scada.MainVision
 
 			var item = new ConfigItem(key);
 			item.ColumnName = columnName;
+            item.Unit = this.GetUnit(columnName);
             item.Max = max;
             item.Min = min;
             item.Height = height;
@@ -309,6 +316,17 @@ namespace Scada.MainVision
             {
                 height = 100.0;
             }
+        }
+
+        private string GetUnit(string columnName)
+        {
+            int p1 = columnName.IndexOf("(");
+            int p2 = columnName.IndexOf(")");
+            if (p1 > 0 && p2 > p1)
+            {
+                return columnName.Substring(p1 + 1, p2 - p1 - 1);
+            }
+            return string.Empty;
         }
 
 		internal string GetDisplayName(string deviceKey)

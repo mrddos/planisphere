@@ -83,5 +83,17 @@ namespace Scada.MainVision
 
 
         public event EventHandler ClickDeviceItem;
+
+        private void OnHideDeviceButton(object sender, RoutedEventArgs e)
+        {
+            this.MainWindow.OnHideDeviceButton(sender, e);
+        }
+
+        // Parent Window
+        public MainWindow MainWindow 
+        { 
+            get; 
+            set; 
+        }
     }
 }
