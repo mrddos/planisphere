@@ -193,6 +193,7 @@ namespace Scada.Main
             // deviceListView.Enabled = true;
             this.UpdateDevicesWaitStatus();
 			Program.DeviceManager.ShutdownDeviceConnection();
+            Application.Exit();
 		}
 
 		private void startMainVisionMenuItem_Click(object sender, EventArgs e)
@@ -209,7 +210,6 @@ namespace Scada.Main
                 process.Start();
 
             }
-            
 		}
 
 		private void logToolMenuItem_Click(object sender, EventArgs e)
@@ -261,7 +261,7 @@ namespace Scada.Main
             {
                 if (item.Checked)
                 {
-                    
+                    // Running.
                     item.SubItems[2].Text = "Running";
                 }
             }

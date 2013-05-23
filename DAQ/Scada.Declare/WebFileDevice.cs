@@ -196,8 +196,11 @@ namespace Scada.Declare
 
 		public override void Stop()
 		{
-			if (this.timer != null)
-				this.timer.Dispose();
+            if (this.timer != null)
+            {
+                this.timer.Dispose();
+                this.timer = null;
+            }
 			isOpen = false;
 		}
 

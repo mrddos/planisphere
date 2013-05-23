@@ -87,7 +87,7 @@
             </Button.Content>
         </Button>
         <!-- Device -->
-        <m:DeviceListPanel Grid.Row="3" Grid.Column="0" x:Name="DeviceList" Margin="15,0,5,5" />
+        <m:DeviceListPanel Grid.Row="3" Grid.Column="0" x:Name="DeviceList" Margin="15,0,5,5"/>
 
         <!-- End -->
     </Grid>
