@@ -12,6 +12,8 @@ namespace Scada.Controls
     using Microsoft.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Media;
+    using System.IO;
+    using System.Text;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -270,7 +272,7 @@ namespace Scada.Controls
                     DateTime dt = DateTime.Parse((string)entry[Time]);
                     if (dt > latestDateTime)
                     {
-                        this.dataSource.Add(entry);
+                        this.dataSource.Insert(0, entry);
                     }
                     else
                     {
@@ -420,7 +422,23 @@ namespace Scada.Controls
 
         private void ExportDataListToFile(List<Dictionary<string, object>> dataList)
         {
-
+            DateTime now = DateTime.Now;
+            string fileName = string.Format("{0}-{1}-{2}-{3}.csv", now.Year, now.Month, now.Day, now.Ticks);
+            string filePath = string.Format("./csv/{0}", fileName);
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                foreach (Dictionary<string, object> i in dataList)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    
+                    foreach (object item in i.Values)
+                    {
+                        sb.Append(item.ToString()).Append(",");
+                    }
+                    string line = sb.ToString(0, sb.Length - 1);
+                    sw.WriteLine(line);
+                }
+            }
         }
 
         private void SaveChart(object sender, RoutedEventArgs e)

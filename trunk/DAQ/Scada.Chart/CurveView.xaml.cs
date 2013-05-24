@@ -83,6 +83,8 @@ namespace Scada.Chart
 
         private int visibleCount = 0;
 
+        private int offset = 0;
+
 
         public double CenterX
         {
@@ -266,9 +268,9 @@ namespace Scada.Chart
 
         private void UpdateViewHandler()
         {
-            TranslateTransform tt = new TranslateTransform(0, 0);
+            // TranslateTransform tt = new TranslateTransform(0, 0);
             // tt.BeginAnimation(TranslateTransform.XProperty, AnimationTimeline.
-            curve.RenderTransform = tt;
+            // curve.RenderTransform = tt;
         }
 
         /// <summary>
@@ -282,19 +284,20 @@ namespace Scada.Chart
             curve.Points.Add(p);
 
             this.totalCount += 1;
-            this.visibleCount += 1;
-            double aw = this.ActualWidth;
+            // this.visibleCount += 1;
+            // double aw = this.ActualWidth;
 
-            const int MaxVisibleCount = 3;
+            // Seems good for the device.
+            const int MaxVisibleCount = 4;
             if (this.totalCount >= MaxVisibleCount) 
             {
                 this.timeLine.X1 = this.timeLine.X2 = 0;
                 this.UpdateCurveScale(1.0);
 
-
-                double offset = (MaxVisibleCount - 1 - this.totalCount) * ChartView.Graduation * 5;
-                this.visibleCount -= 1;
-                TranslateTransform tt = new TranslateTransform(offset, 0);
+                this.offset -= 1;
+                double offsetPos = (this.offset) * ChartView.Graduation * 5;
+                
+                TranslateTransform tt = new TranslateTransform(offsetPos, 0);
                 
                 curve.RenderTransform = tt;
                 
@@ -380,7 +383,7 @@ namespace Scada.Chart
             if (this.GetY(xo, out y))
             {
                 double v = this.GetValue(y);
-                // TODO: Optimize.
+                v = ConvertDouble(v, 2);
 
                 this.valueBorder.Visibility = Visibility.Visible;
                 string t;
@@ -390,6 +393,21 @@ namespace Scada.Chart
             {
                 this.valueBorder.Visibility = Visibility.Collapsed;
             }
+        }
+
+        static double ConvertDouble(double d, int n)
+        {
+            if (d == 0.0) return 0;
+            if (d > 1 || d < -1)
+                n = n - (int)Math.Log10(Math.Abs(d)) - 1;
+            else
+                n = n + (int)Math.Log10(1.0 / Math.Abs(d));
+            if (n < 0)
+            {
+                d = (int)(d / Math.Pow(10, 0 - n)) * Math.Pow(10, 0 - n);
+                n = 0;
+            }
+            return Math.Round(d, n);
         }
 
         private double Convert(double v)

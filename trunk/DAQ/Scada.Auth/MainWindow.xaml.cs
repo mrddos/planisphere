@@ -37,6 +37,7 @@ namespace Scada.Auth
             this.Close();
         }
 
+        /*
         private void OnMaxButton(object sender, RoutedEventArgs e)
         {
             this.MaxWidth = SystemParameters.WorkArea.Width + 8;
@@ -50,6 +51,7 @@ namespace Scada.Auth
                 this.WindowState = WindowState.Normal;
             }
         }
+        */
 
         private void OnMinButton(object sender, RoutedEventArgs e)
         {
