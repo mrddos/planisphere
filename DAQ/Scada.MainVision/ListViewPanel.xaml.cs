@@ -42,7 +42,7 @@ namespace Scada.Controls
         private const string Time = "time";
 
 
-        private const int MaxListCount = 100;
+        private const int MaxListCount = 50;
 
         private bool ShowChartViewBySearch = true;
 
@@ -98,7 +98,10 @@ namespace Scada.Controls
                 if (this.listView != null)
                 {
                     this.ListViewContainer.Content = this.listView;
-                    this.ApplyListStyle((ListView)this.listView);
+
+                    ListView theListView = (ListView)this.listView;
+                    // theListView.ItemsSource = this.dataSource;
+                    this.ApplyListStyle(theListView);
                 }
 			}
 		}
@@ -256,6 +259,42 @@ namespace Scada.Controls
             {
                 this.searchDataSource.Add(entry);
             }
+            else if (config == DataArrivalConfig.TimeNew)
+            {
+                const string Time = "time";
+                if (this.dataSource.Count > 0)
+                {
+                    Dictionary<string, object> latest = this.dataSource[0];
+                    DateTime latestDateTime = DateTime.Parse((string)latest[Time]);
+
+                    DateTime dt = DateTime.Parse((string)entry[Time]);
+                    if (dt > latestDateTime)
+                    {
+                        this.dataSource.Add(entry);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else
+                {
+                    this.dataSource.Add(entry);
+                }
+
+                ListView listView = (ListView)this.ListView;
+                int selected = listView.SelectedIndex;
+                listView.ItemsSource = null;
+                listView.ItemsSource = this.dataSource;
+                listView.SelectedIndex = selected;
+
+                if (this.dataSource.Count > MaxListCount)
+                {
+                    int p = MaxListCount;
+                    int l = this.dataSource.Count - p;
+                    this.dataSource.RemoveRange(p, l);
+                }
+            }
 		}
 
         // END
@@ -263,6 +302,8 @@ namespace Scada.Controls
 		{
             if (config == DataArrivalConfig.TimeRecent)
             {
+                ///////////////////////////////////////////////////////////////////
+                // TODO. Remove...
                 if (this.ListView == null || !(this.ListView is ListView))
                     return;
 

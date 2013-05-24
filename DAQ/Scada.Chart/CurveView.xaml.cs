@@ -79,6 +79,10 @@ namespace Scada.Chart
 
         private ChartView chartView;
 
+        private int totalCount = 0;
+
+        private int visibleCount = 0;
+
 
         public double CenterX
         {
@@ -277,13 +281,23 @@ namespace Scada.Chart
             this.Convert(point, out p);
             curve.Points.Add(p);
 
+            this.totalCount += 1;
+            this.visibleCount += 1;
             double aw = this.ActualWidth;
-            double curvePercent = 0.75;
-            if (p.X > aw * curvePercent) 
+
+            const int MaxVisibleCount = 3;
+            if (this.totalCount >= MaxVisibleCount) 
             {
-                TranslateTransform tt = new TranslateTransform(aw * curvePercent - p.X, 0);
+                this.timeLine.X1 = this.timeLine.X2 = 0;
+                this.UpdateCurveScale(1.0);
+
+
+                double offset = (MaxVisibleCount - 1 - this.totalCount) * ChartView.Graduation * 5;
+                this.visibleCount -= 1;
+                TranslateTransform tt = new TranslateTransform(offset, 0);
                 
                 curve.RenderTransform = tt;
+                
                 // TODO: 
                 return UpdateResult.Overflow;
             }

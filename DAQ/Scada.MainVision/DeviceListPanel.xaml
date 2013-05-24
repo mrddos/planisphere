@@ -33,7 +33,8 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="Title" Grid.Row="0" Grid.Column="0" Margin="5,0,0,0" Height="20" FontSize="14" Foreground="White"
+            <TextBlock x:Name="Title" Grid.Row="0" Grid.Column="0" Margin="5,0,0,0" Height="20" FontSize="14" 
+                       Foreground="White" FontFamily="微软雅黑"
                        VerticalAlignment="Center">设备列表</TextBlock>
 
             <Button Width="18" Height="18" Grid.Row="0" Grid.Column="2" 
