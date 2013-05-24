@@ -16,7 +16,9 @@ namespace Scada.MainVision
     /// </summary>
     internal class DBDataProvider : DataProvider
     {
-        private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
+        private string ConnectionString;
+
+        private const string ConnectionStringFormat = "datasource={0};username=root;database=scada";
 
         private const int MaxCountFetchRecent = 10;
 
@@ -24,7 +26,7 @@ namespace Scada.MainVision
 
         private const string Time = "time";
 
-        private MySqlConnection conn = new MySqlConnection(ConnectionString);
+        private MySqlConnection conn = null;
 
         private MySqlCommand cmd = null;
 
@@ -56,7 +58,6 @@ namespace Scada.MainVision
         /// </summary>
         static DBDataProvider()
         {
-
         }
 
         /// <summary>
@@ -75,6 +76,11 @@ namespace Scada.MainVision
             this.FetchCount = 20;
 
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>(30);
+
+            // 192.168.1.24 
+            this.ConnectionString = string.Format(ConnectionStringFormat, "127.0.0.1");
+            this.conn = new MySqlConnection(ConnectionString);
+
             if (this.conn != null)
             {
                 try
@@ -87,6 +93,10 @@ namespace Scada.MainVision
                     string msg = e.Message;
                 }
             }
+
+            // 192.168.1.24
+
+
 
 
             this.timelineSource = new List<Dictionary<string, object>>();
@@ -145,14 +155,14 @@ namespace Scada.MainVision
                 if (data != null)
                 {
                     this.latestData.Add(deviceKey, data);
-                }
 
-                if (this.dataListeners.ContainsKey(deviceKey))
-                {
-                    DBDataCommonListerner listener = this.dataListeners[deviceKey];
-                    if (listener != null)
+                    if (this.dataListeners.ContainsKey(deviceKey))
                     {
-                        listener.OnDataArrival(DataArrivalConfig.TimeNew, data);
+                        DBDataCommonListerner listener = this.dataListeners[deviceKey];
+                        if (listener != null)
+                        {
+                            listener.OnDataArrival(DataArrivalConfig.TimeNew, data);
+                        }
                     }
                 }
             }
@@ -168,6 +178,8 @@ namespace Scada.MainVision
         // Notify the new 
         public override void RefreshTimeline(string deviceKey)
         {
+            return;
+            
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
             if (listener == null)
             {
@@ -219,11 +231,10 @@ namespace Scada.MainVision
         {
             try
             {
-
-
                 DBDataCommonListerner listener = this.dataListeners[deviceKey];
 
                 var result = this.Refresh(deviceKey, false, -1, fromTime, toTime);
+
                 listener.OnDataArrivalBegin(DataArrivalConfig.TimeRange);
                 foreach (var data in result)
                 {

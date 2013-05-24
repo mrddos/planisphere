@@ -60,6 +60,11 @@ namespace Scada.Declare
 			line = line.Substring(p + 1);
 			string[] items = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
+            double d = 0.0;
+            if (double.TryParse(items[4], out d))
+            {
+                items[4] = (d * 10).ToString();
+            }
 			return items;
 		}
 

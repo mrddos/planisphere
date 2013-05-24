@@ -27,16 +27,15 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    
     <Style x:Key="TreeViewItemFocusVisual">
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate>
                     <Border>
-                        <Rectangle Margin="0,0,0,0"
-                 StrokeThickness="5"
-                 Stroke="Black"
-                 StrokeDashArray="1 2"
-                 Opacity="0"/>
+                        <Rectangle Margin="0, 0, 0, 0" StrokeThickness="5" Stroke="Black"
+                                    StrokeDashArray="1 2" Opacity="0"/>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -54,6 +53,7 @@
                         RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="Padding" Value="1,0,0,0"/>
         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontFamily" Value="微软雅黑"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -81,10 +81,9 @@
                             <Border BorderThickness="0,0,0,.8" BorderBrush="#363636">
                                 <StackPanel Orientation="Horizontal">
                                     <Label Foreground="DarkGreen">></Label>
-                                    <ContentPresenter x:Name="PART_Header" 
-                                                          ContentSource="Header"
-                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                          VerticalAlignment="Center"/>
+                                    <ContentPresenter x:Name="PART_Header" ContentSource="Header"
+                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                        VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                         </Border>

@@ -121,8 +121,6 @@ namespace Scada.MainVision
             }
         }
 
-
-
         private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
         {
             if (config == DataArrivalConfig.TimeNew)
@@ -139,7 +137,6 @@ namespace Scada.MainVision
                         }
                     }
 
-                    
                     this.AddTimePoint(i, entry);
                     this.lastEntry = entry;
                     i++;
