@@ -29,7 +29,7 @@ namespace Scada.MainVision
         /// </summary>
         public abstract void RefreshTimeNow();
 
-        public abstract void RefreshTimeRange(string deviceKey, DateTime from, DateTime to);
+        public abstract List<Dictionary<string, object>> RefreshTimeRange(string deviceKey, DateTime from, DateTime to);
 
         /// <summary>
         /// 

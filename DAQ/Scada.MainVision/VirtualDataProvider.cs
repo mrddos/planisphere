@@ -162,7 +162,7 @@ namespace Scada.MainVision
             throw new NotImplementedException();
         }
 
-        public override void RefreshTimeRange(string deviceKey, DateTime from, DateTime to)
+        public override List<Dictionary<string, object>> RefreshTimeRange(string deviceKey, DateTime from, DateTime to)
         {
             throw new NotImplementedException();
         }

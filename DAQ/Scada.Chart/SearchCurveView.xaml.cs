@@ -20,7 +20,7 @@ namespace Scada.Chart
     /// <summary>
     /// Interaction logic for Chart.xaml
     /// </summary>
-    public partial class CurveView : UserControl
+    public partial class SearchCurveView : UserControl
     {
         // Graduation Line
         struct GraduationLine
@@ -54,6 +54,8 @@ namespace Scada.Chart
             }
         }
 
+        public const double Grad = 2.0;
+
         public const double GridViewHeight = 1000.0;
 
         public const double GridViewWidth = 1000.0;
@@ -78,11 +80,11 @@ namespace Scada.Chart
 
         private TextBlock valueLabel;
 
-        private ChartView chartView;
+        private SearchChartView chartView;
 
-        const int MaxVisibleCount = 14;
+        // const int MaxVisibleCount = 300;
 
-        private double finalOffsetPos = 0.0;
+        // private double finalOffsetPos = 0.0;
 
         private int totalCount = 0;
 
@@ -109,7 +111,7 @@ namespace Scada.Chart
             set;
         }
 
-        public CurveView(ChartView chartView)
+        public SearchCurveView(SearchChartView chartView)
         {
             InitializeComponent();
             this.chartView = chartView;
@@ -135,13 +137,14 @@ namespace Scada.Chart
             Color gridLineColor = Color.FromRgb(150, 150, 150);
             SolidColorBrush gridLineBrush = new SolidColorBrush(gridLineColor);
 
-            for (int i = 0; i < 20; i++)
+            const double Width = Grad * 5 * 5;
+            for (int i = 0; i < 40; i++)
             {
                 Line l = new Line();
-                l.X1 = l.X2 = i * 40;
+                l.X1 = l.X2 = i * Width;
                 l.Y1 = 0;
                 l.Y2 = GridViewHeight;
-
+                l.StrokeThickness = 0.3;
                 l.Stroke = gridLineBrush;
                 this.CanvasView.Children.Add(l);
             }
@@ -150,9 +153,10 @@ namespace Scada.Chart
             for (int i = 0; i < 20; i++)
             {
                 Line l = new Line();
-                l.Y1 = l.Y2 = canvasHeight - i * 40;
+                l.Y1 = l.Y2 = canvasHeight - i * Width;
                 l.X1 = 0;
                 l.X2 = 1900;
+                l.StrokeThickness = 0.3;
 
                 l.Stroke = gridLineBrush;
                 this.CanvasView.Children.Add(l);
@@ -185,7 +189,7 @@ namespace Scada.Chart
                 l.Y1 = l.Y2 = y;
                 l.X1 = (i % 5 != 0) ? scaleWidth - Charts.ScaleLength : scaleWidth - Charts.MainScaleLength;
                 l.X2 = scaleWidth;
-
+                l.StrokeThickness = 0.5;
                 l.Stroke = new SolidColorBrush(Colors.Gray);
                 this.Graduation.Children.Add(l);
 
@@ -246,15 +250,16 @@ namespace Scada.Chart
             this.CanvasView.Children.Add(this.curve);
         }
 
+        public string CurveName
+        {
+            get;
+            set;
+        }
+
         public CurveDataContext CreateDataContext(string curveName, string displayName)
         {
+            this.CurveName = curveName;
             this.dataContext = new CurveDataContext(curveName);
-            // Delegates
-            this.dataContext.UpdateView += this.UpdateViewHandler;
-            this.dataContext.AddCurvePoint += this.AddCurvePointHandler;
-            this.dataContext.UpdateCurve += this.UpdateCurveHandler;
-            this.dataContext.ClearCurve += this.ClearCurveHandler;
-
             this.DisplayName = displayName;
             return this.dataContext;
         }
@@ -271,7 +276,7 @@ namespace Scada.Chart
             set;
         }
 
-        public long TimeScale
+        public long TimeAxisScale
         {
             get;
             internal set;
@@ -279,8 +284,8 @@ namespace Scada.Chart
 
         private void UpdateViewHandler()
         {
-            TranslateTransform tt = new TranslateTransform(this.finalOffsetPos, 0);
-            curve.RenderTransform = tt;
+            // TranslateTransform tt = new TranslateTransform(this.finalOffsetPos, 0);
+            // curve.RenderTransform = tt;
         }
 
         private void AddCurvePointHandler(DateTime time, double value)
@@ -293,39 +298,20 @@ namespace Scada.Chart
         /// 
         /// </summary>
         /// <param name="point"></param>
-        private UpdateResult UpdateCurveHandler(Point point)
+        public void AddCurvePoint(Point point)
         {
             this.totalCount += 1;
 
+            Point p;
+            this.Convert(point, out p);
 
-            if (this.totalCount <= MaxVisibleCount) 
-            {
-                Point p;
-                this.Convert(point, out p);
-                
-                curve.Points.Add(p);
+            this.curve.Points.Add(p);
 
-                return UpdateResult.None;
-            }
-            else
-            {
-                // 结束缩放
-                this.timeLine.X1 = this.timeLine.X2 = 0;
-                this.UpdateCurveScale(1.0);
+        }
 
-                double offsetPos = (MaxVisibleCount - this.totalCount) * ChartView.Graduation * 5;
-                this.finalOffsetPos = offsetPos;
-                TranslateTransform tt = new TranslateTransform(offsetPos, 0);
-                curve.RenderTransform = tt;
-                // curve.Stroke = (this.totalCount % 2 == 0) ? Brushes.Black : Brushes.Green;
-                Point p;
-                this.Convert(point, out p);
-                curve.Points.Add(p);
-
-                // TODO: 
-                return UpdateResult.Overflow;
-            }
-
+        internal void ClearPoints()
+        {
+            this.curve.Points.Clear();
         }
 
         private void ClearCurveHandler()
@@ -399,6 +385,7 @@ namespace Scada.Chart
         }
 
         private bool beginMoved = false;
+        private PolyLineSegment polyLineSegment;
 
         internal void MoveCurveLine(bool beginMoved)
         {
@@ -408,6 +395,7 @@ namespace Scada.Chart
 
         internal void MoveCurveLine(Point point, string timeLabel)
         {
+            /*
             if (!this.beginMoved)
             {
                 this.beginMoved = true;
@@ -421,7 +409,7 @@ namespace Scada.Chart
             this.finalOffsetPos = offsetPos;
             TranslateTransform tt = new TranslateTransform(offsetPos, 0);
             curve.RenderTransform = tt;
-
+            */
         }
 
         private void UpdateValue(Point point, string timeLabel)
@@ -591,6 +579,7 @@ namespace Scada.Chart
             valueBorder.Child = valueLabel;
             this.CanvasView.Children.Add(valueBorder);
         }
+
 
     }
 }

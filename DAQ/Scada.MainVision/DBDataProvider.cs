@@ -9,6 +9,7 @@ namespace Scada.MainVision
     using Scada.Controls.Data;
     using MySql.Data.MySqlClient;
     using System.Data.SqlTypes;
+    using System.IO;
 
 
     /// <summary>
@@ -73,12 +74,27 @@ namespace Scada.MainVision
             this.allDeviceKeys.Add(DeviceKey_Shelter);
             this.allDeviceKeys.Add(DeviceKey_Weather);
 
-            this.FetchCount = 20;
+            this.FetchCount = 26;
 
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>(30);
 
             // 192.168.1.24 
-            this.ConnectionString = string.Format(ConnectionStringFormat, "127.0.0.1");
+            string fileName = "local.ip";
+            if (File.Exists(fileName))
+            {
+                using (StreamReader sr = new StreamReader(fileName))
+                {
+                    string ip = sr.ReadLine();
+                    if (ip != null && ip.Length > 0)
+                    {
+                        this.ConnectionString = string.Format(ConnectionStringFormat, ip);
+                    }
+                }
+            }
+            else
+            {
+                this.ConnectionString = string.Format(ConnectionStringFormat, "127.0.0.1");
+            }
             this.conn = new MySqlConnection(ConnectionString);
 
             if (this.conn != null)
@@ -178,8 +194,6 @@ namespace Scada.MainVision
         // Notify the new 
         public override void RefreshTimeline(string deviceKey)
         {
-            return;
-            
             DBDataCommonListerner listener = this.dataListeners[deviceKey];
             if (listener == null)
             {
@@ -191,34 +205,11 @@ namespace Scada.MainVision
             {
                 return;
             }
-            List<Dictionary<string, object>> recent = new List<Dictionary<string, object>>();
-            DateTime latestDateTime = DateTime.MinValue;
-            if (this.timelineSource.Count > 0)
-            {
-                var last = this.timelineSource.First();
-                latestDateTime = DateTime.Parse((string)last["time"]);
-            }
-            foreach (var item in result)
-            {
-                DateTime dt = DateTime.Parse((string)item["time"]);
-                if (dt > latestDateTime)
-                {
-                    recent.Add(item);
-                }
-            }
 
-            if (recent.Count == 0)
-            {
-                return;
-            }
-            recent.Sort(DBDataProvider.DateTimeCompare);
-
-            this.timelineSource.AddRange(recent);
-            this.timelineSource.Sort(DBDataProvider.DateTimeCompare);
-
+            result.Sort(DBDataProvider.DateTimeCompare);
 
             listener.OnDataArrivalBegin(DataArrivalConfig.TimeRecent);
-            foreach (var data in recent)
+            foreach (var data in result)
             {
                 listener.OnDataArrival(DataArrivalConfig.TimeRecent, data);
             }
@@ -227,25 +218,30 @@ namespace Scada.MainVision
 
         // Get time-range data,
         // Notify with all the result.
-        public override void RefreshTimeRange(string deviceKey, DateTime fromTime, DateTime toTime)
+        public override List<Dictionary<string, object>> RefreshTimeRange(string deviceKey, DateTime fromTime, DateTime toTime)
         {
             try
             {
-                DBDataCommonListerner listener = this.dataListeners[deviceKey];
+                // DBDataCommonListerner listener = this.dataListeners[deviceKey];
 
                 var result = this.Refresh(deviceKey, false, -1, fromTime, toTime);
-
+                result.Reverse();
+                return result;
+                /*
                 listener.OnDataArrivalBegin(DataArrivalConfig.TimeRange);
                 foreach (var data in result)
                 {
                     listener.OnDataArrival(DataArrivalConfig.TimeRange, data);
                 }
                 listener.OnDataArrivalEnd(DataArrivalConfig.TimeRange);
+                 * */
             }
             catch (Exception e)
             {
 
             }
+
+            return new List<Dictionary<string, object>>();
         }
 
         private Dictionary<string, object> RefreshTimeNow(string deviceKey)

@@ -14,6 +14,7 @@ namespace Scada.Controls
     using System.Windows.Media;
     using System.IO;
     using System.Text;
+    using System.Diagnostics;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -39,14 +40,20 @@ namespace Scada.Controls
 
         private List<Dictionary<string, object>> searchDataSource;
 
+        // Data For Render
+        private List<Dictionary<string, object>> searchData;
+
+        private int searchDataIndex = 0;
+
         private DataArrivalConfig config;
 
         private const string Time = "time";
 
+        const int MaxCountPage = 300;
 
-        private const int MaxListCount = 50;
+        private const int MaxListCount = 26;
 
-        private bool ShowChartViewBySearch = true;
+        // private bool ShowChartViewBySearch = true;
 
         // Must Use the <Full Name>
         private System.Windows.Forms.Timer refreshDataTimer;
@@ -69,23 +76,32 @@ namespace Scada.Controls
             this.refreshDataTimer.Start();
 		}
 
+
+        internal void ListRecentData()
+        {
+            this.dataProvider.RefreshTimeline(this.deviceKey);
+        }
+
         private void RefreshDataTimerTick(object sender, EventArgs e)
         {
             // TODO: Current settings? if show current, continue.
             // If filter by start -> end time, returns.
 
             // TODO: Check Whether the DeviceKey is in current...
+
+            /*
             if (this.deviceKey != null)
             {
                 if (this.deviceKey == this.dataProvider.CurrentDeviceKey)
                 {
-                    this.dataProvider.RefreshTimeline(this.deviceKey);
+                    // this.dataProvider.RefreshTimeline(this.deviceKey);
                 }
                 else
                 {
                     string msg = "Not current device key.";
                 }
             }
+            */
         }
 
         public Control ListView
@@ -209,13 +225,17 @@ namespace Scada.Controls
 		{
             this.Title.Text = this.DisplayName;
 
-            this.FrList.Items.Add("每分钟");
-            this.FrList.Items.Add("每小时");
-            
-            this.CloseButton.Click += (s, c) => 
-				{
-					this.CloseClick(this, c);
-				};
+            DateTime yestoday = DateTime.Now.AddDays(-1);
+            DateTime from = new DateTime(yestoday.Year, yestoday.Month, yestoday.Day);
+
+            DateTime to = from.AddDays(1).AddSeconds(-1);
+            this.FromDateText.Text = from.ToString();
+            this.ToDateText.Text = to.ToString();
+
+            this.CloseButton.Click += (s, c) =>  {
+		        this.CloseClick(this, c);
+            };
+
 		}
 
 		public void AddDataListener(DataListener listener)
@@ -237,8 +257,7 @@ namespace Scada.Controls
         // BEGIN
         private void OnDataArrivalBegin(DataArrivalConfig config)
 		{
-            //this.config = config;
-            if (config == DataArrivalConfig.TimeRecent)
+            if (config == DataArrivalConfig.TimeNew)
             {
                 // DO nothing for the realtime data-source
             }
@@ -246,6 +265,10 @@ namespace Scada.Controls
             {
                 // For show new data source, so clear the old data source.
                 this.searchDataSource.Clear();
+            }
+            else if (config == DataArrivalConfig.TimeRecent)
+            {
+
             }
 		}
 
@@ -255,6 +278,7 @@ namespace Scada.Controls
 		{
             if (config == DataArrivalConfig.TimeRecent)
             {
+                // Debug.Assert(false, "Time Recent should not be here.");
                 this.dataSource.Add(entry); 
             }
             else if (config == DataArrivalConfig.TimeRange)
@@ -264,6 +288,11 @@ namespace Scada.Controls
             else if (config == DataArrivalConfig.TimeNew)
             {
                 const string Time = "time";
+                if (!entry.ContainsKey(Time))
+                {
+                    return;
+                }
+                
                 if (this.dataSource.Count > 0)
                 {
                     Dictionary<string, object> latest = this.dataSource[0];
@@ -304,8 +333,7 @@ namespace Scada.Controls
 		{
             if (config == DataArrivalConfig.TimeRecent)
             {
-                ///////////////////////////////////////////////////////////////////
-                // TODO. Remove...
+
                 if (this.ListView == null || !(this.ListView is ListView))
                     return;
 
@@ -341,19 +369,64 @@ namespace Scada.Controls
 			
 		}
         
+        ////////////////////////////////////////////////////////////////////////////
         // When click the Search Button.
         private void SearchByDateRange(object sender, RoutedEventArgs e)
         {
-            var dt1 = this.FromDate.SelectedDate.Value;
-            var dt2 = this.ToDate.SelectedDate.Value;
+            if (!this.ValidTimeRange(this.FromDateText.Text, this.ToDateText.Text))
+            {
+                this.FromDateText.Background = Brushes.Pink;
+                this.ToDateText.Background = Brushes.Pink;
 
-            this.dataProvider.RefreshTimeRange(this.deviceKey, dt1, dt2);
+                return;
+            }
+            else
+            {
+                this.FromDateText.Background = Brushes.White;
+                this.ToDateText.Background = Brushes.White;
+            }
+
+            var dt1 = DateTime.Parse(this.FromDateText.Text);
+            var dt2 = DateTime.Parse(this.ToDateText.Text);
+
+            this.searchDataSource = this.dataProvider.RefreshTimeRange(this.deviceKey, dt1, dt2);
+            // int interval = this.currentInterval;
+            this.searchData = this.Filter(this.searchDataSource, this.currentInterval);
+
+            ListView searchListView = (ListView)this.SearchView;
+            searchListView.ItemsSource = null;
+
+            if (this.searchData != null && this.searchData.Count > 0)
+            {
+                // Show the searched data.
+                searchListView.ItemsSource = this.searchData;
+                // Enable the chart button.
+                this.ButtonShowChart.IsEnabled = true;
+            }
 
         }
 
-        private bool ValidTimeRange(DateTime fromDate, DateTime toDate)
+        private List<Dictionary<string, object>> Filter(List<Dictionary<string, object>> data, int page)
         {
-            return fromDate <= toDate;
+            this.searchDataIndex = page * MaxCountPage;
+            List<Dictionary<string, object>> ret = new List<Dictionary<string, object>>();
+            for (int i = 0; i < Math.Min(data.Count - this.searchDataIndex, MaxCountPage); ++i)
+            {
+                ret.Add(data[this.searchDataIndex + i]);
+            }
+            return ret;
+        }
+
+        private bool ValidTimeRange(string fromDate, string toDate)
+        {
+            try
+            {
+                return DateTime.Parse(fromDate) < DateTime.Parse(toDate);
+            }
+            catch (FormatException)
+            {
+                return false;
+            }
         }
 
         private void DatePickerCalendarClosed(object sender, RoutedEventArgs e)
@@ -364,15 +437,12 @@ namespace Scada.Controls
                 DateTime? dt = picker.SelectedDate;
                 if (dt.HasValue)
                 {
-                    if (!this.ToDate.SelectedDate.HasValue)
-                    {
-                        this.ToDate.SelectedDate = dt.Value.AddDays(1);
-                    }
+                    this.FromDateText.Text = dt.Value.ToString();
                 }
 
-                if (!this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
+                if (!this.ValidTimeRange(this.FromDateText.Text, this.ToDateText.Text))
                 {
-
+                    this.FromDateText.Background = Brushes.Pink;
                 }
             }
             else if (picker.Name == "ToDate")
@@ -380,17 +450,57 @@ namespace Scada.Controls
                 DateTime? dt = picker.SelectedDate;
                 if (dt.HasValue)
                 {
-                    if (!this.FromDate.SelectedDate.HasValue)
-                    {
-                        this.FromDate.SelectedDate = dt.Value.AddDays(-1);
-                    }
+                    DateTime to = dt.Value.AddDays(1).AddSeconds(-1);
+                    this.ToDateText.Text = to.ToString();
                 }
 
-                if (!this.ValidTimeRange(this.FromDate.SelectedDate.Value, this.ToDate.SelectedDate.Value))
+                if (!this.ValidTimeRange(this.FromDateText.Text, this.ToDateText.Text))
                 {
-
+                    this.FromDateText.Background = Brushes.Pink;
                 }
             }
+    
+        }
+
+        private void OnPrevButton(object sender, RoutedEventArgs e)
+        {
+            this.OnNavigateTo(-1);
+        }
+
+        private void OnNextButton(object sender, RoutedEventArgs e)
+        {
+            this.OnNavigateTo(1);
+        }
+
+        private int currentPage = 0;
+
+        private void OnNavigateTo(int nav)
+        {
+            int pageCount = this.searchDataSource.Count / MaxCountPage + 1;
+            this.currentPage += nav;
+            if (this.currentPage < 0)
+            {
+                this.currentPage = 0;
+            }
+            else if (this.currentPage >= pageCount) 
+            {
+                this.currentPage = pageCount - 1;
+            }
+
+            this.searchData = this.Filter(this.searchDataSource, this.currentPage);
+
+            ListView searchListView = (ListView)this.SearchView;
+            searchListView.ItemsSource = null;
+
+            if (this.searchData != null && this.searchData.Count > 0)
+            {
+                // Show the searched data.
+                searchListView.ItemsSource = this.searchData;
+                // Enable the chart button.
+                this.ButtonShowChart.IsEnabled = true;
+            }
+ 
+
         }
 
         // Select the ChartView to show.
@@ -399,7 +509,7 @@ namespace Scada.Controls
             this.ChartViewTabItem.Visibility = Visibility.Visible;
             this.SearchChartViewTabItem.Visibility = Visibility.Collapsed;
             this.TabCtrl.SelectedItem = this.ChartViewTabItem;
-            this.ShowChartViewBySearch = false;
+            // this.ShowChartViewBySearch = false;
         }
 
         private void ShowSearchChartView(object sender, RoutedEventArgs e)
@@ -407,7 +517,7 @@ namespace Scada.Controls
             this.SearchChartViewTabItem.Visibility = Visibility.Visible;
             this.ChartViewTabItem.Visibility = Visibility.Collapsed;
             this.TabCtrl.SelectedItem = this.SearchChartViewTabItem;
-            this.ShowChartViewBySearch = true;
+            // this.ShowChartViewBySearch = true;
         }
 
         private void ExportDataList(object sender, RoutedEventArgs e)
@@ -452,5 +562,36 @@ namespace Scada.Controls
         }
 
 
-	}
+        public int currentInterval { get; set; }
+
+        private void IntervalSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /*
+            switch (this.FrList.SelectedIndex)
+            {
+                case 0:
+                    this.currentInterval = 30;
+                    break;
+                case 1:
+                    this.currentInterval = 60 * 5;
+                    break;
+                case 2:
+                    this.currentInterval = 60 * 60;
+                    break;
+                default:
+                    this.currentInterval = 30;
+                    break;
+            }   
+            */
+        }
+
+        private void SearchChartViewTabItemIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                ((SearchGraphView)this.graphSearchView).SetDataSource(this.searchData);
+            }
+            
+        }
+    }
 }
