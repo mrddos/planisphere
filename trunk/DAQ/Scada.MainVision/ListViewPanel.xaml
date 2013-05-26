@@ -81,16 +81,43 @@
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
 
-                                <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
 
-                            <c:DatePicker x:Name="FromDate" Margin="5, 0, 5, 0" Height="25" CalendarClosed="DatePickerCalendarClosed"></c:DatePicker>
+                            <Border>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="FromDateText" Width="120"  Height="22"></TextBox>
+                                <c:DatePicker x:Name="FromDate" Margin="5, 0, 5, 0" Height="25" Width="30"
+                                                CalendarClosed="DatePickerCalendarClosed" BorderBrush="Transparent">
+                                </c:DatePicker>
+                            </StackPanel>
 
-                            <c:DatePicker x:Name="ToDate" Margin="5, 0, 5, 0" Height="25" CalendarClosed="DatePickerCalendarClosed"></c:DatePicker>
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="SearchByDateRange">查询</Button>
-                            <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每分钟" Visibility="Collapsed"></ComboBox>
+                            </Border>
 
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ExportSearchDataList">导出</Button>
-                                    <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" Style="{StaticResource ButtonKey}" Click="ShowSearchChartView">显示曲线</Button>
+                            <Border>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="ToDateText" Width="120"  Height="22"></TextBox>
+                                    <c:DatePicker x:Name="ToDate" Margin="5, 0, 5, 0" Height="25" Width="30"
+                                        CalendarClosed="DatePickerCalendarClosed" BorderBrush="Transparent">
+                                    </c:DatePicker>
+                                </StackPanel>
+
+                            </Border>
+
+
+                            <!--
+                            <ComboBox x:Name="FrList" Width="100" Margin="5,0,5,0" Height="25" SelectedValue="每30秒" SelectionChanged="IntervalSelectionChanged"></ComboBox>
+                            -->
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
+                                    Style="{StaticResource ButtonKey}" Click="SearchByDateRange">查询</Button>
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
+                                    Style="{StaticResource ButtonKey}" Click="OnPrevButton">&lt;&lt;</Button>
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
+                                    Style="{StaticResource ButtonKey}" Click="OnNextButton">&gt;&gt;</Button>
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
+                                    Style="{StaticResource ButtonKey}" Click="ExportSearchDataList">导出</Button>
+                            <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
+                                    Style="{StaticResource ButtonKey}" Click="ShowSearchChartView" 
+                                    x:Name="ButtonShowChart" IsEnabled="False">显示曲线</Button>
                         </StackPanel>
 
                         <!-- Contains ListView -->
@@ -121,9 +148,9 @@
                 </ContentControl>
             </TabItem>
             <!-- 查询曲线 -->
-            <TabItem Header="查询曲线" Width="80" x:Name="SearchChartViewTabItem" 
-                     Style="{StaticResource TabItemKey}" Visibility="Collapsed">
-                <ContentControl Grid.Row="1" x:Name="SearchGraphViewContainerOuter" Margin="5,5,5,5">
+            <TabItem Header="查询曲线" Width="80" x:Name="SearchChartViewTabItem" Visibility="Collapsed"
+                     Style="{StaticResource TabItemKey}">
+                        <ContentControl Grid.Row="1" x:Name="SearchGraphViewContainerOuter" Margin="5,5,5,5" IsVisibleChanged="SearchChartViewTabItemIsVisibleChanged">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35"></RowDefinition>

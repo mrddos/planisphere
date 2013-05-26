@@ -9,7 +9,11 @@ namespace Scada.DAQ.Installer
     {
         static void Main(string[] args)
         {
-            args = new string[] { "--init-database" };
+            if (args.Length == 0)
+            {
+                args = new string[] { "--init-database" };
+            }
+
             if (args.Length == 0)
             {
                 Console.WriteLine("Args required");
@@ -27,9 +31,11 @@ namespace Scada.DAQ.Installer
             {
                 RepairSystem(args);
             }
-  
+            else if (fa == "--m-hipc")
+            {
+                MockHipcInsertData();
+            }
         }
-
 
         static void InitDataBase(string[] args)
         {
@@ -54,6 +60,12 @@ namespace Scada.DAQ.Installer
         static void RepairSystem(string[] args)
         {
 
+        }
+
+        static void MockHipcInsertData()
+        {
+            DataBaseInsertion ins = new DataBaseInsertion();
+            ins.Execute();
         }
     }
 }

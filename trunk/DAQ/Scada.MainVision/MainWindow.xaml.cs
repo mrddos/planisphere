@@ -164,6 +164,35 @@ namespace Scada.MainVision
             set;
         }
 
+        private static double ConvertDouble(double d, int n)
+        {
+            if (d == 0.0) return 0;
+            if (d > 1 || d < -1)
+                n = n - (int)Math.Log10(Math.Abs(d)) - 1;
+            else
+                n = n + (int)Math.Log10(1.0 / Math.Abs(d));
+            if (n < 0)
+            {
+                d = (int)(d / Math.Pow(10, 0 - n)) * Math.Pow(10, 0 - n);
+                n = 0;
+            }
+            return Math.Round(d, n);
+        }
+
+        private static bool ConvertDouble(string d, out double n)
+        {
+            n = 0.0;
+            double v;
+            if (double.TryParse(d, out v))
+            {
+                n = ConvertDouble(v, 3);
+                return true;
+            }
+            return false;
+        }
+
+
+
         private void DisplayPanelData(HerePaneItem panel, string data1, string data2 = "", string data3 = "", string data4 = "")
         {
             TextBlock text1 = panel[0];
@@ -200,9 +229,12 @@ namespace Scada.MainVision
             if (d.ContainsKey("doserate"))
             {
                 string doserate = d["doserate"] as string;
-
-                string doserateMsg = "剂量率: " + doserate + "uGy/h";
-                this.DisplayPanelData(panel, doserateMsg);
+                double v;
+                if (ConvertDouble(doserate, out v))
+                {
+                    string doserateMsg = "剂量率: " + v + "uGy/h";
+                    this.DisplayPanelData(panel, doserateMsg);
+                }
             }
             
         }
@@ -250,11 +282,15 @@ namespace Scada.MainVision
                         string nuclideDoserate = (string)d[nuclide.ToLower()];
                         if (nuclideDoserate.Length > 0)
                         {
-                            nuclideMsgs[i] = string.Format("{0}: {1}nSv/h", nuclide, nuclideDoserate);
-                            i++;
-                            if (i >= 3)
+                            double v;
+                            if (ConvertDouble(nuclideDoserate, out v))
                             {
-                                break;
+                                nuclideMsgs[i] = string.Format("{0}: {1}nSv/h", nuclide, v);
+                                i++;
+                                if (i >= 3)
+                                {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -373,11 +409,22 @@ namespace Scada.MainVision
             if (d.ContainsKey(BatteryHoursKey))
             {
                 batteryHours = (string)d[BatteryHoursKey];
+                double v;
+                if (double.TryParse(batteryHours, out v))
+                {
+                    batteryHours = Math.Round(v, 0).ToString();
+                }
             }
 
             if (d.ContainsKey(TemperatureKey))
             {
                 temperature = (string)d[TemperatureKey];
+                double v;
+                if (double.TryParse(temperature, out v))
+                {
+                    temperature = Math.Round(v, 0).ToString();
+                }
+                
             }
 
             string mainPowMsg = string.Format("市电状态: {0}", mainPowerOff);

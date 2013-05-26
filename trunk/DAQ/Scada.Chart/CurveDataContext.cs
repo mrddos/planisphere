@@ -14,6 +14,8 @@ namespace Scada.Chart
 
     public delegate void UpdateView();
 
+    public delegate void AddCurvePoint(DateTime time, double value);
+
     public delegate UpdateResult UpdateCurve(Point point);
 
     public delegate void ClearCurve();
@@ -27,6 +29,8 @@ namespace Scada.Chart
         public event UpdateCurve UpdateCurve;
 
         public event ClearCurve ClearCurve;
+
+        public event AddCurvePoint AddCurvePoint;
 
         public CurveDataContext(string curveName)
         {
@@ -50,9 +54,22 @@ namespace Scada.Chart
             this.UpdateView();
         }
 
-        public UpdateResult AddTimeValuePair(int index, double value)
+        public void AddTimeValuePair(DateTime time, double value)
         {
-            double x = index * ChartView.Graduation;
+            this.AddCurvePoint(time, value);
+        }
+
+        public UpdateResult AddTimeValuePair(int index, double value, double graduation = 0.0)
+        {
+            double x;
+            if (graduation == 0.0)
+            {
+                x = index * ChartView.Graduation;
+            }
+            else
+            {
+                x = index * graduation;
+            }
             double y = value;
             var p = new Point(x, y);
             points.Add(p);
@@ -62,6 +79,7 @@ namespace Scada.Chart
 
         public void AddValuePair(DateTime dateTime, double value)
         {
+
         }
 
         public void Clear()

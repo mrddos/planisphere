@@ -63,8 +63,9 @@ namespace Scada.MainVision
                     panel.ListView = this.ShowListView(panel, dataListener);
                     panel.SearchView = this.ShowListView(panel, dataListener);
                     panel.GraphView = this.ShowGraphView(panel, dataListener, true);
-                    panel.GraphSearchView = this.ShowGraphView(panel, dataListener, false);
+                    panel.GraphSearchView = this.ShowSearchGraphView(panel, dataListener, false);
 
+                    panel.ListRecentData();
                     // 是否显示 控制面板
                     if (deviceKey == DataProvider.DeviceKey_HvSampler)
                     {
@@ -111,7 +112,7 @@ namespace Scada.MainVision
             return listView;
         }
 
-
+        // Real time graph
         public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener, bool realTime)
         {
             GraphView graphView = new GraphView(realTime);
@@ -121,6 +122,37 @@ namespace Scada.MainVision
                 graphView.Interval = 60 * 5;
             }
             graphView.AddDataListener(dataListener);
+
+            var columnInfoList = dataListener.GetColumnsInfo();
+            string deviceKey = dataListener.DeviceKey;
+
+            foreach (var columnInfo in columnInfoList)
+            {
+                // Time would be deal as a Chart.
+                if (columnInfo.BindingName.ToLower() == "time")
+                {
+                    continue;
+                }
+
+                if (columnInfo.DisplayInChart)
+                {
+                    graphView.AddLineName(deviceKey, columnInfo.BindingName, columnInfo.Header);
+                }
+            }
+
+            return graphView;
+        }
+
+        // Search graph
+        public SearchGraphView ShowSearchGraphView(ListViewPanel panel, DataListener dataListener, bool realTime)
+        {
+            SearchGraphView graphView = new SearchGraphView(realTime);
+            graphView.Interval = 30;
+            if (dataListener.DeviceKey == "scada.naidevice")
+            {
+                graphView.Interval = 60 * 5;
+            }
+            // graphView.AddDataListener(dataListener);
 
             var columnInfoList = dataListener.GetColumnsInfo();
             string deviceKey = dataListener.DeviceKey;

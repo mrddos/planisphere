@@ -20,7 +20,7 @@ namespace Scada.MainVision
     /// <summary>
     /// Interaction logic for GraphViewPanel.xaml
     /// </summary>
-    public partial class GraphView : UserControl
+    public partial class SearchGraphView : UserControl
     {
         public const string TimeKey = "Time";
 
@@ -45,21 +45,43 @@ namespace Scada.MainVision
 
         private bool baseTimeSet = false;
 
-        public GraphView(bool realTime)
+        public SearchGraphView(bool realTime)
         {
             InitializeComponent();
             this.realTime = realTime;
             this.ChartView.RealTimeMode = realTime;
         }
 
+        // No need.
         public void AddDataListener(DataListener listener)
         {
+            /*
             this.dataListener = listener;
             if (this.dataListener != null)
             {
                 this.dataListener.OnDataArrivalBegin += this.OnDataArrivalBegin;
                 this.dataListener.OnDataArrival += this.OnDataArrival;
                 this.dataListener.OnDataArrivalEnd += this.OnDataArrivalEnd;
+            }
+            */
+        }
+
+        public void SetDataSource(List<Dictionary<string, object>> dataSource)
+        {
+            if (dataSource == null || dataSource.Count == 0)
+            {
+                return;
+            }
+            // TODO: Set base time.
+            var entry0 = dataSource[0];
+            DateTime baseTime = DateTime.Parse((string)entry0["time"]);
+            this.ChartView.UpdateTimeAxis(baseTime);
+
+            this.ChartView.ClearPoints();
+
+            foreach (var e in dataSource)
+            {
+                this.ChartView.AddCurvesDataPoint(e);
             }
         }
 
@@ -89,7 +111,7 @@ namespace Scada.MainVision
 
             ConfigItem item = entry.GetConfigItem(lineName);
 
-            CurveView curveView = this.ChartView.AddCurveView(lineName, displayName);
+            SearchCurveView curveView = this.ChartView.AddCurveView(lineName, displayName);
             
             curveView.Max = item.Max;
             curveView.Min = item.Min;
@@ -231,13 +253,11 @@ namespace Scada.MainVision
             {
                 foreach (string key in dataSources.Keys)
                 {
-                    CurveDataContext dataContext = dataSources[key];
-                    dataContext.UpdateCurves();
+
                 }
             }
 
         }
-
 
         internal void SaveChart()
         {
