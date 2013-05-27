@@ -25,10 +25,28 @@ namespace Scada.MainVision
 			InitializeComponent();
 		}
 
+        private string message;
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        public Window1(string message)
         {
+            InitializeComponent();
+            this.message = message;
+        }
 
+
+        private void WindowLoaded(object sender, RoutedEventArgs e)
+        {
+            this.Message.Text = this.message;
+        }
+
+        private void OnClose(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void WindowMoveHandler(object sender, MouseButtonEventArgs e)
+        {
+            this.DragMove();
         }
 	}
 }

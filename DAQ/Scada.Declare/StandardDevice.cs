@@ -145,6 +145,7 @@ namespace Scada.Declare
 
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
 
+
             var interval = entry[DeviceEntry.ActionInterval];
             if (interval != null)
             {
@@ -549,6 +550,14 @@ namespace Scada.Declare
 			{
 				object dataParser = Activator.CreateInstance(deviceClass, new object[] { });
 				this.dataParser = (DataParser)dataParser;
+
+                int i = 0;
+                double v = 0.0;
+                while (Device.GetFactor(entry, ++i, out v))
+                {
+                    this.dataParser.Factors.Add(v);
+                }
+
 			}
 		}
 
@@ -570,6 +579,8 @@ namespace Scada.Declare
             }
             return false;
         }
+
+
 		
 	}
 }

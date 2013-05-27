@@ -38,6 +38,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.6.4\Assemblies\v2.0\MySql.Data.dll</HintPath>
@@ -221,6 +224,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Hide2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="app.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -129,7 +129,7 @@ namespace Scada.MainVision
 				string displayName = cfg.GetDisplayName(deviceKey);
 				if (!string.IsNullOrEmpty(displayName))
 				{
-					HerePaneItem herePaneItem = this.herePane.AddItem(displayName);
+                    HerePaneItem herePaneItem = this.herePane.AddItem(deviceKey, displayName);
 					panes.Add(herePaneItem);
 				}
             }
@@ -268,8 +268,9 @@ namespace Scada.MainVision
 
             string doserate = (string)d["doserate"];
             string[] nuclides = { "K-40", "I-131", "Bi-214", "Pb-214", "Cs-137", "Co-60", "Am-241", "Ba-140", "Cs-134", "I-133", "Rh-106m", "Ru-103", "Te-129" };
-            string[] nuclideMsgs = new string[3];
+            string[] nuclideMsgs = new string[3]{"", "", ""};
             int i = 0;
+            
             foreach (string nuclide in nuclides)
             {
                 string nuclideKey = nuclide.ToLower();
@@ -279,13 +280,17 @@ namespace Scada.MainVision
                     string indication = (string)d[indicationKey];
                     if (indication == "100")
                     {
+                        
+                        nuclideMsgs[i / 3] += string.Format("{0}, ", nuclide);
+                        i++;
+                        /*
                         string nuclideDoserate = (string)d[nuclide.ToLower()];
                         if (nuclideDoserate.Length > 0)
                         {
                             double v;
                             if (ConvertDouble(nuclideDoserate, out v))
                             {
-                                nuclideMsgs[i] = string.Format("{0}: {1}nSv/h", nuclide, v);
+                                nuclideMsgs[i] = string.Format("{0}: {1}uSv/h", nuclide, v);
                                 i++;
                                 if (i >= 3)
                                 {
@@ -293,12 +298,18 @@ namespace Scada.MainVision
                                 }
                             }
                         }
+                        */
                     }
                 }
 
             }
 
             string doserateMsg = "总剂量率: " + doserate + "uSv/h";
+
+            for (int k = 0; k < 3; ++k)
+            {
+                nuclideMsgs[k] = nuclideMsgs[k].TrimEnd(' ', ',');
+            }
             this.DisplayPanelData(panel, doserateMsg, 
                 nuclideMsgs[0], nuclideMsgs[1], nuclideMsgs[2]);
         }
@@ -318,9 +329,9 @@ namespace Scada.MainVision
             string direction = (string)d["direction"];
             string raingauge = (string)d["raingauge"];
 
-            string windspeedMsg = string.Format("风速: {0}", windspeed);
-            string directionMsg = string.Format("风向: {0}", direction);
-            string raingaugeMsg = string.Format("雨量: {0}", raingauge);
+            string windspeedMsg = string.Format("风速: {0}m/s", windspeed);
+            string directionMsg = string.Format("风向: {0}°", direction);
+            string raingaugeMsg = string.Format("雨量: {0}mm/min", raingauge);
 
             this.DisplayPanelData(panel, windspeedMsg, directionMsg, raingaugeMsg);
    
@@ -349,9 +360,9 @@ namespace Scada.MainVision
                 statusMsg = string.Format("采样状态: 停止"); 
             }
 
-            string volumeMsg = string.Format("累计采样体积: {0}", volume);
-            string hoursMsg = string.Format("累计采样时间: {0}", hours);
-            string flowMsg = string.Format("瞬时采样流量: {0}", flow);
+            string volumeMsg = string.Format("累计采样体积: {0}m³", volume);
+            string hoursMsg = string.Format("累计采样时间: {0}h", hours);
+            string flowMsg = string.Format("瞬时采样流量: {0}m³/h", flow);
 
             this.DisplayPanelData(panel, statusMsg, volumeMsg, hoursMsg, flowMsg);
 
@@ -379,9 +390,9 @@ namespace Scada.MainVision
                 statusMsg = string.Format("采样状态: 停止");
             }
 
-            string volumeMsg = string.Format("累计采样体积: {0}", volume);
-            string hoursMsg = string.Format("累计采样时间: {0}", hours);
-            string flowMsg = string.Format("瞬时采样流量: {0}", flow);
+            string volumeMsg = string.Format("累计采样体积: {0}L", volume);
+            string hoursMsg = string.Format("累计采样时间: {0}h", hours);
+            string flowMsg = string.Format("瞬时采样流量: {0}L/h", flow);
 
             this.DisplayPanelData(panel, statusMsg, volumeMsg, hoursMsg, flowMsg);
         }
@@ -395,7 +406,7 @@ namespace Scada.MainVision
             }
 
             string batteryHours = "";
-            string mainPowerOff = "";
+            string mainPowerWay = "";
             string temperature = "";
 
             const string MainPowKey = "ifmainpoweroff";
@@ -403,7 +414,8 @@ namespace Scada.MainVision
             const string TemperatureKey = "temperature";
             if (d.ContainsKey(MainPowKey))
             {
-                mainPowerOff = (string)d[MainPowKey];
+                string m = (string)d[MainPowKey];
+                mainPowerWay = (m == "1") ? "市电" : "蓄电池";
             }
 
             if (d.ContainsKey(BatteryHoursKey))
@@ -427,9 +439,9 @@ namespace Scada.MainVision
                 
             }
 
-            string mainPowMsg = string.Format("市电状态: {0}", mainPowerOff);
-            string batteryHoursMsg = string.Format("备电时间: {0}", batteryHours);
-            string tempMsg = string.Format("舱内温度: {0}", temperature);
+            string mainPowMsg = string.Format("供电方式: {0}", mainPowerWay);
+            string batteryHoursMsg = string.Format("备电时间: {0}h", batteryHours);
+            string tempMsg = string.Format("舱内温度: {0}℃", temperature);
 
             this.DisplayPanelData(panel, mainPowMsg, batteryHoursMsg, tempMsg);
         }
@@ -446,8 +458,8 @@ namespace Scada.MainVision
                 return;
             }
             string isLidOpen = (string)d["islidopen"];
-            string LidOpenMsg = (isLidOpen == "1") ? "盖子打开" : "盖子关闭";
-            this.DisplayPanelData(panel, LidOpenMsg);
+            string LidOpenMsg = (isLidOpen == "1") ? "雨水采集" : "沉降灰采集";
+            this.DisplayPanelData(panel, "采样状态:" + LidOpenMsg);
         }
 
         void RefreshPanelDataTimerTick(object sender, EventArgs e)
@@ -516,6 +528,19 @@ namespace Scada.MainVision
             if (di != null)
             {
                 this.ShowDataViewPanel(di.DeviceKey);
+                this.ShowHerePane(di.DeviceKey);
+            }
+        }
+
+        private void ShowHerePane(string deviceKey)
+        {
+            foreach (var pane in panes)
+            {
+                if (pane.DeviceKey == deviceKey)
+                {
+                    pane.Visibility = Visibility.Visible;
+                    break;
+                }
             }
         }
 

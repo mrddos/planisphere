@@ -30,10 +30,7 @@ namespace Scada.Main
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-			////////////////////////////////////////////////////////////////
-			// Notify Icon
-			// sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
-			// sysNotifyIcon.Visible = true;
+            InitSysNotifyIcon();
 
 			// Keep-Alive timer
 			this.timer = new System.Windows.Forms.Timer();
@@ -112,6 +109,9 @@ namespace Scada.Main
             Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
 
             this.WindowState = FormWindowState.Minimized;
+
+            this.ShowInTaskbar = false;  //不显示在系统任务栏
+            // this.sysNotifyIcon.Visible = true;  //托盘图标可见
         }
 
         private ListViewItem AddDeviceToList(string deviceName, string version, string status)
@@ -145,7 +145,7 @@ namespace Scada.Main
 
 		private void OnSysNotifyIconContextMenu(object sender, EventArgs e)
 		{
-
+            this.ShowInTaskbar = true;
 		}
 
 		//private void StartConnectToDevices()

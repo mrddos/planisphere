@@ -51,6 +51,9 @@ namespace Scada.Declare
 
         private DateTime lastDateTime = default(DateTime);
 
+        private double factor1;
+
+
 		public FormProxyDevice(DeviceEntry entry)
 		{
 
@@ -87,6 +90,12 @@ namespace Scada.Declare
 
             string tableName = (StringValue)entry[DeviceEntry.TableName];
             string tableFields = (StringValue)entry[DeviceEntry.TableFields];
+
+
+            if (!Device.GetFactor(entry, 1, out this.factor1))
+            {
+                Debug.Assert(false);
+            }
 
             string[] fields = tableFields.Split(',');
             string atList = string.Empty;
@@ -177,6 +186,9 @@ namespace Scada.Declare
                 return false;
             }
             deviceData.Time = time;
+
+            data[1] = string.Format("{0:f1}", (double.Parse(data[1]) * this.factor1));
+
             object[] fields = Device.GetFieldsData(data, time, this.fieldsConfig);
             deviceData = new DeviceData(this, fields);
             deviceData.InsertIntoCommand = this.insertIntoCommand;
