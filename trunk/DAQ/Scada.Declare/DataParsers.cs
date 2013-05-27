@@ -11,10 +11,21 @@ namespace Scada.Declare
 
 		protected LineParser lineParser;
 
+        private List<double> factors = new List<double>();
+
 		public LineParser GetLineParser()
 		{
 			return lineParser;
 		}
+
+        public List<double> Factors
+        {
+            get
+            {
+                return this.factors;
+            }
+        }
+        
 
 		public abstract byte[] GetLineBytes(byte[] data);
 

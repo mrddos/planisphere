@@ -33,9 +33,10 @@ namespace Scada.MainVision
 			InitializeComponent();
 		}
 
-        public HerePaneItem AddItem(string title)
+        public HerePaneItem AddItem(string deviceKey, string title)
         {
             HerePaneItem item = new HerePaneItem();
+            item.DeviceKey = deviceKey;
             item.Title = title;
             this.Panel.Children.Add(item);
 

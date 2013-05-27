@@ -548,17 +548,25 @@ namespace Scada.Controls
                     string line = sb.ToString(0, sb.Length - 1);
                     sw.WriteLine(line);
                 }
+
+                Window1 alert = new Window1("成功导出CSV文件。");
+                alert.ShowDialog();
+                
             }
         }
 
         private void SaveChart(object sender, RoutedEventArgs e)
         {
             ((GraphView)this.GraphView).SaveChart();
+            Window1 alert = new Window1("成功保存曲线。");
+            alert.ShowDialog();
         }
 
         private void SaveSearchChart(object sender, RoutedEventArgs e)
         {
             ((GraphView)this.GraphSearchView).SaveChart();
+            Window1 alert = new Window1("成功保存曲线。");
+            alert.ShowDialog();
         }
 
 

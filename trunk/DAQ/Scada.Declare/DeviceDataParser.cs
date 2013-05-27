@@ -63,7 +63,13 @@ namespace Scada.Declare
             double d = 0.0;
             if (double.TryParse(items[4], out d))
             {
-                items[4] = (d * 10).ToString();
+                double f = 1.0;
+                if (this.Factors.Count > 0)
+                {
+                    f = this.Factors[0];
+                }
+
+                items[4] = (f * d * 10).ToString();
             }
 			return items;
 		}
@@ -105,7 +111,7 @@ namespace Scada.Declare
                 double v = 0.0;
                 if (double.TryParse(item, out v))
                 {
-                    double temp = v * 0.0122;
+                    int temp = (int)(v * 0.0122);
                     ret[0] = temp.ToString();
                 }
             }
@@ -116,7 +122,7 @@ namespace Scada.Declare
                 double v = 0.0;
                 if (double.TryParse(item, out v))
                 {
-                    double humidity = v * 0.0224;
+                    int humidity = (int)(v * 0.0224);
                     ret[1] = humidity.ToString();
                 }
             }
@@ -136,7 +142,7 @@ namespace Scada.Declare
                 {
                     double u = v * 0.00488;
                     double hour = 600 * u * 0.8 / 80;
-                    ret[3] = hour.ToString();
+                    ret[3] = ((int)hour).ToString();
                 }
             }
 

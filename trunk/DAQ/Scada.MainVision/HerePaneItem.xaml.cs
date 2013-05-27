@@ -55,6 +55,12 @@ namespace Scada.MainVision
             set;
         }
 
+        public string DeviceKey
+        {
+            get;
+            set;
+        }
+
         private void ItemLoaded(object sender, RoutedEventArgs e)
         {
             this.data = new HerePaneItemData() { Title = this.Title };
@@ -93,6 +99,12 @@ namespace Scada.MainVision
         {
             // this.Rect.Fill = Brushes.LightGray;
         }
+
+        private void HidePanel(object sender, RoutedEventArgs e)
+        {
+            this.Visibility = Visibility.Collapsed;
+        }
+
 
 
     }

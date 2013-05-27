@@ -285,6 +285,21 @@ namespace Scada.Declare
             return fieldConfigList;
         }
 
+        public static bool GetFactor(DeviceEntry entry, int i, out double v)
+        {
+            v = 0.0;
+            string factor = string.Format("factor{0}", i);
+            string s = (StringValue)entry[factor];
+            if (s != null && s.Length > 0)
+            {
+                if (double.TryParse(s, out v))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
 	}
 
