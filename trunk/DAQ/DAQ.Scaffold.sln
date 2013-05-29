@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.DAQ.Installer", "Scad
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scada.DAQ.DataForm", "Scada.DAQ.DataForm\Scada.DAQ.DataForm.vcxproj", "{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Server", "Scada.Server\Scada.Server.csproj", "{7880CDA0-74D6-49F9-A486-90DF32C9487D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,16 @@ Global
 		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Win32.ActiveCfg = Release|Win32
 		{8DB2E37D-6301-4FED-B16D-C20410E6B5BD}.Release|Win32.Build.0 = Release|Win32
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{7880CDA0-74D6-49F9-A486-90DF32C9487D}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

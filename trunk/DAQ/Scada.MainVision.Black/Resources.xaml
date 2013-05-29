@@ -11,8 +11,8 @@
                     <Grid Width="15" Height="30" Background="Transparent">
                         <Path x:Name="ExpandPath" HorizontalAlignment="Left" 
                                 VerticalAlignment="Center" 
-                                Margin="10,1,10,1"
-                                Fill="#FF00FFFF"
+                                Margin="1,1,1,1"
+                                Fill="Black"
                                 Data="M 4 0 L 8 4 L 4 8 Z"/>
                     </Grid>
                     <!--
@@ -52,7 +52,7 @@
                     Value="{Binding Path=VerticalContentAlignment,
                         RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
         <Setter Property="Padding" Value="1,0,0,0"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontFamily" Value="微软雅黑"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}"/>
         <Setter Property="Template">
@@ -75,10 +75,10 @@
                                             ClickMode="Press"/>
                         <Border x:Name="Bd" Grid.Column="0" Grid.ColumnSpan="2"
                                       Background="{TemplateBinding Background}"
-                                      BorderBrush="#FFFFFF"
+                                      BorderBrush="#8D8D8D"
                                       BorderThickness="0,0,0,.8"
                                       Padding="0,0,0,0">
-                            <Border BorderThickness="0,0,0,.8" BorderBrush="#EEEEEE">
+                            <Border BorderThickness="0,0,0,.8" BorderBrush="#363636">
                                 <StackPanel Orientation="Horizontal">
                                     <Label Foreground="DarkGreen">></Label>
                                     <ContentPresenter x:Name="PART_Header" ContentSource="Header"
@@ -112,19 +112,19 @@
                         </MultiTrigger>
 
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="Bd" Property="Background" Value="#FFFFFF"/>
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter TargetName="Bd" Property="Background" Value="#676767"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="true"/>
                                 <Condition Property="IsSelectionActive" Value="false"/>
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background" Value="White"/>
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter TargetName="Bd" Property="Background" Value="#676767"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -145,7 +145,7 @@
                 <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
                     <GradientStop Color="Silver" Offset="0.0" />
                     <GradientStop Color="Silver" Offset="0.5" />
-                    <GradientStop Color="Black" Offset="0.0" />
+                    <GradientStop Color="White" Offset="0.0" />
                 </LinearGradientBrush>
             </Border.Background>
 
@@ -158,19 +158,19 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="CloseButtonTemplateKey" TargetType="{x:Type Button}">
-        <Border x:Name="PART_Border" BorderBrush="#E5E5E5" BorderThickness="1" Padding="2" Background="#E5E5E5">
+        <Border x:Name="PART_Border" BorderBrush="#3A3A3A" BorderThickness="1" Padding="2" Background="#3A3A3A">
             <Path x:Name="PART_Path" Data="M7,7 L7,7 9,9 M9,7 L9,7 7,9" Fill="Gray" 
-                    Stretch="Fill" Stroke="Gray" StrokeThickness="2" 
+                    Stretch="Fill" Stroke="LightGray" StrokeThickness="2" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" TargetName="PART_Border" Value="#F9F9F9"/>
+                <Setter Property="Background" TargetName="PART_Border" Value="#535353"/>
                 <Setter Property="Stroke" TargetName="PART_Path" Value="LightGray" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" TargetName="PART_Border" Value="#F9F9F9"/>
-                <Setter Property="Stroke" TargetName="PART_Path" Value="Black" />
+                <Setter Property="Background" TargetName="PART_Border" Value="#535353"/>
+                <Setter Property="Stroke" TargetName="PART_Path" Value="White" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -349,9 +349,9 @@
                 <ControlTemplate TargetType="{x:Type TabItem}">
                     <Grid>
                         <Border Name="Border" Height="30" Margin="-1,-2,0,0"
-                                BorderBrush="#D6D6D6"
+                                BorderBrush="#707070"
                                 BorderThickness="0,1,0,0">
-                            <Border Name="Border2" BorderBrush="#D6D6D6"
+                            <Border Name="Border2" BorderBrush="#282828"
                                 BorderThickness="0,0,1,0">
                                 <ContentPresenter x:Name="ContentSite"
                                       VerticalAlignment="Center"
@@ -365,28 +365,14 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Panel.ZIndex" Value="100" />
-                            <Setter TargetName="Border" Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#FCFCFC" Offset="0.0" />
-                                        <GradientStop Color="#FCFCFC" Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
+                            <Setter TargetName="Border" Property="Background" Value="#535353" />
                             <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
-                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="Foreground" Value="White" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
-                            <Setter TargetName="Border" Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#FCFCFC" Offset="0.0" />
-                                        <GradientStop Color="#E0E0E0" Offset="1.0" />
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                            <Setter TargetName="Border" Property="BorderBrush" Value="#E5E5E5" />
-                            <Setter Property="Foreground" Value="#1E1E1E" />
+                            <Setter TargetName="Border" Property="Background" Value="#3A3A3A" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#3A3A3A" />
+                            <Setter Property="Foreground" Value="#919191" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -406,15 +392,15 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Border0" CornerRadius="1" BorderThickness="1" BorderBrush="#C9C9C9">
-                    <Border x:Name="Border" CornerRadius="1" BorderThickness="1" BorderBrush="White">
+                    <Border x:Name="Border0" CornerRadius="1" BorderThickness="1" BorderBrush="#464646">
+                    <Border x:Name="Border" CornerRadius="1" BorderThickness="1" BorderBrush="Gray">
                         
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                <GradientStop Color="#DFDFDF" Offset="0.0" />
-                                <GradientStop Color="#DBDBDB" Offset="0.5" />
-                                <GradientStop Color="#B2B2B2" Offset="0.55" />
-                                <GradientStop Color="#B2B2B2" Offset="1.0" />
+                                <GradientStop Color="#6f6f6f" Offset="0.0" />
+                                <GradientStop Color="#6f6f6f" Offset="0.5" />
+                                <GradientStop Color="#393939" Offset="0.55" />
+                                <GradientStop Color="#393939" Offset="1.0" />
                             </LinearGradientBrush>
                         </Border.Background>
                         
@@ -439,22 +425,22 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocused" Value="true">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
                         </Trigger>
                         <Trigger Property="IsDefaulted" Value="true">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="#DBDBDB" />
+                            <Setter TargetName="Border" Property="Background" Value="#464646" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="Border" Property="Background" Value="#EDEDED" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
+                            <Setter TargetName="Border" Property="Background" Value="#464646" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Border" Property="Background" Value="#EDEDED" />
-                            <Setter TargetName="Border" Property="BorderBrush" Value="White" />
-                            <Setter Property="Foreground" Value="Gray"/>
+                            <Setter TargetName="Border" Property="Background" Value="#464646" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#464646" />
+                            <Setter Property="Foreground" Value="LightGray"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

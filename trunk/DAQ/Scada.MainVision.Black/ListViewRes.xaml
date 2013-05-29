@@ -75,7 +75,7 @@
     <!-- Thumb -->
     <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
         <Setter Property="Width" Value="18"/>
-        <Setter Property="Background" Value="White"/>
+        <Setter Property="Background" Value="Black"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
@@ -92,13 +92,14 @@
        TargetType="GridViewColumnHeader">
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Foreground" Value="White"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewColumnHeader">
                     <Grid>
-                        <Border Name="HeaderBorder" BorderThickness="0, 0, 0, 0.5" BorderBrush="Gray"
-                                Background="#DBDBDB" Height="30" Padding="0, 0, 2, 0" Margin="-2, 0, 0, 0">
+                        <Border Name="HeaderBorder" BorderThickness="0,0,0,1" BorderBrush="#292929"
+                                Background="#7b7b7b" Height="30"
+                                Padding="0, 0, 2, 0" Margin="-2, 0, 0, 0">
                             <ContentPresenter Name="HeaderContent"
                                               Margin="0,0,0,0"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -111,7 +112,7 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="HeaderBorder" Property="Background" Value="#EBEBEB"/>
+                            <Setter TargetName="HeaderBorder" Property="Background" Value="#7b7b7b"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="true">
                             <Setter TargetName="HeaderContent" Property="Margin" Value="1,1,0,0"/>
@@ -140,7 +141,8 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="GridViewColumnHeader">
-                            <Border Name="HeaderBorder" Background="#DBDBDB"/>
+                            <Border Name="HeaderBorder" BorderThickness="0,1,0,1" BorderBrush="#7b7b7b"
+                                    Background="#7b7b7b"/>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -158,7 +160,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListView">
-                    <Border Name="Border" BorderThickness="1" BorderBrush="#F9F9F9" Background="#FCFCFC">
+                    <Border Name="Border" BorderThickness="1" BorderBrush="#535353" Background="#535353">
                         <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
                             <ItemsPresenter />
                         </ScrollViewer>
@@ -168,7 +170,7 @@
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter TargetName="Border" Property="Background" Value="Black"/>
+                            <Setter TargetName="Border" Property="Background" Value="White"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -178,7 +180,7 @@
         <Setter Property="ItemContainerStyle">
             <Setter.Value>
                 <Style TargetType="ListViewItem">
-                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Foreground" Value="White"/>
                     
                     
                     <!--
