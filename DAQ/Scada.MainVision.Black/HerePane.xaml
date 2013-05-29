@@ -16,7 +16,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type Thumb}">
                             <Grid>
-                                <Rectangle Fill="#FCFCFC" RadiusX="5" RadiusY="5"/>
+                                <Rectangle Fill="#90000000" RadiusX="5" RadiusY="5"/>
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
