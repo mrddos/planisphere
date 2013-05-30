@@ -138,7 +138,7 @@ namespace Scada.Chart
                 scaleLine.X1 = scaleLine.X2 = x;
                 scaleLine.Y1 = 0;
                 scaleLine.Y2 = isWholePoint ? Charts.MainScaleLength : Charts.ScaleLength;
-                scaleLine.Stroke = isWholePoint ? Brushes.LightGray : Brushes.Gray;
+                scaleLine.Stroke = isWholePoint ? Brushes.Gray : Brushes.LightGray;
                 this.TimeAxis.Children.Add(scaleLine);
             }
 
@@ -171,7 +171,6 @@ namespace Scada.Chart
                 else
                 {
                     timeLabel = new TextBlock();
-                    timeLabel.Foreground = Brushes.White;
                     timeLabel.FontWeight = FontWeights.Light;
                     timeLabel.FontSize = 9;
 
@@ -213,7 +212,6 @@ namespace Scada.Chart
             CheckBox cb = new CheckBox();
             cb.IsChecked = true;
             cb.Content = displayName;
-            cb.Foreground = Brushes.White;
             cb.Margin = new Thickness(5, 0, 5, 0);
             
             cb.Checked += (object sender, RoutedEventArgs e) => 

@@ -75,34 +75,34 @@
 
             <!-- Data 1 -->
             <Border BorderThickness="0, 0, 0, 0" Grid.Row="1" Grid.ColumnSpan="3">
-                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#383838">
-            <TextBlock x:Name="data1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
-                       Margin="5" Text="{Binding Data1}" VerticalAlignment="Center"
-                       FontFamily="Arial Black" FontSize="13" Foreground="Green"/>
+                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#CCCCCC">
+                    <TextBlock x:Name="data1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                Margin="5" Text="{Binding Data1}" VerticalAlignment="Center"
+                                FontFamily="微软雅黑" FontSize="13" Foreground="Green"/>
                 </Border>
             </Border>
             <!-- Data 2 -->
-            <Border BorderThickness="0, 1, 0, 0" BorderBrush="#ECECEC" Grid.Row="2" Grid.ColumnSpan="3">
-                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#383838">
+            <Border BorderThickness="0, 0, 0, 0" BorderBrush="#ECECEC" Grid.Row="2" Grid.ColumnSpan="3">
+                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#CCCCCC">
                     <TextBlock x:Name="data2" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                       Margin="5" Text="{Binding Data2}" VerticalAlignment="Center"
-                       FontFamily="Arial Black" FontSize="13" Foreground="Green"/>
+                                Margin="5" Text="{Binding Data2}" VerticalAlignment="Center"
+                                FontFamily="微软雅黑" FontSize="13" Foreground="Green"/>
                 </Border>
             </Border>
             <!-- Data 3 -->
-            <Border BorderThickness="0, 1, 0, 0" BorderBrush="#ECECEC" Grid.Row="3" Grid.ColumnSpan="3">
-                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#383838">
+            <Border BorderThickness="0, 0, 0, 0" BorderBrush="#ECECEC" Grid.Row="3" Grid.ColumnSpan="3">
+                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#CCCCCC">
                     <TextBlock x:Name="data3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                       Margin="5" Text="{Binding Data3}" VerticalAlignment="Center"
-                       FontFamily="Arial Black" FontSize="13" Foreground="Green"/>
+                                Margin="5" Text="{Binding Data3}" VerticalAlignment="Center"
+                                FontFamily="微软雅黑" FontSize="13" Foreground="Green"/>
                 </Border>
             </Border>
             <!-- Data 4 -->
-            <Border BorderThickness="0, 1, 0, 0" BorderBrush="#ECECEC" Grid.Row="4" Grid.ColumnSpan="3">
-                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#383838">
+            <Border BorderThickness="0, 0, 0, 0" BorderBrush="#ECECEC" Grid.Row="4" Grid.ColumnSpan="3">
+                <Border BorderThickness="0, 0, 0, 1" BorderBrush="#CCCCCC">
                     <TextBlock x:Name="data4" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
-                       Margin="5" Text="{Binding Data4}" VerticalAlignment="Center"
-                       FontFamily="Arial Black" FontSize="13" Foreground="Green"/>
+                                Margin="5" Text="{Binding Data4}" VerticalAlignment="Center"
+                                FontFamily="微软雅黑" FontSize="13" Foreground="Green"/>
                 </Border>
             </Border>
 
