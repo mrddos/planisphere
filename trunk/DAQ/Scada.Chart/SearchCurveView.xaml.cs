@@ -198,7 +198,7 @@ namespace Scada.Chart
                 if (i % 5 == 0)
                 {
                     TextBlock t = new TextBlock();
-                    t.Foreground = Brushes.White;
+                    // t.Foreground = Brushes.White;
                     t.FontSize = 9;
                     double pos = (double)y - 10;
                     this.GraduationTexts.Add(textCount, new GraduationText()
@@ -244,8 +244,8 @@ namespace Scada.Chart
         private void AddCurveLine()
         {
             this.curve = new Polyline();
-            Color curveColor = Color.FromRgb(200, 255, 200);
-            this.curve.Stroke = new SolidColorBrush(curveColor);
+            
+            this.curve.Stroke = Brushes.Green;
             
             this.CanvasView.Children.Add(this.curve);
         }
@@ -541,7 +541,7 @@ namespace Scada.Chart
 
         private void SetDisplayName(string displayName)
         {
-            SolidColorBrush labelBrush = new SolidColorBrush(Color.FromRgb(58, 58, 58));
+            SolidColorBrush labelBrush = new SolidColorBrush(Color.FromRgb(219, 219, 219));
             Border labelBorder = new Border();
             labelBorder.CornerRadius = new CornerRadius(1.0);
             labelBorder.Background = labelBrush;
@@ -557,8 +557,7 @@ namespace Scada.Chart
             TextBlock displayLabel = new TextBlock();
             displayLabel.Text = displayName;
             displayLabel.Background = labelBrush;
-            
-            displayLabel.Foreground = Brushes.White;
+
 
             this.CanvasView.Children.Add(labelBorder);
             labelBorder.Child = displayLabel;
@@ -574,7 +573,7 @@ namespace Scada.Chart
             
             valueBorder.SetValue(Canvas.TopProperty, 12.0);
             this.valueLabel = new TextBlock();
-            this.valueLabel.Foreground = Brushes.White;
+            // this.valueLabel.Foreground = Brushes.White;
 
             valueBorder.Child = valueLabel;
             this.CanvasView.Children.Add(valueBorder);

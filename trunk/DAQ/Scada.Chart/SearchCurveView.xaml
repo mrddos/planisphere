@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="200" Background="#535353"
+             d:DesignHeight="200" d:DesignWidth="200" Background="#F8F8F8"
              Loaded="CurveViewLoaded" MouseMove="CanvasViewMouseMove">
-    <Border BorderBrush="#EEEEEE" BorderThickness="1, 1, 1, 0">
+    <Border BorderBrush="#F8F8F8" BorderThickness="1, 1, 1, 0">
         <Grid x:Name="MainView" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="6"></RowDefinition>
@@ -19,10 +19,10 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <!-- Canvas -->
-            <Canvas x:Name="Graduation" Grid.Row="1" Grid.Column="0" Background="#535353">
+            <Canvas x:Name="Graduation" Grid.Row="1" Grid.Column="0" Background="#F8F8F8">
             </Canvas>
 
-            <Canvas x:Name="CanvasView" Background="#545454" Grid.Row="1" Grid.Column="1" 
+            <Canvas x:Name="CanvasView" Background="#F8F8F8" Grid.Row="1" Grid.Column="1" 
                     MouseMove="CanvasViewMouseMove" 
                     
                     >

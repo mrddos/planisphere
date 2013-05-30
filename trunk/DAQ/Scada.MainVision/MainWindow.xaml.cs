@@ -644,7 +644,7 @@ namespace Scada.MainVision
             else
             {
                 this.dataPanelHide = true;
-                this.DataPanelRow.Height = new GridLength(15.0);
+                this.DataPanelRow.Height = new GridLength(0.0);
                 this.herePane.Visibility = Visibility.Collapsed;
             }
         }

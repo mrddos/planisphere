@@ -75,17 +75,17 @@
                                             ClickMode="Press"/>
                         <Border x:Name="Bd" Grid.Column="0" Grid.ColumnSpan="2"
                                       Background="{TemplateBinding Background}"
-                                      BorderBrush="#FFFFFF"
+                                      BorderBrush="#CCCCCC"
                                       BorderThickness="0,0,0,.8"
                                       Padding="0,0,0,0">
-                            <Border BorderThickness="0,0,0,.8" BorderBrush="#EEEEEE">
+                            
                                 <StackPanel Orientation="Horizontal">
                                     <Label Foreground="DarkGreen">></Label>
                                     <ContentPresenter x:Name="PART_Header" ContentSource="Header"
                                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                         VerticalAlignment="Center"/>
                                 </StackPanel>
-                            </Border>
+                           
                         </Border>
                         <ItemsPresenter x:Name="ItemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
                     </Grid>

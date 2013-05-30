@@ -6,7 +6,9 @@
              xmlns:local="clr-namespace:Scada.Chart"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"  MouseMove="MainViewMouseMove">
-    <Grid x:Name="MainView" Background="#535353">
+    <Border BorderBrush="LightGray"  BorderThickness="1, 1, 1, 1">
+    <Grid x:Name="MainView" Background="#F8F8F8">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -16,7 +18,8 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel x:Name="SelectedItems" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+        <StackPanel x:Name="SelectedItems" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                    VerticalAlignment="Bottom" Margin="10, 0, 0, 0">
         </StackPanel>
         
         <ScrollViewer x:Name="panelScrollViewer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" >
@@ -29,7 +32,8 @@
             
             </StackPanel>
         </ScrollViewer>
-        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="2" Background="#535353" Loaded="TimeAxisLoaded"></Canvas>
+        <Canvas x:Name="TimeAxis" Grid.Column="1" Grid.Row="2" Background="#F8F8F8" Loaded="TimeAxisLoaded"></Canvas>
         
     </Grid>
+    </Border>
 </UserControl>
