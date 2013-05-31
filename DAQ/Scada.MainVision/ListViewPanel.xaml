@@ -6,7 +6,7 @@
              xmlns:sys="clr-namespace:System"
              xmlns:c="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="600" Loaded="ContentLoaded" Margin="5,0,5,5">
+             d:DesignHeight="300" d:DesignWidth="600" Loaded="ContentLoaded" Margin="0,0,5,0">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,12 +16,12 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="0" BorderThickness="1" BorderBrush="#E5E5E5">
+    <Border CornerRadius="0" BorderThickness="1" BorderBrush="#302D30">
     <!-- Content -->
     <Grid Background="#EEEEEE">
         
         <Grid.RowDefinitions>
-            <RowDefinition Height="36"/>
+            <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
@@ -34,7 +34,7 @@
         -->
 
         <!-- Header -->
-        <Grid Background="#E5E5E5" Grid.Row="0" Margin="0, 0, 0, 8">
+        <Grid Background="#404040" Grid.Row="0" >
 
 
             <Grid.ColumnDefinitions>
@@ -42,7 +42,7 @@
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <TextBlock x:Name="Title" Grid.Row="0" Grid.Column="0" Margin="5,0,0,0" Height="20" 
-                        FontSize="14" FontWeight="Bold" Foreground="Black"></TextBlock>
+                        FontSize="14" FontWeight="Bold" Foreground="White"></TextBlock>
 
             <Button x:Name="CloseButton" Width="18" Height="18" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
                     HorizontalAlignment="Right" VerticalAlignment="Top"
@@ -52,12 +52,12 @@
 
         
         <!-- Row 1 -->
-        <Border Grid.Row="1" Background="#E5E5E5" BorderBrush="#282828" BorderThickness="0, 0, 0, 0">
+        <Border Grid.Row="1" Background="#E5E5E5" BorderBrush="#282828" BorderThickness="0, 0, 0, 0" Margin="0, 4, 0, 0">
         <TabControl x:Name="TabCtrl" Background="#F9F9F9" BorderBrush="#F9F9F9">
             <!-- 实时列表 -->
             <TabItem Header="实时列表" Width="80" Background="#F9F9F9" Style="{StaticResource TabItemKey}" >
-                <ContentControl Grid.Row="1" Margin="0">
-                    <Grid >
+                <ContentControl Grid.Row="1" Margin="0" >
+                    <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>

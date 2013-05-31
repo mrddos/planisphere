@@ -244,9 +244,9 @@ namespace Scada.Chart
         private void AddCurveLine()
         {
             this.curve = new Polyline();
-            
-            this.curve.Stroke = Brushes.Green;
-            
+
+            Color curveColor = Color.FromRgb(00, 0x7A, 0xCC);
+            this.curve.Stroke = new SolidColorBrush(curveColor);
             this.CanvasView.Children.Add(this.curve);
         }
 

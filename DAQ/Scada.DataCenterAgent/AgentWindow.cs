@@ -15,6 +15,9 @@ namespace Scada.DataCenterAgent
 
         private Agent agent;
 
+        private DataPacketBuilder builder = new DataPacketBuilder();
+
+
         public AgentWindow()
         {
             InitializeComponent();
@@ -40,15 +43,59 @@ namespace Scada.DataCenterAgent
         private void InitializeTimer()
         {
             this.timer = new Timer();
-            this.timer.Interval = 3000;
+            this.timer.Interval = 2000;
             this.timer.Start();
             this.timer.Tick += this.SendDataTick;
         }
 
         private void SendDataTick(object sender, EventArgs e)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes("Fucking\n");
-            this.agent.Send(bytes);
+            DateTime now = DateTime.Now;
+            if (!IsRightSendTime(now))
+            {
+                return;
+            }
+
+            DateTime rightTime = GetRightSendTime(now);
+            if (rightTime == this.lastSendTime)
+            {
+                return;
+            }
+            this.lastSendTime = rightTime;
+
+
+            this.SendPackets();
+        }
+
+        private DateTime lastSendTime;
+
+        private static DateTime GetRightSendTime(DateTime dt)
+        {
+            return default(DateTime);
+        }
+
+        private static bool IsRightSendTime(DateTime dt)
+        {
+            return true;
+        }
+
+
+        private void SendPackets()
+        {
+            foreach (var deviceKey in Settings.Instance.DeviceKeys)
+            {
+                DataPacket p = builder.GetDataPacket();
+
+                List<Agent> agents = new List<Agent>(){ this.agent };
+                foreach (var agent in agents)
+                {
+                    byte[] bytes = p.ToBytes();
+                    agent.Send(bytes);
+                }
+            }
+
+            // TODO: Agents
+
         }
     }
 }

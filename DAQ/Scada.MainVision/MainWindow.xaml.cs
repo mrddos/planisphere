@@ -504,7 +504,7 @@ namespace Scada.MainVision
                 this.Grid.Children.Add(panel);
             }
 
-			this.panelManager.SetListViewPanelPos(panel, 3, 1);
+			this.panelManager.SetListViewPanelPos(panel, 3, 2);
 		}
 
       
@@ -613,10 +613,15 @@ namespace Scada.MainVision
             if (this.WindowState == WindowState.Normal)
             {
                 this.WindowState = WindowState.Maximized;
+
+                this.SideColumn.Width = new GridLength(16.0);
+                this.herePane.Margin = new Thickness(15, 0, 0, 0);
             }
             else
             {
                 this.WindowState = WindowState.Normal;
+                this.SideColumn.Width = new GridLength(10.0);
+                this.herePane.Margin = new Thickness(10, 0, 0, 0);
             }
         }
 
@@ -654,13 +659,13 @@ namespace Scada.MainVision
             if (this.devicePanelHide)
             {
                 this.devicePanelHide = false;
-                this.DeviceListColumn.Width = new GridLength(300.0);
+                this.DeviceListColumn.Width = new GridLength(220.0);
                 this.DeviceList.Visibility = Visibility.Visible;
             }
             else
             {
                 this.devicePanelHide = true;
-                this.DeviceListColumn.Width = new GridLength(15.0);
+                this.DeviceListColumn.Width = new GridLength(0.0);
                 this.DeviceList.Visibility = Visibility.Collapsed;
             }
         }

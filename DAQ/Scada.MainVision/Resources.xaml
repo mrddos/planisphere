@@ -80,7 +80,9 @@
                                       Padding="0,0,0,0">
                             
                                 <StackPanel Orientation="Horizontal">
-                                    <Label Foreground="DarkGreen">></Label>
+                                <Label Foreground="Black" FontFamily="Times" FontSize="12" Margin="2, 2, 2, 2">
+                                    &gt;
+                                </Label>
                                     <ContentPresenter x:Name="PART_Header" ContentSource="Header"
                                                         HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                         VerticalAlignment="Center"/>
@@ -112,20 +114,43 @@
                         </MultiTrigger>
 
                         <Trigger Property="IsSelected" Value="true">
-                            <Setter TargetName="Bd" Property="Background" Value="#FFFFFF"/>
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter TargetName="Bd" Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </Trigger>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
                                 <Condition Property="IsSelected" Value="true"/>
                                 <Condition Property="IsSelectionActive" Value="false"/>
                             </MultiTrigger.Conditions>
-                            <Setter TargetName="Bd" Property="Background" Value="White"/>
-                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter TargetName="Bd" Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
                         </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="Black"/>
                         </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="#007ACC"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="false">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="true"/>
+                                <Condition Property="IsSelected" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="false"/>
+                                <Condition Property="IsSelected" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -158,18 +183,18 @@
     </ControlTemplate>
 
     <ControlTemplate x:Key="CloseButtonTemplateKey" TargetType="{x:Type Button}">
-        <Border x:Name="PART_Border" BorderBrush="#E5E5E5" BorderThickness="1" Padding="2" Background="#E5E5E5">
+        <Border x:Name="PART_Border" BorderBrush="#414141" BorderThickness="1" Padding="2" Background="#404040">
             <Path x:Name="PART_Path" Data="M7,7 L7,7 9,9 M9,7 L9,7 7,9" Fill="Gray" 
                     Stretch="Fill" Stroke="Gray" StrokeThickness="2" 
                     HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Border>
         <ControlTemplate.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" TargetName="PART_Border" Value="#F9F9F9"/>
+                <Setter Property="Background" TargetName="PART_Border" Value="#606060"/>
                 <Setter Property="Stroke" TargetName="PART_Path" Value="LightGray" />
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
-                <Setter Property="Background" TargetName="PART_Border" Value="#F9F9F9"/>
+                <Setter Property="Background" TargetName="PART_Border" Value="#5A5A5A"/>
                 <Setter Property="Stroke" TargetName="PART_Path" Value="Black" />
             </Trigger>
         </ControlTemplate.Triggers>
@@ -191,7 +216,11 @@
                     <!--触发器-->
                     <ControlTemplate.Triggers>
                         <Trigger Property="Button.IsMouseOver" Value="True">
-                            
+                            <Setter Property="Opacity">
+                                <Setter.Value>
+                                    0.6
+                                </Setter.Value>
+                            </Setter>
                         </Trigger>
                         <Trigger Property="Button.IsPressed" Value="True">
                             <Setter Property="RenderTransform">
@@ -348,7 +377,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TabItem}">
                     <Grid>
-                        <Border Name="Border" Height="30" Margin="-1,-2,0,0"
+                        <Border Name="Border" Height="24" Margin="-1,-2,0,0"
                                 BorderBrush="#D6D6D6"
                                 BorderThickness="0,1,0,0">
                             <Border Name="Border2" BorderBrush="#D6D6D6"
@@ -368,13 +397,13 @@
                             <Setter TargetName="Border" Property="Background">
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                                        <GradientStop Color="#FCFCFC" Offset="0.0" />
-                                        <GradientStop Color="#FCFCFC" Offset="1.0" />
+                                        <GradientStop Color="#007ACC" Offset="0.0" />
+                                        <GradientStop Color="#007ACC" Offset="1.0" />
                                     </LinearGradientBrush>
                                 </Setter.Value>
                             </Setter>
                             <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
-                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="Foreground" Value="White" />
                         </Trigger>
                         <Trigger Property="IsSelected" Value="False">
                             <Setter TargetName="Border" Property="Background">
@@ -388,6 +417,30 @@
                             <Setter TargetName="Border" Property="BorderBrush" Value="#E5E5E5" />
                             <Setter Property="Foreground" Value="#1E1E1E" />
                         </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="#007ACC"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="false">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="true"/>
+                                <Condition Property="IsSelected" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border" Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </MultiTrigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsMouseOver" Value="false"/>
+                                <Condition Property="IsSelected" Value="true"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border" Property="Background" Value="#007ACC"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -423,12 +476,8 @@
                                 <RowDefinition Height="*"></RowDefinition>
                                 <RowDefinition Height="*"></RowDefinition>
                             </Grid.RowDefinitions>
-                            <ContentPresenter Grid.RowSpan="2"
-                            Margin="2"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            RecognizesAccessKey="True">
-
+                            <ContentPresenter Grid.RowSpan="2" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    RecognizesAccessKey="True">
                             </ContentPresenter>
                             <!--
                             <Rectangle Grid.Row="1" Fill="Black" Opacity="0.6"></Rectangle>
@@ -454,8 +503,11 @@
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="Border" Property="Background" Value="#EDEDED" />
                             <Setter TargetName="Border" Property="BorderBrush" Value="White" />
-                            <Setter Property="Foreground" Value="Gray"/>
+                            <Setter Property="Foreground" Value="Black"/>
                         </Trigger>
+                        <Trigger Property="IsEnabled" Value="true">
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Trigger>                        
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

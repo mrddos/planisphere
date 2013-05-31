@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -53,7 +53,9 @@
     <Compile Include="AgentWindow.Designer.cs">
       <DependentUpon>AgentWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="CRC16.cs" />
     <Compile Include="DataPacket.cs" />
+    <Compile Include="DataPacketBuilder.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DBDataSource.cs" />
     <Compile Include="Program.cs" />
