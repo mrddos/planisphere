@@ -111,9 +111,8 @@ namespace Scada.DataCenterAgent
             const int MaxItemCount = 20;
             var ret = new Dictionary<string, object>(MaxItemCount);
 
-            Settings cfg = Settings.Instance;
-            SettingEntries entry = cfg[deviceKey];
-            this.cmd.CommandText = this.GetSelectStatement(entry.TableName, 1);
+            
+            this.cmd.CommandText = this.GetSelectStatement("TableName", 1);
             using (MySqlDataReader reader = this.cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -128,7 +127,7 @@ namespace Scada.DataCenterAgent
                     }
 
                     ret.Add(Id, id);
-
+                    /*
                     foreach (var i in entry.Items)
                     {
                         string key = i.Key.ToLower();
@@ -147,6 +146,7 @@ namespace Scada.DataCenterAgent
                             // No this field.
                         }
                     }
+                    */
 
 
                 }
@@ -164,15 +164,14 @@ namespace Scada.DataCenterAgent
             // Return values
             var ret = new List<Dictionary<string, object>>();
 
-            Settings settings = Settings.Instance;
-            SettingEntries entry = settings[deviceKey];
+
             if (current)
             {
-                this.cmd.CommandText = this.GetSelectStatement(entry.TableName, count);
+                this.cmd.CommandText = this.GetSelectStatement("TableName", count);
             }
             else
             {
-                this.cmd.CommandText = this.GetSelectStatement(entry.TableName, fromTime, toTime);
+                this.cmd.CommandText = this.GetSelectStatement("TableName", fromTime, toTime);
             }
             using (MySqlDataReader reader = this.cmd.ExecuteReader())
             {
@@ -187,7 +186,7 @@ namespace Scada.DataCenterAgent
                     
                     Dictionary<string, object> data = new Dictionary<string, object>(10);
                     data.Add("Id", id);
-
+                    /*
                     foreach (var i in entry.Items)
                     {
                         string key = i.Key.ToLower();
@@ -211,6 +210,7 @@ namespace Scada.DataCenterAgent
                     // this.dataCache.Add(id, data);
 
                     index++;
+                     * */
                 }
             }
 

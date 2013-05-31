@@ -1,16 +1,59 @@
+<?xml version="1.0"?>
+<settings>
+	<datacenters>
+		<datacenter ip="" port="6000" wireless="" wirelessport="6000"/>
+		<datacenter ip="" port="6000" wireless="" wirelessport="6000"/>
+	</datacenters>
+
+	<!-- -->
+	<site SysName="" SysST="" passwd="123456" adapter="" name="" station="">
+	</site>
 
 
 
-[Scada.HIPC]
+	<devices>
+		<device id="scada.hipc" type="" table="">
+			<code field="aa">0102060301</code>
+			<code field="bb">0102060302</code>
+			<code field="cc">0102060303</code>
 
-[Scada.NaIDevice]
+		</device>
 
-[Scada.Weather]
+		<device id="scada.hipc" type="">
+			<code></code>
+			<code></code>
+			<code></code>
+		</device>
 
-[Scada.HVSampler]
+		<device id="scada.hipc" type="">
+			<code></code>
+			<code></code>
+			<code></code>
+		</device>
 
-[Scada.ISampler]
+		<device id="scada.hipc" type="">
+			<code></code>
+			<code></code>
+			<code></code>			
+		</device>
 
-[Scada.Shelter]
+		<device id="scada.hipc" type="">
+			<code></code>
+			<code></code>
+			<code></code>			
+		</device>
 
-[Scada.DWD]
+		<device id="scada.hipc" type="">
+			<code></code>
+			<code></code>
+			<code></code>			
+		</device>
+
+		<device id="scada.hipc" type="">
+			<code></code>
+			<code></code>
+			<code></code>			
+		</device>
+
+	</devices>
+</settings>
