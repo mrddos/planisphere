@@ -76,21 +76,27 @@ namespace Scada.DataCenterAgent
         {
             if (result.IsCompleted)
             {
-                TcpClient client = (TcpClient)result.AsyncState;
-                client.EndConnect(result);
-                //client.
-                if (client.Connected)
+                try
                 {
-                    this.stream = this.client.GetStream();
-
-                    if (!string.IsNullOrEmpty(this.Greeting))
+                    TcpClient client = (TcpClient)result.AsyncState;
+                    client.EndConnect(result);
+                    //client.
+                    if (client.Connected)
                     {
-                        string greeting = this.Greeting + "\n";
-                        byte[] b = Encoding.ASCII.GetBytes(greeting);
-                        stream.Write(b, 0, b.Length);
-                    }
+                        this.stream = this.client.GetStream();
 
-                    this.BeginRead(this.client);
+                        if (!string.IsNullOrEmpty(this.Greeting))
+                        {
+                            string greeting = this.Greeting + "\n";
+                            byte[] b = Encoding.ASCII.GetBytes(greeting);
+                            stream.Write(b, 0, b.Length);
+                        }
+
+                        this.BeginRead(this.client);
+                    }
+                }
+                catch (SocketException)
+                {
                 }
 
             }

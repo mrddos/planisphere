@@ -196,6 +196,7 @@ namespace Scada.Chart
                 if (i % 5 == 0)
                 {
                     TextBlock t = new TextBlock();
+                    t.Foreground = Brushes.Black;
                     t.FontSize = 9;
                     double pos = (double)y - 10;
                     this.GraduationTexts.Add(textCount, new GraduationText()
@@ -203,11 +204,11 @@ namespace Scada.Chart
                         Text = t, Pos = pos
                     });
 
-                    if (value > 10)
+                    if (this.Max > 10)
                     {
                         t.Text = string.Format("{0}", (int)value);
                     }
-                    else if (value > 1)
+                    else if (this.Max > 1)
                     {
                         double dv = ConvertDouble(value, 1);
                         t.Text = string.Format("{0:f1}", (double)dv);
@@ -554,10 +555,12 @@ namespace Scada.Chart
 
         private void SetDisplayName(string displayName)
         {
+            const double Top = 12.0;
             SolidColorBrush labelBrush = new SolidColorBrush(Color.FromRgb(219, 219, 219));
+            /*
             Border labelBorder = new Border();
             labelBorder.CornerRadius = new CornerRadius(1.0);
-            labelBorder.Background = labelBrush;
+            //labelBorder.Background = labelBrush;
             labelBorder.BorderBrush = labelBrush;
             labelBorder.Padding = new Thickness(4.0, 3.0, 4.0, 3.0);
             labelBorder.BorderThickness = new Thickness(1);
@@ -566,15 +569,16 @@ namespace Scada.Chart
 
             labelBorder.SetValue(Canvas.RightProperty, 12.0);
             labelBorder.SetValue(Canvas.TopProperty, 12.0);
-
+            */
             TextBlock displayLabel = new TextBlock();
             displayLabel.Text = displayName;
-            displayLabel.Background = labelBrush;
+            // displayLabel.Background = labelBrush;
             
-            // displayLabel.Foreground = Brushes.White;
-
-            this.CanvasView.Children.Add(labelBorder);
-            labelBorder.Child = displayLabel;
+            displayLabel.Foreground = Brushes.Black;
+            displayLabel.SetValue(Canvas.RightProperty, 12.0);
+            displayLabel.SetValue(Canvas.TopProperty, Top);
+            this.CanvasView.Children.Add(displayLabel);
+            
 
 
             // Value text Label.
@@ -582,12 +586,12 @@ namespace Scada.Chart
             // valueBorder.Background = labelBrush;
             valueBorder.CornerRadius = new CornerRadius(1.0);
             valueBorder.BorderBrush = labelBrush;
-            valueBorder.Padding = new Thickness(4.0, 3.0, 4.0, 3.0);
+            valueBorder.Padding = new Thickness(4.0, 0.0, 4.0, 3.0);
             valueBorder.SetValue(Canvas.RightProperty, 120.0);
             
-            valueBorder.SetValue(Canvas.TopProperty, 12.0);
+            valueBorder.SetValue(Canvas.TopProperty, Top);
             this.valueLabel = new TextBlock();
-            // this.valueLabel.Foreground = Brushes.Green;
+            this.valueLabel.Foreground = Brushes.Black;
 
             valueBorder.Child = valueLabel;
             this.CanvasView.Children.Add(valueBorder);

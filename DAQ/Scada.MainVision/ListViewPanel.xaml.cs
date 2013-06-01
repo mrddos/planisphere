@@ -549,24 +549,27 @@ namespace Scada.Controls
                     sw.WriteLine(line);
                 }
 
-                Window1 alert = new Window1("成功导出CSV文件。");
-                alert.ShowDialog();
-                
+
+                // Window1 alert = new Window1("成功导出CSV文件。");
+                // alert.ShowDialog();
+                MainWindow.Status = "成功导出CSV文件。";
             }
         }
 
         private void SaveChart(object sender, RoutedEventArgs e)
         {
             ((GraphView)this.GraphView).SaveChart();
-            Window1 alert = new Window1("成功保存曲线。");
-            alert.ShowDialog();
+            MainWindow.Status = "成功保存曲线。";
+            // Window1 alert = new Window1("成功保存曲线。");
+            // alert.ShowDialog();
         }
 
         private void SaveSearchChart(object sender, RoutedEventArgs e)
         {
             ((GraphView)this.GraphSearchView).SaveChart();
-            Window1 alert = new Window1("成功保存曲线。");
-            alert.ShowDialog();
+            MainWindow.Status = "成功保存曲线。";
+            // Window1 alert = new Window1("成功保存曲线。");
+            // alert.ShowDialog();
         }
 
 

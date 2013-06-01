@@ -12,10 +12,11 @@
 
 
 	<devices>
-		<device id="scada.hipc" type="" table="">
-			<code field="aa">0102060301</code>
-			<code field="bb">0102060302</code>
-			<code field="cc">0102060303</code>
+		<device id="scada.hipc" type="" table="HIPC_rec">
+			<code field="doserate">0102060301</code>
+			<code field="highvoltage">0102060302</code>
+			<code field="battery">0102060303</code>
+			<code field="temperature">0102060304</code>
 
 		</device>
 

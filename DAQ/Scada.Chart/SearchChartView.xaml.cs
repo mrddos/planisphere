@@ -177,6 +177,7 @@ namespace Scada.Chart
                 else
                 {
                     timeLabel = new TextBlock();
+                    timeLabel.Foreground = Brushes.Black;
                     //timeLabel.Foreground = Brushes.White;
                     timeLabel.FontWeight = FontWeights.Light;
                     timeLabel.FontSize = 9;
@@ -231,7 +232,7 @@ namespace Scada.Chart
             {
                 SearchCurveView curveView = (SearchCurveView)view;
 
-                string key = curveView.CurveName;
+                string key = curveView.CurveName.ToLower();
                 if (entry.ContainsKey(key))
                 {
                     string value = (string)entry[key];
@@ -263,7 +264,7 @@ namespace Scada.Chart
         {
             foreach (var cv in this.ChartContainer.Children)
             {
-                CurveView curveView = (CurveView)cv;
+                SearchCurveView curveView = (SearchCurveView)cv;
                 if (curveView.CurveViewName == curveViewName)
                 {
                     curveView.Visibility = itemChecked ? Visibility.Visible : Visibility.Collapsed;

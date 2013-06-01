@@ -64,24 +64,34 @@ namespace Scada.DataCenterAgent
             this.lastSendTime = rightTime;
 
 
-            this.SendPackets();
+            this.SendPackets(rightTime);
         }
 
         private DateTime lastSendTime;
 
         private static DateTime GetRightSendTime(DateTime dt)
         {
-            return default(DateTime);
+            int second = dt.Second / 30 * 30;
+            DateTime ret = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, second);
+            return ret;
         }
 
         private static bool IsRightSendTime(DateTime dt)
         {
-            return true;
+            int sec = dt.Second - 5;
+            if ((sec >= 0 && sec <= 10) || ((sec >= 30) && sec <= 40))
+            {
+                return true;
+            }
+            return false;
         }
 
 
-        private void SendPackets()
+        private void SendPackets(DateTime time)
         {
+            // For test
+            var d = DBDataSource.Instance.GetData("scada.hipc", time);
+
             foreach (var deviceKey in Settings.Instance.DeviceKeys)
             {
                 DataPacket p = builder.GetDataPacket();

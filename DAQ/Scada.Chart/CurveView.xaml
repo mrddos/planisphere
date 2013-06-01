@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="200" d:DesignWidth="200"
              Loaded="CurveViewLoaded" MouseMove="CanvasViewMouseMove">
-    <Border BorderBrush="#F8F8F8" BorderThickness="1, 1, 1, 0">
+    <Border BorderBrush="#CCCCCC" BorderThickness="1, 1, 1, 0">
         <Grid x:Name="MainView" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="6"></RowDefinition>

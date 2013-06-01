@@ -53,10 +53,10 @@
         
         <!-- Row 1 -->
         <Border Grid.Row="1" Background="#E5E5E5" BorderBrush="#282828" BorderThickness="0, 0, 0, 0" Margin="0, 4, 0, 0">
-        <TabControl x:Name="TabCtrl" Background="#F9F9F9" BorderBrush="#F9F9F9">
+                <TabControl x:Name="TabCtrl" Background="#F9F9F9" BorderBrush="#007ACC" BorderThickness="0,2,0, 0">
             <!-- 实时列表 -->
-            <TabItem Header="实时列表" Width="80" Background="#F9F9F9" Style="{StaticResource TabItemKey}" >
-                <ContentControl Grid.Row="1" Margin="0" >
+            <TabItem Header="实时列表" Width="80" Background="#F9F9F9" Style="{StaticResource TabItemKey}">
+                <ContentControl Grid.Row="1" Margin="0, 1, 0, 0" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="35"></RowDefinition>
