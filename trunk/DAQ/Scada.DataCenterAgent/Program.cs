@@ -13,7 +13,7 @@ namespace Scada.DataCenterAgent
         [STAThread]
         static void Main()
         {
-            Settings settings = new Settings();
+            // Settings settings = new Settings();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new AgentWindow());

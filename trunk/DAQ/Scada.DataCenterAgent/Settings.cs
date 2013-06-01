@@ -70,7 +70,7 @@ namespace Scada.DataCenterAgent
         /// </summary>
         public class Device
         {
-            private string TableName
+            public string TableName
             {
                 get;
                 set;
@@ -84,6 +84,13 @@ namespace Scada.DataCenterAgent
                 this.codes.Add(new DeviceCode() { Code = code, Field = field });
             }
 
+
+            public string Key { get; set; }
+
+            internal List<DeviceCode> GetCodes()
+            {
+                return this.codes;
+            }
         }
 
         /// <summary>
@@ -109,16 +116,42 @@ namespace Scada.DataCenterAgent
             var devices = doc.SelectNodes("//devices/device");
             foreach (XmlNode deviceNode in devices)
             {
-                Device device = new Device();
+                Device device = this.ParseDeviceNode(deviceNode);
                 this.devices.Add(device);
                 var codes = deviceNode.SelectNodes("code");
                 foreach (XmlNode codeNode in codes)
                 {
                     string code = codeNode.InnerText;
                     XmlNode fieldNode = codeNode.Attributes.GetNamedItem("field");
-                    device.AddCode(code, fieldNode.Value);
+                    if (fieldNode != null)
+                    {
+                        device.AddCode(code, fieldNode.Value);
+                    }
                 }
             }
+        }
+
+        private Device ParseDeviceNode(XmlNode deviceNode)
+        {
+            var tableNameNode = deviceNode.Attributes.GetNamedItem("table");
+            string tableName = string.Empty;
+            if (tableNameNode != null)
+            {
+                tableName = tableNameNode.Value;
+            }
+
+            var idNode = deviceNode.Attributes.GetNamedItem("id");
+            string deviceKey = string.Empty;
+            if (idNode != null)
+            {
+                deviceKey = idNode.Value;
+            }
+
+            Device device = new Device();
+            device.TableName = tableName;
+            device.Key = deviceKey;
+
+            return device;
         }
 
         public List<DataCenter> DataCenters
@@ -127,6 +160,26 @@ namespace Scada.DataCenterAgent
             {
                 return this.dataCenters;
             }
+        }
+
+        internal string GetTableName(string deviceKey)
+        {
+            Device device = devices.Find((d) => { return d.Key == deviceKey; });
+            if (device != null)
+            {
+                return device.TableName;
+            }
+            return string.Empty;
+        }
+
+        internal List<DeviceCode> GetCodes(string deviceKey)
+        {
+            Device device = devices.Find((d) => { return d.Key == deviceKey; });
+            if (device != null)
+            {
+                return device.GetCodes();
+            }
+            return new List<DeviceCode>();
         }
     }
 }

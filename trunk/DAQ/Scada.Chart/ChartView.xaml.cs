@@ -171,6 +171,7 @@ namespace Scada.Chart
                 else
                 {
                     timeLabel = new TextBlock();
+                    timeLabel.Foreground = Brushes.Black;
                     timeLabel.FontWeight = FontWeights.Light;
                     timeLabel.FontSize = 9;
 

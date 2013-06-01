@@ -16,11 +16,11 @@ namespace Scada.DAQ.Installer
 
         private int v = 0;
 
+        private string device;
 
-
-        public DataBaseInsertion()
+        public DataBaseInsertion(string device)
         {
-            
+            this.device = device;
         }
 
         private int Interval
@@ -74,20 +74,38 @@ namespace Scada.DAQ.Installer
 
         internal void ExecuteSQL(MySqlCommand cmd, DateTime t)
         {
+            if (this.device.ToLower() == "hipc")
+            {
+                cmd.CommandText = "insert into HIPC_rec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, 123, 24, 1)";
+                cmd.Parameters.AddWithValue("@1", t);
 
-            cmd.CommandText = "insert into HIPC_rec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, 123, 24, 1)";
-            cmd.Parameters.AddWithValue("@1", t);
+                v = (v + 1) % 5;
+                double d = double.Parse("1." + v);
+                cmd.Parameters.AddWithValue("@2", d);
 
-            v = (v + 1) % 5;
-            double d = double.Parse("1." + v);
-            cmd.Parameters.AddWithValue("@2", d);
+                double h = double.Parse("410." + v);
+                cmd.Parameters.AddWithValue("@3", h);
 
-            double h = double.Parse("410." + v);
-            cmd.Parameters.AddWithValue("@3", h);
-            
 
-            cmd.ExecuteNonQuery();
-            cmd.Parameters.Clear();
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+            else if (this.device.ToLower() == "weather")
+            {
+                cmd.CommandText = "insert into weather(time, Windspeed, Direction, Temperature, Humidity, Pressure, Raingauge,Dewpoint,IfRain) values(@1, 0, 360, @2, @3, 1000.1, 1, 1, 0)";
+                cmd.Parameters.AddWithValue("@1", t);
+
+                v = (v + 1) % 5;
+                double d = double.Parse("1." + v);
+                cmd.Parameters.AddWithValue("@2", d);
+
+                double h = double.Parse("20." + v);
+                cmd.Parameters.AddWithValue("@3", h);
+
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
         }
 
         

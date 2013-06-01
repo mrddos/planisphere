@@ -50,7 +50,16 @@ namespace Scada.MainVision
 
         private bool loaded = false;
 
+        private static TextBlock statusBar;
+        
 
+        public static string Status
+        {
+            set
+            {
+                MainWindow.statusBar.Text = value;
+            }
+        }
 
         public MainWindow()
         {
@@ -75,6 +84,8 @@ namespace Scada.MainVision
 
 		private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            MainWindow.statusBar = this.StatusBar;
+
 			// TODO: Window Loaded.
 			this.LoadConfig();
 			this.LoadDataProvider();

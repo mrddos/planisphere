@@ -33,7 +33,11 @@ namespace Scada.DAQ.Installer
             }
             else if (fa == "--m-hipc")
             {
-                MockHipcInsertData();
+                MockInsertData("hipc");
+            }
+            else if (fa == "--m-weather")
+            {
+                MockInsertData("weather");
             }
         }
 
@@ -62,9 +66,9 @@ namespace Scada.DAQ.Installer
 
         }
 
-        static void MockHipcInsertData()
+        static void MockInsertData(string device)
         {
-            DataBaseInsertion ins = new DataBaseInsertion();
+            DataBaseInsertion ins = new DataBaseInsertion(device);
             ins.Execute();
         }
     }

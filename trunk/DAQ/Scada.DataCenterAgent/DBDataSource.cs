@@ -8,8 +8,7 @@ namespace Scada.DataCenterAgent
     using MySql.Data.MySqlClient;
     using System.Data.SqlTypes;
     using System.IO;
-
-
+    
     /// <summary>
     /// Each Device has a Listener.
     /// </summary>
@@ -42,7 +41,7 @@ namespace Scada.DataCenterAgent
         /// <summary>
         /// 
         /// </summary>
-        public DBDataSource()
+        private DBDataSource()
         {
             this.conn = new MySqlConnection(ConnectionString);
 
@@ -57,51 +56,42 @@ namespace Scada.DataCenterAgent
             }
         }
 
+        private static DBDataSource instance = null;
+
+        public static DBDataSource Instance
+        {
+            get
+            {
+                if (DBDataSource.instance == null)
+                {
+                    DBDataSource.instance = new DBDataSource();
+                }
+                return DBDataSource.instance;
+            }
+        }
+
 
         DataPacket GetDataPacket(string deviceKey, DateTime time)
         {
             return default(DataPacket);
         }
-       
-        /*
-        public override void RefreshTimeNow()
+
+        private string GetSelectStatement(string tableName, DateTime time)
         {
-            this.latestData.Clear();
-            foreach (var item in this.allDeviceKeys)
-            {
-                string deviceKey = item.ToLower();
-                // Would use listener to notify, panel would get the lastest data.
-                var data = this.RefreshTimeNow(deviceKey);
-                if (data != null)
-                {
-                    this.latestData.Add(deviceKey, data);
-
-                }
-            }
-        }
-        */
-
-        // Get time-range data,
-        // Notify with all the result.
-        public List<Dictionary<string, object>> RefreshTimeRange(string deviceKey, DateTime fromTime, DateTime toTime)
-        {
-            try
-            {
-                // DBDataCommonListerner listener = this.dataListeners[deviceKey];
-
-                var result = this.Refresh(deviceKey, false, -1, fromTime, toTime);
-                result.Reverse();
-                return result;
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            return new List<Dictionary<string, object>>();
+            // Get the recent <count> entries.
+            string format = "select * from {0} where time='{1}'";
+            return string.Format(format, tableName, time.ToString());
         }
 
-        private Dictionary<string, object> RefreshTimeNow(string deviceKey)
+        private string GetSelectStatement(string tableName, DateTime fromTime, DateTime toTime)
+        {
+            // Get the recent <count> entries.
+            string format = "select * from {0}  where time<'{1}' and time>'{2}' order by Id DESC";
+            string sql = string.Format(format, tableName, toTime, fromTime);
+            return sql;
+        }
+
+        public Dictionary<string, object> GetData(string deviceKey, DateTime time)
         {
             if (this.cmd == null)
             {
@@ -111,8 +101,9 @@ namespace Scada.DataCenterAgent
             const int MaxItemCount = 20;
             var ret = new Dictionary<string, object>(MaxItemCount);
 
-            
-            this.cmd.CommandText = this.GetSelectStatement("TableName", 1);
+            string tableName = Settings.Instance.GetTableName(deviceKey);
+
+            this.cmd.CommandText = this.GetSelectStatement(tableName, time);
             using (MySqlDataReader reader = this.cmd.ExecuteReader())
             {
                 if (reader.Read())
@@ -127,118 +118,35 @@ namespace Scada.DataCenterAgent
                     }
 
                     ret.Add(Id, id);
-                    /*
-                    foreach (var i in entry.Items)
+
+                    List<Settings.DeviceCode> codes = Settings.Instance.GetCodes(deviceKey);
+
+                    foreach (var c in codes)
                     {
-                        string key = i.Key.ToLower();
+                        string field = c.Field.ToLower();
                         try
                         {
-                            string v = reader.GetString(key);
-                            ret.Add(key, v);
+                            string v = reader.GetString(field);
+                            ret.Add(c.Code, v);
                         }
                         catch (SqlNullValueException)
                         {
                             // TODO: Has Null Value
-                            ret.Add(key, null);
+                            ret.Add(c.Code, string.Empty);
                         }
                         catch (Exception)
                         {
                             // No this field.
                         }
                     }
-                    */
-
-
-                }
-            }
-
-            return ret;
-        }
-
-        private List<Dictionary<string, object>> Refresh(string deviceKey, bool current, int count, DateTime fromTime, DateTime toTime)
-        {
-            if (this.cmd == null)
-            {
-                return null;
-            }
-            // Return values
-            var ret = new List<Dictionary<string, object>>();
-
-
-            if (current)
-            {
-                this.cmd.CommandText = this.GetSelectStatement("TableName", count);
-            }
-            else
-            {
-                this.cmd.CommandText = this.GetSelectStatement("TableName", fromTime, toTime);
-            }
-            using (MySqlDataReader reader = this.cmd.ExecuteReader())
-            {
-                int index = 0;
-                while (reader.Read())
-                {
-                    // Must Has an Id.
-                    string id = reader.GetString(Id);
-                    id = id.Trim();
-
-                    // if (string.IsNullOrEmpty(id) || this.dataCache.ContainsKey(id)) { continue; }
                     
-                    Dictionary<string, object> data = new Dictionary<string, object>(10);
-                    data.Add("Id", id);
-                    /*
-                    foreach (var i in entry.Items)
-                    {
-                        string key = i.Key.ToLower();
-                        try
-                        {
-                            string v = reader.GetString(key);
-                            data.Add(key, v);
-                        }
-                        catch (SqlNullValueException)
-                        {
-                            // TODO: Has Null Value
-                            data.Add(key, null);
-                        }
-                        catch (Exception)
-                        {
-                            // No this field.
-                        }
-                    }
 
-                    ret.Add(data);
-                    // this.dataCache.Add(id, data);
 
-                    index++;
-                     * */
                 }
             }
 
             return ret;
-        }
 
-        private string GetSelectStatement(string tableName, int count)
-        {
-            // Get the recent <count> entries.
-            string format = "select * from {0} order by Id DESC limit {1}";
-            return string.Format(format, tableName, count);
-        }
-
-        private string GetSelectStatement(string tableName, DateTime fromTime, DateTime toTime)
-        {
-            // Get the recent <count> entries.
-            string format = "select * from {0}  where time<'{1}' and time>'{2}' order by Id DESC";
-            string sql = string.Format(format, tableName, toTime, fromTime);
-            return sql;
-        }
-
-        public Dictionary<string, object> GetLatestData(string deviceKey)
-        {
-            if (this.latestData.ContainsKey(deviceKey))
-            {
-                return (Dictionary<string, object>)this.latestData[deviceKey];
-            }
-            return null;
         }
 
         public static int DateTimeCompare(Dictionary<string, object> a, Dictionary<string, object> b)

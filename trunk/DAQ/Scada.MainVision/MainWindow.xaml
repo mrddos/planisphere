@@ -93,7 +93,12 @@
         <!-- Device -->
         <m:DeviceListPanel Grid.Row="3" Grid.Column="1" x:Name="DeviceList" Margin="0,0,4,0"/>
 
-        <Rectangle Grid.Row="4" Grid.ColumnSpan="3" Fill="#66217A"></Rectangle>
+
+        <Grid Grid.Row="4" Grid.ColumnSpan="3" Background="#66217A">
+            <TextBlock x:Name="StatusBar" HorizontalAlignment="Left" Foreground="White" Margin="8, 0, 5, 0">就绪</TextBlock>
+            <TextBlock HorizontalAlignment="Right" Foreground="White" Margin="0, 0, 5, 0">北京中检维康技术有限公司</TextBlock>
+        </Grid>
+
         <!-- End -->
     </Grid>
     
