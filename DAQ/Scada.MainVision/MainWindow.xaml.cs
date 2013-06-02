@@ -85,6 +85,8 @@ namespace Scada.MainVision
 		private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             MainWindow.statusBar = this.StatusBar;
+            this.Title = "Nuclover-SCADA";
+
 
 			// TODO: Window Loaded.
 			this.LoadConfig();
@@ -202,7 +204,37 @@ namespace Scada.MainVision
             return false;
         }
 
+        // #007ACC
+        private void CheckAlarm(HerePaneItem panel, string deviceKey, string item, int index, double value)
+        {
+            var i = Config.Instance()[deviceKey].GetConfigItem(item);
+            if (!i.Alarm)
+            {
+                return;
+            }
+            TextBlock text = panel[index];
+            if (value >= i.Red)
+            {
+                text.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 44));
+            }
+            else if (value >= i.Yellow && value < i.Red)
+            {
+                text.Foreground = Brushes.Orange;
+            }
+            else
+            {
+                text.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0x7a, 0xCC));
+            }
+        }
 
+        private void CheckAlarm(HerePaneItem panel, string deviceKey, string item, int index, string value)
+        {
+            double v;
+            if (double.TryParse(value, out v))
+            {
+                this.CheckAlarm(panel, deviceKey, item, index, v);
+            }
+        }
 
         private void DisplayPanelData(HerePaneItem panel, string data1, string data2 = "", string data3 = "", string data4 = "")
         {
@@ -237,12 +269,14 @@ namespace Scada.MainVision
             {
                 return;
             }
-            if (d.ContainsKey("doserate"))
+            const string Doserate = "doserate";
+            if (d.ContainsKey(Doserate))
             {
-                string doserate = d["doserate"] as string;
+                string doserate = d[Doserate] as string;
                 double v;
                 if (ConvertDouble(doserate, out v))
                 {
+                    this.CheckAlarm(panel, DBDataProvider.DeviceKey_Hipc, Doserate, 0, v); 
                     string doserateMsg = "剂量率: " + v + "uGy/h";
                     this.DisplayPanelData(panel, doserateMsg);
                 }
@@ -272,12 +306,13 @@ namespace Scada.MainVision
             {
                 return;
             }
-            if (!d.ContainsKey("doserate"))
+            const string Doserate = "doserate";
+            if (!d.ContainsKey(Doserate))
             {
                 return;
             }
 
-            string doserate = (string)d["doserate"];
+            string doserate = (string)d[Doserate];
             string[] nuclides = { "K-40", "I-131", "Bi-214", "Pb-214", "Cs-137", "Co-60", "Am-241", "Ba-140", "Cs-134", "I-133", "Rh-106m", "Ru-103", "Te-129" };
             string[] nuclideMsgs = new string[3]{"", "", ""};
             int i = 0;
@@ -316,6 +351,11 @@ namespace Scada.MainVision
             }
 
             string doserateMsg = "总剂量率: " + doserate + "uSv/h";
+            double v;
+            if (ConvertDouble(doserate, out v))
+            {
+                this.CheckAlarm(panel, DBDataProvider.DeviceKey_NaI, Doserate, 0, v);
+            }
 
             for (int k = 0; k < 3; ++k)
             {
@@ -343,6 +383,10 @@ namespace Scada.MainVision
             string windspeedMsg = string.Format("风速: {0}m/s", windspeed);
             string directionMsg = string.Format("风向: {0}°", direction);
             string raingaugeMsg = string.Format("雨量: {0}mm/min", raingauge);
+
+            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "windspeed", 0, windspeed);
+            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "direction", 1, direction);
+            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "raingauge", 2, raingauge);
 
             this.DisplayPanelData(panel, windspeedMsg, directionMsg, raingaugeMsg);
    
@@ -501,7 +545,6 @@ namespace Scada.MainVision
 		{
             Config cfg = Config.Instance();
             var entry = cfg[deviceKey];
-
 
             ListViewPanel panel = this.panelManager.CreateDataViewPanel(this.dataProvider, entry);
             this.dataProvider.CurrentDeviceKey = deviceKey;

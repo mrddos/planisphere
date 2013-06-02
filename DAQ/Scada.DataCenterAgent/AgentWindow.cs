@@ -26,6 +26,7 @@ namespace Scada.DataCenterAgent
         private void AgentWindow_Load(object sender, EventArgs e)
         {
             this.agent = this.CreateAgent("localhost", 2112);
+            Settings s = Settings.Instance;
             this.InitializeTimer();
         }
 
@@ -90,13 +91,16 @@ namespace Scada.DataCenterAgent
         private void SendPackets(DateTime time)
         {
             // For test
-            var d = DBDataSource.Instance.GetData("scada.hipc", time);
+            // var d = DBDataSource.Instance.GetData("scada.hipc", time);
+
+            List<Agent> agents = new List<Agent>() { this.agent };
 
             foreach (var deviceKey in Settings.Instance.DeviceKeys)
             {
-                DataPacket p = builder.GetDataPacket();
+                var d = DBDataSource.Instance.GetData(deviceKey, time);
 
-                List<Agent> agents = new List<Agent>(){ this.agent };
+                DataPacket p = builder.GetDataPacket(d);
+                string ps = p.ToString();
                 foreach (var agent in agents)
                 {
                     byte[] bytes = p.ToBytes();

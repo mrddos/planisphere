@@ -37,7 +37,8 @@ PRIMARY KEY (`Id`)
 
 DROP TABLE IF EXISTS `HVSampler_rec`;
 CREATE TABLE `HVSampler_rec` (
-`Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
+`Id` int(11) NOT NULL AUTO_INCREMENT,
+`Sid` int(11) NOT NULL, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
 `Volume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
 `Flow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/
@@ -54,7 +55,8 @@ PRIMARY KEY (`Id`)
 
 DROP TABLE IF EXISTS `ISampler_rec`;
 CREATE TABLE `ISampler_rec` (
-`Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
+`Id` int(11) NOT NULL AUTO_INCREMENT,
+`Sid` int(11) NOT NULL, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
 `Volume` varchar(8), /*真空泵开关状态，单位：无；数据格式：0或1表示开关*/
 `Flow` varchar(8), /*报警，单位：无；数据格式：0、1、2,，代表不同的报警类型，保留字段*/

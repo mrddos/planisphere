@@ -12,10 +12,16 @@ namespace Scada.DataCenterAgent
         private string deviceKey;
 
 
-        public DataPacket(string deviceKey)
+        public DataPacket(string deviceKey, string cn = "")
         {
             this.deviceKey = deviceKey;
-            this.sb = new StringBuilder("##");
+            this.sb = new StringBuilder("");
+            this.Cn = cn;
+        }
+
+        private void SetHeader()
+        {
+            this.sb.Append("##");
         }
 
         private void SetLength(int length)
@@ -24,13 +30,15 @@ namespace Scada.DataCenterAgent
             this.sb.Append(len);
         }
 
-        public void Append()
-        {
-        }
-
         public byte[] ToBytes()
         {
             return null;
+        }
+
+
+        public new string ToString()
+        {
+            return this.sb.ToString();
         }
 
         public string QN
@@ -81,14 +89,29 @@ namespace Scada.DataCenterAgent
         public string Cp
         {
             get;
-            set;
+            private set;
+        }
+
+        public void SetContent(Dictionary<string, object> data)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var i in data)
+            {
+                string item = string.Format("{0}={1};", i.Key, i.Value);
+                sb.Append(item);
+            }
+            sb.Remove(sb.Length - 1, 1);
+            this.Cp = sb.ToString();
         }
 
 
         private string Password
         {
-            get;
-            set;
+            get
+            {
+                return Settings.Instance.Password;
+            }
+            set { }
         }
 
 
@@ -100,5 +123,27 @@ namespace Scada.DataCenterAgent
         }
 
 
+
+        internal void Build()
+        {
+            this.SetHeader();
+            string ds = GetDataSections();
+
+            int len = ds.Length;
+            this.SetLength(len);
+            this.sb.Append(ds);
+
+            string crc16 = CRC16.GetCode(Encoding.ASCII.GetBytes(ds));
+            this.sb.Append(crc16);
+            this.sb.Append("\r\n");
+        }
+
+
+        private string GetDataSections()
+        {
+            this.GenQN();
+            string p = string.Format("QN={0};ST={1};CN={2};PW={3};MN={4};CP=&&{5}&&", this.QN, this.St, this.Cn, this.Password, this.Mn, this.Cp);
+            return p;
+        }
     }
 }

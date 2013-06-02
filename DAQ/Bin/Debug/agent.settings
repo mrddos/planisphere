@@ -6,7 +6,7 @@
 	</datacenters>
 
 	<!-- -->
-	<site SysName="" SysST="" passwd="123456" adapter="" name="" station="">
+	<site sysname="" sysst="213213123213123213" password="123456" adapter="" name="" station="">
 	</site>
 
 

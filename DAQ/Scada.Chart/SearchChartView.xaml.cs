@@ -235,8 +235,9 @@ namespace Scada.Chart
                 string key = curveView.CurveName.ToLower();
                 if (entry.ContainsKey(key))
                 {
-                    string value = (string)entry[key];
-                    curveView.AddCurvePoint(new Point(this.index * 2, double.Parse(value)));
+                    string valueStr = (string)entry[key];
+                    double value = string.IsNullOrEmpty(valueStr) ? 0.0 : double.Parse(valueStr);
+                    curveView.AddCurvePoint(new Point(this.index * 2, value));
                 }
             }
             this.index += 1;
@@ -257,7 +258,16 @@ namespace Scada.Chart
             {
                 this.OnItemChecked(curveViewName, false);
             };
-            this.SelectedItems.Children.Add(cb);
+
+            if (this.SelectedItems1.Children.Count > 8)
+            {
+                this.SelectedItems2.Visibility = Visibility.Visible;
+                this.SelectedItems2.Children.Add(cb);
+            }
+            else
+            {
+                this.SelectedItems1.Children.Add(cb);
+            }
         }
 
         private void OnItemChecked(string curveViewName, bool itemChecked)

@@ -39,6 +39,10 @@ namespace Scada.DAQ.Installer
             {
                 MockInsertData("weather");
             }
+            else if (fa == "--m-nai")
+            {
+                MockInsertData("nai");
+            }
         }
 
         static void InitDataBase(string[] args)

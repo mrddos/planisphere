@@ -51,7 +51,16 @@ namespace Scada.Declare
 
         private DateTime lastDateTime = default(DateTime);
 
+        private DateTime beginTime;
+        private DateTime endTime;
+
+        private bool? lastStartState;
+
         private double factor1;
+
+        private string tableName;
+
+        private int currentSid = 1;
 
 
 		public FormProxyDevice(DeviceEntry entry)
@@ -106,6 +115,7 @@ namespace Scada.Declare
             }
             atList = atList.TrimEnd(',', ' ');
 
+            this.tableName = tableName;
             string cmd = string.Format("insert into {0}({1}) values({2})", tableName, tableFields, atList);
             this.insertIntoCommand = cmd;
 
@@ -114,8 +124,16 @@ namespace Scada.Declare
             List<FieldConfig> fieldConfigList = ParseDataFieldConfig(fieldsConfigStr);
             this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
 
+            this.GenCurrentSid();
 			return true;
 		}
+
+        private void GenCurrentSid()
+        {
+            DBConnectionForSid c = new DBConnectionForSid();
+            int sid = c.GetCurrentSid(this.tableName);
+            this.currentSid = sid + 1;
+        }
 
         private string GetText(IntPtr hWnd, int nCtrlId)
         {
@@ -168,12 +186,13 @@ namespace Scada.Declare
             if (hWnd != IntPtr.Zero)
             {
                 int i = 0;
-                ret = new string[this.elemIdList.Count];
+                ret = new string[this.elemIdList.Count + 1];
                 foreach (int elemId in this.elemIdList)
                 {
                     ret[i] = GetText(hWnd, elemId);
                     i++;
                 }
+                ret[i] = this.currentSid.ToString();
             }
             return ret;
         }
@@ -218,8 +237,36 @@ namespace Scada.Declare
                     {
                         return;
                     }
-                    // this.lastDateTime = rightTime;
+
                     string[] dataSet = GetData(hWnd);
+                    bool startState = (dataSet[0] == "1");
+
+                    if (!this.lastStartState.HasValue)
+                    {
+                        this.lastStartState = startState;
+                        if (startState)
+                        {
+                            // BeginTime
+                            this.beginTime = rightTime;
+                        }
+                    }
+                    else
+                    {
+                        if (this.lastStartState != startState)
+                        {
+                            if (startState)
+                            {
+                                // BeginTime
+                                this.beginTime = rightTime;
+                            }
+                            else
+                            {
+                                // EndTime
+                                this.endTime = rightTime;
+                            }
+                            this.lastStartState = startState;
+                        }
+                    }
 
                     DeviceData dd = default(DeviceData);
                     bool got = this.GetDeviceData(dataSet, rightTime, out dd);
