@@ -61,6 +61,16 @@ namespace Scada.MainVision
             get;
             set;
         }
+
+        public bool Alarm 
+        { 
+            get; 
+            set; 
+        }
+
+        public double Yellow { get; set; }
+
+        public double Red { get; set; }
     }
 
 	public class ConfigEntry
@@ -84,7 +94,7 @@ namespace Scada.MainVision
         {
             foreach (var item in items)
             {
-                if (item.Key == key)
+                if (key.Equals(item.Key, StringComparison.OrdinalIgnoreCase))
                 {
                     return item;
                 }
@@ -276,11 +286,41 @@ namespace Scada.MainVision
 			string columnName = v[0].Trim();
 
             bool dynamicDataDisplay = false;
+            bool alarm = false;
             double min = 0.0;
             double max = 100.0;
             double height = 100.0;
+            double yellow = double.MaxValue;
+            double red = double.MaxValue;
             if (v.Length > 1)
             {
+                string e2 = v[1].Trim();
+                if (e2.StartsWith("("))
+                {
+                    dynamicDataDisplay = true;
+                    this.ParseDisplayParams(e2, out min, out max, out height);
+                }
+
+                if (v.Length > 2)
+                {
+                    string e3 = v[2].Trim();
+                    if (e3.StartsWith("alarm"))
+                    {
+                        alarm = true;
+                        e3 = e3.Substring(5);
+                        this.ParseAlarmParams(e3, out yellow, out red);
+                    }
+                }
+                else
+                {
+                    if (e2.StartsWith("alarm"))
+                    {
+                        alarm = true;
+                        e2 = e2.Substring(5);
+                        this.ParseAlarmParams(e2, out yellow, out red);
+                    }
+                }
+
                 string dynDataDisplay = v[1].Trim();
                 if (dynDataDisplay.StartsWith("("))
                 {
@@ -297,6 +337,13 @@ namespace Scada.MainVision
             item.Height = height;
 
             item.DisplayInChart = dynamicDataDisplay;
+
+            item.Alarm = alarm;
+            if (alarm)
+            {
+                item.Yellow = yellow;
+                item.Red = red;
+            }
 			entry.Add(item);
 		}
 
@@ -315,6 +362,23 @@ namespace Scada.MainVision
             else
             {
                 height = 100.0;
+            }
+        }
+
+        internal void ParseAlarmParams(string alarmParams, out double yellow, out double red)
+        {
+            alarmParams = alarmParams.Trim('(', ')');
+            string[] paramArray = alarmParams.Split(',');
+            yellow = double.MaxValue;
+            red = double.MaxValue;
+            if (paramArray.Length > 1)
+            {
+                yellow = double.Parse(paramArray[0]);
+                red = double.Parse(paramArray[1]);
+            }
+            else
+            {
+                red = double.Parse(paramArray[0]);
             }
         }
 

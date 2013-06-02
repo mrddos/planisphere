@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -22,7 +23,9 @@ namespace Scada.Auth
 	{
 		public MainWindow()
 		{
+
 			InitializeComponent();
+            this.Title = "Nuclover-SCADA";
 		}
 
         // Move the window by mouse-press-down.
@@ -63,7 +66,8 @@ namespace Scada.Auth
         {
             using (Process process = new Process())
             {
-                process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
+                process.StartInfo.CreateNoWindow = true;    //设定不显示窗口
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.FileName = "Scada.MainVision.exe"; //设定程序名  
                 process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
@@ -72,6 +76,7 @@ namespace Scada.Auth
                 process.Start();
 
             }
+            Thread.Sleep(2000);
             this.Close();
         }
 	}

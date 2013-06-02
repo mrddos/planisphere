@@ -40,7 +40,14 @@ namespace Scada.DAQ.Installer
                     DateTime t = GetBaseTime(DateTime.Now);
                     while (true)
                     {
-                        t = t.AddSeconds(this.Interval);
+                        if (this.device != "nai")
+                        {
+                            t = t.AddSeconds(this.Interval);
+                        }
+                        else
+                        {
+                            t = t.AddSeconds(60 * 5);
+                        }
                         ExecuteSQL(cmd, t);
                         Thread.Sleep(8 * 1000);
                     }
@@ -102,6 +109,20 @@ namespace Scada.DAQ.Installer
                 double h = double.Parse("20." + v);
                 cmd.Parameters.AddWithValue("@3", h);
 
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+            else if (this.device.ToLower() == "nai")
+            {
+                t = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
+                cmd.CommandText = "insert into nai_rec(time, StartTime, EndTime, Coefficients, ChannelData, DoseRate, Temperature,HighVoltage,NuclideFound,EnergyFromPosition) values(@1, @2, @3, @4, '1 1 1 1 1 1 1', @5, 24, 400.1, 1, 1460.83)";
+                cmd.Parameters.AddWithValue("@1", t);
+                cmd.Parameters.AddWithValue("@2", t.AddMinutes(-5));
+                cmd.Parameters.AddWithValue("@3", t);
+
+                cmd.Parameters.AddWithValue("@4", "-4.94022E+00 1.37924E+00 9.68201E-05");
+                cmd.Parameters.AddWithValue("@5", "0.04");
 
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();

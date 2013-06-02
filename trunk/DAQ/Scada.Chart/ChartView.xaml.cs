@@ -223,7 +223,15 @@ namespace Scada.Chart
             {
                 this.OnItemChecked(curveViewName, false);
             };
-            this.SelectedItems.Children.Add(cb);
+            if (this.SelectedItems1.Children.Count > 8)
+            {
+                this.SelectedItems2.Visibility = Visibility.Visible;
+                this.SelectedItems2.Children.Add(cb);
+            }
+            else
+            {
+                this.SelectedItems1.Children.Add(cb);
+            }
         }
 
         private void OnItemChecked(string curveViewName, bool itemChecked)

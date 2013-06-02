@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="DataParsers.cs" />
     <Compile Include="DBConnection.cs" />
+    <Compile Include="DBConnectionForSid.cs" />
     <Compile Include="DeviceDataParser.cs" />
     <Compile Include="DWD485ASCIIFormater.cs" />
     <Compile Include="FormProxyDevice.cs" />

@@ -106,13 +106,20 @@ namespace Scada.DataCenterAgent
         {
             doc.Load("agent.settings");
 
+            // Data Center
             var datacenters = doc.SelectNodes("//datacenter");
             foreach (var dc in datacenters)
             {
 
             }
 
-
+            // Site
+            var siteNode = doc.SelectNodes("//site")[0];
+            this.SysName = this.GetAttribute(siteNode, "sysname");
+            this.SysSt = this.GetAttribute(siteNode, "sysst");
+            this.Password = this.GetAttribute(siteNode, "password");
+            
+            // Devices
             var devices = doc.SelectNodes("//devices/device");
             foreach (XmlNode deviceNode in devices)
             {
@@ -180,6 +187,31 @@ namespace Scada.DataCenterAgent
                 return device.GetCodes();
             }
             return new List<DeviceCode>();
+        }
+
+        private string GetAttribute(XmlNode node, string attr)
+        {
+            var xmlAttr = node.Attributes.GetNamedItem(attr);
+            return xmlAttr.Value; 
+        }
+
+
+        public string Password
+        {
+            get;
+            private set;
+        }
+
+        public string SysName
+        {
+            get;
+            private set;
+        }
+
+        public string SysSt
+        {
+            get;
+            private set;
         }
     }
 }

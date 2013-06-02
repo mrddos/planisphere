@@ -17,9 +17,11 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel x:Name="SelectedItems" Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                    VerticalAlignment="Bottom" Margin="10, 0, 0, 0">
-        </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical" VerticalAlignment="Center">
+                <StackPanel x:Name="SelectedItems1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10, 0, 0, 0"/>
+                <StackPanel x:Name="SelectedItems2" Orientation="Horizontal" VerticalAlignment="Center" Margin="10, 0, 0, 0" Visibility="Collapsed"/>
+
+            </StackPanel>
         
         <ScrollViewer x:Name="panelScrollViewer" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" >
             <StackPanel x:Name="ChartContainer" 

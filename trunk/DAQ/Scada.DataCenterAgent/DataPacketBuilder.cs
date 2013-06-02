@@ -12,11 +12,12 @@ namespace Scada.DataCenterAgent
         }
 
 
-        public DataPacket GetDataPacket()
+        public DataPacket GetDataPacket(Dictionary<string, object> data)
         {
             DataPacket dp = new DataPacket("");
 
-
+            dp.SetContent(data);
+            dp.Build();
             return dp;
         }
 

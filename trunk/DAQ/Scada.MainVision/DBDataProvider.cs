@@ -257,45 +257,52 @@ namespace Scada.MainVision
             Config cfg = Config.Instance();
             ConfigEntry entry = cfg[deviceKey];
             this.cmd.CommandText = this.GetSelectStatement(entry.TableName, 1);
-            using (MySqlDataReader reader = this.cmd.ExecuteReader())
+
+            try
             {
-                if (reader.Read())
+                using (MySqlDataReader reader = this.cmd.ExecuteReader())
                 {
-                    // Must Has an Id.
-                    string id = reader.GetString(Id);
-                    id = id.Trim();
-
-                    if (string.IsNullOrEmpty(id))
+                    if (reader.Read())
                     {
-                        return null;
-                    }
+                        // Must Has an Id.
+                        string id = reader.GetString(Id);
+                        id = id.Trim();
 
-                    ret.Add(Id, id);
+                        if (string.IsNullOrEmpty(id))
+                        {
+                            return null;
+                        }
 
-                    foreach (var i in entry.ConfigItems)
-                    {
-                        string key = i.Key.ToLower();
-                        try
-                        {
-                            string v = reader.GetString(key);
-                            ret.Add(key, v);
-                        }
-                        catch (SqlNullValueException)
-                        {
-                            // TODO: Has Null Value
-                            ret.Add(key, null);
-                        }
-                        catch (Exception)
-                        {
-                            // No this field.
-                        }
-                    }
+                        ret.Add(Id, id);
 
-                    if (entry.DataFilter != null)
-                    {
-                        entry.DataFilter.Fill(ret);
+                        foreach (var i in entry.ConfigItems)
+                        {
+                            string key = i.Key.ToLower();
+                            try
+                            {
+                                string v = reader.GetString(key);
+                                ret.Add(key, v);
+                            }
+                            catch (SqlNullValueException)
+                            {
+                                // TODO: Has Null Value
+                                ret.Add(key, null);
+                            }
+                            catch (Exception)
+                            {
+                                // No this field.
+                            }
+                        }
+
+                        if (entry.DataFilter != null)
+                        {
+                            entry.DataFilter.Fill(ret);
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
             }
 
             return ret;
