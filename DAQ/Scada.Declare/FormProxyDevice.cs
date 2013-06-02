@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -91,9 +92,18 @@ namespace Scada.Declare
                 }
                 string controlIdStr = (StringValue)entry[elemId];
                 int controlId = 0;
-                if (int.TryParse(controlIdStr, out controlId))
+                if (controlIdStr.StartsWith("0x"))
                 {
+                    controlIdStr = controlIdStr.Substring(2);
+                    controlId = int.Parse(controlIdStr, NumberStyles.AllowHexSpecifier);
                     this.elemIdList.Add(controlId);
+                }
+                else
+                {
+                    if (int.TryParse(controlIdStr, out controlId))
+                    {
+                        this.elemIdList.Add(controlId);
+                    }
                 }
             }
 
@@ -180,24 +190,21 @@ namespace Scada.Declare
             return (IntPtr)int.Parse(line);
         }
 
-        private string[] GetData(IntPtr hWnd)
+        private List<string> GetData(IntPtr hWnd)
         {
-            string[] ret = EmptyStringArray;
+            List<string> ret = new List<string>();
             if (hWnd != IntPtr.Zero)
             {
-                int i = 0;
-                ret = new string[this.elemIdList.Count + 1];
                 foreach (int elemId in this.elemIdList)
                 {
-                    ret[i] = GetText(hWnd, elemId);
-                    i++;
+                    string s = GetText(hWnd, elemId);
+                    ret.Add(s);
                 }
-                ret[i] = this.currentSid.ToString();
             }
             return ret;
         }
 
-        private bool GetDeviceData(string[] data, DateTime time, out DeviceData deviceData)
+        private bool GetDeviceData(string[] data, DateTime time, DateTime beginTime, DateTime endTime, out DeviceData deviceData)
         {
             deviceData = default(DeviceData);
             if (data == null || data.Length == 0)
@@ -222,6 +229,9 @@ namespace Scada.Declare
                 // Fetch Window Handle from HWND.r file.
                 this.hWnd = FetchWindowHandle(this.processName);
 
+
+                string s = GetText(hWnd, this.elemIdList[0]);
+                this.lastStartState = (s == "1");
                 // Start timer to work.
                 this.timer = new Timer(new TimerCallback((object o) => {
 
@@ -237,46 +247,46 @@ namespace Scada.Declare
                     {
                         return;
                     }
+                    this.lastDateTime = rightTime;
 
-                    string[] dataSet = GetData(hWnd);
+                    List<string> dataSet = GetData(hWnd);
                     bool startState = (dataSet[0] == "1");
 
-                    if (!this.lastStartState.HasValue)
+                    if (this.lastStartState != startState)
                     {
-                        this.lastStartState = startState;
+                        // State changed;
                         if (startState)
                         {
-                            // BeginTime
+                            this.GenCurrentSid();
+                            // dataSet.Add(this.currentSid.ToString());
                             this.beginTime = rightTime;
                         }
-                    }
-                    else
-                    {
-                        if (this.lastStartState != startState)
+                        else
                         {
-                            if (startState)
-                            {
-                                // BeginTime
-                                this.beginTime = rightTime;
-                            }
-                            else
-                            {
-                                // EndTime
-                                this.endTime = rightTime;
-                            }
-                            this.lastStartState = startState;
+                            this.beginTime = default(DateTime);
+                            this.endTime = default(DateTime);
                         }
+                        this.lastStartState = startState;
                     }
 
+                    if (startState)
+                    {
+                        this.endTime = rightTime;
+                    }
+
+                    dataSet.Add(this.currentSid.ToString());
+                    dataSet.Add(this.beginTime.ToString());
+                    dataSet.Add(this.endTime.ToString());
+
                     DeviceData dd = default(DeviceData);
-                    bool got = this.GetDeviceData(dataSet, rightTime, out dd);
+                    bool got = this.GetDeviceData(dataSet.ToArray(), rightTime, this.beginTime, this.endTime, out dd);
                     if (got)
                     {
                         this.lastDateTime = rightTime;
                         this.SynchronizationContext.Post(this.DataReceived, dd);
                     }
 
-                }), null, 1000, 1000);
+                }), null, 1000, 2000);
                 
             }));
 

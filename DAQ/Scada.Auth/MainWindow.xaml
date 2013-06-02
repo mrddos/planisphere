@@ -42,7 +42,7 @@
         </Grid.Resources>
         
         <Grid.Background>
-            <ImageBrush ImageSource="login.jpg"></ImageBrush>
+            <ImageBrush ImageSource="login2.jpg"></ImageBrush>
         </Grid.Background>
         
         <Grid.RowDefinitions>
@@ -53,7 +53,7 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="0">
             <Button BorderThickness="0" BorderBrush="Transparent" Click="OnMinButton"
-                        Style="{StaticResource SystemButton}" Opacity="0.4" Width="34" Height="30">
+                        Style="{StaticResource SystemButton}" Width="34" Height="30" Margin="0,1, 0, 0">
                 <Button.Background>
                     <ImageBrush ImageSource="Images/Min.png"></ImageBrush>
                 </Button.Background>
@@ -68,7 +68,7 @@
             </Button>
             -->
 
-            <Button BorderThickness="0" BorderBrush="Transparent" Click="OnCloseButton"
+            <Button BorderThickness="0" BorderBrush="Transparent" Click="OnCloseButton" Margin="0, 2, 2, 0"
                         Style="{StaticResource SystemButton}" Width="34" Height="30">
                 <Button.Background>
                     <ImageBrush ImageSource="Images/Close.png"></ImageBrush>
