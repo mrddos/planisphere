@@ -251,14 +251,14 @@ namespace Scada.Chart
         {
             if (this.pressed)
             {
-                Mouse.SetCursor(Cursors.ScrollWE);
-                this.MoveCurveLines(e, true);
+                // Mouse.SetCursor(Cursors.ScrollWE);
+                // this.MoveCurveLines(e, true);
             }
             else
             {
                 Mouse.SetCursor(Cursors.Arrow);
                 this.TrackTimeLine(e);
-                this.MoveCurveLines(e, false);
+                // this.MoveCurveLines(e, false);
             }
         }
 

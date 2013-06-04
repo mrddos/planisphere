@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <settings>
 	<datacenters>
-		<datacenter ip="" port="6000" wireless="" wirelessport="6000"/>
-		<datacenter ip="" port="6000" wireless="" wirelessport="6000"/>
+		<datacenter ip="" port="6000" wirelessip="" wirelessport="6000"/>
+		<datacenter ip="" port="6000" wirelessip="" wirelessport="6000"/>
 	</datacenters>
 
 	<!-- -->

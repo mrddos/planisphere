@@ -99,7 +99,7 @@ namespace Scada.DataCenterAgent
             {
                 var d = DBDataSource.Instance.GetData(deviceKey, time);
 
-                DataPacket p = builder.GetDataPacket(d);
+                DataPacket p = builder.GetDataPacket(deviceKey, d);
                 string ps = p.ToString();
                 foreach (var agent in agents)
                 {
