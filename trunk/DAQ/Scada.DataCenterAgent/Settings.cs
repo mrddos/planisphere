@@ -43,6 +43,11 @@ namespace Scada.DataCenterAgent
         /// </summary>
         public class DataCenter
         {
+            public string Ip { get; set; }
+            public string WirelessIp { get; set; }
+
+            public int Port { get; set; }
+            public int WirelessPort { get; set; }
 
         }
 
@@ -108,9 +113,16 @@ namespace Scada.DataCenterAgent
 
             // Data Center
             var datacenters = doc.SelectNodes("//datacenter");
-            foreach (var dc in datacenters)
+            foreach (XmlNode dcn in datacenters)
             {
+                DataCenter dc = new DataCenter();
+                
+                dc.Ip = this.GetAttribute(dcn, "ip");
+                dc.Port = int.Parse(this.GetAttribute(dcn, "port", "0"));
+                dc.WirelessIp = this.GetAttribute(dcn, "wirelessip");
+                dc.WirelessPort = int.Parse(this.GetAttribute(dcn, "wirelessport", "0"));
 
+                dataCenters.Add(dc);
             }
 
             // Site
@@ -193,6 +205,19 @@ namespace Scada.DataCenterAgent
         {
             var xmlAttr = node.Attributes.GetNamedItem(attr);
             return xmlAttr.Value; 
+        }
+
+        private string GetAttribute(XmlNode node, string attr, string defaultValue = "")
+        {
+            var xmlAttr = node.Attributes.GetNamedItem(attr);
+            if (xmlAttr != null)
+            {
+                if (!string.IsNullOrEmpty(xmlAttr.Value))
+                {
+                    return xmlAttr.Value;
+                }
+            }
+            return defaultValue;
         }
 
 

@@ -25,6 +25,8 @@ namespace Scada.Chart
 
         public const double Grad = 2.0;
 
+        const int IntervalCount = 20;
+
         public const double Offset = 8.0;
 
         struct GraduationLine
@@ -131,7 +133,7 @@ namespace Scada.Chart
             // Base Time;   
             // this.currentBaseTime = this.GetBaseTime(startTime);
 
-            for (int i = 0; i < 350; i++)
+            for (int i = 0; i < 390; i++)
             {
                 // One interval per 5px
                 double x = i * Grad;
@@ -165,8 +167,6 @@ namespace Scada.Chart
             }
             this.currentBaseTime = baseTime;
 
-            const int IntervalCount = 20;
-
             for (int i = 0; i < 20; i++)
             {
                 TextBlock timeLabel = null;
@@ -194,7 +194,7 @@ namespace Scada.Chart
                     this.TimeAxis.Children.Add(timeLabel);
                 }
 
-                string displayTime = this.GetFormatTime(this.currentBaseTime, i, IntervalCount  * this.Interval);
+                string displayTime = this.GetFormatTime(this.currentBaseTime, i, IntervalCount * this.Interval);
                 if (timeLabel != null)
                 {
                     timeLabel.Text = displayTime;
@@ -303,6 +303,12 @@ namespace Scada.Chart
         {
             bool timed = false;
             string timeLabel = string.Empty;
+            int intervalCount = 20;
+            if (this.Interval == 60 * 5)
+            {
+                intervalCount = 10;
+            }
+
             foreach (var view in this.ChartContainer.Children)
             {
                 SearchCurveView curveView = (SearchCurveView)view;
@@ -313,11 +319,9 @@ namespace Scada.Chart
                 if (!timed && x >= 0)
                 {
                     double v = (x - centerX) / scale + centerX;
+                    double index = v / Grad / intervalCount;
 
-                    const int IntervalCount = 20;
-                    double index = v / Grad / IntervalCount;
-                    
-                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, index, IntervalCount * this.Interval);
+                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, index, intervalCount * this.Interval);
                 }
 
                 curveView.TrackTimeLine(point, timeLabel);

@@ -173,7 +173,7 @@ namespace Scada.Chart
             // What's the value aach graduation 
             double ev = (this.Max - this.Min) / dc;
 
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 60; i++)
             {
                 double y = height - i * 10;
 
