@@ -69,7 +69,7 @@ namespace Scada.Declare
                     f = this.Factors[0];
                 }
 
-                items[4] = (f * d * 10).ToString();
+                items[4] = (f * d).ToString();
             }
 			return items;
 		}
