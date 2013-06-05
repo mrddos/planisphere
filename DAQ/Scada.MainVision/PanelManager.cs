@@ -57,6 +57,7 @@ namespace Scada.MainVision
                 // !
                 ListViewPanel panel = new ListViewPanel(dataProvider, entry);
                 DataListener dataListener = dataProvider.GetDataListener(deviceKey);
+                panel.SetIcon(entry.Icon);
                 panel.AddDataListener(dataListener);
                 if (showList)
                 {

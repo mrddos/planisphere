@@ -15,6 +15,7 @@ namespace Scada.Controls
     using System.IO;
     using System.Text;
     using System.Diagnostics;
+    using System.Windows.Media.Imaging;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -603,6 +604,11 @@ namespace Scada.Controls
                 ((SearchGraphView)this.graphSearchView).SetDataSource(this.searchData);
             }
             
+        }
+
+        internal void SetIcon(string icon)
+        {
+            this.Icon.Source = new BitmapImage(new Uri("pack://application:,,,/" + icon));
         }
     }
 }
