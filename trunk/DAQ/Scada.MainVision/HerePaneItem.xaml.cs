@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -90,6 +91,13 @@ namespace Scada.MainVision
             }
         }
 
+
+        internal void SetIcon(string icon)
+        {
+            this.Icon.Source = new BitmapImage(new Uri("pack://application:,,,/" + icon));
+            // this.Icon.ImageSource = new BitmapImage(new Uri("pack://application:,,,/" + icon));
+        }
+
         private void OnMouseEnterRect(object sender, MouseEventArgs e)
         {
 			// this.Rect.Fill = Brushes.AliceBlue;
@@ -104,8 +112,6 @@ namespace Scada.MainVision
         {
             this.Visibility = Visibility.Collapsed;
         }
-
-
 
     }
 }

@@ -128,6 +128,12 @@ namespace Scada.MainVision
             set;
         }
 
+        public string Icon
+        {
+            get;
+            set;
+        }
+
         public DataFilter DataFilter
         {
             get;
@@ -187,6 +193,8 @@ namespace Scada.MainVision
 					// Next line.
 					line = sr.ReadLine();
 				}
+
+                this.BuildIconMapping();
 			}
 		}
 
@@ -209,7 +217,6 @@ namespace Scada.MainVision
 				ConfigEntry entry = dict[this.currentParsedDevice];
                 entry.DeviceKey = this.currentParsedDevice;
                 this.ParseItems(line, entry);
-				
 				return;
 			}
 
@@ -267,6 +274,10 @@ namespace Scada.MainVision
                         {
                             throw new Exception("DataFilter should be set first!");
                         }
+                    }
+                    else if (key == "icon")
+                    {
+                        entry.Icon = string.Format("Images/{0}.png", val);
                     }
                 }
 
@@ -397,5 +408,16 @@ namespace Scada.MainVision
 		{
 			return this.dict[deviceKey].DisplayName;
 		}
+
+        private void BuildIconMapping()
+        {
+            this[DBDataProvider.DeviceKey_Hipc].Icon = "Images/1.png";
+            this[DBDataProvider.DeviceKey_NaI].Icon = "Images/2.png";
+            this[DBDataProvider.DeviceKey_Weather].Icon = "Images/3.png";
+            this[DBDataProvider.DeviceKey_HvSampler].Icon = "Images/4.png";
+            this[DBDataProvider.DeviceKey_ISampler].Icon = "Images/5.png";
+            this[DBDataProvider.DeviceKey_Shelter].Icon = "Images/6.png";
+            this[DBDataProvider.DeviceKey_Dwd].Icon = "Images/7.png";
+        }
 	}
 }

@@ -17,22 +17,6 @@ using System.Windows.Shapes;
 
 namespace Scada.MainVision
 {
-    public class Item
-    {
-        public string Name { get; set; }
-
-
-        public UIElement Contents { get; set; }
-    }
-
-    enum Device
-    {
-        HIPC = 0,
-        Weather,
-        Safe,
-        RD
-    }
-
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -142,7 +126,9 @@ namespace Scada.MainVision
 				string displayName = cfg.GetDisplayName(deviceKey);
 				if (!string.IsNullOrEmpty(displayName))
 				{
+                    string icon = cfg[deviceKey].Icon;
                     HerePaneItem herePaneItem = this.herePane.AddItem(deviceKey, displayName);
+                    herePaneItem.SetIcon(icon);
 					panes.Add(herePaneItem);
 				}
             }
@@ -547,6 +533,7 @@ namespace Scada.MainVision
             var entry = cfg[deviceKey];
 
             ListViewPanel panel = this.panelManager.CreateDataViewPanel(this.dataProvider, entry);
+
             this.dataProvider.CurrentDeviceKey = deviceKey;
             
 			panel.CloseClick += this.ClosePanelButtonClick;

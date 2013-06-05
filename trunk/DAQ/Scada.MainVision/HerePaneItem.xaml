@@ -39,7 +39,7 @@
             </Grid.Background>
 
 
-
+            <!-- Fill="#404040" -->
             <Rectangle Name="Rect" Fill="#404040" Stroke="Gray" 
                    Grid.Row="0" Grid.Column="0"  Grid.ColumnSpan="3" StrokeThickness="0.2">
                 <!--
@@ -69,9 +69,13 @@
                     Click="HidePanel" Template="{StaticResource CloseButtonTemplateKey}" Margin="0, 1, 1, 0"/>
 
             <!-- Title -->
-            <TextBlock Grid.Row="0" TextAlignment="Center" Grid.Column="0" Grid.ColumnSpan="2" Margin="10, 5, 10, 5" 
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                
+                <Image x:Name="Icon" Stretch="Uniform" Width="28" Height="14"/>
+                <TextBlock TextAlignment="Center" Margin="5, 5, 10, 5" 
                        Text="{Binding Title}" FontSize="14" FontFamily="微软雅黑" Foreground="White" />
-
+                
+            </StackPanel>
             <!-- Data 1 -->
             <Border BorderThickness="0, 0, 0, 0" Grid.Row="1" Grid.ColumnSpan="3">
                 <Border BorderThickness="0, 0, 0, 0" BorderBrush="#CCCCCC">
