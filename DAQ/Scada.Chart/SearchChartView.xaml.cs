@@ -237,7 +237,7 @@ namespace Scada.Chart
                 {
                     string valueStr = (string)entry[key];
                     double value = string.IsNullOrEmpty(valueStr) ? 0.0 : double.Parse(valueStr);
-                    curveView.AddCurvePoint(new Point(this.index * 2, value));
+                    curveView.AddCurvePoint(new Point(this.index * Grad, value));
                 }
             }
             this.index += 1;
@@ -303,11 +303,6 @@ namespace Scada.Chart
         {
             bool timed = false;
             string timeLabel = string.Empty;
-            int intervalCount = 20;
-            if (this.Interval == 60 * 5)
-            {
-                intervalCount = 10;
-            }
 
             foreach (var view in this.ChartContainer.Children)
             {
@@ -319,9 +314,9 @@ namespace Scada.Chart
                 if (!timed && x >= 0)
                 {
                     double v = (x - centerX) / scale + centerX;
-                    double index = v / Grad / intervalCount;
+                    double index = v / Grad / IntervalCount;
 
-                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, index, intervalCount * this.Interval);
+                    timeLabel = this.GetFormatDateTime(this.currentBaseTime, index, IntervalCount * this.Interval);
                 }
 
                 curveView.TrackTimeLine(point, timeLabel);
