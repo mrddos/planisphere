@@ -33,9 +33,19 @@ namespace Scada.DataCenterAgent
 
         private NetworkStream stream;
 
+        private DataHandler handler;
+
+        private bool connected = false;
+
+        internal bool Started
+        {
+            get;
+            set;
+        }
 
         public Agent()
         {
+            this.handler = new DataHandler(this);
         }
 
         public string ServerAddress
@@ -105,12 +115,7 @@ namespace Scada.DataCenterAgent
                     {
                         this.stream = this.client.GetStream();
 
-                        if (!string.IsNullOrEmpty(this.Greeting))
-                        {
-                            string greeting = this.Greeting + "\n";
-                            byte[] b = Encoding.ASCII.GetBytes(greeting);
-                            stream.Write(b, 0, b.Length);
-                        }
+                        this.handler.SendAuthPacket();
 
                         this.BeginRead(this.client);
                     }
@@ -159,9 +164,23 @@ namespace Scada.DataCenterAgent
         }
 
 
-        internal void Send(byte[] message)
+        private void Send(byte[] message)
         {
             this.stream.Write(message, 0, message.Length);
+        }
+
+
+        internal void SendPacket(DataPacket p, DateTime time)
+        {
+            if (this.Started)
+            {
+                // Call send bytes.
+            }
+        }
+
+        internal void SendPacket(DataPacket p)
+        {
+            this.SendPacket(p, default(DateTime));
         }
     }
 }
