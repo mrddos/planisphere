@@ -129,7 +129,8 @@ namespace Scada.DataCenterAgent
             var siteNode = doc.SelectNodes("//site")[0];
             this.SysName = this.GetAttribute(siteNode, "sysname");
             this.SysSt = this.GetAttribute(siteNode, "sysst");
-            this.Password = this.GetAttribute(siteNode, "password");
+
+            this.LoadPassword();
             
             // Devices
             var devices = doc.SelectNodes("//devices/device");
@@ -220,11 +221,44 @@ namespace Scada.DataCenterAgent
             return defaultValue;
         }
 
+        private string password = string.Empty;
 
         public string Password
         {
-            get;
-            private set;
+            get
+            {
+                if (this.password == string.Empty)
+                {
+                    this.LoadPassword();
+                }
+                return password;
+            }
+
+            set
+            {
+                if (this.password != value)
+                {
+                    this.password = value;
+                    this.UpdatePassword(value);
+                }
+            }
+
+        }
+
+        private void LoadPassword()
+        {
+            using (StreamReader sr = new StreamReader("password"))
+            {
+                this.password = sr.ReadLine();
+            }
+        }
+
+        private void UpdatePassword(string password)
+        {
+            using (StreamWriter sw = new StreamWriter("password"))
+            {
+                sw.WriteLine(password);
+            }
         }
 
         public string SysName

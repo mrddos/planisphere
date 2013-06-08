@@ -60,7 +60,7 @@ namespace Scada.MainVision
                 DisplayName = deviceName, 
                 DeviceKey = deviceKey 
             };
-            tvi.MouseDoubleClick += OnDeviceItemClick;
+            tvi.Selected += this.OnDeviceItemClick;
 			tvi.Header = deviceName;
             tvi.FontSize = 14.0;
             tvi.FontFamily = new FontFamily("微软雅黑");

@@ -1,18 +1,20 @@
 <?xml version="1.0"?>
 <settings>
+	<!-- Default Port is 6000 and 7000 -->
 	<datacenters>
-		<datacenter ip="" port="6000" wirelessip="" wirelessport="6000"/>
-		<datacenter ip="" port="6000" wirelessip="" wirelessport="6000"/>
+		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
+		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 	</datacenters>
 
-	<!-- -->
-	<site sysname="" sysst="213213123213123213" password="123456" adapter="" name="" station="">
+	<!-- NOTICE SNO-->
+	<site sysname="" sysst="213213123213123213" adapter="" name="" station="" sno="">
 	</site>
 
 
 
 	<devices>
-		<device id="scada.hipc" type="" table="HIPC_rec">
+		<!-- NOTICE ENO -->
+		<device id="scada.hipc" type="" table="HIPC_rec" eno="">
 			<code field="doserate">0102060301</code>
 			<code field="highvoltage">0102060302</code>
 			<code field="battery">0102060303</code>

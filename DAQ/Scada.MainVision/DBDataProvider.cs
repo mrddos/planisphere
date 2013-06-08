@@ -361,7 +361,10 @@ namespace Scada.MainVision
                         catch (SqlNullValueException)
                         {
                             // TODO: Has Null Value
-                            data.Add(key, null);
+                            if (!data.ContainsKey(key))
+                            {
+                                data.Add(key, string.Empty);
+                            }
                         }
                         catch (Exception)
                         {
