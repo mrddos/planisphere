@@ -11,12 +11,23 @@ namespace Scada.DataCenterAgent
 
         private string deviceKey;
 
+        public DataPacket(SentCommand cmd)
+        {
+            this.Cn = string.Format("{0}", (int)cmd);
+        }
 
-        public DataPacket(string deviceKey, string cn = "")
+        public DataPacket(string deviceKey, bool realTime = true)
         {
             this.deviceKey = deviceKey;
             this.sb = new StringBuilder("");
-            this.Cn = cn;
+            if (realTime)
+            {
+                this.Cn = string.Format("{0}", (int)SentCommand.Data);;
+            }
+            else
+            {
+                this.Cn = string.Format("{0}", (int)SentCommand.HistoryData);
+            }
         }
 
         private void SetHeader()
@@ -61,10 +72,10 @@ namespace Scada.DataCenterAgent
             private set;
         }
 
-        public string St
+        public int St
         {
             get;
-            private set;
+            set;
         }
 
         public string Cn

@@ -13,7 +13,9 @@ namespace Scada.DataCenterAgent
     {
         private Timer timer;
 
-        private Agent agent;
+        private DataHandler handler;
+
+        private List<Agent> agents = new List<Agent>();
 
         private DataPacketBuilder builder = new DataPacketBuilder();
 
@@ -25,19 +27,31 @@ namespace Scada.DataCenterAgent
 
         private void AgentWindow_Load(object sender, EventArgs e)
         {
-            this.agent = this.CreateAgent("localhost", 2112);
-            Settings s = Settings.Instance;
+            this.InitializeAgents();
             this.InitializeTimer();
         }
 
-        private Agent CreateAgent(string serverAddress, int serverPort)
+        private void InitializeAgents()
+        {
+            Settings s = Settings.Instance;
+            foreach (Settings.DataCenter dc in s.DataCenters)
+            {
+
+            }
+
+            this.handler = new DataHandler();
+            this.handler.Agents = this.agents;
+        }
+
+        private Agent CreateAgent(string serverAddress, int serverPort, bool wireless)
         {
             Agent agent = new Agent();
             agent.ServerAddress = serverAddress;
             agent.ServerPort = serverPort;
             agent.Greeting = "Hello";
+            agent.Wireless = wireless;
             agent.Connect();
-
+            agent.OnReceiveMessage += this.OnReceiveMessage;
             return agent;
         }
 
@@ -64,8 +78,10 @@ namespace Scada.DataCenterAgent
             }
             this.lastSendTime = rightTime;
 
-
-            this.SendPackets(rightTime);
+            if (this.handler != null)
+            {
+                this.handler.SendDataPackets(rightTime);
+            }
         }
 
         private DateTime lastSendTime;
@@ -87,29 +103,12 @@ namespace Scada.DataCenterAgent
             return false;
         }
 
-
-        private void SendPackets(DateTime time)
+        private void OnReceiveMessage(Agent agent, string msg)
         {
-            // For test
-            // var d = DBDataSource.Instance.GetData("scada.hipc", time);
-
-            List<Agent> agents = new List<Agent>() { this.agent };
-
-            foreach (var deviceKey in Settings.Instance.DeviceKeys)
+            if (this.handler != null)
             {
-                var d = DBDataSource.Instance.GetData(deviceKey, time);
-
-                DataPacket p = builder.GetDataPacket(deviceKey, d);
-                string ps = p.ToString();
-                foreach (var agent in agents)
-                {
-                    byte[] bytes = p.ToBytes();
-                    agent.Send(bytes);
-                }
+                this.handler.OnMessage(msg);
             }
-
-            // TODO: Agents
-
         }
     }
 }

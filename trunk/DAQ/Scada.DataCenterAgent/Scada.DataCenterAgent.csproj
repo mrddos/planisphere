@@ -54,6 +54,7 @@
       <DependentUpon>AgentWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="CRC16.cs" />
+    <Compile Include="DataHandler.cs" />
     <Compile Include="DataPacket.cs" />
     <Compile Include="DataPacketBuilder.cs" />
     <Compile Include="Settings.cs" />

@@ -24,6 +24,8 @@ namespace Scada.DataCenterAgent
         public StringBuilder messageBuffer = new StringBuilder();
     }
 
+    internal delegate void OnReceiveMessage(Agent agent, string msg);
+
 
     class Agent
     {
@@ -49,6 +51,24 @@ namespace Scada.DataCenterAgent
         }
 
         public string Greeting
+        {
+            get;
+            set;
+        }
+
+        public string Type
+        {
+            get;
+            set;
+        }
+
+        public bool Wireless
+        {
+            get;
+            set;
+        }
+
+        public OnReceiveMessage OnReceiveMessage
         {
             get;
             set;
@@ -131,8 +151,8 @@ namespace Scada.DataCenterAgent
 
                 if (c > 0)
                 {
-                    string a = Encoding.ASCII.GetString(so.buffer, 0, c);
-
+                    string msg = Encoding.ASCII.GetString(so.buffer, 0, c);
+                    this.OnReceiveMessage(this, msg);
                     this.BeginRead(so.client);
                 }
             }
