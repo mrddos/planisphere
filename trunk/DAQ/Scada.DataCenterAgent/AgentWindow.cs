@@ -13,7 +13,7 @@ namespace Scada.DataCenterAgent
     {
         private Timer timer;
 
-        private DataHandler handler;
+        //private DataHandler handler;
 
         private List<Agent> agents = new List<Agent>();
 
@@ -39,8 +39,6 @@ namespace Scada.DataCenterAgent
 
             }
 
-            this.handler = new DataHandler();
-            this.handler.Agents = this.agents;
         }
 
         private Agent CreateAgent(string serverAddress, int serverPort, bool wireless)
@@ -48,7 +46,7 @@ namespace Scada.DataCenterAgent
             Agent agent = new Agent();
             agent.ServerAddress = serverAddress;
             agent.ServerPort = serverPort;
-            agent.Greeting = "Hello";
+
             agent.Wireless = wireless;
             agent.Connect();
             agent.OnReceiveMessage += this.OnReceiveMessage;
@@ -78,11 +76,36 @@ namespace Scada.DataCenterAgent
             }
             this.lastSendTime = rightTime;
 
-            if (this.handler != null)
+            SendDataPackets(rightTime);
+        }
+
+        public void SendDataPackets(DateTime time)
+        {
+            bool willSend = false;
+            foreach (var agent in this.agents)
             {
-                this.handler.SendDataPackets(rightTime);
+                willSend |= agent.Started;
+            }
+
+            if (!willSend)
+            {
+                return;
+            }
+
+            foreach (var deviceKey in Settings.Instance.DeviceKeys)
+            {
+                var d = DBDataSource.Instance.GetData(deviceKey, time);
+
+                DataPacket p = builder.GetDataPacket(deviceKey, d);
+                // string ps = p.ToString();
+                foreach (var agent in this.agents)
+                {
+                    agent.SendPacket(p, time);
+                }
             }
         }
+
+
 
         private DateTime lastSendTime;
 
@@ -105,10 +128,7 @@ namespace Scada.DataCenterAgent
 
         private void OnReceiveMessage(Agent agent, string msg)
         {
-            if (this.handler != null)
-            {
-                this.handler.OnMessage(msg);
-            }
+
         }
     }
 }
