@@ -104,6 +104,11 @@ namespace Scada.DataCenterAgent
 
         public void SetContent(Dictionary<string, object> data)
         {
+            if (data.Count == 0)
+            {
+                this.Cp = string.Empty;
+                return;
+            }
             StringBuilder sb = new StringBuilder();
             foreach (var i in data)
             {
