@@ -42,8 +42,8 @@ namespace Scada.Declare
 				conn.Open();
 				this.cmd = conn.CreateCommand();
 
-				// AddHIPCRecordData("243.5", "2.3", "5.88", "24.0000", 2);
-				// AddHIPCRecordData("243.5", "2.3", "5.88", "24.0000", 2);
+				// AddHPICRecordData("243.5", "2.3", "5.88", "24.0000", 2);
+				// AddHPICRecordData("243.5", "2.3", "5.88", "24.0000", 2);
 			}
 			catch (Exception e)
 			{

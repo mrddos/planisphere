@@ -45,9 +45,9 @@ namespace Scada.Declare
 	}
 
 
-	public class HIPCDataParser : DataParser
+	public class HPICDataParser : DataParser
 	{
-		public HIPCDataParser()
+		public HPICDataParser()
 		{
 			this.lineParser = new LineParser();
 		}

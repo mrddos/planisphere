@@ -370,7 +370,7 @@ namespace Scada.Declare
 
 				if (line.Length > 0)
 				{
-                    // Defect: HIPC need check the time.
+                    // Defect: HPIC need check the time.
                     if (this.actionInterval == 0)
                     {
                         DateTime now = DateTime.Now;

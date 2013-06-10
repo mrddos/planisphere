@@ -22,8 +22,8 @@ CREATE TABLE `weather` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
-DROP TABLE IF EXISTS `hipc_rec`;
-CREATE TABLE `hipc_rec` (
+DROP TABLE IF EXISTS `hpic_rec`;
+CREATE TABLE `hpic_rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
 `Time` datetime DEFAULT NULL,
 `Doserate` varchar(18)  DEFAULT NULL, /*剂量率值，单位：nGy/h，数据格式：N14.2*/

@@ -66,7 +66,7 @@ namespace Scada.MainVision
         /// </summary>
         public DBDataProvider()
         {
-            this.allDeviceKeys.Add(DeviceKey_Hipc);
+            this.allDeviceKeys.Add(DeviceKey_Hpic);
             this.allDeviceKeys.Add(DeviceKey_Dwd);
             this.allDeviceKeys.Add(DeviceKey_HvSampler);
             this.allDeviceKeys.Add(DeviceKey_ISampler);

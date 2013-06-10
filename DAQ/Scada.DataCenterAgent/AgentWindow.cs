@@ -13,6 +13,7 @@ namespace Scada.DataCenterAgent
     {
         private Timer timer;
 
+        private Timer keepAliveTimer;
         //private DataHandler handler;
 
         private List<Agent> agents = new List<Agent>();
@@ -36,7 +37,8 @@ namespace Scada.DataCenterAgent
             Settings s = Settings.Instance;
             foreach (Settings.DataCenter dc in s.DataCenters)
             {
-
+                Agent agent = CreateAgent(dc.Ip, dc.Port, false);
+                this.agents.Add(agent);
             }
 
         }
@@ -57,8 +59,23 @@ namespace Scada.DataCenterAgent
         {
             this.timer = new Timer();
             this.timer.Interval = 2000;
-            this.timer.Start();
             this.timer.Tick += this.SendDataTick;
+            this.timer.Start();
+
+            // KeepAlive timer
+            this.keepAliveTimer = new Timer();
+            this.keepAliveTimer.Interval = 1000 * 60;
+            this.keepAliveTimer.Tick += this.KeepAliveTick;
+            this.keepAliveTimer.Start();
+        }
+
+        private void KeepAliveTick(object sender, EventArgs e)
+        {
+            DataPacket p = builder.GetKeepAlivePacket();
+            foreach (var agent in this.agents)
+            {
+                agent.SendPacket(p);
+            }
         }
 
         private void SendDataTick(object sender, EventArgs e)
@@ -100,7 +117,7 @@ namespace Scada.DataCenterAgent
                 // string ps = p.ToString();
                 foreach (var agent in this.agents)
                 {
-                    agent.SendPacket(p, time);
+                    agent.SendDataPacket(p, time);
                 }
             }
         }

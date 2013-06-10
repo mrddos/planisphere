@@ -411,7 +411,7 @@ namespace Scada.MainVision
 
         private void BuildIconMapping()
         {
-            this[DBDataProvider.DeviceKey_Hipc].Icon = "Images/1.png";
+            this[DBDataProvider.DeviceKey_Hpic].Icon = "Images/1.png";
             this[DBDataProvider.DeviceKey_NaI].Icon = "Images/2.png";
             this[DBDataProvider.DeviceKey_Weather].Icon = "Images/3.png";
             this[DBDataProvider.DeviceKey_HvSampler].Icon = "Images/4.png";

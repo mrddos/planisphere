@@ -81,9 +81,9 @@ namespace Scada.DAQ.Installer
 
         internal void ExecuteSQL(MySqlCommand cmd, DateTime t)
         {
-            if (this.device.ToLower() == "hipc")
+            if (this.device.ToLower() == "hpic")
             {
-                cmd.CommandText = "insert into HIPC_rec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, 123, 24, 1)";
+                cmd.CommandText = "insert into HPIC_rec(time, doserate, highvoltage, battery, temperature, alarm) values(@1, @2, @3, 123, 24, 1)";
                 cmd.Parameters.AddWithValue("@1", t);
 
                 v = (v + 1) % 5;

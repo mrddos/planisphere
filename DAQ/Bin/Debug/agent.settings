@@ -2,8 +2,11 @@
 <settings>
 	<!-- Default Port is 6000 and 7000 -->
 	<datacenters>
+		<datacenter ip="127.0.0.1" port="6000" wirelessip="" wirelessport="7000"/>
+		<!--
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
+		-->
 	</datacenters>
 
 	<!-- NOTICE SNO-->
@@ -14,7 +17,7 @@
 
 	<devices>
 		<!-- NOTICE ENO -->
-		<device id="scada.hipc" type="" table="HIPC_rec" eno="">
+		<device id="scada.hpic" type="" table="HPIC_rec" eno="">
 			<code field="doserate">0102060301</code>
 			<code field="highvoltage">0102060302</code>
 			<code field="battery">0102060303</code>
@@ -22,37 +25,37 @@
 
 		</device>
 
-		<device id="scada.hipc" type="">
+		<device id="scada.?" type="">
 			<code></code>
 			<code></code>
 			<code></code>
 		</device>
 
-		<device id="scada.hipc" type="">
+		<device id="scada.?" type="">
 			<code></code>
 			<code></code>
 			<code></code>
 		</device>
 
-		<device id="scada.hipc" type="">
+		<device id="scada.?" type="">
 			<code></code>
 			<code></code>
 			<code></code>			
 		</device>
 
-		<device id="scada.hipc" type="">
+		<device id="scada.?" type="">
 			<code></code>
 			<code></code>
 			<code></code>			
 		</device>
 
-		<device id="scada.hipc" type="">
+		<device id="scada.?" type="">
 			<code></code>
 			<code></code>
 			<code></code>			
 		</device>
 
-		<device id="scada.hipc" type="">
+		<device id="scada.?" type="">
 			<code></code>
 			<code></code>
 			<code></code>			

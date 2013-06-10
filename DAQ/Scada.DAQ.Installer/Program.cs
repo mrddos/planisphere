@@ -31,9 +31,9 @@ namespace Scada.DAQ.Installer
             {
                 RepairSystem(args);
             }
-            else if (fa == "--m-hipc")
+            else if (fa == "--m-hpic")
             {
-                MockInsertData("hipc");
+                MockInsertData("hpic");
             }
             else if (fa == "--m-weather")
             {
