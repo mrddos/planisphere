@@ -11,7 +11,7 @@ namespace Scada.DataCenterAgent
     public class Settings
     {
 
-        public const string DeviceKey_Hipc = "scada.hipc";
+        public const string DeviceKey_Hpic = "scada.hpic";
 
         public const string DeviceKey_Weather = "scada.weather";
 
@@ -27,7 +27,7 @@ namespace Scada.DataCenterAgent
 
 
         public string[] DeviceKeys = {
-                                DeviceKey_Hipc, 
+                                DeviceKey_Hpic, 
                                 DeviceKey_Weather, 
                                 DeviceKey_HvSampler, 
                                 DeviceKey_ISampler, 

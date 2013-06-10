@@ -16,7 +16,7 @@ namespace Scada.MainVision
 
         private Dictionary<string, DBDataCommonListerner> dataListeners = new Dictionary<string, DBDataCommonListerner>();
 
-        private string dataProviderFile = "HIPC.log";
+        private string dataProviderFile = "HPIC.log";
 
         private List<Dictionary<string, object>> dataPool = new List<Dictionary<string, object>>();
 
@@ -26,7 +26,7 @@ namespace Scada.MainVision
 
 		public VirtualDataProvider()
 		{
-            deviceKeyList.Add("scada.hipc");
+            deviceKeyList.Add("scada.hpic");
 
             using (FileStream fileStream = File.OpenRead(dataProviderFile))
             {
@@ -48,7 +48,7 @@ namespace Scada.MainVision
                 }
             }
 
-            // this.dataListeners.Add("scada.hipc", new DBDataCommonListerner("scada.hipc"));
+            // this.dataListeners.Add("scada.hpic", new DBDataCommonListerner("scada.hpic"));
 		}
 
         /*

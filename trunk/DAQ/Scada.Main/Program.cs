@@ -125,7 +125,7 @@ namespace Scada.Main
             deviceManager.Initialize();
 
 
-            // deviceManager.SelectDevice("Scada.HIPC", "0.9", true);
+            // deviceManager.SelectDevice("Scada.HPIC", "0.9", true);
             // deviceManager.SelectDevice("Scada.Weather", "0.9", true);
             // deviceManager.Run();
 

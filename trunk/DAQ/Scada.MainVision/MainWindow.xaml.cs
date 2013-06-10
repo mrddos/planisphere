@@ -94,7 +94,7 @@ namespace Scada.MainVision
             }
 
             this.AddDevicePanes();
-            this.ShowDataViewPanel("scada.hipc");
+            this.ShowDataViewPanel("scada.hpic");
             // this.OnDeviceItemClicked(null, null);
             this.loaded = true;
 
@@ -248,9 +248,9 @@ namespace Scada.MainVision
         }
 
         // 1 剂量率
-        private void UpdatePanel_HIPC(HerePaneItem panel)
+        private void UpdatePanel_HPIC(HerePaneItem panel)
         {
-            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Hipc);
+            var d = this.dataProvider.GetLatestData(DataProvider.DeviceKey_Hpic);
             if (d == null)
             {
                 return;
@@ -262,7 +262,7 @@ namespace Scada.MainVision
                 double v;
                 if (ConvertDouble(doserate, out v))
                 {
-                    this.CheckAlarm(panel, DBDataProvider.DeviceKey_Hipc, Doserate, 0, v); 
+                    this.CheckAlarm(panel, DBDataProvider.DeviceKey_Hpic, Doserate, 0, v); 
                     string doserateMsg = "剂量率: " + v + "uGy/h";
                     this.DisplayPanelData(panel, doserateMsg);
                 }
@@ -507,7 +507,7 @@ namespace Scada.MainVision
         {
             this.dataProvider.RefreshTimeNow();
 
-            this.UpdatePanel_HIPC(this.panes[0]);
+            this.UpdatePanel_HPIC(this.panes[0]);
             this.UpdatePanel_NaI(this.panes[1]);
             this.UpdatePanel_Weather(this.panes[2]);
 

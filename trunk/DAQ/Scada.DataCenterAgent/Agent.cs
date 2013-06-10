@@ -43,6 +43,12 @@ namespace Scada.DataCenterAgent
             set;
         }
 
+        internal bool History
+        {
+            get;
+            set;
+        }
+
         public Agent()
         {
             this.handler = new DataHandler(this);
@@ -115,6 +121,7 @@ namespace Scada.DataCenterAgent
                     {
                         this.stream = this.client.GetStream();
 
+                        // [Auth]
                         this.handler.SendAuthPacket();
 
                         this.BeginRead(this.client);
@@ -169,18 +176,25 @@ namespace Scada.DataCenterAgent
             this.stream.Write(message, 0, message.Length);
         }
 
-
         internal void SendPacket(DataPacket p, DateTime time)
         {
-            if (this.Started)
-            {
-                // Call send bytes.
-            }
+            string s = p.ToString();
+            this.Send(Encoding.ASCII.GetBytes(s));
         }
 
         internal void SendPacket(DataPacket p)
         {
             this.SendPacket(p, default(DateTime));
+        }
+
+        internal void SendDataPacket(DataPacket p, DateTime time)
+        {
+            // Only start or history.
+            if (this.Started || this.History)
+            {
+                string s = p.ToString();
+                this.Send(Encoding.ASCII.GetBytes(s));
+            }
         }
     }
 }

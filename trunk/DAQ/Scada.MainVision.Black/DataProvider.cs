@@ -10,7 +10,7 @@ namespace Scada.MainVision
 	public abstract class DataProvider
 	{
 
-        public const string DeviceKey_Hipc = "scada.hipc";
+        public const string DeviceKey_Hpic = "scada.hpic";
 
         public const string DeviceKey_Weather = "scada.weather";
 

@@ -7,7 +7,7 @@ namespace Scada.DataCenterAgent
 {
     public class DataPacket
     {
-        private StringBuilder sb;
+        private StringBuilder sb = new StringBuilder();
 
         private string deviceKey;
 
@@ -19,7 +19,6 @@ namespace Scada.DataCenterAgent
         public DataPacket(string deviceKey, bool realTime = true)
         {
             this.deviceKey = deviceKey;
-            this.sb = new StringBuilder("");
             if (realTime)
             {
                 this.Cn = string.Format("{0}", (int)SentCommand.Data);;
