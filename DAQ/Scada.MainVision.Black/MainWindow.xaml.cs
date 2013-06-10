@@ -267,7 +267,7 @@ namespace Scada.MainVision
                         
                         nuclideMsgs[i / 3] += string.Format("{0}, ", nuclide);
                         i++;
-                        /*
+                        /* Now, only show nuclides name.
                         string nuclideDoserate = (string)d[nuclide.ToLower()];
                         if (nuclideDoserate.Length > 0)
                         {
@@ -297,6 +297,7 @@ namespace Scada.MainVision
             this.DisplayPanelData(panel, doserateMsg, 
                 nuclideMsgs[0], nuclideMsgs[1], nuclideMsgs[2]);
         }
+
         // 3 // 风速、风向、雨量
         private void UpdatePanel_Weather(HerePaneItem panel)
         {
@@ -318,8 +319,8 @@ namespace Scada.MainVision
             string raingaugeMsg = string.Format("雨量: {0}mm/min", raingauge);
 
             this.DisplayPanelData(panel, windspeedMsg, directionMsg, raingaugeMsg);
-   
         }
+
         // 4 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
         private void UpdatePanel_HV(HerePaneItem panel)
         {
@@ -349,8 +350,8 @@ namespace Scada.MainVision
             string flowMsg = string.Format("瞬时采样流量: {0}m³/h", flow);
 
             this.DisplayPanelData(panel, statusMsg, volumeMsg, hoursMsg, flowMsg);
-
         }
+
         // 5 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
         private void UpdatePanel_I(HerePaneItem panel)
         {
@@ -380,6 +381,7 @@ namespace Scada.MainVision
 
             this.DisplayPanelData(panel, statusMsg, volumeMsg, hoursMsg, flowMsg);
         }
+
         // 6 市电状态、备电时间、舱内温度、门禁报警、烟感报警、浸水报警
         private void UpdatePanel_Shelter(HerePaneItem panel)
         {
@@ -429,6 +431,7 @@ namespace Scada.MainVision
 
             this.DisplayPanelData(panel, mainPowMsg, batteryHoursMsg, tempMsg);
         }
+
         // 7 仅工作状态
         private void UpdatePanel_DWD(HerePaneItem panel)
         {

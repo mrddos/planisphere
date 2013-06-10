@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Server
 {
     static class Program
     {
@@ -11,17 +11,12 @@ namespace Scada.DataCenterAgent
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
-            // Settings settings = new Settings();
+            
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            AgentWindow aw = new AgentWindow();
-            if (args.Length > 0 && args[0] == "--start")
-            {
-                aw.StartState = true;
-            }
-            Application.Run(aw);
+            Application.Run(new Form1());
         }
     }
 }

@@ -90,6 +90,11 @@ namespace Scada.DataCenterAgent
             set;
         }
 
+        public override string ToString()
+        {
+            return this.ServerAddress;
+        }
+
         public void Connect()
         {
             if ((this.client == null) || (!this.client.Connected))
@@ -165,6 +170,10 @@ namespace Scada.DataCenterAgent
                 {
                     string msg = Encoding.ASCII.GetString(so.buffer, 0, c);
                     this.OnReceiveMessage(this, msg);
+                    if (this.handler != null)
+                    {
+                        this.handler.OnMessage(msg);
+                    }
                     this.BeginRead(so.client);
                 }
             }
