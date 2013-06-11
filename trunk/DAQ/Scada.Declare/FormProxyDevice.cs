@@ -212,9 +212,16 @@ namespace Scada.Declare
                 return false;
             }
             deviceData.Time = time;
-
-            data[1] = string.Format("{0:f1}", (double.Parse(data[1]) * this.factor1));
-
+            double value = 0.0;
+            if (double.TryParse(data[1], out value))
+            {
+                data[1] = string.Format("{0:f1}", value * this.factor1);
+            }
+            else
+            {
+                data[1] = string.Format("{0:f1}", this.factor1);
+            }
+            
             object[] fields = Device.GetFieldsData(data, time, this.fieldsConfig);
             deviceData = new DeviceData(this, fields);
             deviceData.InsertIntoCommand = this.insertIntoCommand;

@@ -46,11 +46,11 @@ namespace Scada.MainVision
 
         private const int BufferLength = 1024;
 
-        private const int StartButtonHandle = 0x3B;
+        private const int StartButtonHandle = 0x3E;
 
-        private const int StopButtonHandle = 0x3A;
+        private const int StopButtonHandle = 0x3D;
 
-        private const int StatusTextBox = 0xF;
+        private const int StatusTextBox = 0x1A;
 
         private IntPtr formHandle;
 

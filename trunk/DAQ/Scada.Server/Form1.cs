@@ -101,11 +101,15 @@ namespace Scada.Server
             {
                 hvsStarted = false;
                 this.button2.Text = "超大流量气溶胶采样器 - 启动";
+                string msg = "QN=20090516010101001;ST=38;CN=7012;PW=123456;MN=80110010000000;Flag=3;CP=&&&&";
+                this.Send(msg);
             }
             else
             {
                 hvsStarted = true;
                 this.button2.Text = "超大流量气溶胶采样器 - 停止";
+                string msg = "QN=20090516010101001;ST=38;CN=7011;PW=123456;MN=80110010000000;Flag=3;CP=&&&&";
+                this.Send(msg);
             }
         }
 
@@ -119,11 +123,15 @@ namespace Scada.Server
             {
                 isStarted = false;
                 this.button3.Text = "碘采样器 - 启动";
+                string msg = "QN=20090516010101001;ST=38;CN=7022;PW=123456;MN=80110010000000;Flag=3;CP=&&&&";
+                this.Send(msg);
             }
             else
             {
                 isStarted = true;
                 this.button3.Text = "碘采样器 - 停止";
+                string msg = "QN=20090516010101001;ST=38;CN=7021;PW=123456;MN=80110010000000;Flag=3;CP=&&&&";
+                this.Send(msg);
             }
         }
 
