@@ -17,6 +17,12 @@ namespace Scada.DataCenterAgent
         StopSend = 2012,
 
         HistoryData = 2042,
+
+        StartHvs = 7011,
+        StopHvs = 7012,
+
+        StartIs = 7021,
+        StopIs = 7022,
         
     }
 
@@ -35,6 +41,10 @@ namespace Scada.DataCenterAgent
 
         // Agent ref.
         private Agent agent;
+
+        private SamplerController hvsc = new SamplerController("scada.hvsampler");
+
+        private SamplerController isc = new SamplerController("scada.isampler");
 
         public DataHandler(Agent agent)
         {
@@ -89,6 +99,27 @@ namespace Scada.DataCenterAgent
                         this.agent.History = true;
                         this.HandleHistoryData(msg);
                         this.agent.History = false;
+                    }
+                    break;
+
+                case ReceivedCommand.StartHvs:
+                    {
+                        hvsc.Start();
+                    }
+                    break;
+                case ReceivedCommand.StopHvs:
+                    {
+                        hvsc.Stop();
+                    }
+                    break;
+                case ReceivedCommand.StartIs:
+                    {
+                        isc.Start();
+                    }
+                    break;
+                case ReceivedCommand.StopIs:
+                    {
+                        isc.Stop();
                     }
                     break;
 
