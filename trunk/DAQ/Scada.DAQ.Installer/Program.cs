@@ -43,6 +43,21 @@ namespace Scada.DAQ.Installer
             {
                 MockInsertData("nai");
             }
+            else if (fa == "--all")
+            {
+                // TODO: Copy MySQL, and Prepare the my.ini file
+
+
+                // TODO: Start the MySQL...
+
+
+                // TODO: Copy files to a folder...
+
+
+                // TODO: Invoke InitDataBase
+
+                // TODO: Tell user install finished.
+            }
         }
 
         static void InitDataBase(string[] args)

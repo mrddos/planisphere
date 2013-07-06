@@ -39,6 +39,10 @@ namespace Scada.DataCenterAgent
             this.statusStrip1.Items.Add("状态: 等待");
             this.statusStrip1.Items.Add(new ToolStripSeparator());
             this.statusStrip1.Items.Add("IP ADDR:PORT");
+            ToolStripLabel label = new ToolStripLabel();
+            label.Alignment = ToolStripItemAlignment.Right;
+            label.Text = "22:04";
+            this.statusStrip1.Items.Add(label);
 
             // Start if have the --start args.
             if (this.StartState)
