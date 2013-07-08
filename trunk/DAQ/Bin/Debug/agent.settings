@@ -2,7 +2,7 @@
 <settings>
 	<!-- Default Port is 6000 and 7000 -->
 	<datacenters>
-		<datacenter ip="122.235.137.146" port="6700" wirelessip="" wirelessport="7000"/>
+		<datacenter ip="122.235.136.165" port="6700" wirelessip="" wirelessport="7000"/>
 		<!--
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
@@ -10,7 +10,7 @@
 	</datacenters>
 
 	<!-- NOTICE SNO-->
-	<site sysname="" sysst="213213123213123213" adapter="" name="" station="" sno="">
+	<site sysname="" sysst="213213123213123213" adapter="" name="" station="" sno="0101A010000000">
 	</site>
 
 
