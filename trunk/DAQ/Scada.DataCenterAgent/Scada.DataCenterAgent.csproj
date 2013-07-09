@@ -33,7 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 6.6.4\Assemblies\v2.0\MySql.Data.dll</HintPath>
+      <HintPath>..\Bin\Libs\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,7 +58,6 @@
     <Compile Include="DataHandler.cs" />
     <Compile Include="DataPacket.cs" />
     <Compile Include="DataPacketBuilder.cs" />
-    <Compile Include="SamplerController.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="DBDataSource.cs" />
     <Compile Include="Program.cs" />
