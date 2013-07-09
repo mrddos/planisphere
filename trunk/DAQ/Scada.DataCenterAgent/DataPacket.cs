@@ -157,6 +157,7 @@ namespace Scada.DataCenterAgent
         private string GetDataSections()
         {
             this.GenQN();
+            this.Mn = Settings.Instance.Mn;
             string p = string.Format("QN={0};ST={1};CN={2};PW={3};MN={4};Flag=1;CP=&&{5}&&", this.QN, this.St, this.Cn, this.Password, this.Mn, this.Cp);
             return p;
         }

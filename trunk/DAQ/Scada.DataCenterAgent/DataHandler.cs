@@ -17,13 +17,14 @@ namespace Scada.DataCenterAgent
         StopSend = 2012,
 
         HistoryData = 2042,
-
+        Init = 6021,
         StartHvs = 7011,
         StopHvs = 7012,
 
         StartIs = 7021,
         StopIs = 7022,
-        
+     
+        Reply = 9012
     }
 
     public enum SentCommand
@@ -32,7 +33,8 @@ namespace Scada.DataCenterAgent
         Data = 2011,
         HistoryData = 2042,
         Auth = 6011,
-        KeepAlive = 6031
+        KeepAlive = 6031,
+        Reply = 9011
     }
 
     class DataHandler
@@ -45,6 +47,13 @@ namespace Scada.DataCenterAgent
         private SamplerController hvsc = new SamplerController("scada.hvsampler");
 
         private SamplerController isc = new SamplerController("scada.isampler");
+
+
+        private SentCommand CurrentSentCommand
+        {
+            get;
+            set;
+        }
 
         public DataHandler(Agent agent)
         {
@@ -61,6 +70,7 @@ namespace Scada.DataCenterAgent
             // MN=0101A010000000;Flag=1;CP=&&&&
             var p = this.builder.GetAuthPacket();
             this.agent.SendPacket(p);
+            this.CurrentSentCommand = SentCommand.Auth;
         }
 
         public void SendKeepAlivePacket()
@@ -69,6 +79,14 @@ namespace Scada.DataCenterAgent
             // MN=0101A010000000;CP=&&&&
             var p = this.builder.GetKeepAlivePacket();
             this.agent.SendPacket(p);
+        }
+
+        public void SendReplyPacket()
+        {
+            // QN=20090516010101001;ST=38;CN=6031;PW=123456;
+            // MN=0101A010000000;CP=&&&&
+            var p = this.builder.GetReplyPacket();
+            this.agent.SendReplyPacket(p, default(DateTime));
         }
 
         
@@ -101,7 +119,11 @@ namespace Scada.DataCenterAgent
                         this.agent.History = false;
                     }
                     break;
-
+                case ReceivedCommand.Init:
+                    {
+                        this.InitializeRequest(msg);
+                    }
+                    break;
                 case ReceivedCommand.StartHvs:
                     {
                         hvsc.Start();
@@ -123,6 +145,11 @@ namespace Scada.DataCenterAgent
                     }
                     break;
 
+                case ReceivedCommand.Reply:
+                    {
+                        this.OnServerReply(msg);
+                    }
+                    break;
                 case ReceivedCommand.None:
                 case ReceivedCommand.Unknown:
                 default:
@@ -130,7 +157,34 @@ namespace Scada.DataCenterAgent
             }
         }
 
+        private void OnServerReply(string msg)
+        {
+            // TODO:
+            string ret = DataHandler.ParseValue(msg, "ExeRtn");
+            if (this.CurrentSentCommand == SentCommand.Auth)
+            {
+
+            }
+            else if (this.CurrentSentCommand == SentCommand.Data)
+            {
+
+            }
+            else if (this.CurrentSentCommand == SentCommand.HistoryData)
+            {
+
+            }
+
+            // After reply, reset the Current Sent Command
+            this.CurrentSentCommand = SentCommand.None;
+        }
+
         private void HandleHistoryData(string msg)
+        {
+            // TODO:
+
+        }
+
+        private void InitializeRequest(string msg)
         {
             // TODO:
 
