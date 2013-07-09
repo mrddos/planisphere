@@ -2,7 +2,7 @@
 <settings>
 	<!-- Default Port is 6000 and 7000 -->
 	<datacenters>
-		<datacenter ip="122.235.136.165" port="6700" wirelessip="" wirelessport="7000"/>
+		<datacenter ip="127.0.0.1" port="6700" wirelessip="" wirelessport="7000"/>
 		<!--
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
@@ -10,14 +10,14 @@
 	</datacenters>
 
 	<!-- NOTICE SNO-->
-	<site sysname="" sysst="213213123213123213" adapter="" name="" station="" sno="0101A010000000">
+	<site sysname="" sysst="213213123213123213" adapter="" name="" station="" sno="0101A010000000" mn="1203A010000000">
 	</site>
 
 
 
 	<devices>
 		<!-- NOTICE ENO -->
-		<device id="scada.hpic" type="" table="HPIC_rec" eno="">
+		<device id="scada.hpic" table="HPIC_rec" eno="001001">
 			<code field="doserate">0102060301</code>
 			<code field="highvoltage">0102060302</code>
 			<code field="battery">0102060303</code>
@@ -25,37 +25,39 @@
 
 		</device>
 
-		<device id="scada.?" type="">
+		<device id="scada.weather" table="Weather_rec" eno="002000">
 			<code></code>
 			<code></code>
 			<code></code>
 		</device>
 
-		<device id="scada.?" type="">
+		<device id="Scada.HVSampler" table="HVSampler_rec" eno="003001">
 			<code></code>
 			<code></code>
 			<code></code>
 		</device>
 
-		<device id="scada.?" type="">
+		<device id="Scada.ISampler" table="ISampler_rec" eno="004000">
 			<code></code>
 			<code></code>
 			<code></code>			
 		</device>
 
-		<device id="scada.?" type="">
+		<device id="Scada.DWD" table="rdsampler_rec" eno="005000">
 			<code></code>
 			<code></code>
 			<code></code>			
 		</device>
 
-		<device id="scada.?" type="">
+		<!-- ??? -->
+		<device id="Scada.NaIDevice" table="NaI_Rec" eno="010002???">
 			<code></code>
 			<code></code>
 			<code></code>			
 		</device>
 
-		<device id="scada.?" type="">
+		<!-- ??? -->
+		<device id="Scada.Shelter" table="environment_rec" eno="010002???">
 			<code></code>
 			<code></code>
 			<code></code>			

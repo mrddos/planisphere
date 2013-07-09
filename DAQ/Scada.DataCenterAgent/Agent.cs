@@ -205,5 +205,12 @@ namespace Scada.DataCenterAgent
                 this.Send(Encoding.ASCII.GetBytes(s));
             }
         }
+
+
+        internal void SendReplyPacket(DataPacket p, DateTime time)
+        {
+            string s = p.ToString();
+            this.Send(Encoding.ASCII.GetBytes(s));
+        }
     }
 }

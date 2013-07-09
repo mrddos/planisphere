@@ -129,6 +129,7 @@ namespace Scada.DataCenterAgent
             var siteNode = doc.SelectNodes("//site")[0];
             this.SysName = this.GetAttribute(siteNode, "sysname");
             this.SysSt = this.GetAttribute(siteNode, "sysst");
+            this.Mn = this.GetAttribute(siteNode, "mn");
 
             this.LoadPassword();
             
@@ -268,6 +269,12 @@ namespace Scada.DataCenterAgent
         }
 
         public string SysSt
+        {
+            get;
+            private set;
+        }
+
+        public string Mn
         {
             get;
             private set;
