@@ -28,7 +28,7 @@ namespace Scada.DataCenterAgent
         {
             DataPacket dp = new DataPacket(SentCommand.Auth);
             // DataPacket is for sending, SO ST=38.(SysSend)
-            dp.Mn = "0101A010000000";
+            dp.Mn = "1203A010000000";
             dp.St = SysSend;
             dp.Build();
             return dp;

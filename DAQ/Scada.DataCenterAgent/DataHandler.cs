@@ -42,9 +42,9 @@ namespace Scada.DataCenterAgent
         // Agent ref.
         private Agent agent;
 
-        private SamplerController hvsc = new SamplerController("scada.hvsampler");
+        //private SamplerController hvsc = new SamplerController("scada.hvsampler");
 
-        private SamplerController isc = new SamplerController("scada.isampler");
+        //private SamplerController isc = new SamplerController("scada.isampler");
 
         public DataHandler(Agent agent)
         {
@@ -104,22 +104,22 @@ namespace Scada.DataCenterAgent
 
                 case ReceivedCommand.StartHvs:
                     {
-                        hvsc.Start();
+                        //hvsc.Start();
                     }
                     break;
                 case ReceivedCommand.StopHvs:
                     {
-                        hvsc.Stop();
+                        //hvsc.Stop();
                     }
                     break;
                 case ReceivedCommand.StartIs:
                     {
-                        isc.Start();
+                        //isc.Start();
                     }
                     break;
                 case ReceivedCommand.StopIs:
                     {
-                        isc.Stop();
+                        //isc.Stop();
                     }
                     break;
 
