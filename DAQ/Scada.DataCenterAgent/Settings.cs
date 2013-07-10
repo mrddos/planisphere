@@ -92,6 +92,8 @@ namespace Scada.DataCenterAgent
 
             public string Key { get; set; }
 
+            public string EquipNumber { get; set; }
+
             internal List<DeviceCode> GetCodes()
             {
                 return this.codes;
@@ -168,10 +170,17 @@ namespace Scada.DataCenterAgent
                 deviceKey = idNode.Value;
             }
 
+            var equipNode = deviceNode.Attributes.GetNamedItem("eno");
+            string equipNumber = string.Empty;
+            if (equipNode != null)
+            {
+                equipNumber = equipNode.Value;
+            }
+
             Device device = new Device();
             device.TableName = tableName;
             device.Key = deviceKey;
-
+            device.EquipNumber = equipNumber;
             return device;
         }
 
