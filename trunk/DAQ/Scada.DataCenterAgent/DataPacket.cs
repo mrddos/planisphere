@@ -54,7 +54,7 @@ namespace Scada.DataCenterAgent
         public string QN
         {
             get;
-            private set;
+            set;
         }
 
         // PNO.
@@ -119,6 +119,15 @@ namespace Scada.DataCenterAgent
             this.Cp = sb.ToString();
         }
 
+        internal void SetReply(int reply)
+        {
+            this.Cp = string.Format("QnRtn={0}", reply);
+        }
+
+        internal void SetResult(int result)
+        {
+            this.Cp = string.Format("ExeRtn={0}", result);
+        }
 
         private string Password
         {
@@ -153,13 +162,63 @@ namespace Scada.DataCenterAgent
             this.sb.Append("\r\n");
         }
 
+        internal void BuildReply()
+        {
+            this.SetHeader();
+            string ds = GetReplySections();
+
+            int len = ds.Length;
+            this.SetLength(len);
+            this.sb.Append(ds);
+
+            string crc16 = CRC16.GetCode(Encoding.ASCII.GetBytes(ds));
+            this.sb.Append(crc16);
+            this.sb.Append("\r\n");
+        }
+
+        internal void BuildResult()
+        {
+            this.SetHeader();
+            string ds = GetResultSections();
+
+            int len = ds.Length;
+            this.SetLength(len);
+            this.sb.Append(ds);
+
+            string crc16 = CRC16.GetCode(Encoding.ASCII.GetBytes(ds));
+            this.sb.Append(crc16);
+            this.sb.Append("\r\n");
+        }
+
+
 
         private string GetDataSections()
         {
             this.GenQN();
             this.Mn = Settings.Instance.Mn;
-            string p = string.Format("QN={0};ST={1};CN={2};PW={3};MN={4};Flag=1;CP=&&{5}&&", this.QN, this.St, this.Cn, this.Password, this.Mn, this.Cp);
+            string p = string.Format(
+                "QN={0};ST={1};CN={2};PW={3};MN={4};Flag=1;CP=&&{5}&&", 
+                this.QN, this.St, this.Cn, this.Password, this.Mn, this.Cp);
             return p;
         }
+
+        private string GetReplySections()
+        {
+            this.Mn = Settings.Instance.Mn;
+            string p = string.Format(
+                "ST={0};CN={1};PW={2};MN={3};Flag=1;CP=&&QN={4};{5}&&",
+                this.St, this.Cn, this.Password, this.Mn, this.QN, this.Cp);
+            return p;
+        }
+
+        private string GetResultSections()
+        {
+            this.Mn = Settings.Instance.Mn;
+            string p = string.Format(
+                "ST={0};CN={1};PW={2};MN={3};Flag=1;CP=&&QN={4};{5}&&",
+                this.St, this.Cn, this.Password, this.Mn, this.QN, this.Cp);
+            return p;
+        }
+
     }
 }
