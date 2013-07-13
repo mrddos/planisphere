@@ -9,6 +9,8 @@ namespace Scada.DataCenterAgent
     {
         public const int SysSend = 38;
 
+        public const int SysReply = 91;
+
         public DataPacketBuilder()
         {
         }
@@ -43,13 +45,25 @@ namespace Scada.DataCenterAgent
         }
 
 
-
-        internal DataPacket GetReplyPacket()
+        internal DataPacket GetReplyPacket(string qn)
         {
             DataPacket dp = new DataPacket(SentCommand.Reply);
-            // DataPacket is for sending, SO ST=38.(SysSend)
-            dp.St = SysSend;
-            dp.Build();
+            // DataPacket is for sending, SO ST=91.(SysReply)
+            dp.St = SysReply;
+            dp.SetReply(1);
+            dp.QN = qn;
+            dp.BuildReply();
+            return dp;
+        }
+
+        internal DataPacket GetResultPacket(string qn)
+        {
+            DataPacket dp = new DataPacket(SentCommand.Result);
+            // DataPacket is for sending, SO ST=91.(SysReply)
+            dp.St = SysReply;
+            dp.SetResult(1);
+            dp.QN = qn;
+            dp.BuildResult();
             return dp;
         }
     }

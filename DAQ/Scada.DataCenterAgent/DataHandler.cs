@@ -34,7 +34,8 @@ namespace Scada.DataCenterAgent
         HistoryData = 2042,
         Auth = 6011,
         KeepAlive = 6031,
-        Reply = 9011
+        Reply = 9011,
+        Result = 9012,
     }
 
     class DataHandler
@@ -81,14 +82,19 @@ namespace Scada.DataCenterAgent
             this.agent.SendPacket(p);
         }
 
-        public void SendReplyPacket()
+        public void SendReplyPacket(string qn)
         {
             // QN=20090516010101001;ST=38;CN=6031;PW=123456;
             // MN=0101A010000000;CP=&&&&
-            var p = this.builder.GetReplyPacket();
-            this.agent.SendReplyPacket(p, default(DateTime));
+            var p = this.builder.GetReplyPacket(qn);
+            this.agent.SendPacket(p, default(DateTime));
         }
 
+        private void SendResultPacket(string qn)
+        {
+            var p = this.builder.GetResultPacket(qn);
+            this.agent.SendPacket(p, default(DateTime));
+        }
         
 
         public void OnMessage(string msg)
@@ -186,7 +192,9 @@ namespace Scada.DataCenterAgent
 
         private void InitializeRequest(string msg)
         {
-            // TODO:
+            string qn = ParseValue(msg, "QN");
+            this.SendReplyPacket(qn);
+            this.SendResultPacket(qn);
 
         }
 

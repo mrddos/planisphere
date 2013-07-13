@@ -169,12 +169,24 @@ namespace Scada.DataCenterAgent
                 if (c > 0)
                 {
                     string msg = Encoding.ASCII.GetString(so.buffer, 0, c);
+                    this.OnReceivedMessagess(msg);
+                    this.BeginRead(so.client);
+                }
+            }
+        }
+
+        private void OnReceivedMessagess(string messages)
+        {
+            string[] msgs = messages.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            foreach (string msg in msgs)
+            {
+                if (msg.Trim() != string.Empty)
+                {
                     this.OnReceiveMessage(this, msg);
                     if (this.handler != null)
                     {
                         this.handler.OnMessage(msg);
                     }
-                    this.BeginRead(so.client);
                 }
             }
         }
