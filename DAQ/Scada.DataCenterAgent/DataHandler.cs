@@ -17,7 +17,10 @@ namespace Scada.DataCenterAgent
         StopSend = 2012,
 
         HistoryData = 2042,
+
+        DirectData = 3101,
         Init = 6021,
+        KeepAlive = 6031,
         StartHvs = 7011,
         StopHvs = 7012,
 
@@ -110,7 +113,7 @@ namespace Scada.DataCenterAgent
                     break;
                 case ReceivedCommand.StartSend:
                     {
-                        this.agent.Started = true;
+                        this.OnDataRequest(msg);
                     }
                     break;
                 case ReceivedCommand.StopSend:
@@ -125,9 +128,19 @@ namespace Scada.DataCenterAgent
                         this.agent.History = false;
                     }
                     break;
+                case ReceivedCommand.DirectData:
+                    {
+                        this.OnDirectDataRequest(msg);
+                    }
+                    break;
                 case ReceivedCommand.Init:
                     {
-                        this.InitializeRequest(msg);
+                        this.OnInitializeRequest(msg);
+                    }
+                    break;
+                case ReceivedCommand.KeepAlive:
+                    {
+                        this.OnKeepAlive(msg);
                     }
                     break;
                 case ReceivedCommand.StartHvs:
@@ -163,6 +176,11 @@ namespace Scada.DataCenterAgent
             }
         }
 
+        private void OnKeepAlive(string msg)
+        {
+            // TODO: Handle Timeout, but NO doc details talk about this.
+        }
+
         private void OnServerReply(string msg)
         {
             // TODO:
@@ -190,12 +208,29 @@ namespace Scada.DataCenterAgent
 
         }
 
-        private void InitializeRequest(string msg)
+        private void OnInitializeRequest(string msg)
         {
             string qn = ParseValue(msg, "QN");
             this.SendReplyPacket(qn);
             this.SendResultPacket(qn);
 
+        }
+
+        private void OnDataRequest(string msg)
+        {
+            string qn = ParseValue(msg, "QN");
+            this.SendReplyPacket(qn);
+            // Upload data when right time.
+            this.agent.Started = true;
+        }
+
+        private void OnDirectDataRequest(string msg)
+        {
+            string qn = ParseValue(msg, "QN");
+            this.SendReplyPacket(qn);
+            this.SendResultPacket(qn);
+            // Upload data when right time.
+            this.agent.Started = true;
         }
 
         private static int ParseCommandCode(string msg)

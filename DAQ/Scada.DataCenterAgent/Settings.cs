@@ -194,7 +194,7 @@ namespace Scada.DataCenterAgent
 
         internal string GetTableName(string deviceKey)
         {
-            Device device = devices.Find((d) => { return d.Key == deviceKey; });
+            Device device = devices.Find((d) => { return deviceKey.Equals(d.Key, StringComparison.OrdinalIgnoreCase)  ; });
             if (device != null)
             {
                 return device.TableName;
