@@ -132,6 +132,7 @@ namespace Scada.DataCenterAgent
             this.SysName = this.GetAttribute(siteNode, "sysname");
             this.SysSt = this.GetAttribute(siteNode, "sysst");
             this.Mn = this.GetAttribute(siteNode, "mn");
+            this.Sno = this.GetAttribute(siteNode, "sno");
 
             this.LoadPassword();
             
@@ -198,6 +199,16 @@ namespace Scada.DataCenterAgent
             if (device != null)
             {
                 return device.TableName;
+            }
+            return string.Empty;
+        }
+
+        internal string GetEquipNumber(string deviceKey)
+        {
+            Device device = devices.Find((d) => { return deviceKey.Equals(d.Key, StringComparison.OrdinalIgnoreCase); });
+            if (device != null)
+            {
+                return device.EquipNumber;
             }
             return string.Empty;
         }
@@ -284,6 +295,12 @@ namespace Scada.DataCenterAgent
         }
 
         public string Mn
+        {
+            get;
+            private set;
+        }
+
+        public string Sno
         {
             get;
             private set;

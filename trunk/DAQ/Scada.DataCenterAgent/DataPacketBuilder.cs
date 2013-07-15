@@ -21,7 +21,9 @@ namespace Scada.DataCenterAgent
             DataPacket dp = new DataPacket(deviceKey);
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.St = SysSend;
-            dp.SetContent(data);
+            string sno = Settings.Instance.Sno;
+            string eno = Settings.Instance.GetEquipNumber(deviceKey);
+            dp.SetContent(sno, eno, data);
             dp.Build();
             return dp;
         }
@@ -31,7 +33,9 @@ namespace Scada.DataCenterAgent
             DataPacket dp = new DataPacket(deviceKey, true, true);
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.St = SysSend;
-            dp.SetContent(data);
+            string sno = Settings.Instance.Sno;
+            string eno = Settings.Instance.GetEquipNumber(deviceKey);
+            dp.SetContent(sno, eno, data);
             dp.Build();
             return dp;
         }

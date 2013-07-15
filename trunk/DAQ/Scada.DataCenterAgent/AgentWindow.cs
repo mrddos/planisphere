@@ -146,6 +146,7 @@ namespace Scada.DataCenterAgent
 
                 DataPacket p = null;
                 // By different device.
+                
                 if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
                     deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
                 {
