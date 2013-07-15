@@ -16,7 +16,7 @@ namespace Scada.DataCenterAgent
             this.Cn = string.Format("{0}", (int)cmd);
         }
 
-        public DataPacket(string deviceKey, bool realTime = true)
+        public DataPacket(string deviceKey, bool realTime = true, bool flow = false)
         {
             this.deviceKey = deviceKey;
             if (realTime)

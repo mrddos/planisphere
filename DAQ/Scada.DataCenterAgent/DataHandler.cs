@@ -34,6 +34,7 @@ namespace Scada.DataCenterAgent
     {
         None = 0,
         Data = 2011,
+        FlowData = 2014,
         HistoryData = 2042,
         Auth = 6011,
         KeepAlive = 6031,

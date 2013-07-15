@@ -144,8 +144,19 @@ namespace Scada.DataCenterAgent
             {
                 var d = DBDataSource.Instance.GetData(deviceKey, time);
 
-                DataPacket p = builder.GetDataPacket(deviceKey, d);
-                // string ps = p.ToString();
+                DataPacket p = null;
+                // By different device.
+                if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
+                    deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                {
+                    p = builder.GetFlowDataPacket(deviceKey, d);
+                }
+                else
+                {
+                    p = builder.GetDataPacket(deviceKey, d);
+                }
+
+                // Sent by each agent.s
                 foreach (var agent in this.agents)
                 {
                     agent.SendDataPacket(p, time);

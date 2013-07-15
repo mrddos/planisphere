@@ -26,6 +26,16 @@ namespace Scada.DataCenterAgent
             return dp;
         }
 
+        public DataPacket GetFlowDataPacket(string deviceKey, Dictionary<string, object> data)
+        {
+            DataPacket dp = new DataPacket(deviceKey, true, true);
+            // DataPacket is for sending, SO ST=38.(SysSend)
+            dp.St = SysSend;
+            dp.SetContent(data);
+            dp.Build();
+            return dp;
+        }
+
         public DataPacket GetAuthPacket()
         {
             DataPacket dp = new DataPacket(SentCommand.Auth);
