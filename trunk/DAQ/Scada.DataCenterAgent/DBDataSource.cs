@@ -95,7 +95,7 @@ namespace Scada.DataCenterAgent
         {
             if (this.cmd == null)
             {
-                return null;
+                return new Dictionary<string,object>(0);
             }
             // Return values
             const int MaxItemCount = 20;

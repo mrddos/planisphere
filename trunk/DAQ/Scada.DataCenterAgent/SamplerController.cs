@@ -109,14 +109,18 @@ namespace Scada.DataCenterAgent
             string path = Environment.CurrentDirectory;
             string file = string.Format("{0}\\devices\\{1}\\0.9\\HWND.r", path, this.DeviceKey);
 
-            byte[] bytes = new byte[32];
-
-            using (FileStream fs = File.Open(file, FileMode.Open))
+            if (File.Exists(file))
             {
-                int r = fs.Read(bytes, 0, 32);
-                string line = Encoding.ASCII.GetString(bytes, 0, r);
 
-                this.formHandle = (IntPtr)int.Parse(line);
+                byte[] bytes = new byte[32];
+
+                using (FileStream fs = File.Open(file, FileMode.Open))
+                {
+                    int r = fs.Read(bytes, 0, 32);
+                    string line = Encoding.ASCII.GetString(bytes, 0, r);
+
+                    this.formHandle = (IntPtr)int.Parse(line);
+                }
             }
         }
     }
