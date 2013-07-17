@@ -256,6 +256,12 @@ namespace Scada.Declare
                     }
                     this.lastDateTime = rightTime;
 
+                    if (hWnd == IntPtr.Zero)
+                    {
+                        // Defensive code.
+                        return;
+                    }
+
                     List<string> dataSet = GetData(hWnd);
                     bool startState = (dataSet[0] == "1");
 
