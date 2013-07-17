@@ -102,7 +102,7 @@ namespace Scada.DataCenterAgent
             private set;
         }
 
-        public void SetContent(string sno, string eno, Dictionary<string, object> data)
+        public void SetContent(string sno, string eno, string dataTime, Dictionary<string, object> data)
         {
             if (data.Count == 0)
             {
@@ -110,9 +110,13 @@ namespace Scada.DataCenterAgent
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            sb.Append(string.Format("SNO={0};ENO={1};", sno, eno));
+            sb.Append(string.Format("SNO={0};ENO={1};DataTime={2};", sno, eno, dataTime));
             foreach (var i in data)
             {
+                if ("id".Equals(i.Key, StringComparison.OrdinalIgnoreCase) || "time".Equals(i.Key, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
                 string item = string.Format("{0}={1};", i.Key, i.Value);
                 sb.Append(item);
             }
