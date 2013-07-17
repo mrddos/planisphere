@@ -121,6 +121,8 @@ namespace Scada.DataCenterAgent
 
                     List<Settings.DeviceCode> codes = Settings.Instance.GetCodes(deviceKey);
 
+                    string dataTime = reader.GetString("Time");
+                    ret.Add("time", dataTime);
                     foreach (var c in codes)
                     {
                         string field = c.Field.ToLower();

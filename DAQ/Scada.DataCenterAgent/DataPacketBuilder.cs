@@ -15,6 +15,13 @@ namespace Scada.DataCenterAgent
         {
         }
 
+        private string GetDataTimeString(DateTime time)
+        {
+            DateTime n = time;
+            string value = string.Format("{0}{1:d2}{2:d2}{3:d2}{4:d2}{5:d2}", n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second);
+
+            return value;
+        }
 
         public DataPacket GetDataPacket(string deviceKey, Dictionary<string, object> data)
         {
@@ -23,7 +30,9 @@ namespace Scada.DataCenterAgent
             dp.St = SysSend;
             string sno = Settings.Instance.Sno;
             string eno = Settings.Instance.GetEquipNumber(deviceKey);
-            dp.SetContent(sno, eno, data);
+            string timeStr = (string)data["time"];
+            string dataTime = this.GetDataTimeString(DateTime.Parse(timeStr));
+            dp.SetContent(sno, eno, dataTime, data);
             dp.Build();
             return dp;
         }
@@ -35,7 +44,9 @@ namespace Scada.DataCenterAgent
             dp.St = SysSend;
             string sno = Settings.Instance.Sno;
             string eno = Settings.Instance.GetEquipNumber(deviceKey);
-            dp.SetContent(sno, eno, data);
+            string timeStr = (string)data["time"];
+            string dataTime = this.GetDataTimeString(DateTime.Parse(timeStr));
+            dp.SetContent(sno, eno, dataTime, data);
             dp.Build();
             return dp;
         }
