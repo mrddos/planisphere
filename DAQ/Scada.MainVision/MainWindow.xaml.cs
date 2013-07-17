@@ -75,7 +75,6 @@ namespace Scada.MainVision
 			// TODO: Window Loaded.
 			this.LoadConfig();
 			this.LoadDataProvider();
-
             this.SetRefreshPanelDataTimer();
 
 			// Device List
@@ -92,12 +91,10 @@ namespace Scada.MainVision
 					this.DeviceList.AddDevice(displayName, deviceKey);
 				}
             }
-
             this.AddDevicePanes();
             this.ShowDataViewPanel("scada.hpic");
             // this.OnDeviceItemClicked(null, null);
             this.loaded = true;
-
             // Max when startup;
             this.OnMaxButton(null, null);
         }
