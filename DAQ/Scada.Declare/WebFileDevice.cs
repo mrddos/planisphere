@@ -138,9 +138,8 @@ namespace Scada.Declare
             else
             {
                 // Start download ...
-                int min = DateTime.Now.Minute;
-                int i = min / 5;
-                string fileName = GetFileName(i);
+
+                string fileName = GetFileName(DateTime.Now);
 				filePath = this.Path + "\\" + fileName;
 				if (File.Exists(filePath))
                 {
@@ -211,13 +210,17 @@ namespace Scada.Declare
         private void Record(NuclideDataSet set)
         {
             DateTime time = DateTime.Parse(set.EndTime);
+            time = time.AddMinutes(-this.minuteAdjust);
 
             var dd = this.ParseNaI(set, time);
             this.SynchronizationContext.Post(this.DataReceived, dd);
             foreach (var nd in set.sets)
             {
-                var dd2 = this.ParseNuclideData(nd, time);
-                this.SynchronizationContext.Post(this.DataReceived, dd2);
+                if (nd.Indication == "100")
+                {
+                    var dd2 = this.ParseNuclideData(nd, time);
+                    this.SynchronizationContext.Post(this.DataReceived, dd2);
+                }
             }
         }
 
@@ -226,7 +229,8 @@ namespace Scada.Declare
             object[] data = new object[]{ time,
                 time.AddMinutes(-5) , time, s.Coefficients, 
                 s.ChannelData, s.DoseRate, s.Temperature, s.HighVoltage, 
-                s.CalibrationNuclideFound, s.ReferencePeakEnergyFromPosition
+                s.CalibrationNuclideFound, 
+                s.ReferencePeakEnergyFromPosition
             };
             DeviceData dd = new DeviceData(this, data);
             dd.InsertIntoCommand = this.insertIntoCommand;
@@ -253,13 +257,13 @@ namespace Scada.Declare
         /// </summary>
         /// <param name="min"></param>
         /// <returns></returns>
-        private string GetFileName(int index)
+        private string GetFileName(DateTime now)
         {
             string fileName;
-            DateTime t = DateTime.Now;
+            DateTime t = now;
             t = t.AddHours(-this.timeZone).AddMinutes(this.minuteAdjust);
             fileName = string.Format("{0}_{1}-{2:D2}-{3:D2}T{4:D2}_{5:D2}_00Z-5min.n42",
-				this.deviceSn, t.Year, t.Month, t.Day, t.Hour, index * 5);
+				this.deviceSn, t.Year, t.Month, t.Day, t.Hour, t.Minute / 5 * 5);
             return fileName;
         }
 
@@ -276,7 +280,18 @@ namespace Scada.Declare
             string cd = doc.Value("//a:ChannelData", nsmgr);
 
             string dr = doc.Value("//a:DoseRate", nsmgr);
-
+            if (dr != null && dr.Length > 0)
+            {
+                double v;
+                if (double.TryParse(dr, out v))
+                {
+                    dr = (v * 1000).ToString();
+                }
+                else
+                {
+                    dr = "0.0 (ERR)";
+                }
+            }
             string tp = doc.Value("//s:Temperature", nsmgr);
             string hv = doc.Value("//s:HighVoltage", nsmgr);
 
@@ -293,7 +308,7 @@ namespace Scada.Declare
             set.DoseRate = dr;
             set.Temperature = tp;
             set.HighVoltage = hv;
-            set.CalibrationNuclideFound = ns;
+            set.CalibrationNuclideFound = (bool)(ns != "false");
             set.ReferencePeakEnergyFromPosition = ne;
 
             XmlNodeList list = doc.SelectNodes("//a:Nuclide", nsmgr);
@@ -307,6 +322,19 @@ namespace Scada.Declare
                 string na = n.Value("a:NuclideActivity", nsmgr);
 
                 string nd = n.Value("s:DoseRate", nsmgr);
+                if (nd != null && nd.Length > 0)
+                {
+                    double v;
+                    if (double.TryParse(nd, out v))
+                    {
+                        nd = (v * 1000).ToString();
+                    }
+                    else
+                    {
+                        nd = "0.0 (ERR)";
+                    }
+                }
+
 
                 string ch = string.Empty;
                 string en = string.Empty;
