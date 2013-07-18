@@ -392,6 +392,7 @@ namespace Scada.Declare
 					bool got = this.GetDeviceData(line, this.currentActionTime, out dd);
 					if (got)
 					{
+                        dd.OriginData = Encoding.ASCII.GetString(line);
 						this.SynchronizationContext.Post(this.DataReceived, dd);
 					}
 				}

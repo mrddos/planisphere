@@ -51,6 +51,8 @@ namespace Scada.Declare
 
         private DateTime time;
 
+        private string originData;
+
 		private string insertIntoCommand;
 
 		// private FieldConfig[] fieldsConfig;
@@ -62,6 +64,7 @@ namespace Scada.Declare
 			this.delay = 0;
 			this.action = null;
             this.time = default(DateTime);
+            this.originData = string.Empty;
             this.insertIntoCommand = string.Empty;
             
 			// this.fieldsConfig = null;
@@ -106,6 +109,12 @@ namespace Scada.Declare
 			get { return this.insertIntoCommand; }
 			set { this.insertIntoCommand = value; }
 		}
+
+        public string OriginData
+        {
+            get { return this.originData; }
+            set { this.originData = value; }
+        }
 		/*
 		public FieldConfig[] FieldsConfig
 		{

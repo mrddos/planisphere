@@ -69,7 +69,8 @@ namespace Scada.Declare
                     f = this.Factors[0];
                 }
 
-                items[4] = (f * d).ToString();
+                // uGy/h (*1000)==> nGy/h
+                items[4] = (f * d * 1000).ToString();
             }
 			return items;
 		}
@@ -176,7 +177,7 @@ namespace Scada.Declare
                 ret[5] = ifWater ? "1" : "0";
             }
 
-            item = items[8];    // 水
+            item = items[8];    // 门
             if (!string.IsNullOrEmpty(item))
             {
                 bool ifOpen = (item.Trim() == "0");

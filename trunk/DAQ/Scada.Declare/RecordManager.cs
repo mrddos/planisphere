@@ -87,7 +87,11 @@ namespace Scada.Declare
 		public static void DoDataRecord(DeviceData deviceData)
 		{
 			// TODO: Record it in the files.
-
+            if (deviceData.OriginData != null && deviceData.OriginData.Length > 0)
+            {
+                string originLine = deviceData.OriginData;
+                RecordManager.WriteDataToLog(deviceData.Device, originLine.Trim());
+            }
 			string line = RecordManager.PackDeviceData(deviceData);
 			RecordManager.WriteDataToLog(deviceData.Device, line);
             if (analysisToolOpen)

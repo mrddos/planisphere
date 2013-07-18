@@ -260,7 +260,7 @@ namespace Scada.MainVision
                 if (ConvertDouble(doserate, out v))
                 {
                     this.CheckAlarm(panel, DBDataProvider.DeviceKey_Hpic, Doserate, 0, v); 
-                    string doserateMsg = "剂量率: " + v + "uGy/h";
+                    string doserateMsg = "剂量率: " + v + "nGy/h";
                     this.DisplayPanelData(panel, doserateMsg);
                 }
             }
@@ -333,7 +333,7 @@ namespace Scada.MainVision
 
             }
 
-            string doserateMsg = "总剂量率: " + doserate + "uSv/h";
+            string doserateMsg = "总剂量率: " + doserate + "nSv/h";
             double v;
             if (ConvertDouble(doserate, out v))
             {

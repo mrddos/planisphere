@@ -61,8 +61,6 @@ namespace Scada.Main
                 }
             }
 
-             runAll = true;
-
 			////////////////////////////////////////////////////////////////
 			// Device List in Group.
 
