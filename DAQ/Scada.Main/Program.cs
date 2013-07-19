@@ -103,9 +103,7 @@ namespace Scada.Main
             if (!IsWatchRunning())
 			{
 				StartWatchProcess();
-			}
-
-			
+			}			
 
 
 

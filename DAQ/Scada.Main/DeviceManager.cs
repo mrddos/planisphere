@@ -455,6 +455,12 @@ namespace Scada.Main
             long now = DateTime.Now.Ticks;
             foreach (string deviceKey in this.lastUpdateDict.Keys)
             {
+                if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
+                    deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
                 long lastModifyTime = this.lastUpdateDict[deviceKey];
                 long diffInSec = (now - lastModifyTime) / 10000000;
                 if (diffInSec > 60 * 5)

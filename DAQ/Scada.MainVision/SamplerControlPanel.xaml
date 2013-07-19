@@ -15,7 +15,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     
-    <Grid IsVisibleChanged="IsVisibleChanged">
+    <Grid IsVisibleChanged="IsVisibleChanged" Unloaded="Grid_Unloaded_1">
         <Grid.RowDefinitions>
             <RowDefinition Height="200"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
