@@ -427,11 +427,11 @@ namespace Scada.MainVision
             DateTime dt2 = DateTime.MinValue;
             if (t1 != null)
             {
-                dt1 = DateTime.Parse((string)t1);
+                if (DateTime.TryParse((string)t1, out dt1)) ;
             }
             if (t2 != null)
             {
-                dt2 = DateTime.Parse((string)t2);
+                if (DateTime.TryParse((string)t2, out dt2)) ;
             }
 
             if (dt1 > dt2)

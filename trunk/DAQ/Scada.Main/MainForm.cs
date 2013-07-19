@@ -88,7 +88,7 @@ namespace Scada.Main
             if (runAll)
             {
                 this.CheckAllDevices();
-                Thread.Sleep(3000);
+                Thread.Sleep(30000);
                 this.SelectDevices();
                 this.RunDevices();
             }

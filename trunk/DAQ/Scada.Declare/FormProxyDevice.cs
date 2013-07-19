@@ -26,6 +26,9 @@ namespace Scada.Declare
         [DllImport("kernel32.dll")]
         public extern static int GetLastError();
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern IntPtr PostMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
         private string processName;
 
         private IntPtr hWnd = IntPtr.Zero;
@@ -35,6 +38,10 @@ namespace Scada.Declare
         private Timer timer = null;
 
         private const int WM_GETTEXT = 0x000D;
+
+        private const int WM_COMMAND = 0x0111;
+
+        private const int BN_CLICKED = 0;
 
         private const int BufferLength = 1024;
 
@@ -72,6 +79,24 @@ namespace Scada.Declare
 
 		~FormProxyDevice()
         {
+        }
+
+        private static int MakeLong(int l, int h)
+        {
+            // ((LONG)(((WORD)(a & 0xffff)) | ((DWORD)((WORD)(b & 0xffff))) << 16))
+            return (int)(short)(l & 0xffff) | ((int)(short)(h & 0xffff)) << 16;
+        }
+
+        // TODO: Check...
+        public static void PressConnectToCPU(string processName, string devicePath)
+        {
+            IntPtr hWnd = FetchWindowHandle(processName, devicePath);
+
+            const int buttonId = 0x3C;
+
+            IntPtr btnHwnd = GetDlgItem(hWnd, buttonId);
+            int l = MakeLong(buttonId, BN_CLICKED);
+            PostMessage(hWnd, WM_COMMAND, l, (int)btnHwnd);
         }
 
 		private bool Initialize(DeviceEntry entry)
@@ -159,9 +184,9 @@ namespace Scada.Declare
             return sb.ToString();
         }
 
-        private IntPtr FetchWindowHandle(string processName)
+        private static IntPtr FetchWindowHandle(string processName, string path)
         {
-            string hWndCfgFile = this.Path + "\\HWND.r";
+            string hWndCfgFile = path + "\\HWND.r";
 
             using (Process process = new Process())
             {
@@ -172,7 +197,7 @@ namespace Scada.Declare
                 process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
                 process.StartInfo.RedirectStandardError = true;//重定向错误输出
                 
-                string args = string.Format("{0} {1}", this.processName, hWndCfgFile);
+                string args = string.Format("{0} {1}", processName, hWndCfgFile);
                 process.StartInfo.Arguments = args;
                 process.Start();
             }
@@ -242,7 +267,7 @@ namespace Scada.Declare
             this.thread = new Thread(new ThreadStart(() => {
 
                 // Fetch Window Handle from HWND.r file.
-                this.hWnd = FetchWindowHandle(this.processName);
+                this.hWnd = FetchWindowHandle(this.processName, this.Path);
 
 
                 //string s = GetText(hWnd, this.elemIdList[0]);

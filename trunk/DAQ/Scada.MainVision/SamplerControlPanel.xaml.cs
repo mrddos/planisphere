@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -46,15 +47,16 @@ namespace Scada.MainVision
 
         private const int BufferLength = 1024;
 
-        private const int StartButtonHandle = 0x3E;
+        private const int StartButtonId = 0x3E;
 
-        private const int StopButtonHandle = 0x3D;
+        private const int StopButtonId = 0x3D;
 
         private const int StatusTextBox = 0x1A;
 
         private IntPtr formHandle;
 
-        private bool isOpen = false;
+        private Timer timer = null;
+
 
         public SamplerControlPanel(string deviceKey)
         {
@@ -64,16 +66,16 @@ namespace Scada.MainVision
 
         private void OnControl(object sender, RoutedEventArgs e)
         {
-            if (this.isOpen)
+            if (IsStarted())
             {
-                IntPtr btnHwnd = GetDlgItem(this.formHandle, StopButtonHandle);
-                int l = MakeLong(StartButtonHandle, BN_CLICKED);
-                PostMessage(this.formHandle, WM_COMMAND, l, (int)btnHwnd);
+                IntPtr btnHwnd = GetDlgItem(this.formHandle, StopButtonId);
+                int l = MakeLong(StartButtonId, BN_CLICKED);
+                PostMessage(this.formHandle, WM_COMMAND, l, (int)btnHwnd);    
             }
             else
             {
-                IntPtr btnHwnd = GetDlgItem(this.formHandle, StartButtonHandle);
-                int l = MakeLong(StartButtonHandle, BN_CLICKED);
+                IntPtr btnHwnd = GetDlgItem(this.formHandle, StartButtonId);
+                int l = MakeLong(StartButtonId, BN_CLICKED);
                 PostMessage(this.formHandle, WM_COMMAND, l, (int)btnHwnd);
             }
 
@@ -94,7 +96,12 @@ namespace Scada.MainVision
 
         private void IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (IsStarted())
+            this.UpdateButtonStatus(IsStarted());
+        }
+
+        private void UpdateButtonStatus(bool started)
+        {
+            if (started)
             {
                 this.StartButton.IsEnabled = false;
                 this.StopButton.IsEnabled = true;
@@ -109,7 +116,7 @@ namespace Scada.MainVision
         private bool IsStarted()
         {
             string status = this.GetText(this.formHandle, StatusTextBox);
-            return status == "2";
+            return status == "1";
         }
 
 
@@ -148,6 +155,26 @@ namespace Scada.MainVision
                     this.formHandle = (IntPtr)int.Parse(line);
                 }
             }
+
+            this.timer = new Timer();
+            this.timer.Interval = 3000;
+            this.timer.Elapsed += this.ButtonStatusCheckerTick;
+            this.timer.Start();
+        }
+
+        void ButtonStatusCheckerTick(object sender, ElapsedEventArgs e)
+        {
+            Dispatcher.Invoke(new Action(() => {
+                this.UpdateButtonStatus(IsStarted());
+            }));
+            
+        }
+
+        private void Grid_Unloaded_1(object sender, RoutedEventArgs e)
+        {
+            this.timer.Stop();
+            this.timer.Dispose();
+            this.timer = null;
         }
     }
 }
