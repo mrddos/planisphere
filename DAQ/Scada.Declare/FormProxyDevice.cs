@@ -52,10 +52,10 @@ namespace Scada.Declare
 
         private DateTime lastDateTime = default(DateTime);
 
-        private DateTime beginTime;
-        private DateTime endTime;
+        private string beginTime;
+        private string endTime;
 
-        private bool? lastStartState;
+        private bool lastStartState;
 
         private double factor1;
 
@@ -198,13 +198,21 @@ namespace Scada.Declare
                 foreach (int elemId in this.elemIdList)
                 {
                     string s = GetText(hWnd, elemId);
+                    if (s.Contains('.'))
+                    {
+                        double v;
+                        if (double.TryParse(s, out v))
+                        {
+                            s = v.ToString();
+                        }
+                    }
                     ret.Add(s);
                 }
             }
             return ret;
         }
 
-        private bool GetDeviceData(string[] data, DateTime time, DateTime beginTime, DateTime endTime, out DeviceData deviceData)
+        private bool GetDeviceData(string[] data, DateTime time, out DeviceData deviceData)
         {
             deviceData = default(DeviceData);
             if (data == null || data.Length == 0)
@@ -237,8 +245,9 @@ namespace Scada.Declare
                 this.hWnd = FetchWindowHandle(this.processName);
 
 
-                string s = GetText(hWnd, this.elemIdList[0]);
-                this.lastStartState = (s == "1");
+                //string s = GetText(hWnd, this.elemIdList[0]);
+                // this.lastStartState = (s == "1");
+
                 // Start timer to work.
                 this.timer = new Timer(new TimerCallback((object o) => {
 
@@ -264,40 +273,25 @@ namespace Scada.Declare
 
                     List<string> dataSet = GetData(hWnd);
                     bool startState = (dataSet[0] == "1");
-
-                    if (this.lastStartState != startState)
-                    {
-                        // State changed;
-                        if (startState)
-                        {
-                            this.GenCurrentSid();
-                            // dataSet.Add(this.currentSid.ToString());
-                            this.beginTime = rightTime;
-                        }
-                        else
-                        {
-                            this.beginTime = default(DateTime);
-                            this.endTime = default(DateTime);
-                        }
-                        this.lastStartState = startState;
-                    }
-
                     if (startState)
                     {
-                        this.endTime = rightTime;
+                        if (this.lastStartState == false)
+                        {
+                            this.lastStartState = true;
+                            this.GenCurrentSid();
+                            this.beginTime = rightTime.ToString();
+                        }
+                        this.StoreData(dataSet, this.currentSid.ToString(), beginTime, null, rightTime);
                     }
-
-                    dataSet.Add(this.currentSid.ToString());
-                    dataSet.Add(this.beginTime.ToString());
-                    dataSet.Add(this.endTime.ToString());
-
-                    DeviceData dd = default(DeviceData);
-                    bool got = this.GetDeviceData(dataSet.ToArray(), rightTime, this.beginTime, this.endTime, out dd);
-                    if (got)
+                    else
                     {
-                        this.lastDateTime = rightTime;
-                        this.SynchronizationContext.Post(this.DataReceived, dd);
+                        if (this.lastStartState)
+                        {
+                            this.lastStartState = false;
+                            this.StoreData(dataSet, this.currentSid.ToString(), beginTime, rightTime.ToString(), rightTime);
+                        }
                     }
+
 
                 }), null, 1000, 2000);
                 
@@ -305,6 +299,21 @@ namespace Scada.Declare
 
             thread.Start();
 		}
+
+        private void StoreData(List<string> dataSet, string currentSid, string beginTime, string endTime, DateTime currentTime)
+        {
+            dataSet.Add(currentSid);
+            dataSet.Add(beginTime);
+            dataSet.Add(endTime);
+
+            DeviceData dd = default(DeviceData);
+            bool got = this.GetDeviceData(dataSet.ToArray(), currentTime, out dd);
+            if (got)
+            {
+                this.lastDateTime = currentTime;
+                this.SynchronizationContext.Post(this.DataReceived, dd);
+            }
+        }
 
 		public override void Stop()
 		{
