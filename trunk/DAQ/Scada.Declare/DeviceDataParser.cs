@@ -24,6 +24,14 @@ namespace Scada.Declare
 			for (int i = 0; i < items.Length; ++i)
 			{
 				items[i] = items[i].Trim();
+                if (i == 6)
+                {
+                    int d = 0;
+                    if (int.TryParse(items[i], out d))
+                    {
+                        items[i] = d.ToString();
+                    }
+                }
 			}
 			return items;
 		}
@@ -106,36 +114,36 @@ namespace Scada.Declare
            
             string item = string.Empty;
 
-            item = items[1];    // 温度, 第二个是温度
+            item = items[0];    // 温度, 第1个是温度
             if (!string.IsNullOrEmpty(item))
             {
                 double v = 0.0;
                 if (double.TryParse(item, out v))
                 {
-                    double f = 0.0122;
-                    if (this.Factors.Count >= 2)
-                    {
-                        f = this.Factors[1];
-                    }
-
-                    int temp = (int)(v * f);
-                    ret[0] = temp.ToString();
+                    double f = 0.034188;
+                    //if (this.Factors.Count >= 1)
+                    //{
+                    //    f = this.Factors[0];
+                    //}
+                    int i = (int)(v * f - 40);
+                    ret[0] = i.ToString();
                 }
             }
 
-            item = items[0];    // 湿度, 第一个是湿度
+            item = items[1];    // 湿度, 第2个是湿度
             if (!string.IsNullOrEmpty(item))
             {
                 double v = 0.0;
                 if (double.TryParse(item, out v))
                 {
-                    double f = 0.0224;
-                    if (this.Factors.Count >= 1)
-                    {
-                        f = this.Factors[0];
-                    }
-                    int humidity = (int)(v * f);
-                    ret[1] = humidity.ToString();
+                    double f = 0.0244;
+                    //if (this.Factors.Count >= 2)
+                    //{
+                    //    f = this.Factors[1];
+                    //}
+
+                    int i = (int)(v * f);
+                    ret[1] = i.ToString();
                 }
             }
 
