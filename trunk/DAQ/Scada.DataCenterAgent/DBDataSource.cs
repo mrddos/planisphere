@@ -31,7 +31,7 @@ namespace Scada.DataCenterAgent
 
         private List<string> deviceKeyList = new List<string>();
 
-
+        private int minuteAdjustForNaI = 0;
       
 
         // <DeviceKey, dict[data]>
@@ -149,6 +149,31 @@ namespace Scada.DataCenterAgent
 
             return ret;
 
+        }
+
+        public string GetNaIDeviceData(DateTime time)
+        {
+            string fileName = this.GetFileName(time);
+            string content = string.Empty;
+            if (File.Exists(fileName))
+            {
+                StreamReader fs = new StreamReader(fileName);
+                content = fs.ReadToEnd();
+            }
+            
+            return content;
+        }
+
+        private string GetFileName(DateTime time)
+        {
+            int minuteAdjust = Settings.Instance.MinuteAdjust;
+            string deviceSn = Settings.Instance.NaIDeviceSn;
+            string fileName;
+            DateTime t = time;
+            t = t.AddHours(-8).AddMinutes(minuteAdjust);
+            fileName = string.Format("{0}_{1}-{2:D2}-{3:D2}T{4:D2}_{5:D2}_00Z-5min.n42",
+                deviceSn, t.Year, t.Month, t.Day, t.Hour, t.Minute / 5 * 5);
+            return fileName;
         }
 
         public static int DateTimeCompare(Dictionary<string, object> a, Dictionary<string, object> b)
