@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Scada.Declare;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace Scada.DataCenterAgent
@@ -153,6 +155,15 @@ namespace Scada.DataCenterAgent
                     }
                 }
             }
+
+
+            // Load NaI device config.
+            string path = string.Format("{0}\\devices\\Scada.NaIDevice\\0.9\\device.cfg", Environment.CurrentDirectory);
+
+            DeviceEntry entry = LoadFromConfig("Scada.NaIDevice", path);
+
+            this.NaIDeviceSn = (StringValue)entry["DeviceSn"];
+            this.MinuteAdjust = (StringValue)entry["MinuteAdjust"];
         }
 
         private Device ParseDeviceNode(XmlNode deviceNode)
@@ -315,5 +326,48 @@ namespace Scada.DataCenterAgent
             }
             return string.Empty;
         }
+
+
+        public static DeviceEntry LoadFromConfig(string deviceName, string configFile)
+        {
+            if (!File.Exists(configFile))
+                return null;
+
+            using (ScadaReader sr = new ScadaReader(configFile))
+            {
+                SectionType secType = SectionType.None;
+                string line = null;
+                string key = null;
+                IValue value = null;
+                ReadLineResult result = sr.ReadLine(out secType, out line, out key, out value);
+                // Dictionary<string, string> config = new Dictionary<string, string>();
+                DeviceEntry entry = new DeviceEntry();
+                while (result == ReadLineResult.OK)
+                {
+                    result = sr.ReadLine(out secType, out line, out key, out value);
+
+                    if (secType == SectionType.KeyWithStringValue)
+                    {
+                        entry[key] = value;
+                    }
+                }
+                DirectoryInfo di = Directory.GetParent(configFile);
+                string devicePath = di.FullName;
+                // Path
+                entry[DeviceEntry.Path] = new StringValue(devicePath);
+                entry[DeviceEntry.Identity] = new StringValue(deviceName);
+
+                // Virtual 
+                if (File.Exists(devicePath + "\\virtual-device"))
+                {
+                    entry[DeviceEntry.Virtual] = new StringValue("true");
+                }
+                return entry;
+            }
+        }
+
+        public string NaIDeviceSn { get; set; }
+
+        public int MinuteAdjust { get; set; }
     }
 }
