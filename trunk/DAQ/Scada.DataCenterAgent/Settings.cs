@@ -305,5 +305,15 @@ namespace Scada.DataCenterAgent
             get;
             private set;
         }
+
+        internal string GetDeviceKeyByEno(string eno)
+        {
+            Device device = devices.Find((d) => { return eno.Equals(d.EquipNumber, StringComparison.OrdinalIgnoreCase); });
+            if (device != null)
+            {
+                return device.Key;
+            }
+            return string.Empty;
+        }
     }
 }

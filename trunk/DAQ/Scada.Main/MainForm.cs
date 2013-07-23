@@ -85,10 +85,13 @@ namespace Scada.Main
                 }
             }
 
+            runAll = true;
             if (runAll)
             {
                 this.CheckAllDevices();
-                Thread.Sleep(30000);
+                Thread.Sleep(1000);
+                this.PressVBFormConnectToCPUButtons();
+                
                 this.SelectDevices();
                 this.RunDevices();
             }
@@ -106,6 +109,17 @@ namespace Scada.Main
                 this.RunDevices();
             }
             
+        }
+
+        private void PressVBFormConnectToCPUButtons()
+        {
+            const string Version = "0.9";
+            string path;
+            path = DeviceManager.GetDevicePath("Scada.HVSampler", Version);
+            FormProxyDevice.PressConnectToCPU("MDS.exe", path);
+
+            path = DeviceManager.GetDevicePath("Scada.ISampler", Version);
+            FormProxyDevice.PressConnectToCPU("AIS.exe", path);
         }
 
         private void RunDevices()
@@ -147,6 +161,7 @@ namespace Scada.Main
 		private void InitSysNotifyIcon()
 		{
 			// Notify Icon
+            sysNotifyIcon.Text = "系统设备管理器";
 			sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
 			sysNotifyIcon.Visible = true;
 
