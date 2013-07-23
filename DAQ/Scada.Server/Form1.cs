@@ -157,5 +157,15 @@ namespace Scada.Server
 
             }
         }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            // QN=20090516010101001;ST=38;CN=2042;PW=123456;
+            // MN=80110010000000;Flag=3;CP=&&SNO=0101A01;ENO=001001;
+            // BeginTime=20090506083030;EndTime=20090506084530;PolId=xxx &&
+
+            string msg = "QN=20090516010101001;ST=38;CN=2042;PW=123456;MN=80110010000000;Flag=3;CP=&&SNO=0101A01;ENO=001001;BeginTime=20090506083030;EndTime=20090506084530;PolId=000111&&";
+            this.Send(msg);
+        }
     }
 }

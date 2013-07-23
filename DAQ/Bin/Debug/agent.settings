@@ -2,7 +2,10 @@
 <settings>
 	<!-- Default Port is 6000 and 7000 -->
 	<datacenters>
+		<!--
 		<datacenter ip="122.224.74.82" port="6000" wirelessip="" wirelessport="7000"/>
+		-->
+		<datacenter ip="127.0.0.1" port="6000" wirelessip="" wirelessport="7000"/>
 		<!--
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>

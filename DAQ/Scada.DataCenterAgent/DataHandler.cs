@@ -205,7 +205,59 @@ namespace Scada.DataCenterAgent
 
         private void HandleHistoryData(string msg)
         {
-            // TODO:
+            string sno = ParseValue(msg, "SNO");
+
+            string eno = ParseValue(msg, "ENO");
+
+            string beginTime = ParseValue(msg, "BeginTime");
+            string endTime = ParseValue(msg, "EndTime");
+
+            string polId = ParseValue(msg, "PolId");
+
+            this.UploadHistoryData(eno, beginTime, endTime, polId);
+        }
+
+        private void UploadHistoryData(string eno, string beginTime, string endTime, string polId)
+        {
+            DateTime f = ParseDateTime(beginTime);
+            DateTime t = ParseDateTime(endTime);
+            if (f >= t)
+            {
+                return;
+            }
+            string deviceKey = Settings.Instance.GetDeviceKeyByEno(eno);
+            string deviceKeyLower = deviceKey.ToLower();
+            DateTime dt = f;
+            while (dt <= t)
+            {
+                var d = DBDataSource.Instance.GetData(deviceKey, dt);
+
+
+                DataPacket p = null;
+                // By different device.
+
+                if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
+                    deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                {
+                    p = builder.GetFlowDataPacket(deviceKey, d);
+                }
+                else
+                {
+                    p = builder.GetDataPacket(deviceKey, d);
+                }
+
+                this.agent.SendDataPacket(p, dt);
+
+                if (deviceKeyLower.Contains("nai"))
+                {
+                    // NaI inc 5 min.
+                    dt = dt.AddSeconds(60 * 5);
+                }
+                else
+                {
+                    dt = dt.AddSeconds(30);
+                }
+            }
 
         }
 
@@ -248,6 +300,26 @@ namespace Scada.DataCenterAgent
         {
             Settings.Instance.Password = DataHandler.ParseValue(msg, "PW");
             // TODO: 应答
+        }
+
+        private DateTime ParseDateTime(string time)
+        {
+            // 2009 05 06 08 30 30
+            try
+            {
+                int y = int.Parse(time.Substring(0, 4));
+                int m = int.Parse(time.Substring(4, 2));
+                int d = int.Parse(time.Substring(6, 2));
+                int h = int.Parse(time.Substring(8, 2));
+                int min = int.Parse(time.Substring(10, 2));
+                int sec = int.Parse(time.Substring(12, 2));
+                DateTime dt = new DateTime(y, m, d, h, min, sec);
+                return dt;
+            }
+            catch (FormatException e)
+            {
+                return (default(DateTime));
+            }
         }
 
         private static string ParseValue(string msg, string key)
