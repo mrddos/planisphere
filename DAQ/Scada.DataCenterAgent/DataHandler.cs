@@ -230,31 +230,38 @@ namespace Scada.DataCenterAgent
             DateTime dt = f;
             while (dt <= t)
             {
-                var d = DBDataSource.Instance.GetData(deviceKey, dt);
-
-
-                DataPacket p = null;
-                // By different device.
-
-                if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
-                    deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
                 {
-                    p = builder.GetFlowDataPacket(deviceKey, d);
-                }
-                else
-                {
-                    p = builder.GetDataPacket(deviceKey, d);
-                }
+                    // NaIDevice ... Gose here.
+                    // 分包
+                    string content = DBDataSource.Instance.GetNaIDeviceData(dt);
 
-                this.agent.SendDataPacket(p, dt);
-
-                if (deviceKeyLower.Contains("nai"))
-                {
-                    // NaI inc 5 min.
+                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content);
+                    foreach (var p in pks)
+                    {
+                        this.agent.SendDataPacket(p, dt);
+                    }
                     dt = dt.AddSeconds(60 * 5);
                 }
                 else
                 {
+                    // Non NaIDevice
+                    var d = DBDataSource.Instance.GetData(deviceKey, dt);
+
+                    DataPacket p = null;
+                    // By different device.
+
+                    if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
+                        deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                    {
+                        p = builder.GetFlowDataPacket(deviceKey, d);
+                    }
+                    else
+                    {
+                        p = builder.GetDataPacket(deviceKey, d);
+                    }
+
+                    this.agent.SendDataPacket(p, dt);
                     dt = dt.AddSeconds(30);
                 }
             }

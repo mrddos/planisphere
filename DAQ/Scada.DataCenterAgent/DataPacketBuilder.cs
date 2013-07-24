@@ -91,5 +91,40 @@ namespace Scada.DataCenterAgent
             dp.BuildResult();
             return dp;
         }
+
+        internal List<DataPacket> GetDataPackets(string deviceKey, DateTime dateTime, string content)
+        {
+            List<DataPacket> rets = new List<DataPacket>();
+            int from = 0;
+            const int MaxContent = 920;
+            int count = content.Length / MaxContent + 1;
+            int index = 1;
+
+            string sno = Settings.Instance.Sno;
+            string eno = Settings.Instance.GetEquipNumber(deviceKey);
+
+            string dataTime = this.GetDataTimeString(dateTime);
+
+            while (true)
+            {
+                DataPacket dp = new DataPacket(SentCommand.Data);
+                dp.Splitted = true;
+                dp.PacketCount = count;
+                dp.PacketIndex = index;
+                dp.St = SysSend;
+
+                string c = content.Substring(from, Math.Min(MaxContent, content.Length - from));
+                dp.SetContent(sno, eno, dataTime, c);
+                dp.Build();
+
+                rets.Add(dp);
+                if (from >= content.Length)
+                    break;
+
+                from += c.Length;
+                index += 1;
+            }
+            return rets;
+        }
     }
 }

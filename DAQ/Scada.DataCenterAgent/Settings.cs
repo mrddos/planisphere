@@ -158,7 +158,9 @@ namespace Scada.DataCenterAgent
 
 
             // Load NaI device config.
-            string path = string.Format("{0}\\devices\\Scada.NaIDevice\\0.9\\device.cfg", Environment.CurrentDirectory);
+            // TODO:
+            this.NaIFilePath = string.Format("{0}\\devices\\Scada.NaIDevice\\0.9", Environment.CurrentDirectory);
+            string path = string.Format("{0}\\device.cfg", this.NaIFilePath);
 
             DeviceEntry entry = LoadFromConfig("Scada.NaIDevice", path);
 
@@ -369,5 +371,7 @@ namespace Scada.DataCenterAgent
         public string NaIDeviceSn { get; set; }
 
         public int MinuteAdjust { get; set; }
+
+        public string NaIFilePath { get; set; }
     }
 }
