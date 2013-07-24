@@ -11,6 +11,8 @@ namespace Scada.DataCenterAgent
 
         private string deviceKey;
 
+        private bool splitted = false;
+
         public DataPacket(SentCommand cmd)
         {
             this.Cn = string.Format("{0}", (int)cmd);
@@ -26,6 +28,18 @@ namespace Scada.DataCenterAgent
             else
             {
                 this.Cn = string.Format("{0}", (int)SentCommand.HistoryData);
+            }
+        }
+
+        public bool Splitted
+        {
+            get
+            {
+                return this.splitted;
+            }
+            set
+            {
+                this.splitted = value;
             }
         }
 
@@ -124,6 +138,20 @@ namespace Scada.DataCenterAgent
             this.Cp = sb.ToString();
         }
 
+        public void SetContent(string sno, string eno, string dataTime, string data)
+        {
+            if (data.Length == 0)
+            {
+                this.Cp = string.Empty;
+                return;
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("SNO={0};ENO={1};DataTime={2};", sno, eno, dataTime));
+            sb.Append(data);
+            this.Cp = sb.ToString();
+        }
+        
+
         internal void SetReply(int reply)
         {
             this.Cp = string.Format("QnRtn={0}", reply);
@@ -201,10 +229,27 @@ namespace Scada.DataCenterAgent
         {
             this.GenQN();
             this.Mn = Settings.Instance.Mn;
-            string p = string.Format(
-                "QN={0};ST={1};CN={2};PW={3};MN={4};Flag=1;CP=&&{5}&&", 
-                this.QN, this.St, this.Cn, this.Password, this.Mn, this.Cp);
-            return p;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("QN={0};", this.QN));
+
+            if (this.Splitted)
+            {
+                sb.Append(string.Format("PNUM={0};PNO={1};", this.PacketCount, this.PacketIndex));
+            }
+
+            sb.Append(string.Format("ST={0};CN={1};PW={2};MN={3};", this.St, this.Cn, this.Password, this.Mn));
+
+            if (this.Splitted)
+            {
+                sb.Append("Flag=3;");
+            }
+
+            if (this.Cp != null)
+            {
+                sb.Append(string.Format("CP=&&{0}&&", this.Cp));
+            }
+            return sb.ToString();
         }
 
         private string GetReplySections()
@@ -225,5 +270,9 @@ namespace Scada.DataCenterAgent
             return p;
         }
 
+
+        public int PacketCount { get; set; }
+
+        public int PacketIndex { get; set; }
     }
 }

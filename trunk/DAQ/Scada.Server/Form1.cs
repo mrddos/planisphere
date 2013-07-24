@@ -51,19 +51,31 @@ namespace Scada.Server
 
                 while (true)
                 {
-                    string result = sr.ReadLine();
-                    Debug.WriteLine(result);
+                    try
+                    {
+                        string result = sr.ReadLine();
+                        Debug.WriteLine(result);
 
-                    this.Invoke(new InvokeCallback(this.OnReceived), result);
+                        this.Invoke(new InvokeCallback(this.OnReceived), result);
 
 
-                    string received = "Server Received\n";
-                    var b = Encoding.ASCII.GetBytes(received);
-                    ns.Write(b, 0, b.Length);
+                        string received = "Server Received\n";
+                        var b = Encoding.ASCII.GetBytes(received);
+                        ns.Write(b, 0, b.Length);
+                    }
+                    catch (IOException e)
+                    {
+                        break;
+                    }
                 }
             }
             // TODO:
             tcpListener.Stop();
+
+            this.Invoke(new InvokeCallback((string p) => 
+            {
+                this.Close();
+            }), "");
         }
 
         private void OnReceived(string msg)
@@ -164,7 +176,7 @@ namespace Scada.Server
             // MN=80110010000000;Flag=3;CP=&&SNO=0101A01;ENO=001001;
             // BeginTime=20090506083030;EndTime=20090506084530;PolId=xxx &&
 
-            string msg = "QN=20090516010101001;ST=38;CN=2042;PW=123456;MN=80110010000000;Flag=3;CP=&&SNO=0101A01;ENO=001001;BeginTime=20090506083030;EndTime=20090506084530;PolId=000111&&";
+            string msg = "QN=20090516010101001;ST=38;CN=2042;PW=123456;MN=80110010000000;Flag=3;CP=&&SNO=0101A01;ENO=010002;BeginTime=20130119140500;EndTime=20130119140900;PolId=000111&&";
             this.Send(msg);
         }
     }

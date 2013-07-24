@@ -147,6 +147,15 @@ namespace Scada.DataCenterAgent
                     // 分包
                     string content = DBDataSource.Instance.GetNaIDeviceData(time);
 
+                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, time, content);
+                    foreach (var p in pks)
+                    {
+                        // Sent by each agent.s
+                        foreach (var agent in this.agents)
+                        {
+                            agent.SendDataPacket(p, time);
+                        }
+                    }
                 }
                 else
                 {

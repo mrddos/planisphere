@@ -154,10 +154,11 @@ namespace Scada.DataCenterAgent
         public string GetNaIDeviceData(DateTime time)
         {
             string fileName = this.GetFileName(time);
+            string filePath = string.Format("{0}\\{1}", Settings.Instance.NaIFilePath, fileName);
             string content = string.Empty;
-            if (File.Exists(fileName))
+            if (File.Exists(filePath))
             {
-                StreamReader fs = new StreamReader(fileName);
+                StreamReader fs = new StreamReader(filePath);
                 content = fs.ReadToEnd();
             }
             
