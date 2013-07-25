@@ -30,7 +30,11 @@ namespace Scada.DataCenterAgent
             dp.St = SysSend;
             string sno = Settings.Instance.Sno;
             string eno = Settings.Instance.GetEquipNumber(deviceKey);
-            string timeStr = (string)data["time"];
+            string timeStr = string.Empty;
+            if (data.ContainsKey("time"))
+            {
+                timeStr = (string)data["time"];
+            }
             string dataTime = this.GetDataTimeString(DateTime.Parse(timeStr));
             dp.SetContent(sno, eno, dataTime, data);
             dp.Build();

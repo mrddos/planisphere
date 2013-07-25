@@ -205,6 +205,9 @@ namespace Scada.DataCenterAgent
 
         private void HandleHistoryData(string msg)
         {
+            string qn = ParseValue(msg, "QN");
+            this.SendReplyPacket(qn);
+
             string sno = ParseValue(msg, "SNO");
 
             string eno = ParseValue(msg, "ENO");
