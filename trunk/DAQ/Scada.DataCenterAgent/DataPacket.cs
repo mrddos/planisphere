@@ -247,8 +247,9 @@ namespace Scada.DataCenterAgent
 
             if (this.Cp != null)
             {
-                sb.Append(string.Format("CP=&&{0}&&", this.Cp));
+                this.Cp = "";
             }
+            sb.Append(string.Format("CP=&&{0}&&", this.Cp));
             return sb.ToString();
         }
 
