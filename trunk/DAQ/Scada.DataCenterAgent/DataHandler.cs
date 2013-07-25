@@ -217,10 +217,12 @@ namespace Scada.DataCenterAgent
 
             string polId = ParseValue(msg, "PolId");
 
-            this.UploadHistoryData(eno, beginTime, endTime, polId);
+            this.UploadHistoryData(qn, eno, beginTime, endTime, polId);
+
+            this.SendResultPacket(qn);
         }
 
-        private void UploadHistoryData(string eno, string beginTime, string endTime, string polId)
+        private void UploadHistoryData(string qn, string eno, string beginTime, string endTime, string polId)
         {
             DateTime f = ParseDateTime(beginTime);
             DateTime t = ParseDateTime(endTime);
