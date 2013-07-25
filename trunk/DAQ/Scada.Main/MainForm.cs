@@ -85,7 +85,7 @@ namespace Scada.Main
                 }
             }
 
-            runAll = true;
+            // runAll = true;
             if (runAll)
             {
                 this.CheckAllDevices();
