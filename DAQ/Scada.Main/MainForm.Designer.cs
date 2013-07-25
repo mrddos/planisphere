@@ -331,6 +331,7 @@
             this.Controls.Add(this.statusBar);
             this.Controls.Add(this.toolBar);
             this.Controls.Add(this.menuBar);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuBar;
             this.Name = "MainForm";
             this.Text = "系统设备管理器";
