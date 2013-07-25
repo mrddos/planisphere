@@ -174,6 +174,8 @@ namespace Scada.DataCenterAgent
 
         private void GenQN()
         {
+            if (!string.IsNullOrEmpty(this.QN))
+                return;
             DateTime n = DateTime.Now;
             string value = string.Format("{0}{1:d2}{2:d2}{3:d2}{4:d2}{5:d2}{6:d3}", n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second, n.Millisecond);
             this.QN = value;
