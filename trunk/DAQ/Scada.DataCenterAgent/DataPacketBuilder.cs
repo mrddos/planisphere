@@ -25,6 +25,10 @@ namespace Scada.DataCenterAgent
 
         public DataPacket GetDataPacket(string deviceKey, Dictionary<string, object> data)
         {
+            if (data.Count == 0)
+            {
+                return null;
+            }
             DataPacket dp = new DataPacket(deviceKey);
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.St = SysSend;
@@ -43,6 +47,10 @@ namespace Scada.DataCenterAgent
 
         public DataPacket GetFlowDataPacket(string deviceKey, Dictionary<string, object> data)
         {
+            if (data.Count == 0)
+            {
+                return null;
+            }
             DataPacket dp = new DataPacket(deviceKey, true, true);
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.St = SysSend;

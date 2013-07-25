@@ -210,6 +210,8 @@ namespace Scada.DataCenterAgent
 
         internal void SendDataPacket(DataPacket p, DateTime time)
         {
+            if (p == null)
+                return;
             // Only start or history.
             if (this.Started || this.History)
             {
