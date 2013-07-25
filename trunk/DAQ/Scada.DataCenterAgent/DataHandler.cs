@@ -21,11 +21,8 @@ namespace Scada.DataCenterAgent
         DirectData = 3101,
         Init = 6021,
         KeepAlive = 6031,
-        StartHvs = 7011,
-        StopHvs = 7012,
-
-        StartIs = 7021,
-        StopIs = 7022,
+        StartDev = 3012,
+        StopDev = 3015,
      
         Reply = 9012
     }
@@ -144,16 +141,17 @@ namespace Scada.DataCenterAgent
                         this.OnKeepAlive(msg);
                     }
                     break;
-                case ReceivedCommand.StartHvs:
+                case ReceivedCommand.StartDev:
                     {
                         hvsc.Start();
                     }
                     break;
-                case ReceivedCommand.StopHvs:
+                case ReceivedCommand.StopDev:
                     {
                         hvsc.Stop();
                     }
                     break;
+                /*
                 case ReceivedCommand.StartIs:
                     {
                         isc.Start();
@@ -164,6 +162,7 @@ namespace Scada.DataCenterAgent
                         isc.Stop();
                     }
                     break;
+                 */
 
                 case ReceivedCommand.Reply:
                     {
@@ -241,7 +240,7 @@ namespace Scada.DataCenterAgent
                     // 分包
                     string content = DBDataSource.Instance.GetNaIDeviceData(dt);
 
-                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content);
+                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content, qn);
                     foreach (var p in pks)
                     {
                         this.agent.SendDataPacket(p, dt);

@@ -104,7 +104,7 @@ namespace Scada.DataCenterAgent
             return dp;
         }
 
-        internal List<DataPacket> GetDataPackets(string deviceKey, DateTime dateTime, string content)
+        internal List<DataPacket> GetDataPackets(string deviceKey, DateTime dateTime, string content, string qn = null)
         {
             List<DataPacket> rets = new List<DataPacket>();
             int from = 0;
