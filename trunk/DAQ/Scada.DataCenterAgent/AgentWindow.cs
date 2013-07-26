@@ -135,7 +135,7 @@ namespace Scada.DataCenterAgent
                 willSend |= agent.Started;
             }
 
-            if (!willSend)
+            if (willSend) //// TODO: !
             {
                 return;
             }

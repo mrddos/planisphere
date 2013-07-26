@@ -68,7 +68,7 @@
 
 		<!-- ??? -->
 		<device id="Scada.NaIDevice" table="NaI_Rec" eno="010002">
-			<code content="file">010206033201</code>		
+			<code field="file-content">010206033201</code>		
 		</device>
 
 		<!-- ??? -->

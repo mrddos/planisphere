@@ -146,7 +146,7 @@ namespace Scada.DataCenterAgent
                 return;
             }
             StringBuilder sb = new StringBuilder();
-            sb.Append(string.Format("SNO={0};ENO={1};DataTime={2};", sno, eno, dataTime));
+            //sb.Append(string.Format("SNO={0};ENO={1};DataTime={2};", sno, eno, dataTime));
             sb.Append(data);
             this.Cp = sb.ToString();
         }
@@ -180,8 +180,6 @@ namespace Scada.DataCenterAgent
             string value = string.Format("{0}{1:d2}{2:d2}{3:d2}{4:d2}{5:d2}{6:d3}", n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second, n.Millisecond);
             this.QN = value;
         }
-
-
 
         internal void Build()
         {
@@ -247,7 +245,7 @@ namespace Scada.DataCenterAgent
                 sb.Append("Flag=3;");
             }
 
-            if (this.Cp != null)
+            if (this.Cp == null)
             {
                 this.Cp = "";
             }
