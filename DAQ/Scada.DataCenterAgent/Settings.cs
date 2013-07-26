@@ -228,7 +228,7 @@ namespace Scada.DataCenterAgent
 
         internal List<DeviceCode> GetCodes(string deviceKey)
         {
-            Device device = devices.Find((d) => { return d.Key == deviceKey; });
+            Device device = devices.Find((d) => { return deviceKey.Equals(d.Key, StringComparison.OrdinalIgnoreCase); });
             if (device != null)
             {
                 return device.GetCodes();

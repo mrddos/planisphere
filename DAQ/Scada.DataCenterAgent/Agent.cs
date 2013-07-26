@@ -162,15 +162,21 @@ namespace Scada.DataCenterAgent
             if (result.IsCompleted)
             {
                 StateObject so = (StateObject)result.AsyncState;
-
-                NetworkStream stream = client.GetStream();
-                int c = stream.EndRead(result);
-
-                if (c > 0)
+                try
                 {
-                    string msg = Encoding.ASCII.GetString(so.buffer, 0, c);
-                    this.OnReceivedMessagess(msg);
-                    this.BeginRead(so.client);
+                    NetworkStream stream = client.GetStream();
+                    int c = stream.EndRead(result);
+
+                    if (c > 0)
+                    {
+                        string msg = Encoding.ASCII.GetString(so.buffer, 0, c);
+                        this.OnReceivedMessagess(msg);
+                        this.BeginRead(so.client);
+                    }
+                }
+                catch (Exception e)
+                {
+                    string readErrorMessage = e.Message;
                 }
             }
         }

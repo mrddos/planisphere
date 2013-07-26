@@ -240,7 +240,7 @@ namespace Scada.DataCenterAgent
                     // 分包
                     string content = DBDataSource.Instance.GetNaIDeviceData(dt);
 
-                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content, qn);
+                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content, true);
                     foreach (var p in pks)
                     {
                         this.agent.SendDataPacket(p, dt);

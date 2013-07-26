@@ -23,13 +23,13 @@ namespace Scada.DataCenterAgent
             return value;
         }
 
-        public DataPacket GetDataPacket(string deviceKey, Dictionary<string, object> data)
+        public DataPacket GetDataPacket(string deviceKey, Dictionary<string, object> data, bool realTime = false)
         {
             if (data.Count == 0)
             {
                 return null;
             }
-            DataPacket dp = new DataPacket(deviceKey);
+            DataPacket dp = new DataPacket(deviceKey, realTime);
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.St = SysSend;
             string sno = Settings.Instance.Sno;
@@ -45,13 +45,13 @@ namespace Scada.DataCenterAgent
             return dp;
         }
 
-        public DataPacket GetFlowDataPacket(string deviceKey, Dictionary<string, object> data)
+        public DataPacket GetFlowDataPacket(string deviceKey, Dictionary<string, object> data, bool realTime = false)
         {
             if (data.Count == 0)
             {
                 return null;
             }
-            DataPacket dp = new DataPacket(deviceKey, true, true);
+            DataPacket dp = new DataPacket(deviceKey, realTime, true);
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.St = SysSend;
             string sno = Settings.Instance.Sno;
@@ -104,12 +104,12 @@ namespace Scada.DataCenterAgent
             return dp;
         }
 
-        internal List<DataPacket> GetDataPackets(string deviceKey, DateTime dateTime, string content, string qn = null)
+        internal List<DataPacket> GetDataPackets(string deviceKey, DateTime dateTime, string content, bool history = false, string qn = null)
         {
             List<DataPacket> rets = new List<DataPacket>();
             int from = 0;
             const int MaxContent = 920;
-            int count = content.Length / MaxContent + 1;
+            int count = content.Length / MaxContent + 2;
             int index = 1;
 
             string sno = Settings.Instance.Sno;
@@ -117,24 +117,53 @@ namespace Scada.DataCenterAgent
 
             string dataTime = this.GetDataTimeString(dateTime);
 
+            // Header packet
+            DataPacket dp = null;
+            if (!history)
+                dp = new DataPacket(SentCommand.Data);
+            else
+                dp = new DataPacket(SentCommand.HistoryData);
+
+            dp.Splitted = true;
+            dp.PacketCount = count;
+            dp.PacketIndex = index;
+            dp.St = SysSend;
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            List<Settings.DeviceCode> codes = Settings.Instance.GetCodes(deviceKey);
+            string contentCode = codes[0].Code;
+            data.Add(contentCode, string.Empty);
+            data.Add("time", dateTime.ToString());
+            dp.SetContent(sno, eno, dataTime, data);
+            dp.Build();
+            rets.Add(dp);
+
+            string pqn = dp.QN;
+
             while (true)
             {
-                DataPacket dp = new DataPacket(SentCommand.Data);
+                index += 1;
+                dp = null;
+
+                if (!history)
+                    dp = new DataPacket(SentCommand.Data);
+                else
+                    dp = new DataPacket(SentCommand.HistoryData);
                 dp.Splitted = true;
                 dp.PacketCount = count;
                 dp.PacketIndex = index;
                 dp.St = SysSend;
 
                 string c = content.Substring(from, Math.Min(MaxContent, content.Length - from));
+                dp.QN = pqn;
                 dp.SetContent(sno, eno, dataTime, c);
                 dp.Build();
 
                 rets.Add(dp);
-                if (from >= content.Length)
-                    break;
 
                 from += c.Length;
-                index += 1;
+                if (from >= content.Length)
+                    break;
+                
             }
             return rets;
         }
