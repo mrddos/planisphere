@@ -132,8 +132,9 @@ namespace Scada.DataCenterAgent
                         this.BeginRead(this.client);
                     }
                 }
-                catch (SocketException)
+                catch (SocketException e)
                 {
+                    var s = e.Message;
                 }
 
             }
