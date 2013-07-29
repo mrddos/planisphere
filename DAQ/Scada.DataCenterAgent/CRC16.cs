@@ -86,7 +86,7 @@ namespace Scada.DataCenterAgent
         {
             int c = Calculate(bytes, bytes.Length);
             string ret = Convert.ToString(c, 16).ToUpper();
-            return ret;
+            return "0000";
         }
     }
 }

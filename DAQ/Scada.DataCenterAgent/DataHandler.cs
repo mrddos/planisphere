@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Scada.DataCenterAgent
 {
@@ -243,6 +244,7 @@ namespace Scada.DataCenterAgent
                     List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content, true);
                     foreach (var p in pks)
                     {
+                        Thread.Sleep(10);
                         this.agent.SendDataPacket(p, dt);
                     }
                     dt = dt.AddSeconds(60 * 5);
