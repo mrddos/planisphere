@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -22,6 +23,11 @@ namespace Scada.DAQ.Installer
             if (fa == "--init-database")
             {
                 InitDataBase(args);
+            }
+            else if (fa == "--init-database-s")
+            {
+                Debug.Assert(false);
+                InitDataBaseSilent(args);
             }
             else if (fa == "--init-dirs")
             {
@@ -68,11 +74,21 @@ namespace Scada.DAQ.Installer
             string input = Console.ReadLine();
             if (input == "Yes")
             {
-                Console.WriteLine("Execute .\\scada.sql");
-                DataBaseCreator creator = new DataBaseCreator(@".\scada.sql");
+                Type type = typeof(Program);
+                string fn = type.Assembly.Location;
+                string sqlFileName = string.Format("{0}\\..\\scada.sql", fn);
+                DataBaseCreator creator = new DataBaseCreator(sqlFileName);
                 creator.Execute();
             }
+        }
 
+        static void InitDataBaseSilent(string[] args)
+        {
+            Type type = typeof(Program);
+            string fn = type.Assembly.Location;
+            string sqlFileName = string.Format("{0}\\..\\scada.sql", fn);
+            DataBaseCreator creator = new DataBaseCreator(sqlFileName);
+            creator.Execute();
         }
 
         static void InitDirectories(string[] args)

@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Diagnostics;
 
+// using IWshRuntimeLibrary;
+
 namespace Scada.Installer
 {
     public partial class Form1 : Form
@@ -18,6 +20,8 @@ namespace Scada.Installer
         {
             InitializeComponent();
         }
+
+        private string mySqlVersion = "";
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -32,7 +36,21 @@ namespace Scada.Installer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.textBox1.Text = @"d:\Scada";
+            this.textBox1.Text = @"C:\Users\HealerKx\Projects\DAQ-Proj\DAQ\Bin\install";
+
+            this.textBox4.Text = "."; 
+            this.textBox5.Text = ".";
+            if (File.Exists("mysql.version"))
+            {
+                using (StreamReader sr = new StreamReader("mysql.version"))
+                {
+                    this.mySqlVersion = sr.ReadLine();
+                }
+            }
+            else
+            {
+                this.mySqlVersion = "mysql-5.1.60-win32";
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -46,7 +64,7 @@ namespace Scada.Installer
             StartInstallProcess();
         }
 
-
+        // Start the Install process
         private void StartInstallProcess()
         {
             if (!CreateFolders())
@@ -64,6 +82,11 @@ namespace Scada.Installer
                 return;
             }
 
+            if (!RunMySQL())
+            {
+                return;
+            }
+
             if (!UnzipProgramFiles())
             {
                 return;
@@ -72,6 +95,71 @@ namespace Scada.Installer
             if (!CreateTables())
             {
                 return;
+            }
+
+            if (!CreateStartupMenu())
+            {
+                return;
+            }
+
+            this.progressBox.Items.Add("安装成功!");
+        }
+
+        private bool RunMySQL()
+        {
+            try
+            {
+                string mysqld = string.Format("{0}\\{1}\\bin\\mysqld.exe", this.textBox2.Text, this.mySqlVersion);
+                using (Process process = new Process())
+                {
+                    process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.FileName = mysqld; //设定程序名  
+                    process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
+                    process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
+                    process.StartInfo.RedirectStandardError = true;//重定向错误输出
+
+                    process.StartInfo.Arguments = "";
+                    bool ret = process.Start();
+                    if (ret)
+                    {
+                        this.progressBox.Items.Add("MySQL启动成功");
+                    }
+                    else
+                    {
+                        this.progressBox.Items.Add("MySQL启动失败");
+                    }
+                    return ret;
+                }
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private bool CreateStartupMenu()
+        {
+            try
+            {
+                string p = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+                string s = this.CreateStartupBatFile();
+                IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
+
+                IWshRuntimeLibrary.WshShortcut shortcut = (IWshRuntimeLibrary.WshShortcut)shell.CreateShortcut(p + "\\startup.lnk");
+                shortcut.TargetPath = s;
+                shortcut.Arguments = "";
+                shortcut.Description = "启动";
+                shortcut.WorkingDirectory = this.textBox3.Text;
+                shortcut.IconLocation = string.Format("{0},0", s);
+                shortcut.Save();
+
+                this.progressBox.Items.Add("启动组快捷方式创建成功");
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 
@@ -88,118 +176,149 @@ namespace Scada.Installer
                 process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
                 process.StartInfo.RedirectStandardError = true;//重定向错误输出
 
-                process.StartInfo.Arguments = "--init-database";
-                return process.Start();
+                process.StartInfo.Arguments = "--init-database-s";
+                bool ret = process.Start();
+                if (ret)
+                {
+                    this.progressBox.Items.Add("数据库初始化成功");
+                }
+                else
+                {
+                    this.progressBox.Items.Add("数据库初始化失败");
+                }
+                return ret;
             }
         }
 
         private bool UnzipProgramFiles()
         {
-            string programZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "install\\program.zip");
+            string programZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "\\bin.zip");
             string destPath = this.textBox3.Text;
             if (!File.Exists(programZipFile))
             {
+                this.progressBox.Items.Add("Error: 未找到文件: bin.zip");
                 return false;
             }
+            this.progressBox.Items.Add("解压缩程序中...");
             string errorMessage;
-            return UnZipFile(programZipFile, destPath, out errorMessage);
+
+            bool ret = Zip.UnZipFile(programZipFile, destPath, out errorMessage);
+            if (ret)
+            {
+                this.progressBox.Items.Add("解压缩程序成功");
+            }
+            else
+            {
+                this.progressBox.Items.Add("解压缩程序失败");
+            }
+            return ret;
         }
 
         private bool PrepareMySQLConfigFile()
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         private bool UnzipMySQLFiles()
         {
-            string mySqlZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "install\\mysql.zip");
+            return true;
+            string mySqlZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "\\mysql.zip");
             string destPath = this.textBox2.Text;
             if (!File.Exists(mySqlZipFile))
             {
+                this.progressBox.Items.Add("Error: 未找到文件 mysql.zip");
                 return false;
             }
+            this.progressBox.Items.Add("解压缩数据库中...");
             string errorMessage;
-            return UnZipFile(mySqlZipFile, destPath, out errorMessage);
-        }
-
-        private static bool UnZipFile(string zipFilePath, string unZipDir, out string errorMessage)
-        {
-            errorMessage = string.Empty;
-            if (zipFilePath == string.Empty)
+            bool ret = Zip.UnZipFile(mySqlZipFile, destPath, out errorMessage);
+            if (ret)
             {
-                errorMessage = "压缩文件不能为空！";
-                return false;
+                this.progressBox.Items.Add("解压缩数据库成功");
             }
-            if (!File.Exists(zipFilePath))
+            else
             {
-                errorMessage = "压缩文件不存在！";
-                return false;
+                this.progressBox.Items.Add("解压缩数据库失败");
             }
-            if (unZipDir == string.Empty)
-                unZipDir = zipFilePath.Replace(Path.GetFileName(zipFilePath), Path.GetFileNameWithoutExtension(zipFilePath));
-            if (!unZipDir.EndsWith("\\"))
-                unZipDir += "\\";
-            if (!Directory.Exists(unZipDir))
-                Directory.CreateDirectory(unZipDir);
-
-            try
-            {
-                using (ZipInputStream s = new ZipInputStream(File.OpenRead(zipFilePath)))
-                {
-
-                    ZipEntry theEntry;
-                    while ((theEntry = s.GetNextEntry()) != null)
-                    {
-                        string directoryName = Path.GetDirectoryName(theEntry.Name);
-                        string fileName = Path.GetFileName(theEntry.Name);
-                        if (directoryName.Length > 0)
-                        {
-                            Directory.CreateDirectory(unZipDir + directoryName);
-                        }
-                        if (!directoryName.EndsWith("\\"))
-                            directoryName += "\\";
-                        if (fileName != String.Empty)
-                        {
-                            using (FileStream streamWriter = File.Create(unZipDir + theEntry.Name))
-                            {
-
-                                int size = 2048;
-                                byte[] data = new byte[2048];
-                                while (true)
-                                {
-                                    size = s.Read(data, 0, data.Length);
-                                    if (size > 0)
-                                    {
-                                        streamWriter.Write(data, 0, size);
-                                    }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-                return false;
-            }
-            return true;
+            return ret;
         }
 
         // TODO:
         private bool CreateFolders()
         {
-            string mySqlPath = this.textBox2.Text;
-            string programPath = this.textBox3.Text;
+            try
+            {
+                string mySqlPath = this.textBox2.Text;
+                string programPath = this.textBox3.Text;
 
-            Directory.CreateDirectory(mySqlPath);
-            Directory.CreateDirectory(programPath);
+                Directory.CreateDirectory(mySqlPath);
+                Directory.CreateDirectory(programPath);
 
-            return true;
+                this.progressBox.Items.Add("目录创建成功");
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+
+        private string CreateStartupBatFile()
+        {
+            string p = string.Format("{0}\\startup.bat", this.textBox3.Text);
+            if (File.Exists(p))
+            {
+                File.Delete(p);
+            }
+            FileStream fs = File.Create(p);
+            using (StreamWriter sw = new StreamWriter(fs))
+            {
+                // Run MySQL
+                string edb = string.Format("start {0}\\{1}\\bin\\mysqld.exe", this.textBox2.Text, this.mySqlVersion);
+                sw.WriteLine(edb);
+                sw.WriteLine();
+
+                // Run MDS.exe
+                string emds = string.Format("start {0}\\mds.exe", this.textBox4.Text);
+                sw.WriteLine(emds);
+                sw.WriteLine();
+
+                // Run AIS.exe
+                string eais = string.Format("start {0}\\mds.exe", this.textBox5.Text);
+                sw.WriteLine(eais);
+                sw.WriteLine();
+
+                // Run Scada.Main.exe
+                string emain = string.Format("start {0}\\Scada.Main.exe /ALL", this.textBox3.Text);
+                sw.WriteLine(emain);
+                sw.WriteLine();
+            }
+            fs.Close();
+
+            return p;
+        }
+
+        private void buttonMds_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = @"C:\";
+            DialogResult dr = fbd.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                this.textBox4.Text = fbd.SelectedPath;
+            }
+        }
+
+        private void buttonAis_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.SelectedPath = @"C:\";
+            DialogResult dr = fbd.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                this.textBox5.Text = fbd.SelectedPath;
+            }
         }
 
 
