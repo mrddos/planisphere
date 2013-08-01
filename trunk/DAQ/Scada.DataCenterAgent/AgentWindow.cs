@@ -68,17 +68,17 @@ namespace Scada.DataCenterAgent
             foreach (Settings.DataCenter dc in s.DataCenters)
             {
                 Agent agent = CreateAgent(dc.Ip, dc.Port, false);
+                agent.AddWirelessInfo(dc.WirelessIp, dc.WirelessPort);
                 this.agents.Add(agent);
             }
 
             this.statusStrip1.Items[0].Text = "状态: 开始";
         }
 
+        // 先连接有线的线路
         private Agent CreateAgent(string serverAddress, int serverPort, bool wireless)
         {
-            Agent agent = new Agent();
-            agent.ServerAddress = serverAddress;
-            agent.ServerPort = serverPort;
+            Agent agent = new Agent(serverAddress, serverPort);
 
             agent.Wireless = wireless;
             agent.Connect();
@@ -95,7 +95,7 @@ namespace Scada.DataCenterAgent
 
             // KeepAlive timer
             this.keepAliveTimer = new Timer();
-            this.keepAliveTimer.Interval = 1000 * 60;
+            this.keepAliveTimer.Interval = 1000 * 5;
             this.keepAliveTimer.Tick += this.KeepAliveTick;
             this.keepAliveTimer.Start();
         }
