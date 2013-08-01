@@ -23,6 +23,8 @@ namespace Scada.Installer
 
         private string mySqlVersion = "";
 
+        private bool finished = false;
+
         private void button2_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -61,7 +63,14 @@ namespace Scada.Installer
 
         private void button1_Click(object sender, EventArgs e)
         {
-            StartInstallProcess();
+            if (!this.finished)
+            {
+                StartInstallProcess();
+            }
+            else
+            {
+                this.Close();
+            }
         }
 
         // Start the Install process
@@ -102,7 +111,13 @@ namespace Scada.Installer
                 return;
             }
 
-            this.progressBox.Items.Add("安装成功!");
+            if (CreateDesktopIcons("Scada.Main.exe", "系统设备管理器") &&
+                CreateDesktopIcons("Scada.MainVision.exe", "Nuclover - SCADA"))
+            {
+                this.progressBox.Items.Add("安装成功!");
+                this.button1.Text = "关闭";
+                this.finished = true;
+            }
         }
 
         private bool RunMySQL()
@@ -163,6 +178,36 @@ namespace Scada.Installer
             }
         }
 
+        private bool CreateDesktopIcons(string fileName, string linkName)
+        {
+            try
+            {
+                string p = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string s = this.GetBinFile(fileName);
+                IWshRuntimeLibrary.WshShell shell = new IWshRuntimeLibrary.WshShell();
+
+                IWshRuntimeLibrary.WshShortcut shortcut = (IWshRuntimeLibrary.WshShortcut)shell.CreateShortcut(p + "\\" + linkName + ".lnk");
+                shortcut.TargetPath = s;
+                shortcut.Arguments = "";
+                shortcut.Description = fileName;
+                shortcut.WorkingDirectory = this.textBox3.Text;
+                shortcut.IconLocation = string.Format("{0},0", s);
+                shortcut.Save();
+
+                this.progressBox.Items.Add("桌面快捷方式创建成功");
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        private string GetBinFile(string fileName)
+        {
+            return string.Format("{0}\\{1}", this.textBox3.Text, fileName);
+        }
+
         private bool CreateTables()
         {
             string fileName = "Scada.DAQ.Installer.exe";
@@ -221,7 +266,8 @@ namespace Scada.Installer
 
         private bool UnzipMySQLFiles()
         {
-            return true;
+            //return true;
+            
             string mySqlZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "\\mysql.zip");
             string destPath = this.textBox2.Text;
             if (!File.Exists(mySqlZipFile))
