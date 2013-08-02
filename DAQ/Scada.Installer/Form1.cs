@@ -267,8 +267,8 @@ namespace Scada.Installer
         private bool UnzipMySQLFiles()
         {
             //return true;
-            
-            string mySqlZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "\\mysql.zip");
+            string mySqlZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "mysql.zip");
+
             string destPath = this.textBox2.Text;
             if (!File.Exists(mySqlZipFile))
             {
