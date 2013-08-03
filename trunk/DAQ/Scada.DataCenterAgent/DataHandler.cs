@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
@@ -31,6 +32,7 @@ namespace Scada.DataCenterAgent
     public enum SentCommand
     {
         None = 0,
+        GetTime = 1011,
         Data = 2011,
         FlowData = 2014,
         HistoryData = 2042,
@@ -38,6 +40,19 @@ namespace Scada.DataCenterAgent
         KeepAlive = 6031,
         Reply = 9011,
         Result = 9012,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class SystemTime
+    {
+        public ushort wYear;
+        public ushort wMonth;
+        public ushort wDayOfWeek;
+        public ushort wDay;
+        public ushort whour;
+        public ushort wMinute;
+        public ushort wSecond;
+        public ushort wMilliseconds;
     }
 
     class DataHandler
@@ -51,6 +66,12 @@ namespace Scada.DataCenterAgent
 
         private SamplerController isc = new SamplerController("scada.isampler");
 
+        // Win32 API
+        [DllImport("Kernel32.dll")]
+        public static extern void GetLocalTime(SystemTime st);
+
+        [DllImport("Kernel32.dll")]
+        public static extern void SetLocalTime(SystemTime st);
 
         private SentCommand CurrentSentCommand
         {
@@ -105,6 +126,16 @@ namespace Scada.DataCenterAgent
 
             switch (code)
             {
+                case ReceivedCommand.SetTime:
+                    {
+                        this.OnSetTime(msg);
+                    }
+                    break;
+                case ReceivedCommand.GetTime:
+                    {
+                        this.OnGetTime(msg);
+                    }
+                    break;
                 case ReceivedCommand.SetPassword:
                     {
                         this.HandleSetPassword(msg);
@@ -144,26 +175,15 @@ namespace Scada.DataCenterAgent
                     break;
                 case ReceivedCommand.StartDev:
                     {
+                        this.OnStartDevice(msg);
                         hvsc.Start();
                     }
                     break;
                 case ReceivedCommand.StopDev:
                     {
-                        hvsc.Stop();
+                        this.OnStopDevice(msg);
                     }
                     break;
-                /*
-                case ReceivedCommand.StartIs:
-                    {
-                        isc.Start();
-                    }
-                    break;
-                case ReceivedCommand.StopIs:
-                    {
-                        isc.Stop();
-                    }
-                    break;
-                 */
 
                 case ReceivedCommand.Reply:
                     {
@@ -180,6 +200,37 @@ namespace Scada.DataCenterAgent
         private void OnKeepAlive(string msg)
         {
             // TODO: Handle Timeout, but NO doc details talk about this.
+        }
+
+        private void OnGetTime(string msg)
+        {
+            string qn = ParseValue(msg, "QN");
+            this.SendReplyPacket(qn);
+
+            var p = this.builder.GetTimePacket(qn);
+            this.agent.SendPacket(p, default(DateTime));
+            this.SendResultPacket(qn);
+        }
+
+        private void OnSetTime(string msg)
+        {
+            string qn = ParseValue(msg, "QN");
+            this.SendReplyPacket(qn);
+
+            string time = ParseValue(msg, "SystemTime");
+            DateTime dt = this.ParseDateTime(time);
+            SystemTime st = new SystemTime();
+
+            st.wYear = (ushort)dt.Year;
+            st.wMonth = (ushort)dt.Month;
+            st.wDay = (ushort)dt.Day;
+            st.whour = (ushort)dt.Hour;
+            st.wMinute = (ushort)dt.Minute;
+            st.wSecond = (ushort)dt.Second;
+            st.wMilliseconds = 0;
+
+            SetLocalTime(st);
+            this.SendResultPacket(qn);
         }
 
         private void OnServerReply(string msg)
@@ -288,6 +339,32 @@ namespace Scada.DataCenterAgent
             this.SendReplyPacket(qn);
             // Upload data when right time.
             this.agent.Started = true;
+        }
+
+        private void OnStartDevice(string msg)
+        {
+            string eno = ParseValue(msg, "ENO");
+            if (eno == "")
+            {
+                hvsc.Start();
+            }
+            else if (eno == "")
+            {
+                hvsc.Start();
+            }
+        }
+
+        private void OnStopDevice(string msg)
+        {
+            string eno = ParseValue(msg, "ENO");
+            if (eno == "")
+            {
+                hvsc.Stop();
+            }
+            else if (eno == "")
+            {
+                isc.Stop();
+            }
         }
 
         private void OnDirectDataRequest(string msg)

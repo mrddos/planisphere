@@ -27,7 +27,9 @@ namespace Scada.DataCenterAgent
 
     internal delegate void OnReceiveMessage(Agent agent, string msg);
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     class Agent
     {
         // Wired connection Tcp client
@@ -60,6 +62,12 @@ namespace Scada.DataCenterAgent
         {
             this.ServerAddress = serverAddress;
             this.ServerPort = serverPort;
+        }
+
+        internal void AddWirelessInfo(string wirelessServerAddress, int wirelessServerPort)
+        {
+            this.WirelessServerAddress = wirelessServerAddress;
+            this.WirelessServerPort = wirelessServerPort;
         }
 
         public string ServerAddress
@@ -134,7 +142,7 @@ namespace Scada.DataCenterAgent
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    this.Notify("Connect: " + e.Message);
                 }
             }
         }
@@ -152,10 +160,11 @@ namespace Scada.DataCenterAgent
                         this.WirelessServerAddress, this.WirelessServerPort, 
                         new AsyncCallback(ConnectToWirelessCallback), 
                         this.wirelessClient);
+                    this.Notify("using wireless connection");
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e.Message);
+                    this.Notify("ConnectToWireless: " + e.Message);
                 }
             }
         }
@@ -190,6 +199,7 @@ namespace Scada.DataCenterAgent
             }
         }
 
+        // Callback for Wireless
         private void ConnectToWirelessCallback(IAsyncResult result)
         {
             if (result.IsCompleted)
@@ -218,7 +228,7 @@ namespace Scada.DataCenterAgent
             }
         }
 
-
+        // BeginRead~ <client>
         private void BeginRead(TcpClient client)
         {
             NetworkStream stream = client.GetStream();
@@ -228,7 +238,7 @@ namespace Scada.DataCenterAgent
                 try
                 {
                     StateObject so = new StateObject() { client = client };
-                    IAsyncResult ar = stream.BeginRead(so.buffer, 0, StateObject.BufferSize, new AsyncCallback(ReadCallback), so);
+                    IAsyncResult ar = stream.BeginRead(so.buffer, 0, StateObject.BufferSize, new AsyncCallback(OnReadCallback), so);
                 }
                 catch (Exception e)
                 {
@@ -237,7 +247,7 @@ namespace Scada.DataCenterAgent
             }
         }
 
-        private void ReadCallback(IAsyncResult result)
+        private void OnReadCallback(IAsyncResult result)
         {
             if (result.IsCompleted)
             {
@@ -274,6 +284,14 @@ namespace Scada.DataCenterAgent
                         this.handler.OnMessage(msg);
                     }
                 }
+            }
+        }
+
+        private void Notify(string msg)
+        {
+            if (this.handler != null)
+            {
+                this.handler.OnMessage(msg);
             }
         }
 
@@ -328,10 +346,5 @@ namespace Scada.DataCenterAgent
             this.Send(Encoding.ASCII.GetBytes(s));
         }
 
-        internal void AddWirelessInfo(string wirelessServerAddress, int wirelessServerPort)
-        {
-            this.WirelessServerAddress = wirelessServerAddress;
-            this.WirelessServerPort = wirelessServerPort;
-        }
     }
 }
