@@ -167,5 +167,15 @@ namespace Scada.DataCenterAgent
             }
             return rets;
         }
+
+        internal DataPacket GetTimePacket(string qn)
+        {
+            DataPacket dp = new DataPacket(SentCommand.GetTime);
+            // DataPacket is for sending, SO ST=38.(SysSend)
+            dp.QN = qn;
+            dp.St = SysSend;
+            dp.BuildGetTime(this.GetDataTimeString(DateTime.Now));
+            return dp;
+        }
     }
 }

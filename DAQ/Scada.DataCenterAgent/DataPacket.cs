@@ -223,7 +223,19 @@ namespace Scada.DataCenterAgent
             this.sb.Append("\r\n");
         }
 
+        internal void BuildGetTime(string time)
+        {
+            this.SetHeader();
+            string ds = GetTimeSection(time);
 
+            int len = ds.Length;
+            this.SetLength(len);
+            this.sb.Append(ds);
+
+            string crc16 = CRC16.GetCode(Encoding.ASCII.GetBytes(ds));
+            this.sb.Append(crc16);
+            this.sb.Append("\r\n");
+        }
 
         private string GetDataSections()
         {
@@ -269,6 +281,17 @@ namespace Scada.DataCenterAgent
                 "ST={0};CN={1};PW={2};MN={3};Flag=1;CP=&&QN={4};{5}&&",
                 this.St, this.Cn, this.Password, this.Mn, this.QN, this.Cp);
             return p;
+        }
+
+        private string GetTimeSection(string time)
+        {
+            this.Mn = Settings.Instance.Mn;
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(string.Format("ST={0};CN={1};PW={2};MN={3};", this.St, this.Cn, this.Password, this.Mn));
+
+            sb.Append(string.Format("CP=&&QN={0};SystemTime={1}&&", this.QN, time));
+            return sb.ToString();
         }
 
 
