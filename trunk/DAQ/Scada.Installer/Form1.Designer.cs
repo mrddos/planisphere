@@ -47,6 +47,7 @@
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.buttonMds = new System.Windows.Forms.Button();
             this.buttonAis = new System.Windows.Forms.Button();
+            this.checkBoxMySQL = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -203,11 +204,22 @@
             this.buttonAis.UseVisualStyleBackColor = true;
             this.buttonAis.Click += new System.EventHandler(this.buttonAis_Click);
             // 
+            // checkBoxMySQL
+            // 
+            this.checkBoxMySQL.AutoSize = true;
+            this.checkBoxMySQL.Location = new System.Drawing.Point(349, 399);
+            this.checkBoxMySQL.Name = "checkBoxMySQL";
+            this.checkBoxMySQL.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxMySQL.TabIndex = 5;
+            this.checkBoxMySQL.Text = "解压MySQL";
+            this.checkBoxMySQL.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(617, 429);
+            this.Controls.Add(this.checkBoxMySQL);
             this.Controls.Add(this.progressBox);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -254,6 +266,7 @@
         private System.Windows.Forms.Button buttonMds;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.CheckBox checkBoxMySQL;
     }
 }
 

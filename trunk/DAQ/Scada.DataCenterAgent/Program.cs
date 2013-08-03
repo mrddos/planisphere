@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Scada.DataCenterAgent
@@ -16,12 +17,13 @@ namespace Scada.DataCenterAgent
             // Settings settings = new Settings();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            AgentWindow aw = new AgentWindow();
+            AgentWindow agentWindow = new AgentWindow();
             if (args.Length > 0 && args[0] == "--start")
             {
-                aw.StartState = true;
+                Thread.Sleep(2000);
+                agentWindow.StartState = true;
             }
-            Application.Run(aw);
+            Application.Run(agentWindow);
         }
     }
 }

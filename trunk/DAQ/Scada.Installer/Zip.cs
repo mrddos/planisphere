@@ -50,14 +50,14 @@ namespace Scada.Installer
                             using (FileStream streamWriter = File.Create(unZipDir + theEntry.Name))
                             {
 
-                                int size = 2048;
-                                byte[] data = new byte[2048];
+                                const int size = 2048 * 5;
+                                byte[] data = new byte[size];
                                 while (true)
                                 {
-                                    size = s.Read(data, 0, data.Length);
-                                    if (size > 0)
+                                    int r = s.Read(data, 0, data.Length);
+                                    if (r > 0)
                                     {
-                                        streamWriter.Write(data, 0, size);
+                                        streamWriter.Write(data, 0, r);
                                     }
                                     else
                                     {
