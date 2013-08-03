@@ -26,7 +26,7 @@ namespace Scada.DAQ.Installer
             }
             else if (fa == "--init-database-s")
             {
-                Debug.Assert(false);
+                // Debug.Assert(false);
                 InitDataBaseSilent(args);
             }
             else if (fa == "--init-dirs")
