@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}</ProjectGuid>
+    <ProjectGuid>{4E8D9B6B-541E-4B60-8D22-01ECBB83FA8C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Scada.DataCenterAgent</RootNamespace>
-    <AssemblyName>Scada.DataCenterAgent</AssemblyName>
+    <RootNamespace>Scada.Data.Client</RootNamespace>
+    <AssemblyName>Scada.Data.Client</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MySql.Data">
-      <HintPath>..\Bin\Libs\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,29 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Agent.cs" />
-    <Compile Include="AgentWindow.cs">
+    <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AgentWindow.Designer.cs">
-      <DependentUpon>AgentWindow.cs</DependentUpon>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ControlInvoke.cs" />
-    <Compile Include="CRC16.cs" />
-    <Compile Include="DataHandler.cs" />
-    <Compile Include="DataPacket.cs" />
-    <Compile Include="DataPacketBuilder.cs" />
-    <Compile Include="DeviceEntry.cs" />
-    <Compile Include="SamplerController.cs" />
-    <Compile Include="ScadaReader.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="DBDataSource.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Value.cs" />
-    <EmbeddedResource Include="AgentWindow.resx">
-      <DependentUpon>AgentWindow.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

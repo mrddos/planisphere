@@ -181,7 +181,7 @@ namespace Scada.DataCenterAgent
             this.QN = value;
         }
 
-        internal void Build()
+        public void Build()
         {
             this.SetHeader();
             string ds = GetDataSections();

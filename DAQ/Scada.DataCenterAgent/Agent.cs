@@ -278,6 +278,7 @@ namespace Scada.DataCenterAgent
             {
                 if (msg.Trim() != string.Empty)
                 {
+
                     this.OnReceiveMessage(this, msg);
                     if (this.handler != null)
                     {
