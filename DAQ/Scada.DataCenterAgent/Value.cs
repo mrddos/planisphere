@@ -30,4 +30,35 @@ namespace Scada.DataCenterAgent
             return string.Empty;
         }
     }
+
+    class DeviceTime
+    {
+        internal static DateTime Parse(string deviceTime)
+        {
+            // 2009 05 06 08 30 30
+            try
+            {
+                int y = int.Parse(deviceTime.Substring(0, 4));
+                int m = int.Parse(deviceTime.Substring(4, 2));
+                int d = int.Parse(deviceTime.Substring(6, 2));
+                int h = int.Parse(deviceTime.Substring(8, 2));
+                int min = int.Parse(deviceTime.Substring(10, 2));
+                int sec = int.Parse(deviceTime.Substring(12, 2));
+                DateTime dt = new DateTime(y, m, d, h, min, sec);
+                return dt;
+            }
+            catch (FormatException)
+            {
+                return (default(DateTime));
+            }
+        }
+
+        internal static string Convert(DateTime time)
+        {
+            DateTime n = time;
+            string value = string.Format("{0}{1:d2}{2:d2}{3:d2}{4:d2}{5:d2}", n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second);
+
+            return value;
+        }
+    }
 }

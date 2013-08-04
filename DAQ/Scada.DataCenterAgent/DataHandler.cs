@@ -58,7 +58,7 @@ namespace Scada.DataCenterAgent
     /// <summary>
     /// DataHandler
     /// </summary>
-    class DataHandler
+    class MessageDataHandler
     {
         private DataPacketBuilder builder = new DataPacketBuilder();
 
@@ -82,7 +82,7 @@ namespace Scada.DataCenterAgent
             set;
         }
 
-        public DataHandler(Agent agent)
+        public MessageDataHandler(Agent agent)
         {
             this.agent = agent;
         }
@@ -230,7 +230,7 @@ namespace Scada.DataCenterAgent
             this.SendReplyPacket(qn);
 
             string time = Value.Parse(msg, "SystemTime");
-            DateTime dt = this.ParseDateTime(time);
+            DateTime dt = DeviceTime.Parse(time);
             SystemTime st = new SystemTime();
 
             st.wYear = (ushort)dt.Year;
@@ -287,8 +287,8 @@ namespace Scada.DataCenterAgent
 
         private void UploadHistoryData(string qn, string eno, string beginTime, string endTime, string polId)
         {
-            DateTime f = ParseDateTime(beginTime);
-            DateTime t = ParseDateTime(endTime);
+            DateTime f = DeviceTime.Parse(beginTime);
+            DateTime t = DeviceTime.Parse(endTime);
             if (f >= t)
             {
                 return;
@@ -404,25 +404,6 @@ namespace Scada.DataCenterAgent
             // TODO: 应答
         }
 
-        private DateTime ParseDateTime(string time)
-        {
-            // 2009 05 06 08 30 30
-            try
-            {
-                int y = int.Parse(time.Substring(0, 4));
-                int m = int.Parse(time.Substring(4, 2));
-                int d = int.Parse(time.Substring(6, 2));
-                int h = int.Parse(time.Substring(8, 2));
-                int min = int.Parse(time.Substring(10, 2));
-                int sec = int.Parse(time.Substring(12, 2));
-                DateTime dt = new DateTime(y, m, d, h, min, sec);
-                return dt;
-            }
-            catch (FormatException e)
-            {
-                return (default(DateTime));
-            }
-        }
 
 
         

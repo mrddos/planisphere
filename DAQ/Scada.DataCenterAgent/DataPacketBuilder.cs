@@ -15,6 +15,7 @@ namespace Scada.DataCenterAgent
         {
         }
 
+        /*
         private string GetDataTimeString(DateTime time)
         {
             DateTime n = time;
@@ -22,6 +23,7 @@ namespace Scada.DataCenterAgent
 
             return value;
         }
+        */
 
         public DataPacket GetDataPacket(string deviceKey, Dictionary<string, object> data, bool realTime = false)
         {
@@ -39,7 +41,7 @@ namespace Scada.DataCenterAgent
             {
                 timeStr = (string)data["time"];
             }
-            string dataTime = this.GetDataTimeString(DateTime.Parse(timeStr));
+            string dataTime = DeviceTime.Convert(DateTime.Parse(timeStr));
             dp.SetContent(sno, eno, dataTime, data);
             dp.Build();
             return dp;
@@ -57,7 +59,7 @@ namespace Scada.DataCenterAgent
             string sno = Settings.Instance.Sno;
             string eno = Settings.Instance.GetEquipNumber(deviceKey);
             string timeStr = (string)data["time"];
-            string dataTime = this.GetDataTimeString(DateTime.Parse(timeStr));
+            string dataTime = DeviceTime.Convert(DateTime.Parse(timeStr));
             dp.SetContent(sno, eno, dataTime, data);
             dp.Build();
             return dp;
@@ -115,7 +117,7 @@ namespace Scada.DataCenterAgent
             string sno = Settings.Instance.Sno;
             string eno = Settings.Instance.GetEquipNumber(deviceKey);
 
-            string dataTime = this.GetDataTimeString(dateTime);
+            string dataTime = DeviceTime.Convert(dateTime);
 
             // Header packet
             DataPacket dp = null;
@@ -174,7 +176,7 @@ namespace Scada.DataCenterAgent
             // DataPacket is for sending, SO ST=38.(SysSend)
             dp.QN = qn;
             dp.St = SysSend;
-            dp.BuildGetTime(this.GetDataTimeString(DateTime.Now));
+            dp.BuildGetTime(DeviceTime.Convert(DateTime.Now));
             return dp;
         }
     }
