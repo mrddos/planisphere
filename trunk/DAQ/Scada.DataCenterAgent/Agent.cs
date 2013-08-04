@@ -42,7 +42,7 @@ namespace Scada.DataCenterAgent
         private NetworkStream stream;
 
         // the current data handler.
-        private DataHandler handler;
+        private MessageDataHandler handler;
 
         
 
@@ -184,7 +184,7 @@ namespace Scada.DataCenterAgent
                         this.stream = this.client.GetStream();
                         this.BeginRead(this.client);
 
-                        this.handler = new DataHandler(this);
+                        this.handler = new MessageDataHandler(this);
                         // [Auth]
                         this.handler.SendAuthPacket();
                     }
@@ -214,7 +214,7 @@ namespace Scada.DataCenterAgent
                         this.stream = this.client.GetStream();
                         this.BeginRead(this.client);
 
-                        this.handler = new DataHandler(this);
+                        this.handler = new MessageDataHandler(this);
                         // [Auth]
                         this.handler.SendAuthPacket();
                     }
