@@ -38,7 +38,7 @@ namespace Scada.DataCenterAgent
                                 DeviceKey_NaI
                                      };
 
-        public static Settings Instance = new Settings(); 
+        public static Settings Instance = new Settings();
 
         /// <summary>
         /// 
@@ -113,7 +113,11 @@ namespace Scada.DataCenterAgent
 
         public Settings()
         {
-            doc.Load("agent.settings");
+            string settingFileName = "agent.settings";
+            if (File.Exists(settingFileName))
+            {
+                doc.Load(settingFileName);
+            }
 
             // Data Center
             var datacenters = doc.SelectNodes("//datacenter");

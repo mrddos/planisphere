@@ -8,7 +8,7 @@ using System.Threading;
 namespace Scada.DataCenterAgent
 {
     // Command for received.
-    enum ReceivedCommand
+    public enum ReceivedCommand
     {
         Unknown = -1,
         None = 0,
@@ -55,6 +55,9 @@ namespace Scada.DataCenterAgent
         public ushort wMilliseconds;
     }
 
+    /// <summary>
+    /// DataHandler
+    /// </summary>
     class DataHandler
     {
         private DataPacketBuilder builder = new DataPacketBuilder();
@@ -83,9 +86,6 @@ namespace Scada.DataCenterAgent
         {
             this.agent = agent;
         }
-
-
-        
 
 
         public void SendAuthPacket()
@@ -126,31 +126,37 @@ namespace Scada.DataCenterAgent
 
             switch (code)
             {
+                // 设置系统时间
                 case ReceivedCommand.SetTime:
                     {
                         this.OnSetTime(msg);
                     }
                     break;
+                // 获得系统时间
                 case ReceivedCommand.GetTime:
                     {
                         this.OnGetTime(msg);
                     }
                     break;
+                // 设置密码
                 case ReceivedCommand.SetPassword:
                     {
                         this.HandleSetPassword(msg);
                     }
                     break;
+                // 开始
                 case ReceivedCommand.StartSend:
                     {
                         this.OnDataRequest(msg);
                     }
                     break;
+                // 结束
                 case ReceivedCommand.StopSend:
                     {
                         this.agent.Started = false;
                     }
                     break;
+                // 历史数据
                 case ReceivedCommand.HistoryData:
                     {
                         this.agent.History = true;
@@ -158,38 +164,44 @@ namespace Scada.DataCenterAgent
                         this.agent.History = false;
                     }
                     break;
+                // 直接数据
                 case ReceivedCommand.DirectData:
                     {
                         this.OnDirectDataRequest(msg);
                     }
                     break;
+                // 初始化
                 case ReceivedCommand.Init:
                     {
                         this.OnInitializeRequest(msg);
                     }
                     break;
+                // 心跳包
                 case ReceivedCommand.KeepAlive:
                     {
                         this.OnKeepAlive(msg);
                     }
                     break;
+                // 启动设备
                 case ReceivedCommand.StartDev:
                     {
                         this.OnStartDevice(msg);
                         hvsc.Start();
                     }
                     break;
+                // 停止设备
                 case ReceivedCommand.StopDev:
                     {
                         this.OnStopDevice(msg);
                     }
                     break;
-
+                // Server Reply
                 case ReceivedCommand.Reply:
                     {
                         this.OnServerReply(msg);
                     }
                     break;
+                // Error!
                 case ReceivedCommand.None:
                 case ReceivedCommand.Unknown:
                 default:
@@ -204,7 +216,7 @@ namespace Scada.DataCenterAgent
 
         private void OnGetTime(string msg)
         {
-            string qn = ParseValue(msg, "QN");
+            string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
 
             var p = this.builder.GetTimePacket(qn);
@@ -214,10 +226,10 @@ namespace Scada.DataCenterAgent
 
         private void OnSetTime(string msg)
         {
-            string qn = ParseValue(msg, "QN");
+            string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
 
-            string time = ParseValue(msg, "SystemTime");
+            string time = Value.Parse(msg, "SystemTime");
             DateTime dt = this.ParseDateTime(time);
             SystemTime st = new SystemTime();
 
@@ -236,7 +248,7 @@ namespace Scada.DataCenterAgent
         private void OnServerReply(string msg)
         {
             // TODO:
-            string ret = DataHandler.ParseValue(msg, "ExeRtn");
+            string ret = Value.Parse(msg, "ExeRtn");
             if (this.CurrentSentCommand == SentCommand.Auth)
             {
 
@@ -256,17 +268,17 @@ namespace Scada.DataCenterAgent
 
         private void HandleHistoryData(string msg)
         {
-            string qn = ParseValue(msg, "QN");
+            string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
 
-            string sno = ParseValue(msg, "SNO");
+            string sno = Value.Parse(msg, "SNO");
 
-            string eno = ParseValue(msg, "ENO");
+            string eno = Value.Parse(msg, "ENO");
 
-            string beginTime = ParseValue(msg, "BeginTime");
-            string endTime = ParseValue(msg, "EndTime");
+            string beginTime = Value.Parse(msg, "BeginTime");
+            string endTime = Value.Parse(msg, "EndTime");
 
-            string polId = ParseValue(msg, "PolId");
+            string polId = Value.Parse(msg, "PolId");
 
             this.UploadHistoryData(qn, eno, beginTime, endTime, polId);
 
@@ -327,7 +339,7 @@ namespace Scada.DataCenterAgent
 
         private void OnInitializeRequest(string msg)
         {
-            string qn = ParseValue(msg, "QN");
+            string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
             this.SendResultPacket(qn);
 
@@ -335,7 +347,7 @@ namespace Scada.DataCenterAgent
 
         private void OnDataRequest(string msg)
         {
-            string qn = ParseValue(msg, "QN");
+            string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
             // Upload data when right time.
             this.agent.Started = true;
@@ -343,7 +355,7 @@ namespace Scada.DataCenterAgent
 
         private void OnStartDevice(string msg)
         {
-            string eno = ParseValue(msg, "ENO");
+            string eno = Value.Parse(msg, "ENO");
             if (eno == "")
             {
                 hvsc.Start();
@@ -356,7 +368,7 @@ namespace Scada.DataCenterAgent
 
         private void OnStopDevice(string msg)
         {
-            string eno = ParseValue(msg, "ENO");
+            string eno = Value.Parse(msg, "ENO");
             if (eno == "")
             {
                 hvsc.Stop();
@@ -369,7 +381,7 @@ namespace Scada.DataCenterAgent
 
         private void OnDirectDataRequest(string msg)
         {
-            string qn = ParseValue(msg, "QN");
+            string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
             this.SendResultPacket(qn);
             // Upload data when right time.
@@ -379,7 +391,7 @@ namespace Scada.DataCenterAgent
         private static int ParseCommandCode(string msg)
         {
             int code = 0;
-            if (int.TryParse(ParseValue(msg, "CN"), out code))
+            if (int.TryParse(Value.Parse(msg, "CN"), out code))
             {
                 return code;
             }
@@ -388,7 +400,7 @@ namespace Scada.DataCenterAgent
 
         private void HandleSetPassword(string msg)
         {
-            Settings.Instance.Password = DataHandler.ParseValue(msg, "PW");
+            Settings.Instance.Password = Value.Parse(msg, "PW");
             // TODO: 应答
         }
 
@@ -412,28 +424,6 @@ namespace Scada.DataCenterAgent
             }
         }
 
-        private static string ParseValue(string msg, string key)
-        {
-            string tof = string.Format("{0}=", key);
-            int p = msg.IndexOf(tof);
-            if (p > 0)
-            {
-                int e = msg.IndexOf(";", p);
-                if (e < 0)
-                {
-                    e = msg.IndexOf("&&", p);
-                    if (e < 0)
-                    {
-                        e = msg.Length;
-                    }
-                }
-                int len = tof.Length;
-                // 3 is CN='s length
-                string value = msg.Substring(p + len, e - p - len);
-                return value;
-            }
-            return string.Empty;
-        }
 
         
     }

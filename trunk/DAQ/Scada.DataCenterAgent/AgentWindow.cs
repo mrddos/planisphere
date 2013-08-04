@@ -214,11 +214,6 @@ namespace Scada.DataCenterAgent
 
         }
 
-        private void toolStripContainer1_TopToolStripPanel_Click(object sender, EventArgs e)
-        {
-
-        }
-
         // 开始
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
