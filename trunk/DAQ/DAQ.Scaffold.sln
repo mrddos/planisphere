@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Server", "Scada.Serve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Installer", "Scada.Installer\Scada.Installer.csproj", "{6C423818-C163-4F35-A8CF-08E8EDD52DB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Data.Client.Tcp", "Scada.Data.Client.Tcp\Scada.Data.Client.Tcp.csproj", "{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Data.Client.Unit", "Scada.Data.Client.Tcp\Scada.Data.Client.Unit\Scada.Data.Client.Unit.csproj", "{C5B14544-6078-4E82-9454-D7E837E0A557}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,26 @@ Global
 		{6C423818-C163-4F35-A8CF-08E8EDD52DB9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6C423818-C163-4F35-A8CF-08E8EDD52DB9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6C423818-C163-4F35-A8CF-08E8EDD52DB9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F0A63AD3-D5E0-43C4-9F1A-7E51D402E84C}.Release|Win32.ActiveCfg = Release|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
