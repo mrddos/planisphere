@@ -83,6 +83,7 @@ namespace Scada.DataCenterAgent
             agent.Wireless = wireless;
             agent.Connect();
             agent.OnReceiveMessage += this.OnReceiveMessage;
+            agent.OnNotifyEvent += this.OnNotifyEvent;
             return agent;
         }
 
@@ -208,11 +209,27 @@ namespace Scada.DataCenterAgent
         private void OnReceiveMessage(Agent agent, string msg)
         {
             this.SafeInvoke(() => {
-                string line = string.Format("{0}: {1}", agent.ToString(), msg);
+                string line = string.Format("{0}: {1}", agent.ToString(false), msg);
                 this.listBox1.Items.Add(line);
             });
 
         }
+
+        private void OnNotifyEvent(Agent agent, NotifyEvent ne, string msg)
+        {
+            this.SafeInvoke(() =>
+            {
+                if (NotifyEvent.Connected == ne)
+                {
+                    this.statusStrip1.Items[1].Text = agent.ToString() + " 已连接";
+                }
+                else if (NotifyEvent.ConnectError == ne)
+                {
+                    this.listBox1.Items.Add(msg);
+                }
+            });
+        }
+
 
         // 开始
         private void toolStripButton1_Click(object sender, EventArgs e)

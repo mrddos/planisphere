@@ -25,7 +25,15 @@ namespace Scada.DataCenterAgent
         public StringBuilder messageBuffer = new StringBuilder();
     }
 
+    public enum NotifyEvent
+    {
+        Connected,
+        ConnectError
+    }
+
     internal delegate void OnReceiveMessage(Agent agent, string msg);
+
+    internal delegate void OnNotifyEvent(Agent agent, NotifyEvent ne, string msg);
 
     /// <summary>
     /// 
@@ -119,11 +127,28 @@ namespace Scada.DataCenterAgent
             set;
         }
 
+        public OnNotifyEvent OnNotifyEvent
+        {
+            get;
+            set;
+        }
+
         public override string ToString()
         {
             return (this.client != null) 
                 ? string.Format("{0}:{1}", this.ServerAddress, this.ServerPort) 
                 : string.Format("{0}:{1}", this.WirelessServerAddress, this.WirelessServerPort);
+        }
+
+        public string ToString(bool usePort)
+        {
+            if (usePort)
+            {
+                return this.ToString();
+            }
+            return (this.client != null)
+                ? string.Format("{0}", this.ServerAddress)
+                : string.Format("{0}", this.WirelessServerAddress);
         }
 
         public void Connect()
@@ -142,7 +167,7 @@ namespace Scada.DataCenterAgent
                 }
                 catch (Exception e)
                 {
-                    this.Notify("Connect: " + e.Message);
+                    this.LoggerAdd("Connect: " + e.Message);
                 }
             }
         }
@@ -160,11 +185,11 @@ namespace Scada.DataCenterAgent
                         this.WirelessServerAddress, this.WirelessServerPort, 
                         new AsyncCallback(ConnectToWirelessCallback), 
                         this.wirelessClient);
-                    this.Notify("using wireless connection");
+                    this.LoggerAdd("using wireless connection");
                 }
                 catch (Exception e)
                 {
-                    this.Notify("ConnectToWireless: " + e.Message);
+                    this.LoggerAdd("ConnectToWireless: " + e.Message);
                 }
             }
         }
@@ -187,12 +212,14 @@ namespace Scada.DataCenterAgent
                         this.handler = new MessageDataHandler(this);
                         // [Auth]
                         this.handler.SendAuthPacket();
+
+                        this.OnNotifyEvent(this, NotifyEvent.Connected, "已连接");
                     }
                 }
                 catch (SocketException e)
                 {
                     this.client = null;
-                    var s = e.Message;
+                    this.OnNotifyEvent(this, NotifyEvent.ConnectError, e.Message);
                     this.ConnectToWireless();
                 }
 
@@ -217,6 +244,8 @@ namespace Scada.DataCenterAgent
                         this.handler = new MessageDataHandler(this);
                         // [Auth]
                         this.handler.SendAuthPacket();
+
+                        this.OnNotifyEvent(this, NotifyEvent.Connected, "已连接");
                     }
                 }
                 catch (SocketException e)
@@ -260,7 +289,7 @@ namespace Scada.DataCenterAgent
                     if (c > 0)
                     {
                         string msg = Encoding.ASCII.GetString(so.buffer, 0, c);
-                        this.OnReceivedMessagess(msg);
+                        this.DoReceivedMessages(msg);
                         this.BeginRead(so.client);
                     }
                 }
@@ -271,14 +300,17 @@ namespace Scada.DataCenterAgent
             }
         }
 
-        private void OnReceivedMessagess(string messages)
+        private void DoReceivedMessages(string messages)
         {
             string[] msgs = messages.Split(new string[] { "\r\n" }, StringSplitOptions.None);
             foreach (string msg in msgs)
             {
                 if (msg.Trim() != string.Empty)
                 {
-
+                    if ("6031" == Value.Parse(msg, "CN"))
+                    {
+                        continue;
+                    }
                     this.OnReceiveMessage(this, msg);
                     if (this.handler != null)
                     {
@@ -288,7 +320,7 @@ namespace Scada.DataCenterAgent
             }
         }
 
-        private void Notify(string msg)
+        private void LoggerAdd(string msg)
         {
             if (this.handler != null)
             {
@@ -296,7 +328,10 @@ namespace Scada.DataCenterAgent
             }
         }
 
-
+        /// <summary>
+        /// Final entry of send bytes.
+        /// </summary>
+        /// <param name="message"></param>
         private void Send(byte[] message)
         {
             try

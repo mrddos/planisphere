@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Data.Client.Tcp", "Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Data.Client.Unit", "Scada.Data.Client.Tcp\Scada.Data.Client.Unit\Scada.Data.Client.Unit.csproj", "{C5B14544-6078-4E82-9454-D7E837E0A557}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scada.FormProxy", "Scada.FormProxy\Scada.FormProxy.vcxproj", "{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,16 @@ Global
 		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{C5B14544-6078-4E82-9454-D7E837E0A557}.Release|Win32.ActiveCfg = Release|Any CPU
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Debug|Mixed Platforms.ActiveCfg = Release|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Debug|Mixed Platforms.Build.0 = Release|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Debug|Win32.Build.0 = Debug|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Release|Any CPU.ActiveCfg = Release|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Release|Win32.ActiveCfg = Release|Win32
+		{4C50D0B2-B2C4-4D0A-9829-9A9EDEC86668}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

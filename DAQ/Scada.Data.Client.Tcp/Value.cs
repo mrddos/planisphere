@@ -5,8 +5,16 @@ using System.Text;
 
 namespace Scada.DataCenterAgent
 {
+    /// <summary>
+    /// 
+    /// </summary>
     class Value
     {
+        public const int SysSend = 38;
+
+        public const int SysReply = 91;
+
+
         internal static string Parse(string msg, string key)
         {
             string tof = string.Format("{0}=", key);
@@ -31,6 +39,9 @@ namespace Scada.DataCenterAgent
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     class DeviceTime
     {
         internal static DateTime Parse(string deviceTime)
