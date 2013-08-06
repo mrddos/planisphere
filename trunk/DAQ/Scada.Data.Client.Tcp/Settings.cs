@@ -10,9 +10,16 @@ using System.Xml;
 
 namespace Scada.DataCenterAgent
 {
-    public class Settings
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Settings : ISettings
     {
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// !
+        /// 
         public const string DeviceKey_Hpic = "scada.hpic";
 
         public const string DeviceKey_Weather = "scada.weather";
@@ -314,13 +321,23 @@ namespace Scada.DataCenterAgent
         public string Mn
         {
             get;
-            private set;
+            set;
         }
 
         public string Sno
         {
             get;
             private set;
+        }
+
+
+        public DateTime CurrentTime
+        {
+            set { }
+            get
+            {
+                return DateTime.Now;
+            }
         }
 
         internal string GetDeviceKeyByEno(string eno)

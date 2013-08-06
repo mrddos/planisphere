@@ -130,6 +130,8 @@ namespace Scada.Declare
         /// <param name="o"></param>
 		private void TimerCallback(object o)
 		{
+            // The temp file name is fixed.
+            string tempFile = this.Path + "\\temp_download_file.xml";
             string filePath = string.Empty;
             if (this.IsVirtual)
             {
@@ -138,9 +140,11 @@ namespace Scada.Declare
             else
             {
                 // Start download ...
-
                 string fileName = GetFileName(DateTime.Now);
-				filePath = this.Path + "\\" + fileName;
+                string datePath = this.Path + "\\" + this.GetDatePath(DateTime.Now);
+                this.DoFolderPolicy(datePath);
+
+                filePath = datePath + "\\" + fileName;
 				if (File.Exists(filePath))
                 {
                     return;
@@ -148,25 +152,30 @@ namespace Scada.Declare
 
                 // Download the file.
                 string address = this.addr + fileName;
+                
                 using (WebClient client = new WebClient())
                 {
                     try
                     {
-						client.DownloadFile(address, filePath);
+                        if (File.Exists(tempFile))
+                        {
+                            File.Delete(tempFile);
+                        }
+                        client.DownloadFile(address, tempFile);
                     }
                     catch (Exception e)
                     {
-						string msg = e.Message;
+                        RecordManager.DoSystemEventRecord(this, e.Message);
                     }
                 }
             }
 			Thread.Sleep(1000);
-            if (File.Exists(filePath))
+            if (File.Exists(tempFile))
             {
                 try
                 {
                     XmlDocument doc = new XmlDocument();
-                    doc.Load(filePath);
+                    doc.Load(tempFile);
                     // XmlElement root = doc.DocumentElement;
                     var nsmgr = new XmlNamespaceManager(doc.NameTable);
                     nsmgr.AddNamespace("a", "http://physics.nist.gov/Divisions/Div846/Gp4/ANSIN4242/2005/ANSIN4242");
@@ -175,10 +184,16 @@ namespace Scada.Declare
 
                     NuclideDataSet set = this.ParseData(doc, nsmgr);
                     this.Record(set);
+
+                    File.Move(tempFile, filePath);
+                }
+                catch (IOException e)
+                {
+                    RecordManager.DoSystemEventRecord(this, e.Message);
                 }
                 catch (Exception e)
                 {
-
+                    RecordManager.DoSystemEventRecord(this, e.Message);
                 }
                 finally
                 {
@@ -265,6 +280,11 @@ namespace Scada.Declare
             fileName = string.Format("{0}_{1}-{2:D2}-{3:D2}T{4:D2}_{5:D2}_00Z-5min.n42",
 				this.deviceSn, t.Year, t.Month, t.Day, t.Hour, t.Minute / 5 * 5);
             return fileName;
+        }
+
+        private string GetDatePath(DateTime date)
+        {
+            return string.Format("{0}-{1:D2}", date.Year, date.Month);
         }
 
 		// TODO: CalibrationNuclideFound and ReferencePeakEnergyFromPosition
@@ -366,7 +386,22 @@ namespace Scada.Declare
             return set;
         }
 
+        
+        private void DoFolderPolicy(string folderName)
+        {
+            if (!Directory.Exists(folderName))
+            {
+                Directory.CreateDirectory(folderName);
+            }
 
+            DateTime threeMonthAgo = DateTime.Now.AddMonths(-3);
+            string threeMonthAgoPath = this.Path + "\\" + this.GetDatePath(threeMonthAgo);
+
+            if (Directory.Exists(threeMonthAgoPath))
+            {
+                Directory.Delete(threeMonthAgoPath, true);
+            }
+        }
 
 	}
 }

@@ -151,10 +151,16 @@ namespace Scada.DataCenterAgent
 
         }
 
+        private string GetDatePath(DateTime date)
+        {
+            return string.Format("{0}-{1:D2}", date.Year, date.Month);
+        }
+
         public string GetNaIDeviceData(DateTime time)
         {
             string fileName = this.GetFileName(time);
-            string filePath = string.Format("{0}\\{1}", Settings.Instance.NaIFilePath, fileName);
+            string datePath = this.GetDatePath(DateTime.Now);
+            string filePath = string.Format("{0}\\{1}\\{2}", Settings.Instance.NaIFilePath, datePath, fileName);
             string content = string.Empty;
             if (File.Exists(filePath))
             {

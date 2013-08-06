@@ -41,8 +41,6 @@ namespace Scada.Installer
         {
             this.textBox1.Text = @"C:\Scada";
 
-            this.textBox4.Text = "."; 
-            this.textBox5.Text = ".";
             if (File.Exists("mysql.version"))
             {
                 using (StreamReader sr = new StreamReader("mysql.version"))
@@ -54,12 +52,16 @@ namespace Scada.Installer
             {
                 this.mySqlVersion = "mysql-5.1.60-win32";
             }
+
+            this.UpdateUIStauts();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             this.textBox2.Text = this.textBox1.Text + "\\MySQL";
             this.textBox3.Text = this.textBox1.Text + "\\Bin";
+
+            this.UpdateUIStauts();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -120,7 +122,15 @@ namespace Scada.Installer
             if (CreateDesktopIcons("Scada.Main.exe", "系统设备管理器") &&
                 CreateDesktopIcons("Scada.MainVision.exe", "Nuclover - SCADA"))
             {
-                this.AddLog("安装成功!");
+                if (this.installMode)
+                {
+                    this.AddLog("安装成功!");
+                }
+                else
+                {
+                    this.AddLog("更新成功!");
+                }
+
                 this.Invoke(new MyInvoke((object sender, string p) => 
                 {
                     this.button1.Enabled = true;
@@ -141,6 +151,12 @@ namespace Scada.Installer
         {
             try
             {
+                Process[] mysqlds = Process.GetProcessesByName("mysqld");
+                if (mysqlds != null && mysqlds.Length > 0)
+                {
+                    return true;
+                }
+
                 string mysqld = string.Format("{0}\\{1}\\bin\\mysqld.exe", this.textBox2.Text, this.mySqlVersion);
                 using (Process process = new Process())
                 {
@@ -227,6 +243,11 @@ namespace Scada.Installer
 
         private bool CreateTables()
         {
+            if (!this.resetCheckBox.Checked)
+            {
+                // Or use this.installMode to check.
+                return true;
+            }
             string fileName = "Scada.DAQ.Installer.exe";
             string filePath = string.Format("{0}\\{1}", this.textBox3.Text, fileName);
             using (Process process = new Process())
@@ -258,20 +279,20 @@ namespace Scada.Installer
             string destPath = this.textBox3.Text;
             if (!File.Exists(programZipFile))
             {
-                this.AddLog("Error: 未找到文件: bin.zip");
+                this.AddLog("Error: 未找到文件: bin.zip!");
                 return false;
             }
-            this.AddLog("解压缩程序中...");
+            this.AddLog("解压缩程序中... (请关闭相关进程，否则解压会失败!)");
             string errorMessage;
 
             bool ret = Zip.UnZipFile(programZipFile, destPath, out errorMessage);
             if (ret)
             {
-                this.AddLog("解压缩程序成功");
+                this.AddLog("解压缩程序成功!");
             }
             else
             {
-                this.AddLog("解压缩程序失败");
+                this.AddLog("解压缩程序失败!");
             }
             return ret;
         }
@@ -279,6 +300,17 @@ namespace Scada.Installer
         private bool PrepareMySQLConfigFile()
         {
             return true;
+        }
+
+        private bool MySQLExists()
+        {
+            return this.MySQLExistsAt(this.textBox2.Text);
+        }
+
+        private bool MySQLExistsAt(string mysqlPath)
+        {
+            string mysqld = string.Format("{0}\\{1}\\bin\\mysqld.exe", mysqlPath, this.mySqlVersion);
+            return File.Exists(mysqld);
         }
 
         private bool UnzipMySQLFiles()
@@ -369,6 +401,7 @@ namespace Scada.Installer
                 // Run Scada.Main.exe
                 string startMainScript = string.Format("start {0}\\Scada.Main.exe /ALL", binPath);
                 sw.WriteLine(startMainScript);
+                sw.WriteLine("ping -n 30 127.0.0.1");
                 sw.WriteLine();
 
                 // Run Scada.DataCenterAgent.exe
@@ -379,28 +412,6 @@ namespace Scada.Installer
             fs.Close();
 
             return p;
-        }
-
-        private void buttonMds_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.SelectedPath = @"C:\";
-            DialogResult dr = fbd.ShowDialog();
-            if (dr == DialogResult.OK)
-            {
-                this.textBox4.Text = fbd.SelectedPath;
-            }
-        }
-
-        private void buttonAis_Click(object sender, EventArgs e)
-        {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.SelectedPath = @"C:\";
-            DialogResult dr = fbd.ShowDialog();
-            if (dr == DialogResult.OK)
-            {
-                this.textBox5.Text = fbd.SelectedPath;
-            }
         }
 
         /// <summary>
@@ -418,6 +429,29 @@ namespace Scada.Installer
         private void AddString(object sender, string line)
         {
             this.progressBox.Items.Add(line);
+        }
+
+        private void resetCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private bool installMode = true;
+        private void UpdateUIStauts()
+        {
+            if (MySQLExists())
+            {
+                installMode = false;
+                this.button1.Text = "更新";
+                this.resetCheckBox.Checked = false;
+            }
+            else
+            {
+                installMode = true;
+                this.button1.Text = "安装";
+                this.resetCheckBox.Checked = true;
+            }
+            
         }
         
     }
