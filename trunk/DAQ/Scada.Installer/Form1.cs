@@ -355,23 +355,24 @@ namespace Scada.Installer
                 sw.WriteLine(startMysqlScript);
                 sw.WriteLine();
 
+                string binPath = this.textBox3.Text;
                 // Run MDS.exe
-                string startMDSScript = string.Format("start {0}\\mds.exe", this.textBox4.Text);
+                string startMDSScript = string.Format("start {0}\\mds.exe", binPath);
                 sw.WriteLine(startMDSScript);
-                sw.WriteLine();
+                sw.WriteLine("ping -n 5 127.0.0.1");
 
                 // Run AIS.exe
-                string startAISScript = string.Format("start {0}\\ais.exe", this.textBox5.Text);
+                string startAISScript = string.Format("start {0}\\ais.exe", binPath);
                 sw.WriteLine(startAISScript);
-                sw.WriteLine();
+                sw.WriteLine("ping -n 5 127.0.0.1");
 
                 // Run Scada.Main.exe
-                string startMainScript = string.Format("start {0}\\Scada.Main.exe /ALL", this.textBox3.Text);
+                string startMainScript = string.Format("start {0}\\Scada.Main.exe /ALL", binPath);
                 sw.WriteLine(startMainScript);
                 sw.WriteLine();
 
                 // Run Scada.DataCenterAgent.exe
-                string startAgentScript = string.Format("start {0}\\Scada.DataCenterAgent.exe --start", this.textBox3.Text);
+                string startAgentScript = string.Format("start {0}\\Scada.DataCenterAgent.exe --start", binPath);
                 sw.WriteLine(startAgentScript);
                 sw.WriteLine();
             }
