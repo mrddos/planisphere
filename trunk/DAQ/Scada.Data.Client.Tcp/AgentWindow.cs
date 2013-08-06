@@ -20,6 +20,8 @@ namespace Scada.DataCenterAgent
 
         private DataPacketBuilder builder = new DataPacketBuilder();
 
+        private Dictionary<string, DateTime> lastDeviceSendData = new Dictionary<string, DateTime>();
+
         public bool StartState
         {
             get;
@@ -90,7 +92,7 @@ namespace Scada.DataCenterAgent
         private void InitializeTimer()
         {
             this.timer = new Timer();
-            this.timer.Interval = 2000;
+            this.timer.Interval = 4000;
             this.timer.Tick += this.SendDataTick;
             this.timer.Start();
 
@@ -113,22 +115,31 @@ namespace Scada.DataCenterAgent
         private void SendDataTick(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
-            if (!IsRightSendTime(now))
-            {
-                return;
-            }
 
-            DateTime rightTime = GetRightSendTime(now);
-            if (rightTime == this.lastSendTime)
+            foreach (var deviceKey in Settings.Instance.DeviceKeys)
             {
-                return;
-            }
-            this.lastSendTime = rightTime;
+                if (IsDeviceSendTimeOK(now, deviceKey))
+                {
+                    DateTime sendTime = GetDeviceSendTime(now, deviceKey);
 
-            SendDataPackets(rightTime);
+                    if (!this.lastDeviceSendData.ContainsKey(deviceKey))
+                    {
+                        this.lastDeviceSendData[deviceKey] = default(DateTime);
+                    }
+
+                    if (sendTime == this.lastDeviceSendData[deviceKey])
+                    {
+                        return;
+                    }
+
+                    this.lastDeviceSendData[deviceKey] = sendTime;
+
+                    SendDataPackets(sendTime, deviceKey);
+                }
+            }
         }
 
-        public void SendDataPackets(DateTime time)
+        public void SendDataPackets(DateTime time, string deviceKey)
         {
             bool willSend = false;
             foreach (var agent in this.agents)
@@ -141,40 +152,14 @@ namespace Scada.DataCenterAgent
                 return;
             }
 
-            foreach (var deviceKey in Settings.Instance.DeviceKeys)
+            if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
             {
-                if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
+                // 分包
+                string content = DBDataSource.Instance.GetNaIDeviceData(time);
+
+                List<DataPacket> pks = builder.GetDataPackets(deviceKey, time, content);
+                foreach (var p in pks)
                 {
-                    // 分包
-                    string content = DBDataSource.Instance.GetNaIDeviceData(time);
-
-                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, time, content);
-                    foreach (var p in pks)
-                    {
-                        // Sent by each agent.s
-                        foreach (var agent in this.agents)
-                        {
-                            agent.SendDataPacket(p, time);
-                        }
-                    }
-                }
-                else
-                {
-                    var d = DBDataSource.Instance.GetData(deviceKey, time);
-
-                    DataPacket p = null;
-                    // By different device.
-
-                    if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
-                        deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
-                    {
-                        p = builder.GetFlowDataPacket(deviceKey, d);
-                    }
-                    else
-                    {
-                        p = builder.GetDataPacket(deviceKey, d);
-                    }
-
                     // Sent by each agent.s
                     foreach (var agent in this.agents)
                     {
@@ -182,25 +167,72 @@ namespace Scada.DataCenterAgent
                     }
                 }
             }
+            else
+            {
+                var d = DBDataSource.Instance.GetData(deviceKey, time);
+
+                DataPacket p = null;
+                // By different device.
+
+                if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
+                    deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                {
+                    p = builder.GetFlowDataPacket(deviceKey, d);
+                }
+                else
+                {
+                    p = builder.GetDataPacket(deviceKey, d);
+                }
+
+                // Sent by each agent.s
+                foreach (var agent in this.agents)
+                {
+                    agent.SendDataPacket(p, time);
+                }
+            }
+            
         }
 
 
 
         private DateTime lastSendTime;
 
-        private static DateTime GetRightSendTime(DateTime dt)
+        private static DateTime GetDeviceSendTime(DateTime dt, string deviceKey)
         {
-            int second = dt.Second / 30 * 30;
-            DateTime ret = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, second);
-            return ret;
+            if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
+            {
+                int min = dt.Minute - 1;
+                DateTime ret = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, min, 0);
+                return ret;
+            }
+            else
+            {
+                int second = dt.Second / 30 * 30;
+                DateTime ret = new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, second);
+                return ret;
+            }
         }
 
-        private static bool IsRightSendTime(DateTime dt)
+        private static bool IsDeviceSendTimeOK(DateTime dt, string deviceKey)
         {
-            int sec = dt.Second - 5;
-            if ((sec >= 0 && sec <= 10) || ((sec >= 30) && sec <= 40))
+            if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
             {
-                return true;
+                // 00, 05, 10, ...55,
+                // Send data after 1 min.
+                if ((dt.Minute - 1) % 5 == 0)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                // 5 < current.second < 15 OR
+                // 35 < current.second < 45
+                int sec = dt.Second - 5;
+                if ((sec >= 0 && sec <= 10) || ((sec >= 30) && sec <= 40))
+                {
+                    return true;
+                }
             }
             return false;
         }
