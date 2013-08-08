@@ -45,25 +45,28 @@ namespace Scada.DAQ.Installer
             {
                 MockInsertData("weather");
             }
+            else if (fa == "--m-shelter")
+            {
+                MockInsertData("shelter");
+            }
             else if (fa == "--m-nai")
             {
                 MockInsertData("nai");
             }
-            else if (fa == "--all")
+            else if (fa == "--m-nai-file")
             {
-                // TODO: Copy MySQL, and Prepare the my.ini file
-
-
-                // TODO: Start the MySQL...
-
-
-                // TODO: Copy files to a folder...
-
-
-                // TODO: Invoke InitDataBase
-
-                // TODO: Tell user install finished.
+                MockCreateNaIFiles();
             }
+            else if (fa == "--m-nai")
+            {
+                MockInsertData("nai");
+            }
+
+        }
+
+        private static void MockCreateNaIFiles()
+        {
+            // throw new NotImplementedException();
         }
 
         static void InitDataBase(string[] args)

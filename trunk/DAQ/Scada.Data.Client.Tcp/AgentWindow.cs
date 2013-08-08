@@ -147,7 +147,7 @@ namespace Scada.DataCenterAgent
                 willSend |= agent.Started;
             }
 
-            if (willSend) //// TODO: !
+            if (!willSend) //// TODO: !
             {
                 return;
             }
@@ -169,6 +169,8 @@ namespace Scada.DataCenterAgent
             }
             else
             {
+                // NOTICE!!
+                return;
                 var d = DBDataSource.Instance.GetData(deviceKey, time);
 
                 DataPacket p = null;

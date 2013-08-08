@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -99,7 +100,8 @@ namespace Scada.DAQ.Installer
             }
             else if (this.device.ToLower() == "weather")
             {
-                cmd.CommandText = "insert into weather(time, Windspeed, Direction, Temperature, Humidity, Pressure, Raingauge,Dewpoint,IfRain) values(@1, 0, 360, @2, @3, 1000.1, 1, 1, 0)";
+                cmd.CommandText = "insert into weather(time, Windspeed, Direction, Temperature, Humidity, Pressure, Raingauge,Dewpoint,IfRain) " 
+                                    + "values(@1, 0, 360, @2, @3, 1000.1, 1, 1, 0)";
                 cmd.Parameters.AddWithValue("@1", t);
 
                 v = (v + 1) % 5;
@@ -109,6 +111,23 @@ namespace Scada.DAQ.Installer
                 double h = double.Parse("20." + v);
                 cmd.Parameters.AddWithValue("@3", h);
 
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+            else if (this.device.ToLower() == "shelter")
+            {
+                // Debug.Assert(false);
+                cmd.CommandText = "insert into environment_rec(time, Temperature, Humidity, IfMainPowerOff, BatteryHours, IfSmoke, IfWater, IfDoorOpen, Alarm)" 
+                                    + " values(@1, @2, @3, 0, 4, 0, 0, 0, 0)";
+                cmd.Parameters.AddWithValue("@1", t);
+
+                v = (v + 1) % 5;
+                double d = double.Parse("2" + v);
+                cmd.Parameters.AddWithValue("@2", d);
+
+                double h = double.Parse("3" + v);
+                cmd.Parameters.AddWithValue("@3", h);
 
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();

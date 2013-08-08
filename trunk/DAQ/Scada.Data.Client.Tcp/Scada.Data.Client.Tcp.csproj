@@ -60,6 +60,7 @@
     <Compile Include="DataPacketBuilder.cs" />
     <Compile Include="DeviceEntry.cs" />
     <Compile Include="ISettings.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="SamplerController.cs" />
     <Compile Include="ScadaReader.cs" />
     <Compile Include="Settings.cs" />

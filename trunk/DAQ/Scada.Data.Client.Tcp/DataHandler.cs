@@ -303,12 +303,14 @@ namespace Scada.DataCenterAgent
                     // NaIDevice ... Gose here.
                     // 分包
                     string content = DBDataSource.Instance.GetNaIDeviceData(dt);
-
-                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content, true);
-                    foreach (var p in pks)
+                    if (!string.IsNullOrEmpty(content))
                     {
-                        Thread.Sleep(10);
-                        this.agent.SendDataPacket(p, dt);
+                        List<DataPacket> pks = builder.GetDataPackets(deviceKey, dt, content, true);
+                        foreach (var p in pks)
+                        {
+                            Thread.Sleep(10);
+                            this.agent.SendDataPacket(p, dt);
+                        }
                     }
                     dt = dt.AddSeconds(60 * 5);
                 }
