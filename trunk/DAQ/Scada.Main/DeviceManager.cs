@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Scada.Main
 {
@@ -301,7 +302,16 @@ namespace Scada.Main
                 // Virtual 
                 if (File.Exists(devicePath + "\\virtual-device"))
                 {
-                    entry[DeviceEntry.Virtual] = new StringValue("true");
+                    string message = string.Format("{0} 是虚拟设备，继续点击‘确定’，连接物理设备请点击‘取消’", deviceName);
+                    DialogResult dr = MessageBox.Show(message, "Virtual Device!", MessageBoxButtons.OKCancel);
+                    if (dr == DialogResult.OK)
+                    {
+                        entry[DeviceEntry.Virtual] = new StringValue("true");
+                    }
+                    else
+                    {
+                        entry[DeviceEntry.Virtual] = new StringValue("false");
+                    }
                 }
                 return entry;
             }
