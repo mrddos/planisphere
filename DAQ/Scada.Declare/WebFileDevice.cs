@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.Config;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -176,6 +177,7 @@ namespace Scada.Declare
                 {
                     XmlDocument doc = new XmlDocument();
                     doc.Load(tempFile);
+                    
                     // XmlElement root = doc.DocumentElement;
                     var nsmgr = new XmlNamespaceManager(doc.NameTable);
                     nsmgr.AddNamespace("a", "http://physics.nist.gov/Divisions/Div846/Gp4/ANSIN4242/2005/ANSIN4242");

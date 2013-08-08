@@ -14,26 +14,15 @@ namespace Scada.Main
     /// </summary>
     public partial class SettingsForm : Form
     {
-        private SettingsContext context;
+        // private SettingsContext context;
 
         public SettingsForm()
         {
             InitializeComponent();
         }
 
-        public void SetSettingsContext(SettingsContext context)
-        {
-            this.context = context;
-        }
 
 
 
     }
-
-
-    public class SettingsContext
-    {
-
-    }
-
 }

@@ -9,6 +9,7 @@ using System.Threading;
 using Scada.Common;
 using System.Reflection;
 using System.Globalization;
+using Scada.Config;
 
 namespace Scada.Declare
 {

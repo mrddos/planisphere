@@ -124,6 +124,7 @@ namespace Scada.DataCenterAgent
             if (File.Exists(settingFileName))
             {
                 doc.Load(settingFileName);
+                
             }
 
             // Data Center

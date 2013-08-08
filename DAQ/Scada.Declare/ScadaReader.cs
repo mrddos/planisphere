@@ -6,6 +6,7 @@ using System.Text;
 
 namespace Scada.Declare
 {
+    /*
     public enum ReadLineResult
     {
         Null,
@@ -310,5 +311,5 @@ namespace Scada.Declare
             }
         }
     }
-
+    */
 }

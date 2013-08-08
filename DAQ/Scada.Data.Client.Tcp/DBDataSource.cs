@@ -159,7 +159,7 @@ namespace Scada.DataCenterAgent
         public string GetNaIDeviceData(DateTime time)
         {
             string fileName = this.GetFileName(time);
-            string datePath = this.GetDatePath(DateTime.Now);
+            string datePath = this.GetDatePath(time);
             string filePath = string.Format("{0}\\{1}\\{2}", Settings.Instance.NaIFilePath, datePath, fileName);
             string content = string.Empty;
             if (File.Exists(filePath))

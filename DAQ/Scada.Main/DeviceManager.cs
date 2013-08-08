@@ -1,4 +1,5 @@
-﻿using Scada.Declare;
+﻿using Scada.Config;
+using Scada.Declare;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -183,6 +184,9 @@ namespace Scada.Main
                 {
                     using (ScadaReader sr = new ScadaReader(displayConfig))
                     {
+                        // TODO: Xml Reader parse the whole file.
+                        // And retrieve the resulr, no need to loop reading line
+                        // 
                         SectionType secType = SectionType.None;
                         string line = null;
                         string key = null;
@@ -208,7 +212,6 @@ namespace Scada.Main
                 }
             }
 
-            // TODO: Load d2d
             string d2dFile = MainApplication.InstallPath + "\\" + DeviceMappingFile;
             if (File.Exists(d2dFile))
             {
