@@ -139,7 +139,7 @@ namespace Scada.Declare
 
             if (!Device.GetFactor(entry, 1, out this.factor1))
             {
-                Debug.Assert(false);
+                // Debug.Assert(false);
             }
 
             string[] fields = tableFields.Split(',');

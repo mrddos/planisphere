@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.MainSettings;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,6 +20,11 @@ namespace Scada.Main
         public SettingsForm()
         {
             InitializeComponent();
+        }
+
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+            this.tabPage1.Controls.Add(new HpicCfgForm());
         }
 
 

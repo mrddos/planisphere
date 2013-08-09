@@ -103,9 +103,7 @@ namespace Scada.Main
             if (!IsWatchRunning())
 			{
 				StartWatchProcess();
-			}			
-
-
+			}
 
             // StandardDevice sd = new StandardDevice("Device1");
             
@@ -121,7 +119,6 @@ namespace Scada.Main
 
 
             deviceManager.Initialize();
-
 
             // deviceManager.SelectDevice("Scada.HPIC", "0.9", true);
             // deviceManager.SelectDevice("Scada.Weather", "0.9", true);
