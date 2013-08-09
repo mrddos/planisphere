@@ -1,7 +1,9 @@
 ﻿using Scada.Common;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace Scada.Declare
@@ -21,7 +23,11 @@ namespace Scada.Declare
 
         public static string InstallPath
         {
-            get { return System.Environment.CurrentDirectory; }
+            get 
+            {
+                string p = Assembly.GetExecutingAssembly().Location;
+                return Path.GetDirectoryName(p);
+            }
         }
 
         public static string DevicesRootPath

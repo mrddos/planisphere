@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
@@ -31,15 +32,14 @@ namespace Scada.Watch
         {
             DateTime now = DateTime.Now;
             string fileName = string.Format("{0}-{1}-{2}.log", now.Year, now.Month, now.Day);
-            string path = string.Format("{0}\\devices\\{1}\\{2}\\log\\{3}", System.Environment.CurrentDirectory, deviceName, version, fileName);
+            string path = string.Format("{0}\\devices\\{1}\\{2}\\log\\{3}", GetInstallPath(), deviceName, version, fileName);
 
             return path;
         }
 
         private void AddWatch()
         {
-
-            string stateFile = string.Format("{0}\\devices.stt", System.Environment.CurrentDirectory);
+            string stateFile = string.Format("{0}\\devices.stt", GetInstallPath());
             if (File.Exists(stateFile))
             {
                 using (StreamReader sr = new StreamReader(stateFile))
@@ -101,5 +101,11 @@ namespace Scada.Watch
             // TODO: foreach then check.
 
 		}
+
+        private string GetInstallPath()
+        {
+            string p = Assembly.GetExecutingAssembly().Location;
+            return Path.GetDirectoryName(p);
+        }
 	}
 }

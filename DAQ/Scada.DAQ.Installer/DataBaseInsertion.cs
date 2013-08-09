@@ -111,7 +111,6 @@ namespace Scada.DAQ.Installer
                 double h = double.Parse("20." + v);
                 cmd.Parameters.AddWithValue("@3", h);
 
-
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
             }

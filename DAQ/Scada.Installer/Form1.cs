@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
 
 // using IWshRuntimeLibrary;
 
@@ -275,7 +276,7 @@ namespace Scada.Installer
 
         private bool UnzipProgramFiles()
         {
-            string programZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "\\bin.zip");
+            string programZipFile = string.Format("{0}\\{1}", GetInstallPath(), "\\bin.zip");
             string destPath = this.textBox3.Text;
             if (!File.Exists(programZipFile))
             {
@@ -329,7 +330,7 @@ namespace Scada.Installer
                 }
             }
 
-            string mySqlZipFile = string.Format("{0}\\{1}", System.Environment.CurrentDirectory, "mysql.zip");
+            string mySqlZipFile = string.Format("{0}\\{1}", GetInstallPath(), "mysql.zip");
 
             string destPath = this.textBox2.Text;
             if (!File.Exists(mySqlZipFile))
@@ -452,6 +453,12 @@ namespace Scada.Installer
                 this.resetCheckBox.Checked = true;
             }
             
+        }
+
+        private string GetInstallPath()
+        {
+            string p = Assembly.GetExecutingAssembly().Location;
+            return Path.GetDirectoryName(p);
         }
         
     }

@@ -1,6 +1,7 @@
 ﻿using Scada.Declare;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -120,7 +121,8 @@ namespace Scada.DataCenterAgent
 
         public Settings()
         {
-            string settingFileName = "agent.settings";
+            string settingFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "agent.settings");
+            // string settingFileName = "agent.settings";
             if (File.Exists(settingFileName))
             {
                 doc.Load(settingFileName);
@@ -171,7 +173,8 @@ namespace Scada.DataCenterAgent
 
             // Load NaI device config.
             // TODO:
-            this.NaIFilePath = string.Format("{0}\\devices\\Scada.NaIDevice\\0.9", Environment.CurrentDirectory);
+
+            this.NaIFilePath = string.Format("{0}\\..\\devices\\Scada.NaIDevice\\0.9", Application.ExecutablePath);
             string path = string.Format("{0}\\device.cfg", this.NaIFilePath);
 
             DeviceEntry entry = LoadFromConfig("Scada.NaIDevice", path);
@@ -291,9 +294,15 @@ namespace Scada.DataCenterAgent
 
         }
 
+        private string GetPasswordFile()
+        {
+            string pwFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "password");
+            return pwFileName;
+        }
+
         private void LoadPassword()
         {
-            using (StreamReader sr = new StreamReader("password"))
+            using (StreamReader sr = new StreamReader(GetPasswordFile()))
             {
                 this.password = sr.ReadLine();
             }
@@ -301,7 +310,7 @@ namespace Scada.DataCenterAgent
 
         private void UpdatePassword(string password)
         {
-            using (StreamWriter sw = new StreamWriter("password"))
+            using (StreamWriter sw = new StreamWriter(GetPasswordFile()))
             {
                 sw.WriteLine(password);
             }

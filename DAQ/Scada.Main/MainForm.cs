@@ -31,13 +31,6 @@ namespace Scada.Main
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitSysNotifyIcon();
-
-			// Keep-Alive timer
-			this.timer = new System.Windows.Forms.Timer();
-            this.timer.Interval = Defines.RescueCheckTimer;
-			this.timer.Tick += timerKeepAliveTick;
-			this.timer.Start();
-
             // TODO: Start the selected device by main args;
             // startMenuItem_Click(null, null);
 
@@ -137,6 +130,12 @@ namespace Scada.Main
 
             this.ShowInTaskbar = false;  //不显示在系统任务栏
             // this.sysNotifyIcon.Visible = true;  //托盘图标可见
+
+            // Keep-Alive timer
+            this.timer = new System.Windows.Forms.Timer();
+            this.timer.Interval = Defines.RescueCheckTimer;
+            this.timer.Tick += timerKeepAliveTick;
+            this.timer.Start();
         }
 
         private ListViewItem AddDeviceToList(string deviceName, string version, string status)
