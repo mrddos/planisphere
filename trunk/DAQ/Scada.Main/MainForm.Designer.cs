@@ -65,6 +65,7 @@
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.deviceListView = new System.Windows.Forms.ListView();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuBar.SuspendLayout();
             this.toolBar.SuspendLayout();
             this.statusBar.SuspendLayout();
@@ -326,7 +327,8 @@
             // statusBar
             // 
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLabel});
+            this.statusLabel,
+            this.toolStripStatusLabel1});
             this.statusBar.Location = new System.Drawing.Point(0, 459);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(704, 22);
@@ -354,8 +356,21 @@
             // 
             // statusLabel
             // 
+            this.statusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(0, 17);
+            this.statusLabel.Size = new System.Drawing.Size(59, 17);
+            this.statusLabel.Text = "系统就绪";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.toolStripStatusLabel1.IsLink = true;
+            this.toolStripStatusLabel1.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Always;
+            this.toolStripStatusLabel1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(33, 17);
+            this.toolStripStatusLabel1.Text = "帮助";
             // 
             // MainForm
             // 
@@ -369,6 +384,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuBar;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "系统设备管理器";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
@@ -420,6 +436,7 @@
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }
 

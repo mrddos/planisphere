@@ -62,6 +62,7 @@ namespace Scada.DataCenterAgent
             this.InitializeAgents();
             this.InitializeTimer();
             this.started = true;
+            Log.GetLogFile(Program.System).Log("Data (upload) Agent starts at " + DateTime.Now);
         }
 
         private void InitializeAgents()
@@ -156,40 +157,61 @@ namespace Scada.DataCenterAgent
             {
                 // 分包
                 string content = DBDataSource.Instance.GetNaIDeviceData(time);
-
-                List<DataPacket> pks = builder.GetDataPackets(deviceKey, time, content);
-                foreach (var p in pks)
+                if (!string.IsNullOrEmpty(content))
                 {
+                    List<DataPacket> pks = builder.GetDataPackets(deviceKey, time, content);
+                    foreach (var p in pks)
+                    {
+                        // Sent by each agent.s
+                        foreach (var agent in this.agents)
+                        {
+                            agent.SendDataPacket(p, time);
+                        }
+                    }
+
+                    if (pks.Count > 0)
+                    {
+                        string logger = string.Format("<Real-Time> ", pks[0].ToString());
+                        Log.GetLogFile(deviceKey).Log(logger);
+                    }
+                }
+                else
+                {
+                    Log.GetLogFile(deviceKey).Log("<Real-Time> NaI file Content is empty!");
+                }
+            }
+            else
+            {
+                var d = DBDataSource.Instance.GetData(deviceKey, time);
+                if (d != null && d.Count > 0)
+                {
+                    DataPacket p = null;
+                    // By different device.
+
+                    if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
+                        deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
+                    {
+                        p = builder.GetFlowDataPacket(deviceKey, d);
+                    }
+                    else
+                    {
+                        p = builder.GetDataPacket(deviceKey, d);
+                    }
+
                     // Sent by each agent.s
                     foreach (var agent in this.agents)
                     {
                         agent.SendDataPacket(p, time);
                     }
-                }
-            }
-            else
-            {
-                // NOTICE!!
-                return;
-                var d = DBDataSource.Instance.GetData(deviceKey, time);
 
-                DataPacket p = null;
-                // By different device.
-
-                if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
-                    deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
-                {
-                    p = builder.GetFlowDataPacket(deviceKey, d);
+                    string logger = string.Format("<Real-Time> '{0}'", p.ToString());
+                    Log.GetLogFile(deviceKey).Log(logger);
                 }
                 else
                 {
-                    p = builder.GetDataPacket(deviceKey, d);
-                }
+                    string logger = string.Format("<Real-Time> No data found from the table");
+                    Log.GetLogFile(deviceKey).Log(logger);
 
-                // Sent by each agent.s
-                foreach (var agent in this.agents)
-                {
-                    agent.SendDataPacket(p, time);
                 }
             }
             
@@ -255,11 +277,14 @@ namespace Scada.DataCenterAgent
             {
                 if (NotifyEvent.Connected == ne)
                 {
-                    this.statusStrip1.Items[1].Text = agent.ToString() + " 已连接";
+                    string logger = agent.ToString() + " 已连接";
+                    this.statusStrip1.Items[1].Text = logger;
+                    Log.GetLogFile(Program.System).Log(logger);
                 }
                 else if (NotifyEvent.ConnectError == ne)
                 {
                     this.listBox1.Items.Add(msg);
+                    Log.GetLogFile(Program.System).Log(msg);
                 }
             });
         }
