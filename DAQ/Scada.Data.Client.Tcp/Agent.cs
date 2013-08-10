@@ -167,7 +167,7 @@ namespace Scada.DataCenterAgent
                 }
                 catch (Exception e)
                 {
-                    this.LoggerAdd("Connect: " + e.Message);
+                    this.ScreenLogAppend("Connect: " + e.Message);
                 }
             }
         }
@@ -185,11 +185,11 @@ namespace Scada.DataCenterAgent
                         this.WirelessServerAddress, this.WirelessServerPort, 
                         new AsyncCallback(ConnectToWirelessCallback), 
                         this.wirelessClient);
-                    this.LoggerAdd("using wireless connection");
+                    this.ScreenLogAppend("using wireless connection");
                 }
                 catch (Exception e)
                 {
-                    this.LoggerAdd("ConnectToWireless: " + e.Message);
+                    this.ScreenLogAppend("ConnectToWireless: " + e.Message);
                 }
             }
         }
@@ -311,6 +311,9 @@ namespace Scada.DataCenterAgent
                     {
                         continue;
                     }
+
+                    
+
                     this.OnReceiveMessage(this, msg);
                     if (this.handler != null)
                     {
@@ -320,7 +323,7 @@ namespace Scada.DataCenterAgent
             }
         }
 
-        private void LoggerAdd(string msg)
+        private void ScreenLogAppend(string msg)
         {
             if (this.handler != null)
             {

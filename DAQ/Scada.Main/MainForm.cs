@@ -31,15 +31,11 @@ namespace Scada.Main
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitSysNotifyIcon();
-            this.SetStatusText("就绪");
-            // TODO: Start the selected device by main args;
-            // startMenuItem_Click(null, null);
+            this.SetStatusText("系统就绪");
 
-            ////////////////////////////////////////////////////////////////
-			// SQLite!
-			// System.Data.SQLite.SQLiteConnection.CreateFile("d:\\a.db");
             bool recover = false;
             bool runAll = false;
+
             string[] args = Program.DeviceManager.Args;
             if (args != null && args.Length > 0)
             {
@@ -73,7 +69,7 @@ namespace Scada.Main
                     ListViewGroup g = deviceListView.Groups.Add(deviceKey, displayName);
 
                     List<string> versions = Program.DeviceManager.GetVersions(deviceKey);
-                    ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "Waiting");
+                    ListViewItem lvi = this.AddDeviceToList(deviceName, versions[0], "就绪");
 
                     g.Items.Add(lvi);
                 }
@@ -140,7 +136,7 @@ namespace Scada.Main
             this.WindowState = FormWindowState.Minimized;
             this.ShowAtTaskBar(false);
 
-            this.SetStatusText("运行中...");
+            this.SetStatusText("系统运行中...");
 
             // Keep-Alive timer
             this.timer = new System.Windows.Forms.Timer();
@@ -189,18 +185,14 @@ namespace Scada.Main
 			sysNotifyIcon.Visible = true;
 
 			sysNotifyIcon.Click += new EventHandler(OnSysNotifyIconContextMenu);
-
 		}
 
 		private void OnSysNotifyIconContextMenu(object sender, EventArgs e)
 		{
             this.ShowAtTaskBar(true);
+            this.WindowState = FormWindowState.Normal;
 		}
 
-		//private void StartConnectToDevices()
-		//{
-		//	// Create N Threads to load the devices assemblies.
-		//}
 
 		// Menu Entries
 		private void fileMenuItem_Click(object sender, EventArgs e)
