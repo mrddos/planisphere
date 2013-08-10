@@ -31,6 +31,7 @@ namespace Scada.Main
         private void MainForm_Load(object sender, EventArgs e)
         {
             InitSysNotifyIcon();
+            this.SetStatusText("就绪");
             // TODO: Start the selected device by main args;
             // startMenuItem_Click(null, null);
 
@@ -104,6 +105,11 @@ namespace Scada.Main
             
         }
 
+        private void SetStatusText(string status)
+        {
+            this.statusLabel.Text = status;
+        }
+
         private void PressVBFormConnectToCPUButtons()
         {
             const string Version = "0.9";
@@ -133,9 +139,8 @@ namespace Scada.Main
 
             this.WindowState = FormWindowState.Minimized;
             this.ShowAtTaskBar(false);
-             //不显示在系统任务栏
 
-            // this.sysNotifyIcon.Visible = true;  //托盘图标可见
+            this.SetStatusText("运行中...");
 
             // Keep-Alive timer
             this.timer = new System.Windows.Forms.Timer();
@@ -159,6 +164,7 @@ namespace Scada.Main
             get;
             set;
         }
+
         private void ShowAtTaskBar(bool shown)
         {
             this.BeforeShowAtTaskBar = true;
@@ -307,7 +313,7 @@ namespace Scada.Main
                 if (item.Checked)
                 {
                     hasSelectedDevices = true;
-                    item.SubItems[2].Text = "Running";
+                    item.SubItems[2].Text = "运行中...";
                 }
             }
             return hasSelectedDevices;
@@ -317,7 +323,7 @@ namespace Scada.Main
         {
             foreach (ListViewItem item in this.deviceListView.Items)
             {
-                item.SubItems[2].Text = "Waiting";
+                item.SubItems[2].Text = "就绪";
             }
         }
 
@@ -367,7 +373,7 @@ namespace Scada.Main
 
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            // TODO: Open Settings main process.
         }
 
 

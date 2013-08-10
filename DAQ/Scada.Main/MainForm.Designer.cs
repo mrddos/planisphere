@@ -34,6 +34,7 @@
             this.menuBar = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addDeviceFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.operateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,9 +64,10 @@
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.deviceListView = new System.Windows.Forms.ListView();
-            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuBar.SuspendLayout();
             this.toolBar.SuspendLayout();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // sysNotifyIcon
@@ -106,6 +108,13 @@
             this.addDeviceFileMenuItem.Text = "添加设备文件";
             this.addDeviceFileMenuItem.Click += new System.EventHandler(this.addDeviceFileMenuItem_Click);
             // 
+            // settingToolStripMenuItem
+            // 
+            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingToolStripMenuItem.Text = "设置";
+            this.settingToolStripMenuItem.Click += new System.EventHandler(this.settingToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -130,12 +139,12 @@
             // startMenuItem
             // 
             this.startMenuItem.Name = "startMenuItem";
-            this.startMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.startMenuItem.Size = new System.Drawing.Size(100, 22);
             // 
             // stopMenuItem
             // 
             this.stopMenuItem.Name = "stopMenuItem";
-            this.stopMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stopMenuItem.Size = new System.Drawing.Size(100, 22);
             this.stopMenuItem.Text = "停止";
             this.stopMenuItem.Click += new System.EventHandler(this.stopMenuItem_Click);
             // 
@@ -284,14 +293,14 @@
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.startToolStripMenuItem.Text = "启动";
             this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // startAllToolStripMenuItem
             // 
             this.startAllToolStripMenuItem.Name = "startAllToolStripMenuItem";
-            this.startAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.startAllToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
             this.startAllToolStripMenuItem.Text = "启动全部";
             this.startAllToolStripMenuItem.Click += new System.EventHandler(this.startAllToolStripMenuItem_Click);
             // 
@@ -316,6 +325,8 @@
             // 
             // statusBar
             // 
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel});
             this.statusBar.Location = new System.Drawing.Point(0, 459);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(704, 22);
@@ -341,12 +352,10 @@
             this.deviceListView.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.deviceListView_ItemChecked);
             this.deviceListView.SelectedIndexChanged += new System.EventHandler(this.deviceListView_SelectedIndexChanged);
             // 
-            // settingToolStripMenuItem
+            // statusLabel
             // 
-            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.settingToolStripMenuItem.Text = "设置";
-            this.settingToolStripMenuItem.Click += new System.EventHandler(this.settingToolStripMenuItem_Click);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(0, 17);
             // 
             // MainForm
             // 
@@ -367,6 +376,8 @@
             this.menuBar.PerformLayout();
             this.toolBar.ResumeLayout(false);
             this.toolBar.PerformLayout();
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -408,6 +419,7 @@
         private System.Windows.Forms.ToolStripMenuItem startAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem startToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
     }
 }
 
