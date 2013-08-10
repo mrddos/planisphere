@@ -121,12 +121,11 @@ namespace Scada.DataCenterAgent
 
         public Settings()
         {
+            // "Agent.Settings"
             string settingFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "agent.settings");
-            // string settingFileName = "agent.settings";
             if (File.Exists(settingFileName))
             {
                 doc.Load(settingFileName);
-                
             }
 
             // Data Center

@@ -2,8 +2,10 @@
 using Scada.Controls.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -110,7 +112,9 @@ namespace Scada.MainVision
 
 		private void LoadConfig()
 		{
-			Config.Instance().Load("./dsm.cfg");
+            string installPath = Assembly.GetExecutingAssembly().Location;
+            string fileName = string.Format("{0}\\..\\dsm.cfg", installPath);
+            Config.Instance().Load(fileName);
 		}
 
         private void AddDevicePanes()

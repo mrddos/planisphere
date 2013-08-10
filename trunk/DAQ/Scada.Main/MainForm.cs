@@ -118,17 +118,23 @@ namespace Scada.Main
         private void RunDevices()
         {
             // Update 
-            this.UpdateDevicesRunningStatus();
+            var hasSelectedDevices = this.UpdateDevicesRunningStatus();
+            if (!hasSelectedDevices)
+            {
+                MessageBox.Show("请选择要启动的设备！");
+                return;
+            }
             this.started = true;
             this.startToolBarButton.Enabled = false;
-            // deviceListView.Enabled = false;
+            
             RecordManager.Initialize();
             Program.DeviceManager.DataReceived = this.OnDataReceived;
             Program.DeviceManager.Run(SynchronizationContext.Current, this.OnDataReceived);
 
             this.WindowState = FormWindowState.Minimized;
+            this.ShowAtTaskBar(false);
+             //不显示在系统任务栏
 
-            this.ShowInTaskbar = false;  //不显示在系统任务栏
             // this.sysNotifyIcon.Visible = true;  //托盘图标可见
 
             // Keep-Alive timer
@@ -146,6 +152,18 @@ namespace Scada.Main
             lvi.SubItems.Add(new ListViewItem.ListViewSubItem(lvi, status));
 
             return lvi;
+        }
+
+        private bool BeforeShowAtTaskBar
+        {
+            get;
+            set;
+        }
+        private void ShowAtTaskBar(bool shown)
+        {
+            this.BeforeShowAtTaskBar = true;
+            this.ShowInTaskbar = shown;
+            this.BeforeShowAtTaskBar = false;
         }
 
 		void timerKeepAliveTick(object sender, EventArgs e)
@@ -170,7 +188,7 @@ namespace Scada.Main
 
 		private void OnSysNotifyIconContextMenu(object sender, EventArgs e)
 		{
-            this.ShowInTaskbar = true;
+            this.ShowAtTaskBar(true);
 		}
 
 		//private void StartConnectToDevices()
@@ -202,13 +220,6 @@ namespace Scada.Main
 		private void docMenuItem_Click(object sender, EventArgs e)
 		{
 
-		}
-
-		private void startMenuItem_Click(object sender, EventArgs e)
-		{
-            // TODO: Select the device in the list;
-            this.SelectDevices();
-            this.RunDevices();
 		}
 
 		private void stopMenuItem_Click(object sender, EventArgs e)
@@ -288,16 +299,18 @@ namespace Scada.Main
             }
         }
 
-        private void UpdateDevicesRunningStatus()
+        private bool UpdateDevicesRunningStatus()
         {
+            bool hasSelectedDevices = false;
             foreach (ListViewItem item in this.deviceListView.Items)
             {
                 if (item.Checked)
                 {
-                    // Running.
+                    hasSelectedDevices = true;
                     item.SubItems[2].Text = "Running";
                 }
             }
+            return hasSelectedDevices;
         }
 
         private void UpdateDevicesWaitStatus()
@@ -312,7 +325,10 @@ namespace Scada.Main
         {
             if (this.started)
             {
-                e.NewValue = e.CurrentValue;
+                if (!this.BeforeShowAtTaskBar)
+                {
+                    e.NewValue = e.CurrentValue;
+                }
             }
         }
 
@@ -330,6 +346,26 @@ namespace Scada.Main
         }
 
         private void settingClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO: Select the device in the list;
+            this.SelectDevices();
+            this.RunDevices();
+        }
+
+        private void startAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // TODO: Select the device in the list;
+            this.CheckAllDevices();
+            this.SelectDevices();
+            this.RunDevices();
+        }
+
+        private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
