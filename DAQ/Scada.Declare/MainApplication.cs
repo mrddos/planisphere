@@ -32,7 +32,10 @@ namespace Scada.Declare
 
         public static string DevicesRootPath
         {
-            get { return string.Format("{0}\\{1}", InstallPath, Devices); }
+            get
+            { 
+                return string.Format("{0}\\{1}", InstallPath, Devices);
+            }
         }
 
     }

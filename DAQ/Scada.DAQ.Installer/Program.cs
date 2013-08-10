@@ -69,6 +69,14 @@ namespace Scada.DAQ.Installer
             // throw new NotImplementedException();
         }
 
+        private static string GetScadaSqlFile()
+        {
+            Type type = typeof(Program);
+            string fn = type.Assembly.Location;
+            string sqlFileName = string.Format("{0}\\..\\scada.sql", fn);
+            return sqlFileName;
+        }
+
         static void InitDataBase(string[] args)
         {
             Console.WriteLine("Initialize the DataBase:");
@@ -77,20 +85,14 @@ namespace Scada.DAQ.Installer
             string input = Console.ReadLine();
             if (input == "Yes")
             {
-                Type type = typeof(Program);
-                string fn = type.Assembly.Location;
-                string sqlFileName = string.Format("{0}\\..\\scada.sql", fn);
-                DataBaseCreator creator = new DataBaseCreator(sqlFileName);
+                DataBaseCreator creator = new DataBaseCreator(GetScadaSqlFile());
                 creator.Execute();
             }
         }
 
         static void InitDataBaseSilent(string[] args)
         {
-            Type type = typeof(Program);
-            string fn = type.Assembly.Location;
-            string sqlFileName = string.Format("{0}\\..\\scada.sql", fn);
-            DataBaseCreator creator = new DataBaseCreator(sqlFileName);
+            DataBaseCreator creator = new DataBaseCreator(GetScadaSqlFile());
             creator.Execute();
         }
 

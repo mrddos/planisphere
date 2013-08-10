@@ -10,6 +10,7 @@ namespace Scada.MainVision
     using MySql.Data.MySqlClient;
     using System.Data.SqlTypes;
     using System.IO;
+    using System.Reflection;
 
 
     /// <summary>
@@ -78,8 +79,9 @@ namespace Scada.MainVision
 
             this.dataListeners = new Dictionary<string, DBDataCommonListerner>(30);
 
-            // 192.168.1.24 
-            string fileName = "local.ip";
+            // 192.168.1.24
+            string installPath = Assembly.GetExecutingAssembly().Location;
+            string fileName = string.Format("{0}\\..\\local.ip", installPath);
             if (File.Exists(fileName))
             {
                 using (StreamReader sr = new StreamReader(fileName))
