@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -15,12 +16,13 @@ namespace Scada.DataCenterAgent
         SetPassword = 1072,
         GetTime = 1011,
         SetTime = 1012,
-        StartSend =  2011,
-        StopSend = 2012,
+        StartSendData =  2011,
+        StopSendData = 2012,
 
         HistoryData = 2042,
 
-        DirectData = 3101,
+        StartSendDataDirectly = 3101,
+        StopSendDataDirectly = 3102,
         Init = 6021,
         KeepAlive = 6031,
         StartDev = 3012,
@@ -40,6 +42,8 @@ namespace Scada.DataCenterAgent
         KeepAlive = 6031,
         Reply = 9011,
         Result = 9012,
+        Notify = 9013,
+
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -118,6 +122,12 @@ namespace Scada.DataCenterAgent
             var p = this.builder.GetResultPacket(qn);
             this.agent.SendPacket(p, default(DateTime));
         }
+
+        private void SendNotifyPacket(string qn)
+        {
+            var p = this.builder.GetNotifyPacket(qn);
+            this.agent.SendPacket(p, default(DateTime));
+        }
         
 
         public void OnMessage(string msg)
@@ -145,29 +155,37 @@ namespace Scada.DataCenterAgent
                     }
                     break;
                 // 开始
-                case ReceivedCommand.StartSend:
+                case ReceivedCommand.StartSendData:
                     {
-                        this.OnDataRequest(msg);
+                        this.OnStartSendData(msg);
                     }
                     break;
                 // 结束
-                case ReceivedCommand.StopSend:
+                case ReceivedCommand.StopSendData:
                     {
-                        this.agent.Started = false;
+                        this.OnStopSendData(msg);
                     }
                     break;
                 // 历史数据
                 case ReceivedCommand.HistoryData:
                     {
-                        this.agent.History = true;
+                        this.agent.OnHistoryData = true;
                         this.HandleHistoryData(msg);
-                        this.agent.History = false;
+                        this.agent.OnHistoryData = false;
                     }
                     break;
                 // 直接数据
-                case ReceivedCommand.DirectData:
+                case ReceivedCommand.StartSendDataDirectly:
                     {
-                        this.OnDirectDataRequest(msg);
+                        Debug.Assert(this.agent.Type != Type.Country);
+                        this.OnStartSendDataDirectly(msg);
+                    }
+                    break;
+                // 停止直接数据
+                case ReceivedCommand.StopSendDataDirectly:
+                    {
+                        Debug.Assert(this.agent.Type != Type.Country);
+                        this.OnStopSendDataDirectly(msg);
                     }
                     break;
                 // 初始化
@@ -347,47 +365,64 @@ namespace Scada.DataCenterAgent
 
         }
 
-        private void OnDataRequest(string msg)
+        private void OnStartSendData(string msg)
         {
             string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
-            // Upload data when right time.
             this.agent.Started = true;
+        }
+
+        private void OnStopSendData(string msg)
+        {
+            string qn = Value.Parse(msg, "QN");
+            this.SendNotifyPacket(qn);
+
+            this.agent.Started = false;
         }
 
         private void OnStartDevice(string msg)
         {
             string eno = Value.Parse(msg, "ENO");
-            if (eno == "")
+            string deviceKey = Settings.Instance.GetDeviceKeyByEno(eno);
+            if (deviceKey.ToLower() == "Scada.HVSampler".ToLower())
             {
                 hvsc.Start();
             }
-            else if (eno == "")
+            else if (deviceKey.ToLower() == "Scada.ISampler".ToLower())
             {
-                hvsc.Start();
+                isc.Start();
             }
         }
 
         private void OnStopDevice(string msg)
         {
             string eno = Value.Parse(msg, "ENO");
-            if (eno == "")
+            string deviceKey = Settings.Instance.GetDeviceKeyByEno(eno);
+            if (deviceKey.ToLower() == "Scada.HVSampler".ToLower())
             {
                 hvsc.Stop();
             }
-            else if (eno == "")
+            else if (deviceKey.ToLower() == "Scada.ISampler".ToLower())
             {
                 isc.Stop();
             }
         }
 
-        private void OnDirectDataRequest(string msg)
+        private void OnStartSendDataDirectly(string msg)
         {
             string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
             this.SendResultPacket(qn);
-            // Upload data when right time.
-            this.agent.Started = true;
+            this.StartConnectCountryCenter();
+            this.agent.StartedForDirect = true;
+        }
+
+        private void OnStopSendDataDirectly(string msg)
+        {
+            string qn = Value.Parse(msg, "QN");
+            this.SendReplyPacket(qn);
+            this.SendResultPacket(qn);
+            this.StopConnectCountryCenter();
         }
 
         private static int ParseCommandCode(string msg)
@@ -403,10 +438,26 @@ namespace Scada.DataCenterAgent
         private void HandleSetPassword(string msg)
         {
             Settings.Instance.Password = Value.Parse(msg, "PW");
-            // TODO: 应答
+
+            string qn = Value.Parse(msg, "QN");
+            this.SendReplyPacket(qn);
+            this.SendResultPacket(qn);
         }
 
 
+        // 开始向国家数据中心发送数据
+        private void StartConnectCountryCenter()
+        {
+            this.agent.StartConnectCountryCenter();
+            this.agent.StartedForDirect = true;
+        }
+
+        // 停止向国家数据中心发送数据
+        private void StopConnectCountryCenter()
+        {
+            this.agent.StartedForDirect = false;
+            this.agent.StopConnectCountryCenter();
+        }
 
         
     }

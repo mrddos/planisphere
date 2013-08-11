@@ -229,6 +229,20 @@ namespace Scada.DataCenterAgent
             this.sb.Append("\r\n");
         }
 
+        internal void BuildNotify(string qn)
+        {
+            this.SetHeader();
+            string ds = GetNotifySections(qn);
+
+            int len = ds.Length;
+            this.SetLength(len);
+            this.sb.Append(ds);
+
+            string crc16 = CRC16.GetCode(Encoding.ASCII.GetBytes(ds));
+            this.sb.Append(crc16);
+            this.sb.Append("\r\n");
+        }
+
         internal void BuildGetTime(string time)
         {
             this.SetHeader();
@@ -291,6 +305,16 @@ namespace Scada.DataCenterAgent
             return p;
         }
 
+        private string GetNotifySections(string qn)
+        {
+            this.Mn = this.Settings.Mn;
+            this.St = Value.SysReply;
+            string p = string.Format(
+                "ST={0};CN={1};PW={2};MN={3};Flag=1;CP=&&QN={4}&&",
+                this.St, this.Cn, this.Password, this.Mn, qn);
+            return p;
+        }
+
         private string GetTimeSection(string time)
         {
             this.Mn = this.Settings.Mn;
@@ -306,5 +330,6 @@ namespace Scada.DataCenterAgent
         public int PacketCount { get; set; }
 
         public int PacketIndex { get; set; }
+
     }
 }

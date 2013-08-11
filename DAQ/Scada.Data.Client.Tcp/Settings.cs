@@ -59,6 +59,8 @@ namespace Scada.DataCenterAgent
             public int Port { get; set; }
             public int WirelessPort { get; set; }
 
+
+            public bool CountryCenter { get; set; }
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace Scada.DataCenterAgent
                 dc.Port = int.Parse(this.GetAttribute(dcn, "port", "0"));
                 dc.WirelessIp = this.GetAttribute(dcn, "wirelessip");
                 dc.WirelessPort = int.Parse(this.GetAttribute(dcn, "wirelessport", "0"));
-
+                dc.CountryCenter = this.GetAttribute(dcn, "type", "1") == "2"; 
                 dataCenters.Add(dc);
             }
 
