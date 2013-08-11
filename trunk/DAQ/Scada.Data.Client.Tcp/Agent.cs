@@ -8,7 +8,10 @@ using System.Text;
 
 namespace Scada.DataCenterAgent
 {
-    internal class StateObject
+    /// <summary>
+    /// 
+    /// </summary>
+    public class StateObject
     {
         public const int BufferSize = 1024;
 
@@ -25,20 +28,31 @@ namespace Scada.DataCenterAgent
         public StringBuilder messageBuffer = new StringBuilder();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum NotifyEvent
     {
         Connected,
-        ConnectError
+        ConnectError,
+        ConnectToCountryCenter,
+        DisconnectToCountryCenter,
     }
 
-    internal delegate void OnReceiveMessage(Agent agent, string msg);
+    public enum Type
+    {
+        Province = 1,
+        Country = 2,
+    }
 
-    internal delegate void OnNotifyEvent(Agent agent, NotifyEvent ne, string msg);
+    public delegate void OnReceiveMessage(Agent agent, string msg);
+
+    public delegate void OnNotifyEvent(Agent agent, NotifyEvent ne, string msg);
 
     /// <summary>
     /// 
     /// </summary>
-    class Agent
+    public class Agent
     {
         // Wired connection Tcp client
         private TcpClient client = null;
@@ -60,7 +74,13 @@ namespace Scada.DataCenterAgent
             set;
         }
 
-        internal bool History
+        internal bool StartedForDirect
+        {
+            get;
+            set;
+        }
+
+        internal bool OnHistoryData
         {
             get;
             set;
@@ -102,14 +122,8 @@ namespace Scada.DataCenterAgent
             get;
         }
 
-        // Hello message.
-        public string Greeting
-        {
-            get;
-            set;
-        }
-
-        public string Type
+        // No use.
+        public Type Type
         {
             get;
             set;
@@ -191,6 +205,26 @@ namespace Scada.DataCenterAgent
                 {
                     this.ScreenLogAppend("ConnectToWireless: " + e.Message);
                 }
+            }
+        }
+
+        internal void Disconnect()
+        {
+            try
+            {
+                if (this.client != null)
+                {
+                    this.client.Close();
+                }
+
+                if (this.wirelessClient != null)
+                {
+                    this.wirelessClient.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                this.OnNotifyEvent(this, NotifyEvent.ConnectError, "断开连接时发生错误:" + e.Message);
             }
         }
 
@@ -371,7 +405,7 @@ namespace Scada.DataCenterAgent
             if (p == null)
                 return;
             // Only start or history.
-            if (this.Started || this.History)
+            if (this.Started || this.OnHistoryData)
             {
                 string s = p.ToString();
                 this.Send(Encoding.ASCII.GetBytes(s));
@@ -383,6 +417,19 @@ namespace Scada.DataCenterAgent
         {
             string s = p.ToString();
             this.Send(Encoding.ASCII.GetBytes(s));
+        }
+
+
+        internal void StartConnectCountryCenter()
+        {
+            string msg = string.Format("启动到国家数据中心的连接!");
+            this.OnNotifyEvent(this, NotifyEvent.ConnectToCountryCenter, msg);
+        }
+
+        internal void StopConnectCountryCenter()
+        {
+            string msg = string.Format("国家数据中心连接已断开");
+            this.OnNotifyEvent(this, NotifyEvent.DisconnectToCountryCenter, msg);
         }
 
     }

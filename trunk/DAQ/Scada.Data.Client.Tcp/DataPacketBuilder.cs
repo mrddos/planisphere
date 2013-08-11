@@ -100,6 +100,14 @@ namespace Scada.DataCenterAgent
             return dp;
         }
 
+        internal DataPacket GetNotifyPacket(string qn)
+        {
+            DataPacket dp = new DataPacket(SentCommand.Notify);
+            dp.Settings = Settings.Instance;
+            dp.BuildNotify(qn);
+            return dp;
+        }
+
         internal List<DataPacket> GetDataPackets(string deviceKey, DateTime dateTime, string content, bool history = false, string qn = null)
         {
             List<DataPacket> rets = new List<DataPacket>();

@@ -18,6 +18,8 @@ namespace Scada.DataCenterAgent
 
         private List<Agent> agents = new List<Agent>();
 
+        private Agent countryCenterAgent;
+
         private DataPacketBuilder builder = new DataPacketBuilder();
 
         private Dictionary<string, DateTime> lastDeviceSendData = new Dictionary<string, DateTime>();
@@ -70,9 +72,20 @@ namespace Scada.DataCenterAgent
             Settings s = Settings.Instance;
             foreach (Settings.DataCenter dc in s.DataCenters)
             {
-                Agent agent = CreateAgent(dc.Ip, dc.Port, false);
-                agent.AddWirelessInfo(dc.WirelessIp, dc.WirelessPort);
-                this.agents.Add(agent);
+                if (dc.CountryCenter)
+                {
+                    // 国家中心
+                    this.countryCenterAgent = CreateCountryCenterAgent(dc.Ip, dc.Port);
+                    this.countryCenterAgent.AddWirelessInfo(dc.WirelessIp, dc.WirelessPort);
+                    
+                }
+                else
+                {
+                    // 省中心
+                    Agent agent = CreateAgent(dc.Ip, dc.Port, false);
+                    agent.AddWirelessInfo(dc.WirelessIp, dc.WirelessPort);
+                    this.agents.Add(agent);
+                }
             }
 
             this.statusStrip1.Items[0].Text = "状态: 开始";
@@ -82,9 +95,20 @@ namespace Scada.DataCenterAgent
         private Agent CreateAgent(string serverAddress, int serverPort, bool wireless)
         {
             Agent agent = new Agent(serverAddress, serverPort);
-
+            agent.Type = Type.Province;
             agent.Wireless = wireless;
             agent.Connect();
+            agent.OnReceiveMessage += this.OnReceiveMessage;
+            agent.OnNotifyEvent += this.OnNotifyEvent;
+            return agent;
+        }
+
+        // 国家中心
+        private Agent CreateCountryCenterAgent(string serverAddress, int serverPort)
+        {
+            Agent agent = new Agent(serverAddress, serverPort);
+            agent.Type = Type.Country;
+            agent.Wireless = false;
             agent.OnReceiveMessage += this.OnReceiveMessage;
             agent.OnNotifyEvent += this.OnNotifyEvent;
             return agent;
@@ -286,6 +310,18 @@ namespace Scada.DataCenterAgent
                     this.listBox1.Items.Add(msg);
                     Log.GetLogFile(Program.System).Log(msg);
                 }
+                else if (NotifyEvent.ConnectToCountryCenter == ne)
+                {
+                    this.StartConnectCountryCenter();
+                    this.listBox1.Items.Add(msg);
+                    Log.GetLogFile(Program.System).Log(msg);
+                }
+                else if (NotifyEvent.DisconnectToCountryCenter == ne)
+                {
+                    this.StopConnectCountryCenter();
+                    this.listBox1.Items.Add(msg);
+                    Log.GetLogFile(Program.System).Log(msg);
+                }
             });
         }
 
@@ -300,6 +336,34 @@ namespace Scada.DataCenterAgent
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void StartConnectCountryCenter()
+        {
+            if (this.countryCenterAgent != null)
+            {
+                this.countryCenterAgent.Connect();
+                this.agents.Add(this.countryCenterAgent);
+            }
+            else
+            {
+                this.SafeInvoke(() =>
+                {
+                    string line = string.Format("请检查国家数据中心的配置");
+                    this.listBox1.Items.Add(line);
+
+                    Log.GetLogFile(Program.System).Log("Error: StartConnectCountryCenter(); Check the config.");
+                });
+            }
+        }
+
+        private void StopConnectCountryCenter()
+        {
+            if (this.countryCenterAgent != null)
+            {
+                this.countryCenterAgent.Disconnect();
+                this.agents.Remove(this.countryCenterAgent);
+            }
         }
     }
 }
