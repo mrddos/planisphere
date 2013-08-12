@@ -39,6 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="DeviceEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScadaReader.cs" />
     <Compile Include="ScadaWriter.cs" />
