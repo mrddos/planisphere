@@ -19,7 +19,7 @@ namespace Scada.DataCenterAgent
 
         public int totalBytesRead = 0;
 
-
+        // 
         public string readType = null;
 
         public byte[] buffer = new byte[BufferSize];
@@ -60,21 +60,21 @@ namespace Scada.DataCenterAgent
         // Wireless connection Tcp client
         private TcpClient wirelessClient = null;
 
-        // Maybe from wired, or wireless.
+        // Maybe it uses wired connection, or wireless.
         private NetworkStream stream;
 
         // the current data handler.
         private MessageDataHandler handler;
 
+        private const int Timeout = 5000;
         
-
-        internal bool Started
+        internal bool SendDataStarted
         {
             get;
             set;
         }
 
-        internal bool StartedForDirect
+        internal bool SendDataDirectlyStarted
         {
             get;
             set;
@@ -154,9 +154,9 @@ namespace Scada.DataCenterAgent
                 : string.Format("{0}:{1}", this.WirelessServerAddress, this.WirelessServerPort);
         }
 
-        public string ToString(bool usePort)
+        public string ToString(bool hasPortInfo)
         {
-            if (usePort)
+            if (hasPortInfo)
             {
                 return this.ToString();
             }
@@ -172,7 +172,7 @@ namespace Scada.DataCenterAgent
                 try
                 {
                     this.client = new TcpClient();
-                    this.client.ReceiveTimeout = 10000;
+                    this.client.ReceiveTimeout = Timeout;
 
                     this.client.BeginConnect(
                         this.ServerAddress, this.ServerPort, 
@@ -181,7 +181,8 @@ namespace Scada.DataCenterAgent
                 }
                 catch (Exception e)
                 {
-                    this.ScreenLogAppend("Connect: " + e.Message);
+                    this.ScreenLogAppend("Connect(): " + e.Message);
+                    this.OnNotifyEvent(this, NotifyEvent.ConnectError, "有线连接失败: " + e.Message);
                 }
             }
         }
@@ -193,7 +194,7 @@ namespace Scada.DataCenterAgent
                 try
                 {
                     this.wirelessClient = new TcpClient();
-                    this.wirelessClient.ReceiveTimeout = 10000;
+                    this.wirelessClient.ReceiveTimeout = Timeout;
 
                     this.wirelessClient.BeginConnect(
                         this.WirelessServerAddress, this.WirelessServerPort, 
@@ -203,7 +204,8 @@ namespace Scada.DataCenterAgent
                 }
                 catch (Exception e)
                 {
-                    this.ScreenLogAppend("ConnectToWireless: " + e.Message);
+                    this.ScreenLogAppend("ConnectToWireless(): " + e.Message);
+                    this.OnNotifyEvent(this, NotifyEvent.ConnectError, "无线连接失败: " + e.Message);
                 }
             }
         }
@@ -252,8 +254,9 @@ namespace Scada.DataCenterAgent
                 }
                 catch (SocketException e)
                 {
-                    this.client = null;
+                    this.ScreenLogAppend(e.Message);
                     this.OnNotifyEvent(this, NotifyEvent.ConnectError, e.Message);
+                    this.client = null;
                     this.ConnectToWireless();
                 }
 
@@ -346,12 +349,10 @@ namespace Scada.DataCenterAgent
                         continue;
                     }
 
-                    
-
-                    this.OnReceiveMessage(this, msg);
                     if (this.handler != null)
                     {
-                        this.handler.OnMessage(msg);
+                        this.OnReceiveMessage(this, msg);
+                        this.handler.OnMessageDispatcher(msg);
                     }
                 }
             }
@@ -359,10 +360,7 @@ namespace Scada.DataCenterAgent
 
         private void ScreenLogAppend(string msg)
         {
-            if (this.handler != null)
-            {
-                this.handler.OnMessage(msg);
-            }
+            this.OnReceiveMessage(this, msg);
         }
 
         /// <summary>
@@ -405,7 +403,7 @@ namespace Scada.DataCenterAgent
             if (p == null)
                 return;
             // Only start or history.
-            if (this.Started || this.OnHistoryData)
+            if (this.SendDataStarted || this.OnHistoryData)
             {
                 string s = p.ToString();
                 this.Send(Encoding.ASCII.GetBytes(s));

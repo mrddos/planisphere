@@ -169,7 +169,7 @@ namespace Scada.DataCenterAgent
             bool willSend = false;
             foreach (var agent in this.agents)
             {
-                willSend |= agent.Started;
+                willSend |= agent.SendDataStarted;
             }
 
             if (!willSend) //// TODO: !
@@ -195,8 +195,14 @@ namespace Scada.DataCenterAgent
 
                     if (pks.Count > 0)
                     {
-                        string logger = string.Format("<Real-Time> ", pks[0].ToString());
-                        Log.GetLogFile(deviceKey).Log(logger);
+                        Logger logger = Log.GetLogFile(deviceKey);
+                        logger.Log("---- A Group of NaI file-content ----");
+                        foreach (var p in pks)
+                        {
+                            string msg = p.ToString();
+                            logger.Log(msg);
+                        }
+                        logger.Log("---- ---- ---- ---- ---- ---- ---- ----");
                     }
                 }
                 else
@@ -307,7 +313,7 @@ namespace Scada.DataCenterAgent
                 }
                 else if (NotifyEvent.ConnectError == ne)
                 {
-                    this.listBox1.Items.Add(msg);
+                    this.statusStrip1.Items[1].Text = msg;
                     Log.GetLogFile(Program.System).Log(msg);
                 }
                 else if (NotifyEvent.ConnectToCountryCenter == ne)

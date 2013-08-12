@@ -130,7 +130,7 @@ namespace Scada.DataCenterAgent
         }
         
 
-        public void OnMessage(string msg)
+        public void OnMessageDispatcher(string msg)
         {
             ReceivedCommand code = (ReceivedCommand)ParseCommandCode(msg);
 
@@ -369,7 +369,7 @@ namespace Scada.DataCenterAgent
         {
             string qn = Value.Parse(msg, "QN");
             this.SendReplyPacket(qn);
-            this.agent.Started = true;
+            this.agent.SendDataStarted = true;
         }
 
         private void OnStopSendData(string msg)
@@ -377,7 +377,7 @@ namespace Scada.DataCenterAgent
             string qn = Value.Parse(msg, "QN");
             this.SendNotifyPacket(qn);
 
-            this.agent.Started = false;
+            this.agent.SendDataStarted = false;
         }
 
         private void OnStartDevice(string msg)
@@ -414,7 +414,7 @@ namespace Scada.DataCenterAgent
             this.SendReplyPacket(qn);
             this.SendResultPacket(qn);
             this.StartConnectCountryCenter();
-            this.agent.StartedForDirect = true;
+            this.agent.SendDataDirectlyStarted = true;
         }
 
         private void OnStopSendDataDirectly(string msg)
@@ -449,13 +449,13 @@ namespace Scada.DataCenterAgent
         private void StartConnectCountryCenter()
         {
             this.agent.StartConnectCountryCenter();
-            this.agent.StartedForDirect = true;
+            this.agent.SendDataDirectlyStarted = true;
         }
 
         // 停止向国家数据中心发送数据
         private void StopConnectCountryCenter()
         {
-            this.agent.StartedForDirect = false;
+            this.agent.SendDataDirectlyStarted = false;
             this.agent.StopConnectCountryCenter();
         }
 
