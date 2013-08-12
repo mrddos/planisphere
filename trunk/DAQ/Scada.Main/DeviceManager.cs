@@ -226,7 +226,7 @@ namespace Scada.Main
                         {
                             string device = kv[0].Trim();
                             string address = kv[1].Trim();
-                            this.d2d.Add(device.ToLower(), address); 
+                            this.d2d.Add(device.ToLower(), address);
                         }
                     }
                 }
@@ -273,63 +273,6 @@ namespace Scada.Main
             }
         }
 
-        public static DeviceEntry LoadFromConfig(string deviceName, string configFile)
-        {
-            if (!File.Exists(configFile))
-                return null;
-
-            using (ScadaReader sr = new ScadaReader(configFile))
-            {
-                SectionType secType = SectionType.None;
-                string line = null;
-                string key = null;
-                IValue value = null;
-                ReadLineResult result = sr.ReadLine(out secType, out line, out key, out value);
-                // Dictionary<string, string> config = new Dictionary<string, string>();
-                DeviceEntry entry = new DeviceEntry();
-                while (result == ReadLineResult.OK)
-                {
-                    result = sr.ReadLine(out secType, out line, out key, out value);
-
-                    if (secType == SectionType.KeyWithStringValue)
-                    {
-                        entry[key] = value;
-                    }
-                }
-                DirectoryInfo di = Directory.GetParent(configFile);
-                string devicePath = di.FullName;
-                // Path
-                entry[DeviceEntry.Path] = new StringValue(devicePath);
-				entry[DeviceEntry.Identity] = new StringValue(deviceName);
-
-                // Virtual 
-                string virtualDeviceFlagFile = devicePath + "\\virtual-device";
-                if (File.Exists(virtualDeviceFlagFile))
-                {
-                    string caption = "连接虚拟设备提示";
-                    string message = string.Format("是否要连接 '{0}' 的虚拟设备，连接虚拟设备点击‘是’，\n连接真实设备点击‘否’", deviceName);
-                    DialogResult dr = MessageBox.Show(message, caption, MessageBoxButtons.YesNo);
-                    if (dr == DialogResult.Yes)
-                    {
-                        entry[DeviceEntry.Virtual] = new StringValue("true");
-                    }
-                    else
-                    {
-                        entry[DeviceEntry.Virtual] = new StringValue("false");
-
-                        string deleteVirtualFileMsg = string.Format("是否要删除 '{0}' 的虚拟设备标志文件？", deviceName);
-                        DialogResult del = MessageBox.Show(deleteVirtualFileMsg, caption, MessageBoxButtons.YesNo);
-                        if (del == DialogResult.Yes)
-                        {
-                            File.Delete(virtualDeviceFlagFile);
-                        }
-                            
-                    }
-                }
-                return entry;
-            }
-        }
-
         private Device Load(DeviceEntry entry)
         {
 			if (entry == null)
@@ -364,11 +307,6 @@ namespace Scada.Main
             return (Device)null;
         }
 
-        private static DeviceEntry ReadConfigFile(string deviceName, string configFile)
-        {
-			return LoadFromConfig(deviceName, configFile);
-        }
-
         public bool Run(SynchronizationContext syncCtx, SendOrPostCallback callback)
         {
             foreach (string deviceName in selectedDevices.Keys)
@@ -392,7 +330,7 @@ namespace Scada.Main
                 // TODO: Config file reading
                 if (deviceCfgFile != null)
                 {
-                    DeviceEntry entry = ReadConfigFile(context.DeviceName, deviceCfgFile);
+                    DeviceEntry entry = DeviceEntry.ReadConfigFile(context.DeviceName, deviceCfgFile);
 
                     Device device = Load(entry);
                     if (device != null)
@@ -405,7 +343,7 @@ namespace Scada.Main
                         device.DataReceived += context.Callback;
 
                         // Load the address from the d2d.m
-                        string address = this.GetCOMPort(context.DeviceName);
+                        string address = this.GetCOMPort(entry);
 
                         string deviceLoadedStr = string.Format("Device: '{0}' Loaded @ '{1}'", entry[DeviceEntry.Identity], address);
                         RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
@@ -442,13 +380,9 @@ namespace Scada.Main
             OpenMainProgram();
 		}
 
-        private string GetCOMPort(string deviceName)
+        private string GetCOMPort(DeviceEntry entry)
         {
-            string deviceKey = deviceName.ToLower();
-            if (this.d2d.ContainsKey(deviceKey))
-            {
-                return this.d2d[deviceKey];
-            }
+            
             return string.Empty;
         }
 
