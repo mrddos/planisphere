@@ -425,7 +425,7 @@ namespace Scada.Main
             this.LoadDevicesInfo(MainApplication.InstallPath);
 		}
 
-		public void ShutdownDeviceConnection()
+		public void CloseAllDevices()
 		{
             // Running Devices...
             foreach (string deviceName in selectedDevices.Keys)
@@ -486,6 +486,8 @@ namespace Scada.Main
 
                 long lastModifyTime = this.lastUpdateDict[deviceKey];
                 long diffInSec = (now - lastModifyTime) / 10000000;
+                // 5分钟无数据...
+                // TODO: ...NaI 5分钟数据, 这里得改
                 if (diffInSec > 60 * 5)
                 {
                     this.RescueDevice(deviceKey);

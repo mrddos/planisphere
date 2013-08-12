@@ -111,7 +111,7 @@ namespace Scada.Declare
 
             // Temperature, Humidity, IfMainPowerOff, BatteryHours, IfSmoke, IfWater, IfDoorOpen, Alarm
             string[] ret = new string[8];
-           
+
             string item = string.Empty;
 
             item = items[0];    // 温度, 第1个是温度
@@ -127,6 +127,10 @@ namespace Scada.Declare
                     //}
                     int i = (int)(v * f - 40);
                     ret[0] = i.ToString();
+                }
+                else
+                {
+                    return null;
                 }
             }
 
@@ -144,6 +148,10 @@ namespace Scada.Declare
 
                     int i = (int)(v * f);
                     ret[1] = i.ToString();
+                }
+                else
+                {
+                    return null;
                 }
             }
 
@@ -168,6 +176,10 @@ namespace Scada.Declare
 
                     double hour = f * v;// *0.00488 * 0.8 / 80;
                     ret[3] = ((int)hour).ToString();
+                }
+                else
+                {
+                    return null;
                 }
             }
 

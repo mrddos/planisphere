@@ -226,7 +226,7 @@ namespace Scada.Main
             this.startToolBarButton.Enabled = true;
             // deviceListView.Enabled = true;
             this.UpdateDevicesWaitStatus();
-			Program.DeviceManager.ShutdownDeviceConnection();
+			Program.DeviceManager.CloseAllDevices();
             Application.Exit();
 		}
 
