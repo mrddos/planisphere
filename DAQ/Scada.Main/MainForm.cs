@@ -365,7 +365,17 @@ namespace Scada.Main
 
         private void settingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO: Open Settings main process.
+            // Show MainVision
+            using (Process process = new Process())
+            {
+                process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = "Scada.MainSettings.exe"; //设定程序名  
+                process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
+                process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
+                process.StartInfo.RedirectStandardError = true;//重定向错误输出
+                process.Start();
+            }
         }
 
 

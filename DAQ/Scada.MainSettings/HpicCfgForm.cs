@@ -11,9 +11,14 @@ using Scada.Config;
 
 namespace Scada.MainSettings
 {
-    public partial class HpicCfgForm : UserControl
+    public partial class HpicCfgForm : UserControl, IApply
     {
         const string TheDeviceKey = "scada.hpic";
+
+
+        private string serialPort = "COM1";
+
+        private string factor1;
 
         public HpicCfgForm()
         {
@@ -27,21 +32,54 @@ namespace Scada.MainSettings
 
         private void HpicCfgForm_Load(object sender, EventArgs e)
         {
-
+            // 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
 
 
             string[] ports = SerialPort.GetPortNames();
+            
             foreach (string port in ports)
             {
                 string portName = port.ToUpper();
                 this.comboBoxPort.Items.Add(portName);
             }
 
-            this.comboBoxPort.Text = (StringValue)entry[DeviceEntry.SerialPort];
 
-            this.textBoxFactor.Text = (StringValue)entry["factor1"];
+            this.serialPort = (StringValue)entry[DeviceEntry.SerialPort];
+            if (!string.IsNullOrEmpty(this.serialPort))
+            {
+                this.comboBoxPort.Text = this.serialPort;
+            }
+
+            this.factor1 = (StringValue)entry["factor1"];
+            this.textBoxFactor.Text = this.factor1;
+
+        }
+
+
+
+        public void Apply()
+        {
+            this.serialPort = this.comboBoxPort.Text;
+            this.factor1 = this.textBoxFactor.Text;
+
+
+            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
+            using (ScadaWriter sw = new ScadaWriter(filePath))
+            {
+                sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
+                sw.WriteLine("factor1", this.factor1);
+
+                sw.Commit();
+            }
+
+        }
+
+        public void Cancel()
+        {
+            this.comboBoxPort.Text = this.serialPort;
+            this.textBoxFactor.Text = this.factor1;
         }
     }
 }

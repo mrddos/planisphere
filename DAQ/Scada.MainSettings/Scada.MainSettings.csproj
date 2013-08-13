@@ -43,11 +43,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DwdCfgForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DwdCfgForm.Designer.cs">
+      <DependentUpon>DwdCfgForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EnvCfgForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EnvCfgForm.Designer.cs">
+      <DependentUpon>EnvCfgForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="HpicCfgForm.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="HpicCfgForm.Designer.cs">
       <DependentUpon>HpicCfgForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IApply.cs" />
+    <Compile Include="IsCfgForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="IsCfgForm.Designer.cs">
+      <DependentUpon>IsCfgForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MdsCfgForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MdsCfgForm.Designer.cs">
+      <DependentUpon>MdsCfgForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NaICfgForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NaICfgForm.Designer.cs">
+      <DependentUpon>NaICfgForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
@@ -57,6 +88,18 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WeatherCfgForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WeatherCfgForm.Designer.cs">
+      <DependentUpon>WeatherCfgForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="DwdCfgForm.resx">
+      <DependentUpon>DwdCfgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EnvCfgForm.resx">
+      <DependentUpon>EnvCfgForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="HpicCfgForm.resx">
       <DependentUpon>HpicCfgForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -71,6 +114,9 @@
     </Compile>
     <EmbeddedResource Include="SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WeatherCfgForm.resx">
+      <DependentUpon>WeatherCfgForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
