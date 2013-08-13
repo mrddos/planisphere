@@ -77,8 +77,6 @@ namespace Scada.Main
 	{
         private const string DeviceConfigFile = @"device.cfg";
 
-        private const string DeviceMappingFile = @"d2d.m";
-
         private Dictionary<string, DevicesInfo> dict = new Dictionary<string, DevicesInfo>();
 
         /// <summary>
@@ -212,6 +210,7 @@ namespace Scada.Main
                 }
             }
 
+            /*
             string d2dFile = MainApplication.InstallPath + "\\" + DeviceMappingFile;
             if (File.Exists(d2dFile))
             {
@@ -232,6 +231,7 @@ namespace Scada.Main
                 }
 
             }
+            */ 
         }
 
 
@@ -382,7 +382,10 @@ namespace Scada.Main
 
         private string GetCOMPort(DeviceEntry entry)
         {
-            
+            if (entry.Contains(DeviceEntry.SerialPort))
+            {
+                return (StringValue)entry[DeviceEntry.SerialPort];
+            }
             return string.Empty;
         }
 

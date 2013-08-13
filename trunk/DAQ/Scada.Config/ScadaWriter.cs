@@ -48,20 +48,30 @@ namespace Scada.Config
                     }
                 }
 
-                using (StreamWriter sw = new StreamWriter(this.fileName))
+                try
                 {
-                    foreach (var line in lines)
+                    File.Copy(this.fileName, this.fileName + ".bank", true);
+                    string tempFileName = this.fileName + ".temp";
+                    using (StreamWriter sw = new StreamWriter(tempFileName))
                     {
-                        int assignPos = line.IndexOf("=");
-                        if (assignPos > 0)
+                        foreach (var line in lines)
                         {
-                            string key = line.Substring(0, assignPos).Trim();
-                            
-                            if (changes.Keys.Contains(key))
+                            int assignPos = line.IndexOf("=");
+                            if (assignPos > 0)
                             {
-                                IValue value = changes[key];
-                                string newLine = string.Format("{0} = {1}", key, value.ToString());
-                                sw.WriteLine(newLine);
+                                string key = line.Substring(0, assignPos).Trim();
+
+                                if (changes.Keys.Contains(key))
+                                {
+                                    IValue value = changes[key];
+                                    string newLine = string.Format("{0} = {1}", key, value.ToString());
+                                    sw.WriteLine(newLine);
+                                }
+                                else
+                                {
+                                    sw.WriteLine(line);
+                                }
+
                             }
                             else
                             {
@@ -69,12 +79,14 @@ namespace Scada.Config
                             }
 
                         }
-                        else
-                        {
-                            sw.WriteLine(line);
-                        }
-
                     }
+
+                    File.Delete(this.fileName);
+                    File.Move(tempFileName, this.fileName);
+                }
+                catch (Exception e)
+                {
+
                 }
 
 

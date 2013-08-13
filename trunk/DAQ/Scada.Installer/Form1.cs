@@ -126,10 +126,12 @@ namespace Scada.Installer
                 if (this.installMode)
                 {
                     this.AddLog("安装成功!");
+                    LaunchMainSettings();
                 }
                 else
                 {
                     this.AddLog("更新成功!");
+                    LaunchMainSettings();
                 }
 
                 this.Invoke(new MyInvoke((object sender, string p) => 
@@ -145,6 +147,24 @@ namespace Scada.Installer
             {
                 this.AddLog("安装未完成!");
                 return false;
+            }
+        }
+
+        private void LaunchMainSettings()
+        {
+            string fileName = "Scada.MainSettings.exe";
+            string filePath = string.Format("{0}\\{1}", this.textBox3.Text, fileName);
+            using (Process process = new Process())
+            {
+                process.StartInfo.CreateNoWindow = false;    //设定不显示窗口
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.FileName = filePath; //设定程序名  
+                process.StartInfo.RedirectStandardInput = true;   //重定向标准输入
+                process.StartInfo.RedirectStandardOutput = true;  //重定向标准输出
+                process.StartInfo.RedirectStandardError = true;//重定向错误输出
+
+                process.StartInfo.Arguments = "--first-time";
+                process.Start();
             }
         }
 
