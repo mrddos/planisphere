@@ -61,6 +61,12 @@
     <Compile Include="DeviceEntry.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Logger.cs" />
+    <Compile Include="RealTimeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RealTimeForm.Designer.cs">
+      <DependentUpon>RealTimeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SamplerController.cs" />
     <Compile Include="ScadaReader.cs" />
     <Compile Include="Settings.cs" />
@@ -80,6 +86,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="RealTimeForm.resx">
+      <DependentUpon>RealTimeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -344,11 +344,6 @@ namespace Scada.DataCenterAgent
             {
                 if (msg.Trim() != string.Empty)
                 {
-                    if ("6031" == Value.Parse(msg, "CN"))
-                    {
-                        continue;
-                    }
-
                     if (this.handler != null)
                     {
                         this.OnReceiveMessage(this, msg);
