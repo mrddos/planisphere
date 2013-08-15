@@ -24,6 +24,8 @@ namespace Scada.DataCenterAgent
 
         private Dictionary<string, DateTime> lastDeviceSendData = new Dictionary<string, DateTime>();
 
+        private RealTimeForm detailForm;
+
         public bool StartState
         {
             get;
@@ -203,6 +205,8 @@ namespace Scada.DataCenterAgent
                             logger.Log(msg);
                         }
                         logger.Log("---- ---- ---- ---- ---- ---- ---- ----");
+
+                        this.SendDetails(deviceKey, pks[0].ToString());
                     }
                 }
                 else
@@ -234,8 +238,9 @@ namespace Scada.DataCenterAgent
                         agent.SendDataPacket(p, time);
                     }
 
-                    string logger = string.Format("<Real-Time> '{0}'", p.ToString());
-                    Log.GetLogFile(deviceKey).Log(logger);
+                    string msg = string.Format("<Real-Time> '{0}'", p.ToString());
+                    Log.GetLogFile(deviceKey).Log(msg);
+                    this.SendDetails(deviceKey, msg);
                 }
                 else
                 {
@@ -294,11 +299,15 @@ namespace Scada.DataCenterAgent
 
         private void OnReceiveMessage(Agent agent, string msg)
         {
+            if (!this.keepAliveCheckBox.Checked && ("6031" == Value.Parse(msg, "CN")))
+            {
+                return;
+            }
+
             this.SafeInvoke(() => {
                 string line = string.Format("{0}: {1}", agent.ToString(false), msg);
                 this.listBox1.Items.Add(line);
             });
-
         }
 
         private void OnNotifyEvent(Agent agent, NotifyEvent ne, string msg)
@@ -369,6 +378,34 @@ namespace Scada.DataCenterAgent
             {
                 this.countryCenterAgent.Disconnect();
                 this.agents.Remove(this.countryCenterAgent);
+            }
+        }
+
+        private void detailsButton_Click(object sender, EventArgs e)
+        {
+            this.detailForm = new RealTimeForm(() => 
+            {
+                this.detailForm = null;
+            });
+            this.detailForm.Show();
+        }
+
+
+        private void AgentWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult dr = MessageBox.Show("退出数据上传程序?", "数据上传", MessageBoxButtons.YesNo);
+            if (DialogResult.No == dr)
+            {
+                e.Cancel = true;
+            }
+                
+        }
+
+        private void SendDetails(string deviceKey, string msg)
+        {
+            if (this.detailForm != null)
+            {
+                this.detailForm.OnSendDetails(deviceKey, msg);
             }
         }
     }
