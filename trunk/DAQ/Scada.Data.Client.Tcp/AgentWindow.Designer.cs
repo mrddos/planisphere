@@ -28,25 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AgentWindow));
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.splitter1 = new System.Windows.Forms.Splitter();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.keepAliveCheckBox = new System.Windows.Forms.CheckBox();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.splitter1 = new System.Windows.Forms.Splitter();
-            this.keepAliveCheckBox = new System.Windows.Forms.CheckBox();
             this.detailsButton = new System.Windows.Forms.ToolStripButton();
+            this.sysNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
             this.toolStripContainer1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripContainer1
@@ -85,6 +87,45 @@
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // splitter1
+            // 
+            this.splitter1.Location = new System.Drawing.Point(0, 0);
+            this.splitter1.Name = "splitter1";
+            this.splitter1.Size = new System.Drawing.Size(3, 410);
+            this.splitter1.TabIndex = 2;
+            this.splitter1.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.keepAliveCheckBox);
+            this.panel1.Controls.Add(this.listBox1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(561, 410);
+            this.panel1.TabIndex = 1;
+            // 
+            // keepAliveCheckBox
+            // 
+            this.keepAliveCheckBox.AutoSize = true;
+            this.keepAliveCheckBox.Location = new System.Drawing.Point(12, 380);
+            this.keepAliveCheckBox.Name = "keepAliveCheckBox";
+            this.keepAliveCheckBox.Size = new System.Drawing.Size(86, 17);
+            this.keepAliveCheckBox.TabIndex = 2;
+            this.keepAliveCheckBox.Text = "显示心跳包";
+            this.keepAliveCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 30);
+            this.listBox1.MultiColumn = true;
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(561, 368);
+            this.listBox1.TabIndex = 1;
             // 
             // toolStrip1
             // 
@@ -129,45 +170,6 @@
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.keepAliveCheckBox);
-            this.panel1.Controls.Add(this.listBox1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(561, 410);
-            this.panel1.TabIndex = 1;
-            // 
-            // listBox1
-            // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Margin = new System.Windows.Forms.Padding(3, 3, 3, 30);
-            this.listBox1.MultiColumn = true;
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(561, 368);
-            this.listBox1.TabIndex = 1;
-            // 
-            // splitter1
-            // 
-            this.splitter1.Location = new System.Drawing.Point(0, 0);
-            this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(3, 410);
-            this.splitter1.TabIndex = 2;
-            this.splitter1.TabStop = false;
-            // 
-            // keepAliveCheckBox
-            // 
-            this.keepAliveCheckBox.AutoSize = true;
-            this.keepAliveCheckBox.Location = new System.Drawing.Point(12, 380);
-            this.keepAliveCheckBox.Name = "keepAliveCheckBox";
-            this.keepAliveCheckBox.Size = new System.Drawing.Size(86, 17);
-            this.keepAliveCheckBox.TabIndex = 2;
-            this.keepAliveCheckBox.Text = "显示心跳包";
-            this.keepAliveCheckBox.UseVisualStyleBackColor = true;
-            // 
             // detailsButton
             // 
             this.detailsButton.Image = ((System.Drawing.Image)(resources.GetObject("detailsButton.Image")));
@@ -176,6 +178,11 @@
             this.detailsButton.Size = new System.Drawing.Size(53, 22);
             this.detailsButton.Text = "详情";
             this.detailsButton.Click += new System.EventHandler(this.detailsButton_Click);
+            // 
+            // sysNotifyIcon
+            // 
+            this.sysNotifyIcon.Text = "数据上传";
+            this.sysNotifyIcon.Visible = true;
             // 
             // AgentWindow
             // 
@@ -197,10 +204,10 @@
             this.toolStripContainer1.TopToolStripPanel.PerformLayout();
             this.toolStripContainer1.ResumeLayout(false);
             this.toolStripContainer1.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -219,6 +226,7 @@
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.CheckBox keepAliveCheckBox;
         private System.Windows.Forms.ToolStripButton detailsButton;
+        private System.Windows.Forms.NotifyIcon sysNotifyIcon;
 
     }
 }

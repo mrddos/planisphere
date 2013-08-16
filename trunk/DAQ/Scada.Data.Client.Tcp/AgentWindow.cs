@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.DataCenterAgent.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -42,12 +43,14 @@ namespace Scada.DataCenterAgent
 
         private void AgentWindow_Load(object sender, EventArgs e)
         {
+            InitSysNotifyIcon();
+            this.ShowInTaskbar = false;
             this.statusStrip1.Items.Add("状态: 等待");
             this.statusStrip1.Items.Add(new ToolStripSeparator());
             this.statusStrip1.Items.Add("IP ADDR:PORT");
             ToolStripLabel label = new ToolStripLabel();
             label.Alignment = ToolStripItemAlignment.Right;
-            label.Text = "22:04";
+            label.Text = "";
             this.statusStrip1.Items.Add(label);
 
             // Start if have the --start args.
@@ -55,6 +58,21 @@ namespace Scada.DataCenterAgent
             {
                 Start();
             }
+        }
+
+        private void InitSysNotifyIcon()
+        {
+            // Notify Icon
+            sysNotifyIcon.Text = "系统设备管理器";
+            sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
+            sysNotifyIcon.Visible = true;
+
+            sysNotifyIcon.Click += new EventHandler(OnSysNotifyIconContextMenu);
+        }
+
+        private void OnSysNotifyIconContextMenu(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Normal;
         }
 
         private void Start()
@@ -90,7 +108,7 @@ namespace Scada.DataCenterAgent
                 }
             }
 
-            this.statusStrip1.Items[0].Text = "状态: 开始";
+            this.statusStrip1.Items[0].Text = string.Format("状态: 开始 ({0})", DateTime.Now);
         }
 
         // 先连接有线的线路
@@ -225,11 +243,11 @@ namespace Scada.DataCenterAgent
                     if (deviceKey.Equals("Scada.HVSampler", StringComparison.OrdinalIgnoreCase) ||
                         deviceKey.Equals("Scada.ISampler", StringComparison.OrdinalIgnoreCase))
                     {
-                        p = builder.GetFlowDataPacket(deviceKey, d);
+                        p = builder.GetFlowDataPacket(deviceKey, d, true);
                     }
                     else
                     {
-                        p = builder.GetDataPacket(deviceKey, d);
+                        p = builder.GetDataPacket(deviceKey, d, true);
                     }
 
                     // Sent by each agent.s
@@ -238,13 +256,13 @@ namespace Scada.DataCenterAgent
                         agent.SendDataPacket(p, time);
                     }
 
-                    string msg = string.Format("<Real-Time> '{0}'", p.ToString());
+                    string msg = string.Format("{0}: {1}", DateTime.Now, p.ToString());
                     Log.GetLogFile(deviceKey).Log(msg);
                     this.SendDetails(deviceKey, msg);
                 }
                 else
                 {
-                    string logger = string.Format("<Real-Time> No data found from the table");
+                    string logger = string.Format("{0}: No data found from the table", DateTime.Now);
                     Log.GetLogFile(deviceKey).Log(logger);
 
                 }
