@@ -27,6 +27,7 @@ namespace Scada.DataCenterAgent
 
         private ListBox CreateListBox(string deviceKey)
         {
+            deviceKey = deviceKey.ToLower();
             ListBox lb = new ListBox();
             lb.Tag = deviceKey;
             lb.Dock = DockStyle.Fill;
@@ -49,13 +50,13 @@ namespace Scada.DataCenterAgent
 
         private void RealTimeForm_Load(object sender, EventArgs e)
         {
-            this.tabPage1.Controls.Add(this.CreateListBox(""));
-            this.tabPage2.Controls.Add(this.CreateListBox(""));
-            this.tabPage3.Controls.Add(this.CreateListBox(""));
-            this.tabPage4.Controls.Add(this.CreateListBox(""));
-            this.tabPage5.Controls.Add(this.CreateListBox(""));
-            this.tabPage6.Controls.Add(this.CreateListBox(""));
-            this.tabPage7.Controls.Add(this.CreateListBox(""));
+            this.tabPage1.Controls.Add(this.CreateListBox("Scada.HPIC"));
+            this.tabPage2.Controls.Add(this.CreateListBox("Scada.NaIDevice"));
+            this.tabPage3.Controls.Add(this.CreateListBox("Scada.Weather"));
+            this.tabPage4.Controls.Add(this.CreateListBox("Scada.HVSampler"));
+            this.tabPage5.Controls.Add(this.CreateListBox("Scada.ISampler"));
+            this.tabPage6.Controls.Add(this.CreateListBox("Scada.Shelter"));
+            this.tabPage7.Controls.Add(this.CreateListBox("Scada.DWD"));
         }
 
         private bool closed = false;
