@@ -15,5 +15,10 @@ namespace Scada.Data.Client
         {
             InitializeComponent();
         }
+
+        private void SendPacket()
+        {
+
+        }
     }
 }
