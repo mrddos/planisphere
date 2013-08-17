@@ -197,6 +197,7 @@
             this.Text = "数据中心代理";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AgentWindow_FormClosing);
             this.Load += new System.EventHandler(this.AgentWindow_Load);
+            this.SizeChanged += new System.EventHandler(this.AgentWindow_SizeChanged);
             this.toolStripContainer1.BottomToolStripPanel.ResumeLayout(false);
             this.toolStripContainer1.BottomToolStripPanel.PerformLayout();
             this.toolStripContainer1.ContentPanel.ResumeLayout(false);

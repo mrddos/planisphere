@@ -66,13 +66,16 @@ namespace Scada.DataCenterAgent
             sysNotifyIcon.Text = "系统设备管理器";
             sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
             sysNotifyIcon.Visible = true;
-
+            this.WindowState = FormWindowState.Minimized;
+            this.Hide();
             sysNotifyIcon.Click += new EventHandler(OnSysNotifyIconContextMenu);
         }
 
         private void OnSysNotifyIconContextMenu(object sender, EventArgs e)
         {
+            this.Show();
             this.WindowState = FormWindowState.Normal;
+            
         }
 
         private void Start()
@@ -424,6 +427,19 @@ namespace Scada.DataCenterAgent
             if (this.detailForm != null)
             {
                 this.detailForm.OnSendDetails(deviceKey, msg);
+            }
+        }
+
+        private void AgentWindow_MinimumSizeChanged(object sender, EventArgs e)
+        {
+            // Not invoked.
+        }
+
+        private void AgentWindow_SizeChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.Hide();
             }
         }
     }
