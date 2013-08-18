@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -50,9 +51,17 @@ namespace Scada.Data.Client
 
         private void OnUploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
         {
-            byte[] result = e.Result;
+            if (e.Error == null && !e.Cancelled)
+            {
+                byte[] result = e.Result;
+                if (result.Length > 0)
+                {
+                    string response = ASCIIEncoding.UTF8.GetString(result);
 
-            string response = ASCIIEncoding.UTF8.GetString(result);
+                    JObject jo = JObject.Parse(response);
+
+                }
+            }
         }
     }
 }
