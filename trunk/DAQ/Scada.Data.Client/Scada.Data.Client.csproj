@@ -57,7 +57,7 @@
     </Compile>
     <Compile Include="Packet.cs" />
     <Compile Include="PacketBuilder.cs" />
-    <Compile Include="PacketSender.cs" />
+    <Compile Include="PacketHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
