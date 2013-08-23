@@ -102,7 +102,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="app.ico" />
     <None Include="Resources\AppIcon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

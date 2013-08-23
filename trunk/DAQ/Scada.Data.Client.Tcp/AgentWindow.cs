@@ -202,6 +202,10 @@ namespace Scada.DataCenterAgent
 
             if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
             {
+                if (!this.checkBoxUpdateNaI.Checked)
+                {
+                    return;
+                }
                 // 分包
                 string content = DBDataSource.Instance.GetNaIDeviceData(time);
                 if (!string.IsNullOrEmpty(content))
