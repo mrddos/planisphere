@@ -13,7 +13,17 @@ using Scada.Config;
 
 namespace Scada.Declare
 {
-	public class StandardDevice : Device
+    /*
+     * HPIC:    Send 'SFTW-131-001ER Ver' once, always recv data.
+     * Weather: Send ':D' every 30s.
+     * DWD: Send HEX(00 32 CD A0 30 30 30 01) every 30s
+     * Shelter: Send Q1\r every 30s.
+     * 
+     * 
+     * 
+     * 
+     */
+    public class StandardDevice : Device
 	{
 		private const int ComDataBits = 8;
 
@@ -175,7 +185,7 @@ namespace Scada.Declare
             List<FieldConfig> fieldConfigList = ParseDataFieldConfig(fieldsConfigStr);
 			this.fieldsConfig = fieldConfigList.ToArray<FieldConfig>();
 
-			if (this.IsVirtual)
+			if (!this.IsRealDevice)
 			{
 				string el = (StringValue)entry[DeviceEntry.ExampleLine];
 				el = el.Replace("\\r", "\r");
@@ -186,16 +196,26 @@ namespace Scada.Declare
 			return true;
 		}
 
+        /*
 		public bool IsVirtual
 		{
 			get { return this.isVirtual; }
 		}
+        */
+
+        public bool IsRealDevice
+        {
+            get
+            {
+                return !this.isVirtual;
+            }
+        }
 
 		private bool IsOpen
 		{
 			get
 			{
-				return this.IsVirtual ? true : this.serialPort.IsOpen;
+                return this.IsRealDevice ? this.serialPort.IsOpen : true;
 			}
 		}
 
@@ -216,7 +236,7 @@ namespace Scada.Declare
                 this.serialPort.NewLine = "/r/n";	        //?
                 this.serialPort.DataReceived += this.SerialPortDataReceived;
                 // Real Devie begins here.
-				if (!this.IsVirtual)
+                if (this.IsRealDevice)
 				{
 					this.serialPort.Open();
 
@@ -289,6 +309,7 @@ namespace Scada.Declare
             }
         }
 
+        //////////////////////////////////////////////////////////////////////
         // Virtual-Device.
         private void StartVirtualDevice()
         {
@@ -307,10 +328,12 @@ namespace Scada.Declare
             }
             */
         }
+        //////////////////////////////////////////////////////////////////////
 
 		private byte[] ReadData()
 		{
-			if (!this.isVirtual)
+
+			if (this.IsRealDevice)
 			{
                 // Try to Sleep 100ms and make one time callback.
                 // 200 ms is enough for BoudRate 9600
@@ -369,34 +392,36 @@ namespace Scada.Declare
 
 				byte[] line = this.dataParser.GetLineBytes(buffer);
 
-				if (line.Length > 0)
+				if (line == null || line.Length == 0)
 				{
-                    // Defect: HPIC need check the time.
-                    if (this.actionInterval == 0)
+                    return;
+				}
+
+                // Defect: HPIC need check the time.
+                if (this.actionInterval == 0)
+                {
+                    DateTime now = DateTime.Now;
+                    DateTime rightTime = default(DateTime);
+                    if (!this.IsRightTime(now, out rightTime))
                     {
-                        DateTime now = DateTime.Now;
-                        DateTime rightTime = default(DateTime);
-                        if (!this.IsRightTime(now, out rightTime))
-                        {
-                            return;
-                        }
-
-                        if (this.currentActionTime == rightTime)
-                        {
-                            return;
-                        }
-
-                        this.currentActionTime = rightTime;
+                        return;
                     }
 
-					DeviceData dd;
-					bool got = this.GetDeviceData(line, this.currentActionTime, out dd);
-					if (got)
-					{
-                        dd.OriginData = Encoding.ASCII.GetString(line);
-						this.SynchronizationContext.Post(this.DataReceived, dd);
-					}
-				}
+                    if (this.currentActionTime == rightTime)
+                    {
+                        return;
+                    }
+
+                    this.currentActionTime = rightTime;
+                }
+
+                DeviceData dd;
+                bool got = this.GetDeviceData(line, this.currentActionTime, out dd);
+                if (got)
+                {
+                    dd.OriginData = Encoding.ASCII.GetString(line);
+                    this.SynchronizationContext.Post(this.DataReceived, dd);
+                }
 			}
 			catch (InvalidOperationException e)
 			{
@@ -477,7 +502,7 @@ namespace Scada.Declare
 		{
 			if (this.serialPort != null && this.IsOpen)
 			{
-				if (!this.IsVirtual)
+				if (this.IsRealDevice)
 				{
                     // RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(action));
                     this.currentActionTime = time;

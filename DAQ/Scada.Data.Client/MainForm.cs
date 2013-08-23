@@ -20,7 +20,7 @@ namespace Scada.Data.Client
 
             PacketHandler ps = new PacketHandler();
             ps.Host = "http://127.0.0.1";
-            ps.Commit(new Packet());
+            ps.Commit(new Packet(2));
         }
 
 
