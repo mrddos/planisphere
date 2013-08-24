@@ -142,6 +142,7 @@ namespace Scada.Declare
 
         private SendOrPostCallback dataReceived;
 
+        private static int MaxDelay = 10;
         /// <summary>
         /// 
         /// </summary>
@@ -310,7 +311,42 @@ namespace Scada.Declare
             return false;
         }
 
+        // VB form data every 30 sec.
+        // Verify the time (second) is the right time.
+        public static bool At30Sec(DateTime now, out DateTime rightTime)
+        {
+            int second = (now.Second < 30) ? 0 : 30;
+            rightTime = default(DateTime);
+            if (now.Second >= 0 && now.Second <= MaxDelay)
+            {
+                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
+                return true;
+            }
+            else if (now.Second >= 30 && now.Second <= (30 + MaxDelay))
+            {
+                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
+                return true;
+            }
+            return false;
+        }
 
+        public static bool NowAt30Sec(out DateTime rightTime)
+        {
+            DateTime now = DateTime.Now;
+            int second = (now.Second < 30) ? 0 : 30;
+            rightTime = default(DateTime);
+            if (now.Second >= 0 && now.Second <= MaxDelay)
+            {
+                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
+                return true;
+            }
+            else if (now.Second >= 30 && now.Second <= (30 + MaxDelay))
+            {
+                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
+                return true;
+            }
+            return false;
+        }
 	}
     // Enc of class Device
 

@@ -56,6 +56,8 @@ namespace Scada.Config
 
         public const string ActionInterval = "ActionInterval";
 
+        public const string RecordInterval = "RecordInterval";
+
         public const string Pattern = "Pattern";
 
         public const string DataParser = "DataParser";

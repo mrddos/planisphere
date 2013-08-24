@@ -53,6 +53,8 @@ namespace Scada.Declare
 
         private int actionInterval = 0;
 
+        private int recordInterval = 30;
+
 		private string linePattern = string.Empty;
 
 		private string insertIntoCommand = string.Empty;
@@ -79,7 +81,7 @@ namespace Scada.Declare
 
 		private const string ScadaDeclare = "Scada.Declare.";
 
-        private int MaxDelay = 10;
+        private static int MaxDelay = 10;
 
         private DateTime currentActionTime = default(DateTime);
 
@@ -156,13 +158,17 @@ namespace Scada.Declare
 
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
 
-
-            var interval = entry[DeviceEntry.ActionInterval];
-            if (interval != null)
+            var actionInterval = entry[DeviceEntry.ActionInterval];
+            if (actionInterval != null)
             {
-                this.actionInterval = (StringValue)interval;
+                this.actionInterval = (StringValue)actionInterval;
             }
 
+            var recordInterval = entry[DeviceEntry.RecordInterval];
+            if (recordInterval != null)
+            {
+                this.recordInterval = (StringValue)recordInterval;
+            }
 			// Set DataParser;
 			this.SetDataParser();
 
@@ -286,14 +292,14 @@ namespace Scada.Declare
         private void StartSenderTimer(int interval)
         {
             if (MainApplication.TimerCreator != null)
-            {
-                // Trigger every 1s. 
+            { 
                 this.senderTimer = MainApplication.TimerCreator.CreateTimer(1);
+                // Trigger every 1s.
                 this.senderTimer.Start(() => 
                 {
-                    DateTime now = DateTime.Now;
                     DateTime rightTime = default(DateTime);
-                    if (!this.IsRightTime(now, out rightTime))
+                    // TODO: If trigger goes here
+                    if (!Device.NowAt30Sec(out rightTime))
                     {
                         return;
                     }
@@ -303,6 +309,7 @@ namespace Scada.Declare
                         return;
                     }
 
+                    // TODO: Send every 30s. filter when receive data.
                     this.Send(this.actionSend, rightTime);
                 });
 
@@ -397,12 +404,13 @@ namespace Scada.Declare
                     return;
 				}
 
-                // Defect: HPIC need check the time.
+                // Defect: HPIC need check the right time here.
+                // if ActionInterval == 0, the time trigger not depends send-time.
                 if (this.actionInterval == 0)
                 {
-                    DateTime now = DateTime.Now;
+                    // DateTime now = DateTime.Now;
                     DateTime rightTime = default(DateTime);
-                    if (!this.IsRightTime(now, out rightTime))
+                    if (!Device.NowAt30Sec(out rightTime))
                     {
                         return;
                     }
@@ -606,8 +614,6 @@ namespace Scada.Declare
             }
             return false;
         }
-
-
 		
 	}
 }
