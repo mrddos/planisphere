@@ -28,8 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // MdsCfgForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "MdsCfgForm";
+            this.Load += new System.EventHandler(this.MdsCfgForm_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

@@ -11,12 +11,12 @@ using System.IO.Ports;
 
 namespace Scada.MainSettings
 {
-    public partial class EnvCfgForm : UserControl, IApply
+    public partial class EnvCfgForm : SettingFormBase, IApply
     {
         const string TheDeviceKey = "scada.shelter";
 
 
-        private string serialPort = "COM1";
+        private ShelterSettings settings = new ShelterSettings();
 
         public EnvCfgForm()
         {
@@ -25,12 +25,12 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-            this.serialPort = this.comboBoxPort.Text;
+
 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             using (ScadaWriter sw = new ScadaWriter(filePath))
             {
-                sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
+                // sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
 
                 sw.Commit();
             }
@@ -38,7 +38,7 @@ namespace Scada.MainSettings
 
         public void Cancel()
         {
-            this.comboBoxPort.Text = this.serialPort;
+            // this.comboBoxPort.Text = this.serialPort;
         }
 
         private void EnvCfgForm_Load(object sender, EventArgs e)
@@ -47,20 +47,8 @@ namespace Scada.MainSettings
             DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
 
 
-            string[] ports = SerialPort.GetPortNames();
 
-            foreach (string port in ports)
-            {
-                string portName = port.ToUpper();
-                this.comboBoxPort.Items.Add(portName);
-            }
-
-
-            this.serialPort = (StringValue)entry[DeviceEntry.SerialPort];
-            if (!string.IsNullOrEmpty(this.serialPort))
-            {
-                this.comboBoxPort.Text = this.serialPort;
-            }
+            this.Loaded(this.settings);
         }
     }
 }

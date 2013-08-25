@@ -28,8 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // IsCfgForm
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "IsCfgForm";
+            this.Load += new System.EventHandler(this.IsCfgForm_Load);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

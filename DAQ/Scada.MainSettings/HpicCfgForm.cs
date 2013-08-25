@@ -11,14 +11,16 @@ using Scada.Config;
 
 namespace Scada.MainSettings
 {
-    public partial class HpicCfgForm : UserControl, IApply
+    public partial class HpicCfgForm : SettingFormBase, IApply
     {
+        // Device Key
         const string TheDeviceKey = "scada.hpic";
 
+        private HpicSettings settings = new HpicSettings();
 
         private string serialPort = "COM1";
 
-        private string factor1;
+        // private string factor1;
 
         public HpicCfgForm()
         {
@@ -32,44 +34,28 @@ namespace Scada.MainSettings
 
         private void HpicCfgForm_Load(object sender, EventArgs e)
         {
-            // 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
 
-
-            string[] ports = SerialPort.GetPortNames();
-            
-            foreach (string port in ports)
-            {
-                string portName = port.ToUpper();
-                this.comboBoxPort.Items.Add(portName);
-            }
-
-
-            this.serialPort = (StringValue)entry[DeviceEntry.SerialPort];
-            if (!string.IsNullOrEmpty(this.serialPort))
-            {
-                this.comboBoxPort.Text = this.serialPort;
-            }
-
-            this.factor1 = (StringValue)entry["factor1"];
-            this.textBoxFactor.Text = this.factor1;
-
+            this.Loaded(this.settings);
         }
+
+
+
 
 
 
         public void Apply()
         {
-            this.serialPort = this.comboBoxPort.Text;
-            this.factor1 = this.textBoxFactor.Text;
+            // this.serialPort = this.comboBoxPort.Text;
+            // this.factor1 = this.textBoxFactor.Text;
 
 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             using (ScadaWriter sw = new ScadaWriter(filePath))
             {
                 sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
-                sw.WriteLine("factor1", this.factor1);
+                // sw.WriteLine("factor1", this.factor1);
 
                 sw.Commit();
             }
@@ -78,8 +64,13 @@ namespace Scada.MainSettings
 
         public void Cancel()
         {
-            this.comboBoxPort.Text = this.serialPort;
-            this.textBoxFactor.Text = this.factor1;
+
+        }
+
+        private void propertyGrid_Click(object sender, EventArgs e)
+        {
+
         }
     }
+
 }

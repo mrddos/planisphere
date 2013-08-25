@@ -11,12 +11,11 @@ using System.IO.Ports;
 
 namespace Scada.MainSettings
 {
-    public partial class DwdCfgForm : UserControl, IApply
+    public partial class DwdCfgForm : SettingFormBase, IApply
     {
         const string TheDeviceKey = "scada.dwd";
 
-
-        private string serialPort = "COM1";
+        private DwdSettings settings = new DwdSettings();
 
         public DwdCfgForm()
         {
@@ -25,12 +24,12 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-            this.serialPort = this.comboBoxPort.Text;
+
 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             using (ScadaWriter sw = new ScadaWriter(filePath))
             {
-                sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
+                // sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
 
                 sw.Commit();
             }
@@ -39,7 +38,7 @@ namespace Scada.MainSettings
 
         public void Cancel()
         {
-            this.comboBoxPort.Text = this.serialPort;
+            // this.comboBoxPort.Text = this.serialPort;
         }
 
         private void DwdCfgForm_Load(object sender, EventArgs e)
@@ -49,23 +48,9 @@ namespace Scada.MainSettings
             DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
 
 
-            string[] ports = SerialPort.GetPortNames();
-
-            foreach (string port in ports)
-            {
-                string portName = port.ToUpper();
-                this.comboBoxPort.Items.Add(portName);
-            }
 
 
-            this.serialPort = (StringValue)entry[DeviceEntry.SerialPort];
-            if (!string.IsNullOrEmpty(this.serialPort))
-            {
-                this.comboBoxPort.Text = this.serialPort;
-            }
-
-            //this.factor1 = (StringValue)entry["factor1"];
-            //this.textBoxFactor.Text = this.factor1;
+            this.Loaded(this.settings);
         }
     }
 }

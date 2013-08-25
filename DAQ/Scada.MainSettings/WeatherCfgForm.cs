@@ -11,7 +11,7 @@ using System.IO.Ports;
 
 namespace Scada.MainSettings
 {
-    public partial class WeatherCfgForm : UserControl, IApply
+    public partial class WeatherCfgForm : SettingFormBase, IApply
     {
         const string TheDeviceKey = "scada.weather";
 
@@ -25,7 +25,7 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-            this.serialPort = this.comboBoxPort.Text;
+            // this.serialPort = this.comboBoxPort.Text;
 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             using (ScadaWriter sw = new ScadaWriter(filePath))
@@ -38,29 +38,18 @@ namespace Scada.MainSettings
 
         public void Cancel()
         {
-            this.comboBoxPort.Text = this.serialPort;
+            // this.comboBoxPort.Text = this.serialPort;
         }
+
+        private WeatherSettings settings = new WeatherSettings();
 
         private void WeatherCfgForm_Load(object sender, EventArgs e)
         {
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
             DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
 
+            this.Loaded(this.settings);
 
-            string[] ports = SerialPort.GetPortNames();
-
-            foreach (string port in ports)
-            {
-                string portName = port.ToUpper();
-                this.comboBoxPort.Items.Add(portName);
-            }
-
-
-            this.serialPort = (StringValue)entry[DeviceEntry.SerialPort];
-            if (!string.IsNullOrEmpty(this.serialPort))
-            {
-                this.comboBoxPort.Text = this.serialPort;
-            }
         }
     }
 }

@@ -80,6 +80,10 @@
     <Compile Include="NaICfgForm.Designer.cs">
       <DependentUpon>NaICfgForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SettingFormBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SettingItems.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,6 +106,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="HpicCfgForm.resx">
       <DependentUpon>HpicCfgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="IsCfgForm.resx">
+      <DependentUpon>IsCfgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MdsCfgForm.resx">
+      <DependentUpon>MdsCfgForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NaICfgForm.resx">
+      <DependentUpon>NaICfgForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

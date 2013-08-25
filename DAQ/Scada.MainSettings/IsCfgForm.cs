@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Scada.MainSettings
 {
-    public partial class IsCfgForm : UserControl, IApply
+    public partial class IsCfgForm : SettingFormBase, IApply
     {
         public IsCfgForm()
         {
@@ -24,6 +24,13 @@ namespace Scada.MainSettings
         public void Cancel()
         {
             throw new NotImplementedException();
+        }
+
+        private AisSettings settings = new AisSettings();
+
+        private void IsCfgForm_Load(object sender, EventArgs e)
+        {
+            this.Loaded(this.settings);
         }
     }
 }
