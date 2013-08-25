@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Scada.MainSettings
 {
-    public partial class MdsCfgForm : UserControl, IApply
+    public partial class MdsCfgForm : SettingFormBase, IApply
     {
         public MdsCfgForm()
         {
@@ -25,5 +25,14 @@ namespace Scada.MainSettings
         {
             throw new NotImplementedException();
         }
+
+        private void MdsCfgForm_Load(object sender, EventArgs e)
+        {
+            this.Loaded(this.settings);
+        }
+
+
+        private MdsSettings settings = new MdsSettings();
+
     }
 }

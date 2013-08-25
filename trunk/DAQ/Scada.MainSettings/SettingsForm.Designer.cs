@@ -93,7 +93,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(642, 256);
+            this.tabPage4.Size = new System.Drawing.Size(642, 216);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "超大流量气溶胶采样器";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -103,7 +103,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(642, 256);
+            this.tabPage5.Size = new System.Drawing.Size(642, 216);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "碘采样器";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -113,7 +113,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 22);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(642, 256);
+            this.tabPage6.Size = new System.Drawing.Size(642, 216);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "环境与安防监控";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -123,7 +123,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(642, 256);
+            this.tabPage7.Size = new System.Drawing.Size(642, 216);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "干湿沉降采集器";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -167,6 +167,7 @@
             this.Controls.Add(this.sureButton);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.tabControl);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.Name = "SettingsForm";
             this.Text = "Settings";
