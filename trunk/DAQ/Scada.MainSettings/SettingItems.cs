@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -24,6 +25,80 @@ namespace Scada.MainSettings
             {
                 this.serialPort = value;
             }
+        }
+    }
+
+    public class PropertyConverter : TypeConverter
+    {
+        private Dictionary<object, string> dict;
+
+        public PropertyConverter(Dictionary<object, string> dict)
+        {
+            this.dict = dict;
+        }
+
+        public override bool GetStandardValuesSupported(ITypeDescriptorContext context)
+        {
+            return true;
+        }
+
+        public override bool GetStandardValuesExclusive(ITypeDescriptorContext context)
+        {
+            return true;
+        }
+
+        public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
+        {
+            return new StandardValuesCollection(this.dict.Keys);
+        }
+
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            if (sourceType == typeof(string))
+                return true;
+            else
+                return base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        {
+            if (value.GetType() == typeof(string))
+            {
+                string v = (string)value;
+                foreach (var kv in this.dict)
+                {
+                    if (v == kv.Value)
+                    {
+                        return kv.Key;
+                    }
+                }
+                return null;
+            }
+            else
+                return base.ConvertFrom(context, culture, value);
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            int v = (int)value;
+            if (this.dict.ContainsKey(v))
+            {
+                return this.dict[v];
+            }
+            return string.Empty;
+        }
+        
+    }
+
+    class FrequenceConverter : PropertyConverter
+    {
+        public FrequenceConverter()
+            :base(new Dictionary<object, string>
+            {
+                {30, "30 秒"}, {60, "1 分钟"}, {300, "5 分钟"}
+            })
+        {
+            
         }
     }
 
@@ -53,9 +128,9 @@ namespace Scada.MainSettings
             set;
         }
 
-        [Category("高压电离室")]
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
@@ -68,9 +143,9 @@ namespace Scada.MainSettings
     /// </summary>
     public class WeatherSettings : SerialPortSetting
     {
-        [Category("高压电离室")]
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
@@ -83,9 +158,9 @@ namespace Scada.MainSettings
     /// </summary>
     public class MdsSettings
     {
-        [Category("高压电离室")]
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
@@ -98,9 +173,10 @@ namespace Scada.MainSettings
     /// </summary>
     public class AisSettings
     {
-        [Category("高压电离室")]
+
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
@@ -113,9 +189,9 @@ namespace Scada.MainSettings
     /// </summary>
     public class NaISettings
     {
-        [Category("高压电离室")]
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
@@ -128,9 +204,9 @@ namespace Scada.MainSettings
     /// </summary>
     public class DwdSettings : SerialPortSetting
     {
-        [Category("高压电离室")]
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
@@ -143,9 +219,9 @@ namespace Scada.MainSettings
     /// </summary>
     public class ShelterSettings : SerialPortSetting
     {
-        [Category("高压电离室")]
         [DisplayName("采集频率")]
         [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
         public int Frequence
         {
             get;
