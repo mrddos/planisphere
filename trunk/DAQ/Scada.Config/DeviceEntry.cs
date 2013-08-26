@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -164,6 +165,18 @@ namespace Scada.Config
                 }
                 return entry;
             }
+        }
+
+        public static byte[] ParseHex(string line)
+        {
+            string[] hexArray = line.Split(' ');
+            List<byte> bs = new List<byte>();
+            foreach (string hex in hexArray)
+            {
+                byte b = (byte)int.Parse(hex, NumberStyles.AllowHexSpecifier);
+                bs.Add(b);
+            }
+            return bs.ToArray<byte>();
         }
 
     }

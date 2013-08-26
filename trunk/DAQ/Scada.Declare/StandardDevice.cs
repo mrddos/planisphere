@@ -53,8 +53,6 @@ namespace Scada.Declare
 
         private int actionInterval = 0;
 
-        private int recordInterval = 30;
-
 		private string linePattern = string.Empty;
 
 		private string insertIntoCommand = string.Empty;
@@ -81,7 +79,7 @@ namespace Scada.Declare
 
 		private const string ScadaDeclare = "Scada.Declare.";
 
-        private static int MaxDelay = 10;
+        // private static int MaxDelay = 10;
 
         private DateTime currentActionTime = default(DateTime);
 
@@ -153,7 +151,7 @@ namespace Scada.Declare
 				this.actionSendInHex = true;
 				string hexes = (StringValue)entry[DeviceEntry.ActionSend];
                 hexes = hexes.Trim();
-				this.actionSend = ParseHex(hexes);
+				this.actionSend = DeviceEntry.ParseHex(hexes);
 			}
 
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
@@ -164,11 +162,15 @@ namespace Scada.Declare
                 this.actionInterval = (StringValue)actionInterval;
             }
 
+            // If the config file over write this value.
             var recordInterval = entry[DeviceEntry.RecordInterval];
             if (recordInterval != null)
             {
-                this.recordInterval = (StringValue)recordInterval;
+                this.RecordInterval = (StringValue)recordInterval;
+                this.recordTimePolicy.Interval = this.RecordInterval;
             }
+
+            
 			// Set DataParser;
 			this.SetDataParser();
 
@@ -201,13 +203,6 @@ namespace Scada.Declare
 			}
 			return true;
 		}
-
-        /*
-		public bool IsVirtual
-		{
-			get { return this.isVirtual; }
-		}
-        */
 
         public bool IsRealDevice
         {
@@ -422,14 +417,25 @@ namespace Scada.Declare
 
                     this.currentActionTime = rightTime;
                 }
+                else
+                {
+
+                }
 
                 DeviceData dd;
-                bool got = this.GetDeviceData(line, this.currentActionTime, out dd);
-                if (got)
+                if (!this.GetDeviceData(line, this.currentActionTime, out dd))
                 {
-                    dd.OriginData = Encoding.ASCII.GetString(line);
-                    this.SynchronizationContext.Post(this.DataReceived, dd);
+                    return;
                 }
+
+                DateTime recordTime;
+                if (!this.recordTimePolicy.NowAtRightTime(out recordTime))
+                {
+                    return;
+                }
+
+                dd.OriginData = Encoding.ASCII.GetString(line);
+                this.SynchronizationContext.Post(this.DataReceived, dd);
 			}
 			catch (InvalidOperationException e)
 			{
@@ -516,14 +522,13 @@ namespace Scada.Declare
                     this.currentActionTime = time;
 					this.serialPort.Write(action, 0, action.Length);
 				}
-                // Virtual-Device~!
 				else
 				{
+                    // Virtual-Device
                     this.currentActionTime = time;
                     this.OnSendDataToVirtualDevice(action);					
 				}
 			}
-
 		}
 
         // Virtual !!
@@ -550,27 +555,15 @@ namespace Scada.Declare
 
         private byte[] GetExampleLine(int rand = 0)
         {
-			if (actionSendInHex)
+			if (this.actionSendInHex)
 			{
-				return ParseHex(this.exampleLine);
+				return DeviceEntry.ParseHex(this.exampleLine);
 			}
 			else
 			{
 				return Encoding.ASCII.GetBytes(this.exampleLine);
 			}
         }
-
-		private static byte[] ParseHex(string line)
-		{
-			string[] hexArray = line.Split(' ');
-			List<byte> bs = new List<byte>();
-			foreach (string hex in hexArray)
-			{
-				byte b = (byte)int.Parse(hex, NumberStyles.AllowHexSpecifier);
-				bs.Add(b);
-			}
-			return bs.ToArray<byte>();
-		}
 
 		private void SetDataParser()
 		{
@@ -595,25 +588,6 @@ namespace Scada.Declare
 
 			}
 		}
-
-        // VB form data every 30 sec.
-        // Verify the time (second) is the right time.
-        private bool IsRightTime(DateTime now, out DateTime rightTime)
-        {
-            int second = (now.Second < 30) ? 0 : 30;
-            rightTime = default(DateTime);
-            if (now.Second >= 0 && now.Second <= MaxDelay)
-            {
-                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
-                return true;
-            }
-            else if (now.Second >= 30 && now.Second <= (30 + MaxDelay))
-            {
-                rightTime = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, second);
-                return true;
-            }
-            return false;
-        }
 		
 	}
 }
