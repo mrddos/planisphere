@@ -143,6 +143,17 @@ namespace Scada.Declare
         private SendOrPostCallback dataReceived;
 
         private static int MaxDelay = 10;
+
+        // Each device follow one time policy.
+        public TimePolicy recordTimePolicy = new TimePolicy();
+
+
+        public Device()
+        {
+            this.RecordInterval = TimePolicy.Every30Sec;
+            this.recordTimePolicy.Interval = TimePolicy.Every30Sec;
+        }
+        
         /// <summary>
         /// 
         /// </summary>
@@ -176,6 +187,13 @@ namespace Scada.Declare
         public bool Running
         {
             get { return this.running; }
+        }
+
+        // Default value is 30s. Maybe need change.
+        public int RecordInterval
+        {
+            get;
+            set;
         }
 
 		

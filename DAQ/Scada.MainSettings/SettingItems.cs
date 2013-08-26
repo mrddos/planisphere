@@ -98,7 +98,6 @@ namespace Scada.MainSettings
                 {30, "30 秒"}, {60, "1 分钟"}, {300, "5 分钟"}
             })
         {
-            
         }
     }
 
