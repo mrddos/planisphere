@@ -27,6 +27,9 @@ namespace Scada.DataCenterAgent
         KeepAlive = 6031,
         StartDev = 3012,
         StopDev = 3015,
+
+        SetNewIp = 3103,
+        ApplyNewIp = 3104,
      
         Reply = 9012
     }
@@ -219,12 +222,41 @@ namespace Scada.DataCenterAgent
                         this.OnServerReply(msg);
                     }
                     break;
+                case ReceivedCommand.SetNewIp:
+                    {
+                        this.AddNewIpAddress(msg);
+                    }
+                    break;
+                case ReceivedCommand.ApplyNewIp:
+                    {
+                        this.AddNewIpAddress(msg, true);
+                    }
+                    break;
                 // Error!
                 case ReceivedCommand.None:
                 case ReceivedCommand.Unknown:
                 default:
                     break;
             }
+        }
+
+        private void AddNewIpAddress(string msg, bool apply = false)
+        {
+            string centerType = Value.Parse(msg, "CenterType");
+            string wirelessIp = Value.Parse(msg, "WirelessIp");
+            string wirelessPort = Value.Parse(msg, "WirelessPort");
+            string wireIp = Value.Parse(msg, "WireIp");
+            string wirePort = Value.Parse(msg, "WirePort");
+
+            Settings.Instance.AddNewIpAddress(wireIp, wirePort, wirelessIp, wirelessPort, centerType == "2");
+            if (apply)
+            {
+                // TODO:
+            }
+            string qn = Value.Parse(msg, "QN");
+            this.SendReplyPacket(qn);
+            this.SendResultPacket(qn);
+
         }
 
         private void OnKeepAlive(string msg)
