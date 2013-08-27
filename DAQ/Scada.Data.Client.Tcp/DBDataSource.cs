@@ -91,7 +91,7 @@ namespace Scada.DataCenterAgent
             return sql;
         }
 
-        public Dictionary<string, object> GetData(string deviceKey, DateTime time)
+        public Dictionary<string, object> GetData(string deviceKey, DateTime time, string code = null)
         {
             if (this.cmd == null)
             {
@@ -125,6 +125,10 @@ namespace Scada.DataCenterAgent
                     ret.Add("time", dataTime);
                     foreach (var c in codes)
                     {
+                        if (code != null && code != c.Code)
+                        {
+                            continue;
+                        }
                         string field = c.Field.ToLower();
                         try
                         {

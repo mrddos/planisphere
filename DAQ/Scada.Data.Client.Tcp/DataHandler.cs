@@ -20,6 +20,7 @@ namespace Scada.DataCenterAgent
         StopSendData = 2012,
 
         HistoryData = 2042,
+        HistoryData2 = 2043,
 
         StartSendDataDirectly = 3101,
         StopSendDataDirectly = 3102,
@@ -171,6 +172,7 @@ namespace Scada.DataCenterAgent
                     break;
                 // 历史数据
                 case ReceivedCommand.HistoryData:
+                case ReceivedCommand.HistoryData2:
                     {
                         this.agent.OnHistoryData = true;
                         this.HandleHistoryData(msg);
@@ -330,7 +332,20 @@ namespace Scada.DataCenterAgent
 
             string polId = Value.Parse(msg, "PolId");
 
-            this.UploadHistoryData(qn, eno, beginTime, endTime, polId);
+            if (string.IsNullOrEmpty(eno))
+            {
+                string[] enos = new string[] { "001001", "002000", "003001", "004000", "005000", "010002", "999000" };
+                foreach (string e in enos)
+                {
+                    // for this Command, polId should be Null (means All polId);
+                    this.UploadHistoryData(qn, e, beginTime, endTime, null);
+                }
+
+            }
+            else
+            {
+                this.UploadHistoryData(qn, eno, beginTime, endTime, polId);
+            }
 
             this.SendResultPacket(qn);
         }
@@ -367,7 +382,7 @@ namespace Scada.DataCenterAgent
                 else
                 {
                     // Non NaIDevice
-                    var d = DBDataSource.Instance.GetData(deviceKey, dt);
+                    var d = DBDataSource.Instance.GetData(deviceKey, dt, polId);
 
                     DataPacket p = null;
                     // By different device.
