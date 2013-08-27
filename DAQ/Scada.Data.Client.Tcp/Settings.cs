@@ -130,6 +130,9 @@ namespace Scada.DataCenterAgent
                 doc.Load(settingFileName);
             }
 
+            // Code for quick test.
+            // AddNewIpAddress("", "", "", "", true);
+
             // Data Center
             var datacenters = doc.SelectNodes("//datacenter");
             foreach (XmlNode dcn in datacenters)
@@ -405,5 +408,35 @@ namespace Scada.DataCenterAgent
         public int MinuteAdjust { get; set; }
 
         public string NaIFilePath { get; set; }
+
+        // to test;
+        internal void AddNewIpAddress(string wireIp, string wirePort, string wirelessIp, string wirelessPort, bool country)
+        {
+            string settingFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "agent.settings");
+            if (File.Exists(settingFileName))
+            {
+                doc.Load(settingFileName);
+            }
+
+            // Data Center
+            var dsNotes = doc.SelectNodes("//datacenter");
+            var ds = dsNotes[0].ParentNode;
+
+            XmlNode newDataCenterNode = doc.CreateElement("datacenter");
+            ds.AppendChild(newDataCenterNode);
+            this.AddAttribute(doc, newDataCenterNode, "ip", wireIp);
+            this.AddAttribute(doc, newDataCenterNode, "port", wirePort);
+            this.AddAttribute(doc, newDataCenterNode, "wirelessip", wirelessIp);
+            this.AddAttribute(doc, newDataCenterNode, "wirelessport", wirelessPort);
+            this.AddAttribute(doc, newDataCenterNode, "type", country ? "2" : "1");
+            doc.Save(settingFileName);
+        }
+
+        private void AddAttribute(XmlDocument doc, XmlNode node, string key, string value)
+        {
+            XmlAttribute attrGender = doc.CreateAttribute(key);
+            attrGender.Value = value;
+            node.Attributes.Append(attrGender);
+        }
     }
 }
