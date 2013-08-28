@@ -61,6 +61,8 @@ namespace Scada.Config
 
         public const string Pattern = "Pattern";
 
+        public const string Sensitive = "Sensitive";
+
         public const string DataParser = "DataParser";
 
         public const string TableName = "TableName";

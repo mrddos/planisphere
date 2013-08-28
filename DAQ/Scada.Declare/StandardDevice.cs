@@ -57,6 +57,8 @@ namespace Scada.Declare
 
 		private string insertIntoCommand = string.Empty;
 
+        private bool sensitive = false;
+
 		//private string fieldsConfig = string.Empty;
 
 		private FieldConfig[] fieldsConfig = null;
@@ -170,6 +172,12 @@ namespace Scada.Declare
                 this.recordTimePolicy.Interval = this.RecordInterval;
             }
 
+            var sensitive = entry[DeviceEntry.Sensitive];
+            if (sensitive != null)
+            {
+                string s = (StringValue)sensitive;
+                this.sensitive = (s == "true");
+            }
             
 			// Set DataParser;
 			this.SetDataParser();
@@ -287,25 +295,28 @@ namespace Scada.Declare
         private void StartSenderTimer(int interval)
         {
             if (MainApplication.TimerCreator != null)
-            { 
-                this.senderTimer = MainApplication.TimerCreator.CreateTimer(1);
+            {
+                const int MinInterval = 2;
+                this.senderTimer = MainApplication.TimerCreator.CreateTimer(MinInterval);
                 // Trigger every 1s.
                 this.senderTimer.Start(() => 
                 {
                     DateTime rightTime = default(DateTime);
-                    // TODO: If trigger goes here
-                    if (!Device.NowAt30Sec(out rightTime))
+                    if (!this.sensitive)
                     {
-                        return;
-                    }
+                        // TODO: If trigger goes here
+                        if (!Device.NowAt30Sec(out rightTime) || 
+                            rightTime == this.currentActionTime)
+                        {
+                            return;
+                        }
 
-                    if (rightTime == this.currentActionTime)
+                        this.Send(this.actionSend, rightTime);
+                    }
+                    else
                     {
-                        return;
+                        this.Send(this.actionSend, rightTime);
                     }
-
-                    // TODO: Send every 30s. filter when receive data.
-                    this.Send(this.actionSend, rightTime);
                 });
 
             }
@@ -403,14 +414,9 @@ namespace Scada.Declare
                 // if ActionInterval == 0, the time trigger not depends send-time.
                 if (this.actionInterval == 0)
                 {
-                    // DateTime now = DateTime.Now;
                     DateTime rightTime = default(DateTime);
-                    if (!Device.NowAt30Sec(out rightTime))
-                    {
-                        return;
-                    }
-
-                    if (this.currentActionTime == rightTime)
+                    if (!this.recordTimePolicy.NowAtRightTime(out rightTime) ||
+                        this.currentActionTime == rightTime)
                     {
                         return;
                     }
