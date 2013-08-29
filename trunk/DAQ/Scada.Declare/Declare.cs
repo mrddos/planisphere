@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 
@@ -143,6 +144,8 @@ namespace Scada.Declare
         private SendOrPostCallback dataReceived;
 
         private static int MaxDelay = 10;
+
+        public const string ScadaDeclare = "Scada.Declare.";
 
         // Each device follow one time policy.
         public TimePolicy recordTimePolicy = new TimePolicy();
@@ -348,6 +351,53 @@ namespace Scada.Declare
             return false;
         }
 
+        public DataParser GetDataParser(string dataParserClz)
+        {
+            if (!dataParserClz.Contains('.'))
+            {
+                dataParserClz = ScadaDeclare + dataParserClz;
+            }
+            Assembly assembly = Assembly.GetAssembly(typeof(StandardDevice));
+            Type deviceClass = assembly.GetType(dataParserClz);
+            if (deviceClass != null)
+            {
+                object dataParser = Activator.CreateInstance(deviceClass, new object[] { });
+                return (DataParser)dataParser;
+            }
+            return null;
+        }
+
+        protected void SetDataParserFactors(DataParser dataParser, DeviceEntry entry)
+        {
+            int i = 0;
+            double v = 0.0;
+            while (Device.GetFactor(entry, ++i, out v))
+            {
+                dataParser.Factors.Add(v);
+            }
+        }
+
+        protected int GetValue(DeviceEntry entry, string entryName, int defaultValue)
+        {
+            IValue v = entry[entryName];
+            if (v != null)
+            {
+                return (int)(StringValue)v;
+            }
+            return defaultValue;
+        }
+
+        protected string GetValue(DeviceEntry entry, string entryName, string defaultValue)
+        {
+            IValue v = entry[entryName];
+            if (v != null)
+            {
+                return (StringValue)v;
+            }
+            return defaultValue;
+        }
+
+        /*
         public static bool NowAt30Sec(out DateTime rightTime)
         {
             DateTime now = DateTime.Now;
@@ -364,7 +414,7 @@ namespace Scada.Declare
                 return true;
             }
             return false;
-        }
+        }*/
 	}
     // Enc of class Device
 
