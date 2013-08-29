@@ -33,7 +33,7 @@ namespace Scada.Declare
 
 		private int readTimeout = 12000;		//Receive timeout
 
-		private int baudRate = 19200;
+		private int baudRate = 9600;
 
         private int dataBits = 8;
 
@@ -79,8 +79,6 @@ namespace Scada.Declare
 
 		private string error = "No Error";
 
-		private const string ScadaDeclare = "Scada.Declare.";
-
         // private static int MaxDelay = 10;
 
         private DateTime currentActionTime = default(DateTime);
@@ -108,23 +106,10 @@ namespace Scada.Declare
             this.Path = entry[DeviceEntry.Path].ToString();
 			this.Version = entry[DeviceEntry.Version].ToString();
 
-			IValue baudRate = entry[DeviceEntry.BaudRate];
-			if (baudRate != null)
-			{
-				this.baudRate = (StringValue)baudRate;
-			}
-
-			IValue readTimeout = entry[DeviceEntry.ReadTimeout];
-			if (readTimeout != null)
-			{
-				this.readTimeout = (StringValue)readTimeout;
-			}
-
-			IValue dataBits = entry[DeviceEntry.DataBits];
-			this.dataBits = (dataBits != null) ? (StringValue)dataBits : ComDataBits;
-
-			StringValue stopBits = (StringValue)entry[DeviceEntry.StopBits];
-			this.stopBits = (stopBits != null) ? (StopBits)(int)stopBits : StopBits.One;
+            this.baudRate = this.GetValue(entry, DeviceEntry.BaudRate, 9600);
+            this.readTimeout = this.GetValue(entry, DeviceEntry.ReadTimeout, 12000);        
+            this.dataBits = this.GetValue(entry, DeviceEntry.DataBits, ComDataBits);
+            this.stopBits = (StopBits)this.GetValue(entry, DeviceEntry.StopBits, (int)StopBits.One);
 
 			StringValue parity = (StringValue)entry[DeviceEntry.Parity];
 			this.parity = SerialPorts.ParseParity(parity);
@@ -158,29 +143,18 @@ namespace Scada.Declare
 
 			this.actionDelay = (StringValue)entry[DeviceEntry.ActionDelay];
 
-            var actionInterval = entry[DeviceEntry.ActionInterval];
-            if (actionInterval != null)
-            {
-                this.actionInterval = (StringValue)actionInterval;
-            }
+            const int DefaultRecordInterval = 30;
+            this.actionInterval = this.GetValue(entry, DeviceEntry.ActionInterval, DefaultRecordInterval);
+            this.RecordInterval = this.GetValue(entry, DeviceEntry.RecordInterval, DefaultRecordInterval);
+            this.recordTimePolicy.Interval = this.RecordInterval;
 
-            // If the config file over write this value.
-            var recordInterval = entry[DeviceEntry.RecordInterval];
-            if (recordInterval != null)
-            {
-                this.RecordInterval = (StringValue)recordInterval;
-                this.recordTimePolicy.Interval = this.RecordInterval;
-            }
-
-            var sensitive = entry[DeviceEntry.Sensitive];
-            if (sensitive != null)
-            {
-                string s = (StringValue)sensitive;
-                this.sensitive = (s == "true");
-            }
+            var sensitive = this.GetValue(entry, DeviceEntry.Sensitive, "false");
+            this.sensitive = (sensitive.ToLower() == "true");
             
-			// Set DataParser;
-			this.SetDataParser();
+			// Set DataParser & factors
+            string dataParserClz = (StringValue)entry[DeviceEntry.DataParser];
+            this.dataParser = this.GetDataParser(dataParserClz);
+            this.SetDataParserFactors(this.dataParser, entry);
 
 			string tableName = (StringValue)entry[DeviceEntry.TableName];
 			string tableFields = (StringValue)entry[DeviceEntry.TableFields];
@@ -304,17 +278,18 @@ namespace Scada.Declare
                     DateTime rightTime = default(DateTime);
                     if (!this.sensitive)
                     {
-                        // TODO: If trigger goes here
-                        if (!Device.NowAt30Sec(out rightTime) || 
+                        if (!TimePolicy.At30Sec(DateTime.Now, out rightTime) || 
                             rightTime == this.currentActionTime)
                         {
                             return;
                         }
 
+                        // Send every 30 seconds.
                         this.Send(this.actionSend, rightTime);
                     }
                     else
                     {
+                        // Send every MinInterval seconds.
                         this.Send(this.actionSend, rightTime);
                     }
                 });
@@ -503,21 +478,6 @@ namespace Scada.Declare
             }
         }
 
-
-		public override void Stop()
-		{
-            if (this.senderTimer != null)
-            {
-                this.senderTimer.Close();
-            }
-
-            if (this.serialPort != null && this.IsOpen)
-            {
-                this.serialPort.Close();
-            }
-			// 
-		}
-
 		public override void Send(byte[] action, DateTime time)
 		{
 			if (this.serialPort != null && this.IsOpen)
@@ -527,18 +487,32 @@ namespace Scada.Declare
                     // RecordManager.DoSystemEventRecord(this, Encoding.ASCII.GetString(action));
                     this.currentActionTime = time;
 					this.serialPort.Write(action, 0, action.Length);
-				}
-				else
+                }
+                #region Virtual-Device
+                else
 				{
-                    // Virtual-Device
                     this.currentActionTime = time;
-                    this.OnSendDataToVirtualDevice(action);					
-				}
-			}
+                    this.OnSendDataToVirtualDevice(action);
+                }
+                #endregion
+            }
 		}
 
-        // Virtual !!
-		private void OnSendDataToVirtualDevice(byte[] action)
+        public override void Stop()
+        {
+            if (this.senderTimer != null)
+            {
+                this.senderTimer.Close();
+            }
+
+            if (this.serialPort != null && this.IsOpen)
+            {
+                this.serialPort.Close();
+            }
+        }
+
+#region virtual-device
+        private void OnSendDataToVirtualDevice(byte[] action)
         {
             if (Bytes.Equals(action, this.actionSend))
             {
@@ -570,30 +544,6 @@ namespace Scada.Declare
 				return Encoding.ASCII.GetBytes(this.exampleLine);
 			}
         }
-
-		private void SetDataParser()
-		{
-			string dataParserClz = (StringValue)entry[DeviceEntry.DataParser];
-			if (!dataParserClz.Contains('.'))
-			{
-				dataParserClz = ScadaDeclare + dataParserClz;
-			}
-			Assembly assembly = Assembly.GetAssembly(typeof(StandardDevice));
-			Type deviceClass = assembly.GetType(dataParserClz);
-			if (deviceClass != null)
-			{
-				object dataParser = Activator.CreateInstance(deviceClass, new object[] { });
-				this.dataParser = (DataParser)dataParser;
-
-                int i = 0;
-                double v = 0.0;
-                while (Device.GetFactor(entry, ++i, out v))
-                {
-                    this.dataParser.Factors.Add(v);
-                }
-
-			}
-		}
-		
+#endregion
 	}
 }
