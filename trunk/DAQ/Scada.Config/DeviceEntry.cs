@@ -105,7 +105,7 @@ namespace Scada.Config
         /// <param name="deviceName"></param>
         /// <param name="configFile"></param>
         /// <returns></returns>
-        public static DeviceEntry ReadConfigFile(string deviceName, string configFile)
+        public static DeviceEntry GetDeviceEntry(string deviceName, string configFile)
         {
             return DeviceEntry.LoadFromConfig(deviceName, configFile);
         }
@@ -138,33 +138,8 @@ namespace Scada.Config
                 // Path
                 entry[DeviceEntry.Path] = new StringValue(devicePath);
                 entry[DeviceEntry.Identity] = new StringValue(deviceName);
-
-                // Virtual 
-                string virtualDeviceFlagFile = devicePath + "\\virtual-device";
-                if (File.Exists(virtualDeviceFlagFile))
-                {
-                    /*
-                    string caption = "连接虚拟设备提示";
-                    string message = string.Format("是否要连接 '{0}' 的虚拟设备，连接虚拟设备点击‘是’，\n连接真实设备点击‘否’", deviceName);
-                    DialogResult dr = MessageBox.Show(message, caption, MessageBoxButtons.YesNo);
-                    if (dr == DialogResult.Yes)
-                    {
-                        entry[DeviceEntry.Virtual] = new StringValue("true");
-                    }
-                    else
-                    {
-                        entry[DeviceEntry.Virtual] = new StringValue("false");
-
-                        string deleteVirtualFileMsg = string.Format("是否要删除 '{0}' 的虚拟设备标志文件？", deviceName);
-                        DialogResult del = MessageBox.Show(deleteVirtualFileMsg, caption, MessageBoxButtons.YesNo);
-                        if (del == DialogResult.Yes)
-                        {
-                            File.Delete(virtualDeviceFlagFile);
-                        }
-
-                    }
-                    */
-                }
+ 
+                
                 return entry;
             }
         }

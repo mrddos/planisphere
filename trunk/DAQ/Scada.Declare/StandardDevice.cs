@@ -283,7 +283,7 @@ namespace Scada.Declare
                         {
                             return;
                         }
-
+                        this.currentActionTime = rightTime;
                         // Send every 30 seconds.
                         this.Send(this.actionSend, rightTime);
                     }
@@ -385,6 +385,12 @@ namespace Scada.Declare
                     return;
 				}
 
+                // For Sensitive data!
+                if (this.sensitive)
+                {
+
+                }
+
                 // Defect: HPIC need check the right time here.
                 // if ActionInterval == 0, the time trigger not depends send-time.
                 if (this.actionInterval == 0)
@@ -398,10 +404,6 @@ namespace Scada.Declare
 
                     this.currentActionTime = rightTime;
                 }
-                else
-                {
-
-                }
 
                 DeviceData dd;
                 if (!this.GetDeviceData(line, this.currentActionTime, out dd))
@@ -409,12 +411,7 @@ namespace Scada.Declare
                     return;
                 }
 
-                DateTime recordTime;
-                if (!this.recordTimePolicy.NowAtRightTime(out recordTime))
-                {
-                    return;
-                }
-
+                // Post to Main thread to record.
                 dd.OriginData = Encoding.ASCII.GetString(line);
                 this.SynchronizationContext.Post(this.DataReceived, dd);
 			}

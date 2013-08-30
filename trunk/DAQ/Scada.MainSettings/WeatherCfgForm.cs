@@ -46,7 +46,7 @@ namespace Scada.MainSettings
         private void WeatherCfgForm_Load(object sender, EventArgs e)
         {
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
+            DeviceEntry entry = DeviceEntry.GetDeviceEntry(TheDeviceKey, filePath);
 
             this.Loaded(this.settings);
 

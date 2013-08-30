@@ -330,8 +330,8 @@ namespace Scada.Main
                 // TODO: Config file reading
                 if (deviceCfgFile != null)
                 {
-                    DeviceEntry entry = DeviceEntry.ReadConfigFile(context.DeviceName, deviceCfgFile);
-
+                    DeviceEntry entry = DeviceEntry.GetDeviceEntry(context.DeviceName, deviceCfgFile);
+                    this.CheckVirtualDevice(entry, deviceCfgFile);
                     Device device = Load(entry);
                     if (device != null)
                     {
@@ -355,6 +355,32 @@ namespace Scada.Main
             }
 
             return false;
+        }
+
+        private void CheckVirtualDevice(DeviceEntry entry, string configFile)
+        {
+            string deviceDisplayName = (StringValue)entry[DeviceEntry.Name];
+            string caption = "连接虚拟设备提示";
+            string message = string.Format("是否要连接 '{0}' 的虚拟设备，连接虚拟设备点击‘是’，\n连接真实设备点击‘否’", deviceDisplayName);
+            DialogResult dr = MessageBox.Show(message, caption, MessageBoxButtons.YesNo);
+            if (dr == DialogResult.Yes)
+            {
+                entry[DeviceEntry.Virtual] = new StringValue("true");
+            }
+            else
+            {
+                entry[DeviceEntry.Virtual] = new StringValue("false");
+
+                string deleteVirtualFileMsg = string.Format("是否要删除 '{0}' 的虚拟设备标志文件？", deviceDisplayName);
+                DialogResult del = MessageBox.Show(deleteVirtualFileMsg, caption, MessageBoxButtons.YesNo);
+                if (del == DialogResult.Yes)
+                {
+                    DirectoryInfo di = Directory.GetParent(configFile);
+                    string virtualDeviceFlagFile = string.Format("{0}\\virtual-device", di.FullName);
+
+                    File.Delete(virtualDeviceFlagFile);
+                }
+            }
         }
 
 		public void Initialize()
