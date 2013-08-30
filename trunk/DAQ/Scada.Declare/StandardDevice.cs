@@ -278,7 +278,7 @@ namespace Scada.Declare
                     DateTime rightTime = default(DateTime);
                     if (!this.sensitive)
                     {
-                        if (!TimePolicy.At30Sec(DateTime.Now, out rightTime) || 
+                        if (!this.recordTimePolicy.NowAtRightTime(out rightTime) || 
                             rightTime == this.currentActionTime)
                         {
                             return;
