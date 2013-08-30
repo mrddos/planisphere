@@ -45,7 +45,7 @@ namespace Scada.MainSettings
         {
             // 
             string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            DeviceEntry entry = DeviceEntry.ReadConfigFile(TheDeviceKey, filePath);
+            DeviceEntry entry = DeviceEntry.GetDeviceEntry(TheDeviceKey, filePath);
 
 
 
