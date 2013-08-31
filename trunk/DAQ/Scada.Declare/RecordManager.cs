@@ -137,6 +137,7 @@ namespace Scada.Declare
 			FileStream stream = RecordManager.GetLogFileStream(device, now);
 			string time = string.Format("[{0:HH:mm:ss}] ", now);
 			StringBuilder sb = new StringBuilder(time);
+            sb.Append(string.Format(" <{0}> ", recordType.ToString()));
 			sb.Append(content);
 			sb.Append("\r\n");
 			string line = sb.ToString();
