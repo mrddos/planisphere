@@ -90,7 +90,6 @@ namespace Scada.Main
         [STAThread]
         static void Main(string[] args)
         {
-            // 
             Program.DeviceManager.Args = args;
 
             /*
