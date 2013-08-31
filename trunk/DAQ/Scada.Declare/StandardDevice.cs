@@ -229,12 +229,10 @@ namespace Scada.Declare
 					}
 					else
 					{
-                        if (this.actionSend != null && this.actionSend.Length > 0)
-                        {
-                            this.Send(this.actionSend, default(DateTime));
-                        }
+                        this.Send(this.actionSend, default(DateTime));
 					}
-                    SetStartStatus();
+                    // Set status of starting.
+                    PostStartStatus();
 
 
                     /* TODO: Remove after test.
@@ -425,7 +423,7 @@ namespace Scada.Declare
 			}
 		}
 
-        private void SetStartStatus()
+        private void PostStartStatus()
         {
             DeviceData dd = new DeviceData(this, null);
             
@@ -477,6 +475,11 @@ namespace Scada.Declare
 
 		public override void Send(byte[] action, DateTime time)
 		{
+            if (action == null || action.Length == 0)
+            {
+                return;
+            }
+
 			if (this.serialPort != null && this.IsOpen)
 			{
 				if (this.IsRealDevice)

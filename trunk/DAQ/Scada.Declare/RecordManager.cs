@@ -10,6 +10,15 @@ using System.Threading;
 
 namespace Scada.Declare
 {
+    public enum RecordType
+    {
+        Data,
+        Origin,
+        Event,
+        Notice,
+        Error,
+    }
+
 	public static class RecordManager
 	{
 		private static MySQLRecord mysql = null;
@@ -74,9 +83,9 @@ namespace Scada.Declare
 			}
 		}
 
-		public static void DoSystemEventRecord(Device device, string systemEvent)
+        public static void DoSystemEventRecord(Device device, string systemEvent, RecordType recordType = RecordType.Event)
 		{
-			RecordManager.WriteDataToLog(device, systemEvent);
+			RecordManager.WriteDataToLog(device, systemEvent, recordType);
 
 			if (analysisToolOpen)
 			{
@@ -90,10 +99,10 @@ namespace Scada.Declare
             if (deviceData.OriginData != null && deviceData.OriginData.Length > 0)
             {
                 string originLine = deviceData.OriginData;
-                RecordManager.WriteDataToLog(deviceData.Device, originLine.Trim());
+                RecordManager.WriteDataToLog(deviceData.Device, originLine.Trim(), RecordType.Origin);
             }
 			string line = RecordManager.PackDeviceData(deviceData);
-			RecordManager.WriteDataToLog(deviceData.Device, line);
+			RecordManager.WriteDataToLog(deviceData.Device, line, RecordType.Data);
             if (analysisToolOpen)
             {
                 SendToAnalysisWindow(line);
@@ -122,7 +131,7 @@ namespace Scada.Declare
             return sb.ToString();
         }
 
-		private static void WriteDataToLog(Device device, string content)
+		private static void WriteDataToLog(Device device, string content, RecordType recordType)
 		{
 			DateTime now = DateTime.Now;
 			FileStream stream = RecordManager.GetLogFileStream(device, now);
