@@ -73,6 +73,9 @@ namespace Scada.Config
 
         public const string ExampleLine = "ExampleLine";
 
+        public const string Alarm1 = "Alarm1";
+
+        public const string Alarm2 = "Alarm2";
 
         private Dictionary<string, IValue> dict = new Dictionary<string, IValue>();
 

@@ -8,22 +8,23 @@ using System.Text;
 
 namespace Scada.MainSettings
 {
-    public class SerialPortSetting
+    public class CommonSettings
     {
-        private string serialPort = "COM1";
+        private int frequence = 60;
 
-        [Category("串口")]
-        [TypeConverter(typeof(SerialPortConverter))]
-        [DisplayName("串口")]
-        public string SerialPort
+        [Category("Common")]
+        [DisplayName("采集频率")]
+        [DefaultValue(60)]
+        [TypeConverter(typeof(FrequenceConverter))]
+        public int Frequence
         {
-            get 
-            { 
-                return this.serialPort; 
+            get
+            {
+                return this.frequence;
             }
             set
             {
-                this.serialPort = value;
+                this.frequence = value;
             }
         }
     }
@@ -106,8 +107,24 @@ namespace Scada.MainSettings
     /// 1
     /// </summary>
     [DefaultProperty("AlertValue")]  
-    public class HpicSettings : SerialPortSetting
+    public class HpicSettings : CommonSettings
     {
+        private string serialPort = "COM1";
+
+        [Category("Common")]
+        [TypeConverter(typeof(SerialPortConverter))]
+        [DisplayName("串口")]
+        public virtual string SerialPort
+        {
+            get
+            {
+                return this.serialPort;
+            }
+            set
+            {
+                this.serialPort = value;
+            }
+        }
 
         [Category("高压电离室")]
         [DisplayName("剂量率因子")]
@@ -121,62 +138,63 @@ namespace Scada.MainSettings
         [Category("报警")]
         [DisplayName("剂量率报警阀值")]
         [DefaultValue(100.0)]
-        public double AlertValue
+        public double AlarmValue
         {
             get;
             set;
         }
 
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
-        {
-            get;
-            set;
-        }
     }
 
     /// <summary>
     /// 2
     /// </summary>
-    public class WeatherSettings : SerialPortSetting
+    public class WeatherSettings : CommonSettings
     {
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
+        private string serialPort = "COM1";
+
+        [Category("Common")]
+        [TypeConverter(typeof(SerialPortConverter))]
+        [DisplayName("串口")]
+        public virtual string SerialPort
         {
-            get;
-            set;
+            get
+            {
+                return this.serialPort;
+            }
+            set
+            {
+                this.serialPort = value;
+            }
         }
+
+
     }
 
     /// <summary>
     /// 3
     /// </summary>
-    public class MdsSettings
+    public class MdsSettings : CommonSettings
     {
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
+        [Category("超大流量采样器")]
+        [DisplayName("剂量率因子")]
+        [DefaultValue(1.0)]
+        public double Factor
         {
             get;
             set;
-        }
+        } 
     }
 
     /// <summary>
     /// 4
     /// </summary>
-    public class AisSettings
+    public class AisSettings : CommonSettings
     {
-
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
+        [Category("碘采样器")]
+        [DisplayName("剂量率因子")]
+        [DefaultValue(1.0)]
+        public double Factor
         {
             get;
             set;
@@ -186,45 +204,80 @@ namespace Scada.MainSettings
     /// <summary>
     /// 5
     /// </summary>
-    public class NaISettings
+    public class NaISettings : CommonSettings
     {
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
+        // Hidden
+        private string deviceSn = "sara";
+
+        private string ipAddress = "http://192.168.0.1/spectra/";
+
+        private int minuteAdjust = 0;
+
+        [DisplayName("设备编号")]
+        public string DeviceSn
         {
-            get;
-            set;
+            get { return this.deviceSn; }
+            set { this.deviceSn = value; }
+        }
+
+        [DisplayName("网络地址")]
+        public string IPAddress
+        {
+            get { return this.ipAddress; }
+            set { this.ipAddress = value; }
+        }
+
+        [DisplayName("时间偏移(分钟)")]
+        public int MinuteAdjust
+        {
+            get { return this.minuteAdjust; }
+            set { this.minuteAdjust = value; }
         }
     }
 
     /// <summary>
     /// 6
     /// </summary>
-    public class DwdSettings : SerialPortSetting
+    public class DwdSettings : CommonSettings
     {
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
+        private string serialPort = "COM1";
+
+        [Category("Common")]
+        [TypeConverter(typeof(SerialPortConverter))]
+        [DisplayName("串口")]
+        public virtual string SerialPort
         {
-            get;
-            set;
+            get
+            {
+                return this.serialPort;
+            }
+            set
+            {
+                this.serialPort = value;
+            }
         }
     }
 
     /// <summary>
     /// 7
     /// </summary>
-    public class ShelterSettings : SerialPortSetting
+    public class ShelterSettings : CommonSettings
     {
-        [DisplayName("采集频率")]
-        [DefaultValue(60)]
-        [TypeConverter(typeof(FrequenceConverter))]
-        public int Frequence
+        private string serialPort = "COM1";
+
+        [Category("Common")]
+        [TypeConverter(typeof(SerialPortConverter))]
+        [DisplayName("串口")]
+        public virtual string SerialPort
         {
-            get;
-            set;
+            get
+            {
+                return this.serialPort;
+            }
+            set
+            {
+                this.serialPort = value;
+            }
         }
     }
 }

@@ -16,12 +16,14 @@ namespace Scada.MainSettings
 		[STAThread]
 		static void Main()
 		{
+            /*
+             * Test Code:
             string a = GetDeviceConfigFile("scada.hpic");
             ScadaWriter sw = new ScadaWriter(a);
 
             sw.WriteLine("factor1", new StringValue("2"));
             sw.Commit();
-
+            */
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);

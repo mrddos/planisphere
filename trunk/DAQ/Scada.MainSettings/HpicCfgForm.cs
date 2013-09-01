@@ -13,63 +13,52 @@ namespace Scada.MainSettings
 {
     public partial class HpicCfgForm : SettingFormBase, IApply
     {
-        // Device Key
         const string TheDeviceKey = "scada.hpic";
 
-        private HpicSettings settings = new HpicSettings();
-
-        private string serialPort = "COM1";
-
-        // private string factor1;
+        private HpicSettings settings = null;
 
         public HpicCfgForm()
         {
             InitializeComponent();
         }
 
-        private void comboBoxPort_SelectedIndexChanged(object sender, EventArgs e)
+        protected override string GetDeviceKey()
         {
-
+            return TheDeviceKey;
         }
 
         private void HpicCfgForm_Load(object sender, EventArgs e)
         {
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            DeviceEntry entry = DeviceEntry.GetDeviceEntry(TheDeviceKey, filePath);
-
-            this.Loaded(this.settings);
+            this.Loaded();
+            this.settings = (HpicSettings)this.Reset();
         }
 
-
-
+        protected override object BuildSettings(DeviceEntry entry)
+        {
+            HpicSettings settings = new HpicSettings();
+            settings.SerialPort = (StringValue)entry[DeviceEntry.SerialPort];
+            settings.Frequence = (StringValue)entry[DeviceEntry.RecordInterval];
+            settings.Factor = (StringValue)entry["factor1"];
+            settings.AlarmValue = (StringValue)entry[DeviceEntry.Alarm1];
+            return settings;
+        }
 
 
 
         public void Apply()
         {
-            // this.serialPort = this.comboBoxPort.Text;
-            // this.factor1 = this.textBoxFactor.Text;
-
-
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            using (ScadaWriter sw = new ScadaWriter(filePath))
+            this.settings = (HpicSettings)this.Apply(new Dictionary<string, string> 
             {
-                sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
-                // sw.WriteLine("factor1", this.factor1);
-
-                sw.Commit();
-            }
-
+                {DeviceEntry.SerialPort, this.settings.SerialPort},
+                {DeviceEntry.RecordInterval, this.settings.Frequence.ToString()},
+                {DeviceEntry.Alarm1, this.settings.AlarmValue.ToString()},
+                {"factor1", this.settings.Factor.ToString()}
+            });
         }
 
         public void Cancel()
         {
-
-        }
-
-        private void propertyGrid_Click(object sender, EventArgs e)
-        {
-
+            this.settings = (HpicSettings)this.Reset();
         }
     }
 

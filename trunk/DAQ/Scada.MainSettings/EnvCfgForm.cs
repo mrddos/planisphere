@@ -25,30 +25,37 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-
-
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            using (ScadaWriter sw = new ScadaWriter(filePath))
+            this.settings = (ShelterSettings)this.Apply(new Dictionary<string, string>
             {
-                // sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
+                {DeviceEntry.SerialPort, this.settings.SerialPort},
+                {DeviceEntry.RecordInterval, this.settings.Frequence.ToString()}
+            });
 
-                sw.Commit();
-            }
         }
 
         public void Cancel()
         {
-            // this.comboBoxPort.Text = this.serialPort;
+            this.settings = (ShelterSettings)this.Reset();
         }
 
         private void EnvCfgForm_Load(object sender, EventArgs e)
         {
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            DeviceEntry entry = DeviceEntry.GetDeviceEntry(TheDeviceKey, filePath);
+            this.Loaded();
+            this.settings = (ShelterSettings)this.Reset();
+        }
 
 
+        protected override string GetDeviceKey()
+        {
+            return TheDeviceKey;
+        }
 
-            this.Loaded(this.settings);
+        protected override object BuildSettings(DeviceEntry entry)
+        {
+            ShelterSettings settings = new ShelterSettings();
+            settings.SerialPort = (StringValue)entry[DeviceEntry.SerialPort];
+            settings.Frequence = (StringValue)entry[DeviceEntry.RecordInterval];
+            return settings;
         }
     }
 }
