@@ -24,33 +24,39 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-
-
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            using (ScadaWriter sw = new ScadaWriter(filePath))
+            this.settings = (DwdSettings)this.Apply(new Dictionary<string, string>
             {
-                // sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
-
-                sw.Commit();
-            }
-
+                {DeviceEntry.SerialPort, this.settings.SerialPort},
+                {DeviceEntry.RecordInterval, this.settings.Frequence.ToString()}
+            });
         }
 
         public void Cancel()
         {
-            // this.comboBoxPort.Text = this.serialPort;
+            this.settings = (DwdSettings)this.Reset();
         }
 
         private void DwdCfgForm_Load(object sender, EventArgs e)
         {
-            // 
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            DeviceEntry entry = DeviceEntry.GetDeviceEntry(TheDeviceKey, filePath);
-
-
-
-
-            this.Loaded(this.settings);
+            this.Loaded();
+            this.settings = (DwdSettings)this.Reset();
         }
+
+        protected override string GetDeviceKey()
+        {
+            return TheDeviceKey;
+        }
+
+        protected override object BuildSettings(DeviceEntry entry)
+        {
+            DwdSettings settings = new DwdSettings();
+            settings.Frequence = (StringValue)entry[DeviceEntry.RecordInterval];
+            settings.SerialPort = (StringValue)entry[DeviceEntry.SerialPort];
+            
+            return settings;
+        }
+
+
+
     }
 }

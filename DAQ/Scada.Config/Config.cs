@@ -74,6 +74,11 @@ namespace Scada.Config
         {
             return (sv != null) ? int.Parse(sv.ToString()) : int.MaxValue;
         }
+
+        public static implicit operator double(StringValue sv)
+        {
+            return (sv != null) ? double.Parse(sv.ToString()) : double.MaxValue;
+        }
     }
 
     public class ArrayValue : IValue

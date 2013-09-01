@@ -15,8 +15,8 @@ namespace Scada.MainSettings
     {
         const string TheDeviceKey = "scada.weather";
 
+        private WeatherSettings settings = new WeatherSettings();
 
-        private string serialPort = "COM1";
 
         public WeatherCfgForm()
         {
@@ -25,31 +25,36 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-            // this.serialPort = this.comboBoxPort.Text;
-
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            using (ScadaWriter sw = new ScadaWriter(filePath))
+            this.settings = (WeatherSettings)this.Apply(new Dictionary<string, string>
             {
-                sw.WriteLine(DeviceEntry.SerialPort, this.serialPort);
-
-                sw.Commit();
-            }
+                {DeviceEntry.SerialPort, this.settings.SerialPort},
+                {DeviceEntry.RecordInterval, this.settings.Frequence.ToString()}
+            });
         }
 
         public void Cancel()
         {
-            // this.comboBoxPort.Text = this.serialPort;
+            this.settings = (WeatherSettings)this.Reset();
         }
-
-        private WeatherSettings settings = new WeatherSettings();
 
         private void WeatherCfgForm_Load(object sender, EventArgs e)
         {
-            string filePath = Program.GetDeviceConfigFile(TheDeviceKey);
-            DeviceEntry entry = DeviceEntry.GetDeviceEntry(TheDeviceKey, filePath);
+            this.Loaded();
+            this.settings = (WeatherSettings)this.Reset();
+        }
 
-            this.Loaded(this.settings);
 
+        protected override string GetDeviceKey()
+        {
+            return TheDeviceKey;
+        }
+
+        protected override object BuildSettings(DeviceEntry entry)
+        {
+            WeatherSettings settings = new WeatherSettings();
+            settings.SerialPort = (StringValue)entry[DeviceEntry.SerialPort];
+            settings.Frequence = (StringValue)entry[DeviceEntry.RecordInterval];
+            return settings;
         }
     }
 }

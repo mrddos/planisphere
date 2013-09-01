@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Scada.Config;
 
 namespace Scada.MainSettings
 {
@@ -18,21 +19,40 @@ namespace Scada.MainSettings
 
         public void Apply()
         {
-            throw new NotImplementedException();
+            this.settings = (MdsSettings)this.Apply(new Dictionary<string, string>
+            {
+                {"factor1", this.settings.Factor.ToString()},
+                {DeviceEntry.RecordInterval, this.settings.Frequence.ToString()}
+            });
+ 
         }
 
         public void Cancel()
         {
-            throw new NotImplementedException();
+            this.settings = (MdsSettings)this.Reset();
         }
 
         private void MdsCfgForm_Load(object sender, EventArgs e)
         {
-            this.Loaded(this.settings);
+            this.Loaded();
+            this.settings = (MdsSettings)this.Reset();
         }
 
+        const string TheDeviceKey = "scada.hvsampler";
 
         private MdsSettings settings = new MdsSettings();
 
+        protected override string GetDeviceKey()
+        {
+            return TheDeviceKey;
+        }
+
+        protected override object BuildSettings(DeviceEntry entry)
+        {
+            MdsSettings settings = new MdsSettings();
+            settings.Factor = (StringValue)entry["factor1"];
+            settings.Frequence = (StringValue)entry[DeviceEntry.RecordInterval];
+            return settings;
+        }
     }
 }
