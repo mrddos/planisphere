@@ -4,8 +4,8 @@
 	<datacenters>
 		
 
+		<datacenter ip="122.224.74.82" port="13812" wirelessip="" wirelessport="7000" type="1"/>
 
-		<datacenter ip="122.224.74.82" port="13812" wirelessip="" wirelessport="7000"/>
 		<!--
 
 		<datacenter ip="122.224.74.82" port="6700" wirelessip="" wirelessport="7000" type="1"/>
