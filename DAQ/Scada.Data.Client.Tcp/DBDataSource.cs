@@ -8,6 +8,7 @@ namespace Scada.DataCenterAgent
     using MySql.Data.MySqlClient;
     using System.Data.SqlTypes;
     using System.IO;
+    using System.Threading;
     
     /// <summary>
     /// Each Device has a Listener.
@@ -104,51 +105,58 @@ namespace Scada.DataCenterAgent
             string tableName = Settings.Instance.GetTableName(deviceKey);
 
             this.cmd.CommandText = this.GetSelectStatement(tableName, time);
-            using (MySqlDataReader reader = this.cmd.ExecuteReader())
+            try
             {
-                if (reader.Read())
+                using (MySqlDataReader reader = this.cmd.ExecuteReader())
                 {
-                    // Must Has an Id.
-                    string id = reader.GetString(Id);
-                    id = id.Trim();
-
-                    if (string.IsNullOrEmpty(id))
+                    if (reader.Read())
                     {
-                        return null;
+                        // Must Has an Id.
+                        string id = reader.GetString(Id);
+                        id = id.Trim();
+
+                        if (string.IsNullOrEmpty(id))
+                        {
+                            return null;
+                        }
+
+                        ret.Add(Id, id);
+
+                        List<Settings.DeviceCode> codes = Settings.Instance.GetCodes(deviceKey);
+
+                        string dataTime = reader.GetString("Time");
+                        ret.Add("time", dataTime);
+                        foreach (var c in codes)
+                        {
+                            if (code != null && code != c.Code)
+                            {
+                                continue;
+                            }
+                            string field = c.Field.ToLower();
+                            try
+                            {
+                                string v = reader.GetString(field);
+                                ret.Add(c.Code, v);
+                            }
+                            catch (SqlNullValueException)
+                            {
+                                // TODO: Has Null Value
+                                ret.Add(c.Code, string.Empty);
+                            }
+                            catch (Exception)
+                            {
+                                // No this field.
+                            }
+                        }
+
+
+
                     }
-
-                    ret.Add(Id, id);
-
-                    List<Settings.DeviceCode> codes = Settings.Instance.GetCodes(deviceKey);
-
-                    string dataTime = reader.GetString("Time");
-                    ret.Add("time", dataTime);
-                    foreach (var c in codes)
-                    {
-                        if (code != null && code != c.Code)
-                        {
-                            continue;
-                        }
-                        string field = c.Field.ToLower();
-                        try
-                        {
-                            string v = reader.GetString(field);
-                            ret.Add(c.Code, v);
-                        }
-                        catch (SqlNullValueException)
-                        {
-                            // TODO: Has Null Value
-                            ret.Add(c.Code, string.Empty);
-                        }
-                        catch (Exception)
-                        {
-                            // No this field.
-                        }
-                    }
-                    
-
-
                 }
+            }
+            catch (Exception e)
+            {
+                Thread.Sleep(500);
             }
 
             return ret;
