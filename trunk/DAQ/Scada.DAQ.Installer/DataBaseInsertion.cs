@@ -133,6 +133,7 @@ namespace Scada.DAQ.Installer
             }
             else if (this.device.ToLower() == "nai")
             {
+                // TODO: 
                 t = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
                 cmd.CommandText = "insert into nai_rec(time, StartTime, EndTime, Coefficients, ChannelData, DoseRate, Temperature,HighVoltage,NuclideFound,EnergyFromPosition) values(@1, @2, @3, @4, '1 1 1 1 1 1 1', @5, 24, 400.1, 1, 1460.83)";
                 cmd.Parameters.AddWithValue("@1", t);
@@ -145,6 +146,19 @@ namespace Scada.DAQ.Installer
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
             }
+            else if (this.device.ToLower() == "mds")
+            {
+
+            }
+            else if (this.device.ToLower() == "ais")
+            {
+
+            }
+            else if (this.device.ToLower() == "dwd")
+            {
+
+            }
+
         }
 
         

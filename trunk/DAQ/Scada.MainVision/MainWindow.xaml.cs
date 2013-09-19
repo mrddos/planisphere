@@ -60,7 +60,8 @@ namespace Scada.MainVision
 		{
 			if (connectedToDataBase)
 			{
-				this.dataProvider = new DBDataProvider();
+                DBDataProvider.Instance = new DBDataProvider(); ;
+                this.dataProvider = DBDataProvider.Instance;
 			}
 			else
 			{

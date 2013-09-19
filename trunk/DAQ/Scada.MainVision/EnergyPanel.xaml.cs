@@ -26,16 +26,18 @@ namespace Scada.MainVision
 
         private DeviceEntry entry;
 
+        private static int[] EmptyIntArray = new int[0];
+
         public EnergyPanel()
         {
             InitializeComponent();
+            /*
             this.deviceNaIFilesPath = GetDeviceNaiPath();
-
             this.entry = DeviceEntry.GetDeviceEntry("Scada.NaIDevice", deviceNaIFilesPath + "\\device.cfg");
-            // Code for test.
-            GetNaICannelData(DateTime.Parse("2013-08-12 20:40:00"));
+            **/ 
         }
 
+        /*
         public static string InstallPath
         {
             get 
@@ -66,54 +68,48 @@ namespace Scada.MainVision
         {
             return string.Format("{0}-{1:D2}", date.Year, date.Month);
         }
+        */
         
         public int[] GetNaICannelData(DateTime time)
         {
-            string fileName = this.GetFileName(time);
-            string datePath = this.GetDatePath(time);
-            string filePath = string.Format("{0}\\{1}\\{2}", deviceNaIFilesPath, datePath, fileName);
-
-            if (File.Exists(filePath))
+            string cdLine = DBDataProvider.Instance.GetNaIDeviceChannelData(time);
+            cdLine = cdLine.Trim();
+            if (cdLine.Length > 0)
             {
-                string content = string.Empty;
-                using (StreamReader fs = new StreamReader(filePath))
+                string[] cd = cdLine.Split(' ');
+
+                int[] ret = new int[cd.Length];
+                for (int i = 0; i < cd.Length; ++i)
                 {
-                    content = fs.ReadToEnd();
-
-                    int f = content.IndexOf("<ChannelData>", StringComparison.OrdinalIgnoreCase);
-                    int e = content.IndexOf("</ChannelData>", f, StringComparison.OrdinalIgnoreCase);
-                    if (f > 0 && e > f)
+                    int v;
+                    if (int.TryParse(cd[i], out v))
                     {
-                        string cdLine = content.Substring(f + 13, e - f - 13);
-                        cdLine = cdLine.Trim();
-                        string[] cd = cdLine.Split(' ');
-
-                        int[] ret = new int[cd.Length];
-                        for (int i = 0; i < cd.Length; ++i)
-                        {
-                            int v;
-                            if (int.TryParse(cd[i], out v))
-                            {
-                                ret[i] = v;
-                            }
-                            else
-                            {
-                                ret[i] = 0;
-                            }
-                        }
-                        return ret;
+                        ret[i] = v;
+                    }
+                    else
+                    {
+                        ret[i] = 0;
                     }
                 }
+                return ret;
             }
-
-            return new int[0];
+            return EmptyIntArray;
         }
 
 
         //private
         internal void UpdateEnergyGraphByTime(DateTime time)
         {
-            
+            int[] data = this.GetNaICannelData(time);
+            if (data.Length > 0)
+            {
+                // TODO: show the energy data in chart.
+                // TODO: Chart...
+            }
+            else
+            {
+                // TODO: 文件不存在; But maybe data exists in DB.
+            }
         }
     }
 }

@@ -12,7 +12,6 @@ namespace Scada.MainVision
     using System.IO;
     using System.Reflection;
 
-
     /// <summary>
     /// Each Device has a Listener.
     /// </summary>
@@ -32,7 +31,11 @@ namespace Scada.MainVision
 
         private MySqlCommand cmd = null;
 
-        // private bool isRealTime = true;
+        public static DBDataProvider Instance
+        {
+            get;
+            set;
+        }
 
 
         private List<string> allDeviceKeys = new List<string>();
@@ -441,6 +444,22 @@ namespace Scada.MainVision
                 return -1;
             }
             return 1;
+        }
+
+        public string GetNaIDeviceChannelData(DateTime time)
+        {
+            string sql = string.Format("select ChannelData from nai_rec where time='{0}'", time);
+            this.cmd.CommandText = sql;
+
+            using (MySqlDataReader reader = this.cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    string ret = reader.GetString(0);
+                    return ret;
+                }
+            }
+            return string.Empty;
         }
     }
 }
