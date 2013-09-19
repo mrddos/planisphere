@@ -16,6 +16,7 @@ namespace Scada.Controls
     using System.Text;
     using System.Diagnostics;
     using System.Windows.Media.Imaging;
+    using System.Windows.Input;
 	/// <summary>
 	/// Interaction logic for ListViewPanel.xaml
 	/// </summary>
@@ -30,6 +31,8 @@ namespace Scada.Controls
         private Control graphSearchView = null;
 
         private Control ctrlView = null;
+
+        private Control energyView = null;
 
 		private DataListener dataListener;
 
@@ -54,6 +57,8 @@ namespace Scada.Controls
 
         private const int MaxListCount = 26;
 
+        private object currentSelectedItem;
+
         // private bool ShowChartViewBySearch = true;
 
         // Must Use the <Full Name>
@@ -73,7 +78,7 @@ namespace Scada.Controls
 
             this.refreshDataTimer = new System.Windows.Forms.Timer();
             this.refreshDataTimer.Interval = (entry.Interval * 1000);
-            this.refreshDataTimer.Tick += RefreshDataTimerTick;
+            // this.refreshDataTimer.Tick += RefreshDataTimerTick;
             this.refreshDataTimer.Start();
 		}
 
@@ -83,63 +88,23 @@ namespace Scada.Controls
             this.dataProvider.RefreshTimeline(this.deviceKey);
         }
 
-        private void RefreshDataTimerTick(object sender, EventArgs e)
-        {
-            // TODO: Current settings? if show current, continue.
-            // If filter by start -> end time, returns.
-
-            // TODO: Check Whether the DeviceKey is in current...
-
-            /*
-            if (this.deviceKey != null)
-            {
-                if (this.deviceKey == this.dataProvider.CurrentDeviceKey)
-                {
-                    // this.dataProvider.RefreshTimeline(this.deviceKey);
-                }
-                else
-                {
-                    string msg = "Not current device key.";
-                }
-            }
-            */
-        }
-
         public Control ListView
 		{
-			get
-			{
-                return this.listView;
-			}
+			get { return this.listView; }
 			set
 			{
                 this.listView = value;
-                if (this.listView != null)
-                {
-                    this.ListViewContainer.Content = this.listView;
-
-                    ListView theListView = (ListView)this.listView;
-                    // theListView.ItemsSource = this.dataSource;
-                    this.ApplyListStyle(theListView);
-                }
+                this.SetupListView();
 			}
 		}
 
         public Control SearchView
         {
-            get
-            {
-                return this.searchView;
-            }
-
+            get { return this.searchView; }
             set
             {
                 this.searchView = value;
-                if (this.listView != null)
-                {
-                    this.SearchViewContainer.Content = this.searchView;
-                    this.ApplyListStyle((ListView)this.searchView);
-                }
+                this.SetupSearchListView();
             }
         }
 
@@ -192,6 +157,112 @@ namespace Scada.Controls
                     this.ControlPanelContainer.Content = this.ctrlView;
                 }
             }
+        }
+
+        public Control EnergyPanel
+        {
+            get
+            {
+                return this.energyView;
+            }
+
+            set
+            {
+                this.energyView = value;
+                if (this.energyView != null)
+                {
+                    this.EnergyPanelTabItem.Visibility = Visibility.Visible;
+                    this.EnergyPanelContainer.Content = this.energyView;
+                }
+            }
+        }
+
+        private void SetupListView()
+        {
+            if (this.listView != null)
+            {
+                this.ListViewContainer.Content = this.listView;
+
+                ListView theListView = (ListView)this.listView;
+                // theListView.ItemsSource = this.dataSource;
+                this.ApplyListStyle(theListView);
+                theListView.MouseRightButtonUp += OnListViewMouseRightButton;
+            }
+        }
+
+        // Public method for setup the Context menu for ListView.
+        public void SetupContextMenu(ListView listView)
+        {
+            ContextMenu cm = new ContextMenu();
+            MenuItem mi = new MenuItem();
+            mi.Header = "显示能谱图";
+            mi.Click += this.ShowMenuItemClick;
+            cm.Items.Add(mi);
+            listView.ContextMenu = cm;
+        }
+
+        void ShowMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            if (this.currentSelectedItem != null)
+            {
+                Dictionary<string, object> d = (Dictionary<string, object>)this.currentSelectedItem;
+                if (d.ContainsKey("time"))
+                {
+                    string t = (string)d["time"];
+                    DateTime time;
+                    if (DateTime.TryParse(t, out time))
+                    {
+                        this.ShowEnergy(time);
+                    }
+                }
+            }
+        }
+
+        void OnListViewMouseRightButton(object sender, MouseButtonEventArgs e)
+        {
+            this.currentSelectedItem = null;
+            ListView listView = (ListView)sender;
+            
+            if (this.HasItemClicked(listView, e))
+            {
+                this.currentSelectedItem = listView.SelectedItem;
+            }
+        }
+
+        private void SetupSearchListView()
+        {
+            if (this.searchView != null)
+            {
+                ListView theSearchView = (ListView)this.searchView;
+                this.SearchViewContainer.Content = theSearchView;
+                this.ApplyListStyle((ListView)theSearchView);
+                theSearchView.MouseRightButtonUp += OnSearchListViewMouseRightButton;
+            }
+        }
+
+        void OnSearchListViewMouseRightButton(object sender, MouseButtonEventArgs e)
+        {
+            ListView listView = (ListView)sender;
+            this.currentSelectedItem = null;
+
+            if (this.HasItemClicked(listView, e))
+            {
+                this.currentSelectedItem = listView.SelectedItem;
+            }
+        }
+
+        private bool HasItemClicked(ListView listView, MouseButtonEventArgs e)
+        {
+            int index = listView.SelectedIndex;
+            if (index < 0)
+                return false;
+
+            ListViewItem item = (ListViewItem)listView.ItemContainerGenerator.ContainerFromIndex(index);
+            Rect rect = VisualTreeHelper.GetDescendantBounds(item);
+
+            Point p = e.GetPosition(item);
+            bool b = rect.Contains(p);
+            return b;
         }
 
         public string DisplayName
@@ -365,9 +436,7 @@ namespace Scada.Controls
                 ListView searchListView = (ListView)this.SearchView;
                 searchListView.ItemsSource = null;
                 searchListView.ItemsSource = this.searchDataSource;
-
             }
-			
 		}
         
         ////////////////////////////////////////////////////////////////////////////
@@ -445,6 +514,11 @@ namespace Scada.Controls
                 {
                     this.FromDateText.Background = Brushes.Pink;
                 }
+                else
+                {
+                    this.FromDateText.Background = Brushes.White;
+                    this.ToDateText.Background = Brushes.White;
+                }
             }
             else if (picker.Name == "ToDate")
             {
@@ -457,8 +531,14 @@ namespace Scada.Controls
 
                 if (!this.ValidTimeRange(this.FromDateText.Text, this.ToDateText.Text))
                 {
-                    this.FromDateText.Background = Brushes.Pink;
+                    this.ToDateText.Background = Brushes.Pink;
                 }
+                else
+                {
+                    this.FromDateText.Background = Brushes.White;
+                    this.ToDateText.Background = Brushes.White;
+                }
+
             }
     
         }
@@ -555,6 +635,15 @@ namespace Scada.Controls
                 // alert.ShowDialog();
                 MainWindow.Status = "成功导出CSV文件。";
             }
+        }
+
+        private void ShowEnergy(DateTime time)
+        {
+            this.EnergyPanelTabItem.Visibility = Visibility.Visible;
+            this.TabCtrl.SelectedItem = this.EnergyPanelTabItem;
+            EnergyPanel energyPanel = (EnergyPanel)this.EnergyPanel;
+            energyPanel.UpdateEnergyGraphByTime(time);
+
         }
 
         private void SaveChart(object sender, RoutedEventArgs e)
