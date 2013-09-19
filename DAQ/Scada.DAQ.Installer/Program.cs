@@ -51,15 +51,20 @@ namespace Scada.DAQ.Installer
             }
             else if (fa == "--m-nai")
             {
+                // MockCreateNaIFiles();
                 MockInsertData("nai");
             }
-            else if (fa == "--m-nai-file")
+            else if (fa == "--m-dwd")
             {
-                MockCreateNaIFiles();
+                MockInsertData("dwd");
             }
-            else if (fa == "--m-nai")
+            else if (fa == "--m-mds")
             {
-                MockInsertData("nai");
+                MockInsertData("mds");
+            }
+            else if (fa == "--m-ais")
+            {
+                MockInsertData("ais");
             }
 
         }
