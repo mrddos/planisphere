@@ -76,6 +76,12 @@ namespace Scada.MainVision
                     {
                         panel.ControlPanel = this.ShowControlView(DataProvider.DeviceKey_ISampler);
                     }
+                    else if (deviceKey == DataProvider.DeviceKey_NaI)
+                    {
+                        panel.SetupContextMenu((ListView)panel.ListView);
+                        panel.SetupContextMenu((ListView)panel.SearchView);
+                        panel.EnergyPanel = this.ShowEnergyView(DataProvider.DeviceKey_NaI);
+                    }
                 }
 
                 if (this.currentPanel != null)
@@ -88,7 +94,6 @@ namespace Scada.MainVision
                 return panel;
             }
 		}
-
 
         public ListView ShowListView(ListViewPanel panel, DataListener dataListener)
         {
@@ -109,7 +114,6 @@ namespace Scada.MainVision
                 col.Width = columnInfo.Width;
                 gridView.Columns.Add(col);
             }
-
             return listView;
         }
 
@@ -178,6 +182,12 @@ namespace Scada.MainVision
         private Control ShowControlView(string deviceKey)
         {
             SamplerControlPanel panel = new SamplerControlPanel(deviceKey);
+            return panel;
+        }
+
+        private Control ShowEnergyView(string p)
+        {
+            EnergyPanel panel = new EnergyPanel();
             return panel;
         }
 

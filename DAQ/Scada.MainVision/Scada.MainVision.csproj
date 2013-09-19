@@ -83,6 +83,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="EnergyPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GraphView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -148,6 +152,9 @@
     <Compile Include="DeviceListPanel.xaml.cs">
       <DependentUpon>DeviceListPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EnergyPanel.xaml.cs">
+      <DependentUpon>EnergyPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GraphDataSource.cs" />
     <Compile Include="GraphView.xaml.cs">
       <DependentUpon>GraphView.xaml</DependentUpon>
@@ -209,6 +216,10 @@
     <ProjectReference Include="..\Scada.Chart\Scada.Chart.csproj">
       <Project>{b6af3022-1ba4-4f1f-a7a3-35ece6d5d5f4}</Project>
       <Name>Scada.Chart</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Scada.Config\Scada.Config.csproj">
+      <Project>{4a1ace05-95de-477e-a635-b89e57cecf74}</Project>
+      <Name>Scada.Config</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
