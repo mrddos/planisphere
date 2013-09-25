@@ -1,4 +1,5 @@
-﻿using Scada.Config;
+﻿using Scada.Chart;
+using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,9 +23,8 @@ namespace Scada.MainVision
     /// </summary>
     public partial class EnergyPanel : UserControl
     {
-        private string deviceNaIFilesPath;
-
-        private DeviceEntry entry;
+        // private string deviceNaIFilesPath;
+        // private DeviceEntry entry;
 
         private static int[] EmptyIntArray = new int[0];
 
@@ -34,7 +34,7 @@ namespace Scada.MainVision
             /*
             this.deviceNaIFilesPath = GetDeviceNaiPath();
             this.entry = DeviceEntry.GetDeviceEntry("Scada.NaIDevice", deviceNaIFilesPath + "\\device.cfg");
-            **/ 
+            **/
         }
 
         /*
@@ -111,5 +111,6 @@ namespace Scada.MainVision
                 // TODO: 文件不存在; But maybe data exists in DB.
             }
         }
+
     }
 }

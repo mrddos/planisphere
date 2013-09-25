@@ -78,8 +78,6 @@ namespace Scada.Chart
 
         private TextBlock valueLabel;
 
-        private ChartView chartView;
-
         const int MaxVisibleCount = 14;
 
         private double finalOffsetPos = 0.0;
@@ -109,10 +107,10 @@ namespace Scada.Chart
             set;
         }
 
-        public EnergyCurveView(ChartView chartView)
+        public EnergyCurveView(EnergyChartView chartView)
         {
             InitializeComponent();
-            this.chartView = chartView;
+            
             this.Graduations = new Dictionary<int, GraduationLine>();
             this.GraduationTexts = new Dictionary<int, GraduationText>();
         }
@@ -121,15 +119,15 @@ namespace Scada.Chart
         {
             if (!init)
             {
-                this.Initialize();
+                //this.Initialize();
                 init = true;
             }
         }
 
         private void Initialize()
         {
-            this.CanvasView.Height = this.Height - ChartView.ViewGap;
-            this.Graduation.Height = this.Height - ChartView.ViewGap;
+            // this.CanvasView.Height = this.Height - ChartView.ViewGap;
+            // this.Graduation.Height = this.Height - ChartView.ViewGap;
             // Grid Line |||
             double canvasHeight = this.CanvasView.Height;
             Color gridLineColor = Color.FromRgb(192, 192, 192);
@@ -552,6 +550,13 @@ namespace Scada.Chart
             set;
             get;
         }
+
+        public long PointAxisScale
+        {
+            get;
+            internal set;
+        }
+
 
         private void SetDisplayName(string displayName)
         {
