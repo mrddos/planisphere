@@ -22,10 +22,8 @@
             <Canvas x:Name="Graduation" Grid.Row="1" Grid.Column="0" Background="#F8F8F8">
             </Canvas>
 
-            <Canvas x:Name="CanvasView" Background="#F8F8F8" Grid.Row="1" Grid.Column="1" 
-                    MouseMove="CanvasViewMouseMove" 
-                    
-                    >
+            <Canvas x:Name="CanvasView" Background="#F8F800" Grid.Row="1" Grid.Column="1" 
+                    MouseMove="CanvasViewMouseMove">
             </Canvas>
         </Grid>
     </Border>

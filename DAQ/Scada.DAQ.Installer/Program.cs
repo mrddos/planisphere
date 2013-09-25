@@ -19,6 +19,19 @@ namespace Scada.DAQ.Installer
             {
                 Console.WriteLine("Args required");
             }
+
+            int interval = 10;
+            if (args.Length > 1)
+            {
+                string opt = args[1].Trim();
+                if (opt.StartsWith("-i="))
+                {
+                    string v = opt.Substring(3);
+                    int.TryParse(v.Trim(), out interval);
+                }
+
+            }
+
             string fa = args[0].ToLower();
             if (fa == "--init-database")
             {
@@ -39,32 +52,31 @@ namespace Scada.DAQ.Installer
             }
             else if (fa == "--m-hpic")
             {
-                MockInsertData("hpic");
+                MockInsertData("hpic", interval);
             }
             else if (fa == "--m-weather")
             {
-                MockInsertData("weather");
+                MockInsertData("weather", interval);
             }
             else if (fa == "--m-shelter")
             {
-                MockInsertData("shelter");
+                MockInsertData("shelter", interval);
             }
             else if (fa == "--m-nai")
             {
-                // MockCreateNaIFiles();
-                MockInsertData("nai");
+                MockInsertData("nai", interval);
             }
             else if (fa == "--m-dwd")
             {
-                MockInsertData("dwd");
+                MockInsertData("dwd", interval);
             }
             else if (fa == "--m-mds")
             {
-                MockInsertData("mds");
+                MockInsertData("mds", interval);
             }
             else if (fa == "--m-ais")
             {
-                MockInsertData("ais");
+                MockInsertData("ais", interval);
             }
 
         }
@@ -111,9 +123,10 @@ namespace Scada.DAQ.Installer
 
         }
 
-        static void MockInsertData(string device)
+        static void MockInsertData(string device, int interval)
         {
             DataBaseInsertion ins = new DataBaseInsertion(device);
+            ins.RecordInterval = interval;
             ins.Execute();
         }
     }
