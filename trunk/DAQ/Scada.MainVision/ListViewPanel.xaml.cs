@@ -447,15 +447,11 @@ namespace Scada.Controls
             {
                 this.FromDateText.Background = Brushes.Pink;
                 this.ToDateText.Background = Brushes.Pink;
-
                 return;
             }
-            else
-            {
-                this.FromDateText.Background = Brushes.White;
-                this.ToDateText.Background = Brushes.White;
-            }
 
+            this.FromDateText.Background = Brushes.White;
+            this.ToDateText.Background = Brushes.White;
             var dt1 = DateTime.Parse(this.FromDateText.Text);
             var dt2 = DateTime.Parse(this.ToDateText.Text);
 
@@ -473,7 +469,6 @@ namespace Scada.Controls
                 // Enable the chart button.
                 this.ButtonShowChart.IsEnabled = true;
             }
-
         }
 
         private List<Dictionary<string, object>> Filter(List<Dictionary<string, object>> data, int page)
@@ -543,6 +538,7 @@ namespace Scada.Controls
     
         }
 
+        /* Pages about.
         private void OnPrevButton(object sender, RoutedEventArgs e)
         {
             this.OnNavigateTo(-1);
@@ -583,6 +579,7 @@ namespace Scada.Controls
  
 
         }
+        */ 
 
         // Select the ChartView to show.
         private void ShowChartView(object sender, RoutedEventArgs e)

@@ -45,10 +45,10 @@ namespace Scada.MainVision
 
         private bool baseTimeSet = false;
 
-        public GraphView(bool realTime)
+        public GraphView()
         {
             InitializeComponent();
-            this.realTime = realTime;
+            this.realTime = true;
             this.ChartView.RealTimeMode = realTime;
         }
 

@@ -227,19 +227,9 @@ namespace Scada.MainVision
         {
             try
             {
-                // DBDataCommonListerner listener = this.dataListeners[deviceKey];
-
                 var result = this.Refresh(deviceKey, false, -1, fromTime, toTime);
                 result.Reverse();
                 return result;
-                /*
-                listener.OnDataArrivalBegin(DataArrivalConfig.TimeRange);
-                foreach (var data in result)
-                {
-                    listener.OnDataArrival(DataArrivalConfig.TimeRange, data);
-                }
-                listener.OnDataArrivalEnd(DataArrivalConfig.TimeRange);
-                 * */
             }
             catch (Exception e)
             {

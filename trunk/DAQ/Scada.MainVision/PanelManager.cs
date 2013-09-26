@@ -63,8 +63,8 @@ namespace Scada.MainVision
                 {
                     panel.ListView = this.ShowListView(panel, dataListener);
                     panel.SearchView = this.ShowListView(panel, dataListener);
-                    panel.GraphView = this.ShowGraphView(panel, dataListener, true);
-                    panel.GraphSearchView = this.ShowSearchGraphView(panel, dataListener, false);
+                    panel.GraphView = this.ShowGraphView(panel, dataListener);
+                    panel.GraphSearchView = this.ShowSearchGraphView(panel, dataListener);
 
                     panel.ListRecentData();
                     // 是否显示 控制面板
@@ -118,9 +118,9 @@ namespace Scada.MainVision
         }
 
         // Real time graph
-        public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener, bool realTime)
+        public GraphView ShowGraphView(ListViewPanel panel, DataListener dataListener)
         {
-            GraphView graphView = new GraphView(realTime);
+            GraphView graphView = new GraphView();
             graphView.Interval = 30;
             if (dataListener.DeviceKey == "scada.naidevice")
             {
@@ -149,9 +149,9 @@ namespace Scada.MainVision
         }
 
         // Search graph
-        public SearchGraphView ShowSearchGraphView(ListViewPanel panel, DataListener dataListener, bool realTime)
+        public SearchGraphView ShowSearchGraphView(ListViewPanel panel, DataListener dataListener)
         {
-            SearchGraphView graphView = new SearchGraphView(realTime);
+            SearchGraphView graphView = new SearchGraphView();
             graphView.Interval = 30;
             if (dataListener.DeviceKey == "scada.naidevice")
             {
