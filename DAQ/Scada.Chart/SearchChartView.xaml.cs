@@ -65,6 +65,9 @@ namespace Scada.Chart
             set;
         }
 
+        public static readonly DependencyProperty TimeAxisScaleProperty =
+            DependencyProperty.Register("TimeAxisScale", typeof(long), typeof(ChartView));
+
         private double scale = 1.0;
 
         private bool initialized = false;
@@ -92,12 +95,6 @@ namespace Scada.Chart
             this.GraduationTimes = new Dictionary<int, GraduationTime>();
         }
 
-
-        public static readonly DependencyProperty TimeAxisScaleProperty =
-            DependencyProperty.Register("TimeAxisScale", typeof(long), typeof(ChartView));
-
-        
-
         private void TimeAxisLoaded(object sender, RoutedEventArgs e)
         {
             if (this.initialized)
@@ -111,13 +108,18 @@ namespace Scada.Chart
 
         private DateTime GetBaseTime(DateTime startTime)
         {
-            // 目前只支持30秒 和 5分钟两种间隔
-            Debug.Assert(this.Interval == 30 || this.Interval == 60 * 5 || this.Interval == 0);
+            // 目前只支持30秒 和 1分钟, 5分钟
+            Debug.Assert(this.Interval == 30 || this.Interval == 60 || this.Interval == 300);
 
             DateTime baseTime = default(DateTime);
             if (this.Interval == 30)
             {
                 int second = startTime.Second / 30 * 30;
+                baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, startTime.Minute, second);
+            }
+            else if (this.Interval == 60)
+            {
+                int second = 0;
                 baseTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, startTime.Minute, second);
             }
             else if (this.Interval == 60 * 5)
@@ -149,18 +151,18 @@ namespace Scada.Chart
                 this.TimeAxis.Children.Add(scaleLine);
             }
 
-            this.UpdateTimeAxis(startTime);
+            // this.UpdateTimeAxis(startTime);
         }
 
         public void UpdateTimeAxis(int offset)
         {
             var newDateTime = this.currentBaseTime.AddSeconds(offset * this.Interval);
-            this.UpdateTimeAxis(newDateTime);
+            // this.UpdateTimeAxis(newDateTime);
         }
 
-        public void UpdateTimeAxis(DateTime startTime)
+        public void UpdateTimeAxis(DateTime beginTime, DateTime endTime)
         {
-            DateTime baseTime = this.GetBaseTime(startTime);
+            DateTime baseTime = this.GetBaseTime(beginTime);
             if (this.currentBaseTime == baseTime)
             {
                 return;
@@ -221,11 +223,33 @@ namespace Scada.Chart
             {
                 SearchCurveView curveView = (SearchCurveView)view;
                 curveView.ClearPoints();
-
             }
             this.index = 0;
         }
 
+        public void AddCurvesDataPoints(List<Dictionary<string, object>> dataSource)
+        {
+            foreach (var view in this.ChartContainer.Children)
+            {
+                SearchCurveView curveView = (SearchCurveView)view;
+                string key = curveView.CurveName.ToLower();
+
+                foreach (var e in dataSource)
+                {
+                    if (e.ContainsKey(key))
+                    {
+                        string valueStr = (string)e[key];
+                        double value = string.IsNullOrEmpty(valueStr) ? 0.0 : double.Parse(valueStr);
+                        curveView.AddCurvePoint(new Point(this.index * Grad, value));
+                    }
+
+                }
+            }
+
+        }
+
+        // Abrogated function
+        /* Abrogated
         public void AddCurvesDataPoint(Dictionary<string, object> entry)
         {
             foreach (var view in this.ChartContainer.Children)
@@ -242,6 +266,7 @@ namespace Scada.Chart
             }
             this.index += 1;
         }
+        */
 
         private void AddCurveViewCheckItem(string curveViewName, string displayName)
         {
@@ -356,15 +381,12 @@ namespace Scada.Chart
             */
         }
 
-
-
         public long TimeAxisScale
         {
             get
             {
                 return (long)this.GetValue(TimeAxisScaleProperty);
             }
-
             set
             {
                 this.SetValue(TimeAxisScaleProperty, (long)value);

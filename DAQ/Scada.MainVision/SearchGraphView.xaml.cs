@@ -14,29 +14,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Scada.Chart;
+using System.Diagnostics;
 
 namespace Scada.MainVision
 {
     /// <summary>
-    /// Interaction logic for GraphViewPanel.xaml
+    /// Interaction logic for GraphViewPanel.xaml in MainVision
     /// </summary>
     public partial class SearchGraphView : UserControl
     {
         public const string TimeKey = "Time";
 
-        int i = 0;
+        private int i = 0;
 
         DateTime now = DateTime.Now;
 
-        private DataListener dataListener;
+        // private DataListener dataListener;
+        //private List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
 
         private bool realTime = true;
 
         static Color[] colors = { Colors.Green, Colors.Red, Colors.Blue, Colors.OrangeRed, Colors.Purple };
-
-
-        //private List<Dictionary<string, object>> dataList = new List<Dictionary<string, object>>();
-
+        
         private Dictionary<string, CurveDataContext> dataSources = new Dictionary<string, CurveDataContext>();
         
         // private DataArrivalConfig config;
@@ -45,16 +44,17 @@ namespace Scada.MainVision
 
         private bool baseTimeSet = false;
 
-        public SearchGraphView(bool realTime)
+        public SearchGraphView()
         {
             InitializeComponent();
-            this.realTime = realTime;
-            this.ChartView.RealTimeMode = realTime;
+            this.realTime = false;
+            this.SearchChartView.RealTimeMode = realTime;
         }
 
         // No need.
         public void AddDataListener(DataListener listener)
         {
+            Debug.Assert(false);
             /*
             this.dataListener = listener;
             if (this.dataListener != null)
@@ -72,29 +72,33 @@ namespace Scada.MainVision
             {
                 return;
             }
-            // TODO: Set base time.
+            this.SearchChartView.ClearPoints();
+
             var entry0 = dataSource[0];
-            DateTime baseTime = DateTime.Parse((string)entry0["time"]);
-            this.ChartView.UpdateTimeAxis(baseTime);
+            var entryf = dataSource.Last();
+            DateTime beginTime = DateTime.Parse((string)entry0["time"]);
+            DateTime finalTime = DateTime.Parse((string)entryf["time"]);
 
-            this.ChartView.ClearPoints();
-
+            this.SearchChartView.UpdateTimeAxis(beginTime, finalTime);
+            this.SearchChartView.AddCurvesDataPoints(dataSource);
+            /*
             foreach (var e in dataSource)
             {
-                this.ChartView.AddCurvesDataPoint(e);
+                this.SearchChartView.AddCurvesDataPoint(e);
             }
+            */
         }
 
         public int Interval
         {
             get
             {
-                return this.ChartView.Interval;
+                return this.SearchChartView.Interval;
             }
 
             set
             {
-                this.ChartView.Interval = value;
+                this.SearchChartView.Interval = value;
             }
         }
 
@@ -111,7 +115,7 @@ namespace Scada.MainVision
 
             ConfigItem item = entry.GetConfigItem(lineName);
 
-            SearchCurveView curveView = this.ChartView.AddCurveView(lineName, displayName);
+            SearchCurveView curveView = this.SearchChartView.AddCurveView(lineName, displayName);
             
             curveView.Max = item.Max;
             curveView.Min = item.Min;
@@ -121,9 +125,11 @@ namespace Scada.MainVision
             this.dataSources.Add(lineName.ToLower(), dataContext);
         }
 
-
+        /*
         private void OnDataArrivalBegin(DataArrivalConfig config)
         {
+            Debug.Assert(false);
+
             if (config == DataArrivalConfig.TimeRange)
             {
                 if (!this.realTime)
@@ -139,15 +145,12 @@ namespace Scada.MainVision
 
                     // Reset the Base time.
                     this.baseTimeSet = false;
-
-                    /*
-                    foreach (string key in dataSources.Keys)
-                    {
-                        CurveDataContext dataContext = dataSources[key];
-                        //dataContext.UpdateCurves();
-                    }
-                    */
                     
+                    //foreach (string key in dataSources.Keys)
+                    //{
+                    //    CurveDataContext dataContext = dataSources[key];
+                    //    //dataContext.UpdateCurves();
+                    //}
                 }
             }
             else if (config == DataArrivalConfig.TimeNew)
@@ -161,6 +164,8 @@ namespace Scada.MainVision
 
         private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
         {
+            Debug.Assert(false);
+
             if (!entry.ContainsKey(TimeKey.ToLower()))
             {
                 return;
@@ -183,7 +188,7 @@ namespace Scada.MainVision
                     if (!this.baseTimeSet)
                     {
                         DateTime baseTime = DateTime.Parse(dataTime);
-                        this.ChartView.UpdateTimeAxis(baseTime);
+                        // this.SearchChartView.UpdateTimeAxis(baseTime);
                         this.baseTimeSet = true;
                     }
 
@@ -199,7 +204,7 @@ namespace Scada.MainVision
                     if (!this.baseTimeSet)
                     {
                         DateTime baseTime = DateTime.Parse(dataTime);
-                        this.ChartView.UpdateTimeAxis(baseTime);
+                        // this.SearchChartView.UpdateTimeAxis(baseTime);
                         this.baseTimeSet = true;
                     }
 
@@ -209,6 +214,15 @@ namespace Scada.MainVision
             }
 
         }
+
+        private void OnDataArrivalEnd(DataArrivalConfig config)
+        {
+            Debug.Assert(false);
+            if (config == DataArrivalConfig.TimeRange)
+            {
+            }
+        }
+        */
 
         private void AddTimePoint(int index, Dictionary<string, object> entry)
         {
@@ -235,33 +249,28 @@ namespace Scada.MainVision
 
             if (UpdateResult.Overflow == result)
             {
-                this.ChartView.UpdateTimeAxis(1);
+                this.SearchChartView.UpdateTimeAxis(1);
             }
         }
 
-
-        private void OnDataArrivalEnd(DataArrivalConfig config)
-        {
-            if (config == DataArrivalConfig.TimeRange)
-            {
-            }
-        }
 
         private void ChartView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if ((bool)e.NewValue) // Shown
             {
+                /*
                 foreach (string key in dataSources.Keys)
                 {
 
                 }
+                */
             }
 
         }
 
         internal void SaveChart()
         {
-            this.ChartView.SaveChart();
+            this.SearchChartView.SaveChart();
         }
     }
 
