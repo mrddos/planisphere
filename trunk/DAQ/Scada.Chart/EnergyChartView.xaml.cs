@@ -29,6 +29,8 @@ namespace Scada.Chart
 
         public const double Offset = 8.0;
 
+        private const int AllCount = 2048;
+
         struct GraduationLine
         {
             public Line Line
@@ -69,8 +71,6 @@ namespace Scada.Chart
 
         private bool initialized = false;
 
-        private int index = 0;
-
         private DateTime currentBaseTime = default(DateTime);
 
         private Dictionary<int, GraduationLine> Graduations
@@ -90,19 +90,21 @@ namespace Scada.Chart
             InitializeComponent();
             this.Graduations = new Dictionary<int, GraduationLine>();
             this.GraduationTimes = new Dictionary<int, GraduationTime>();
+            this.CurveView.Height = 400;
         }
 
         public static readonly DependencyProperty PointAxisScaleProperty =
             DependencyProperty.Register("PointAxisAxisScale", typeof(long), typeof(EnergyChartView));
 
-        private void TimeAxisLoaded(object sender, RoutedEventArgs e)
+        private void PointAxisLoaded(object sender, RoutedEventArgs e)
         {
             if (this.initialized)
             {
                 return;
             }
             this.initialized = true;
-            this.InitPointAxis(DateTime.Now);
+            this.InitPointAxis();
+            //this.AddCurveView("Energy", "能谱图");
         }
 
         private DateTime GetBaseTime(DateTime startTime)
@@ -124,12 +126,10 @@ namespace Scada.Chart
             return baseTime;
         }
 
-        private void InitPointAxis(DateTime startTime)
+        private void InitPointAxis()
         {
-            // Base Time;   
-            // this.currentBaseTime = this.GetBaseTime(startTime);
-
-            for (int i = 0; i < 390; i++)
+            /*
+            for (int i = 0; i < 2048 / 2; i++)
             {
                 // One interval per 5px
                 double x = i * Grad;
@@ -145,24 +145,13 @@ namespace Scada.Chart
                 this.PointAxis.Children.Add(scaleLine);
             }
 
-            this.UpdatePointAxis(startTime);
+            this.UpdatePointAxis();
+            */ 
         }
 
-        public void UpdateTimeAxis(int offset)
+        public void UpdatePointAxis()
         {
-            var newDateTime = this.currentBaseTime.AddSeconds(offset * this.Interval);
-            this.UpdatePointAxis(newDateTime);
-        }
-
-        public void UpdatePointAxis(DateTime startTime)
-        {
-            DateTime baseTime = this.GetBaseTime(startTime);
-            if (this.currentBaseTime == baseTime)
-            {
-                return;
-            }
-            this.currentBaseTime = baseTime;
-
+            /*
             for (int i = 0; i < 20; i++)
             {
                 TextBlock timeLabel = null;
@@ -196,89 +185,35 @@ namespace Scada.Chart
                     timeLabel.Text = displayTime;
                 }
                 
-            }
-
+            }*/
         }
 
-
-        public EnergyCurveView AddCurveView(string curveViewName, string displayName, double height = 200.0)
+        // !
+        public EnergyCurveView AddCurveView(string curveViewName, string displayName)
         {
             EnergyCurveView curveView = new EnergyCurveView(this);
             curveView.CurveViewName = curveViewName;
             curveView.PointAxisScale = this.PointAxisScale;
-            curveView.Height = height + ChartView.ViewGap;
+            curveView.Height = 400;
+            
             this.ChartContainer.Children.Add(curveView);
-            this.AddCurveViewCheckItem(curveViewName, displayName);
+            //this.ChartContainer.Height= 500;
             return curveView;
         }
-        
 
         public void ClearPoints()
         {
-            foreach (var view in this.ChartContainer.Children)
-            {
-                SearchCurveView curveView = (SearchCurveView)view;
-                curveView.ClearPoints();
-
-            }
-            this.index = 0;
+            EnergyCurveView curveView = (EnergyCurveView)this.CurveView;
+            curveView.ClearPoints();
+            //this.index = 0;
         }
 
-        public void AddCurvesDataPoint(Dictionary<string, object> entry)
+        public void SetDataPoints(int[] data)
         {
-            foreach (var view in this.ChartContainer.Children)
-            {
-                SearchCurveView curveView = (SearchCurveView)view;
+            EnergyCurveView curveView = (EnergyCurveView)this.CurveView;
 
-                string key = curveView.CurveName.ToLower();
-                if (entry.ContainsKey(key))
-                {
-                    string valueStr = (string)entry[key];
-                    double value = string.IsNullOrEmpty(valueStr) ? 0.0 : double.Parse(valueStr);
-                    curveView.AddCurvePoint(new Point(this.index * Grad, value));
-                }
-            }
-            this.index += 1;
-        }
 
-        private void AddCurveViewCheckItem(string curveViewName, string displayName)
-        {
-            CheckBox cb = new CheckBox();
-            cb.IsChecked = true;
-            cb.Content = displayName;
-            cb.Margin = new Thickness(5, 0, 5, 0);
-            
-            cb.Checked += (object sender, RoutedEventArgs e) => 
-            {
-                this.OnItemChecked(curveViewName, true);
-            };
-            cb.Unchecked += (object sender, RoutedEventArgs e) =>
-            {
-                this.OnItemChecked(curveViewName, false);
-            };
-
-            if (this.SelectedItems1.Children.Count > 8)
-            {
-                this.SelectedItems2.Visibility = Visibility.Visible;
-                this.SelectedItems2.Children.Add(cb);
-            }
-            else
-            {
-                this.SelectedItems1.Children.Add(cb);
-            }
-        }
-
-        private void OnItemChecked(string curveViewName, bool itemChecked)
-        {
-            foreach (var cv in this.ChartContainer.Children)
-            {
-                SearchCurveView curveView = (SearchCurveView)cv;
-                if (curveView.CurveViewName == curveViewName)
-                {
-                    curveView.Visibility = itemChecked ? Visibility.Visible : Visibility.Collapsed;
-                    break;
-                }
-            }
+            curveView.SetPoints(data);
         }
 
         private void MainViewMouseMove(object sender, MouseEventArgs e)
@@ -301,10 +236,25 @@ namespace Scada.Chart
         {
             bool timed = false;
             string timeLabel = string.Empty;
+            EnergyCurveView curveView = (EnergyCurveView)this.CurveView;
 
+            Point point = e.GetPosition((UIElement)curveView.View);
+            double x = point.X;
+            double centerX = curveView.CenterX;
+            if (!timed && x >= 0)
+            {
+                double v = (x - centerX) / scale + centerX;
+                double index = v / Grad / IntervalCount;
+
+                timeLabel = this.GetFormatDateTime(this.currentBaseTime, index, IntervalCount * this.Interval);
+            }
+
+            curveView.TrackTimeLine(point, timeLabel);
+
+            /*
             foreach (var view in this.ChartContainer.Children)
             {
-                SearchCurveView curveView = (SearchCurveView)view;
+                EnergyCurveView curveView = (EnergyCurveView)view;
 
                 Point point = e.GetPosition((UIElement)curveView.View);
                 double x = point.X;
@@ -318,7 +268,7 @@ namespace Scada.Chart
                 }
 
                 curveView.TrackTimeLine(point, timeLabel);
-            }
+            }*/
         }
 
         private void MoveCurveLines(MouseEventArgs e, bool moving)
@@ -328,7 +278,7 @@ namespace Scada.Chart
             string timeLabel = string.Empty;
             foreach (var view in this.ChartContainer.Children)
             {
-                SearchCurveView curveView = (SearchCurveView)view;
+                EnergyCurveView curveView = (EnergyCurveView)view;
 
                 if (moving)
                 {
@@ -397,12 +347,10 @@ namespace Scada.Chart
         private void ZoomChartView(double scale)
         {
             double centerX = 0.0;
-            foreach (var view in this.ChartContainer.Children)
-            {
-                SearchCurveView curveView = (SearchCurveView)view;
-                curveView.UpdateCurveScale(scale);
-                centerX = curveView.CenterX;
-            }
+            EnergyCurveView curveView = (EnergyCurveView)this.CurveView;
+            curveView.UpdateCurveScale(scale);
+            centerX = curveView.CenterX;
+
             this.UpdateTimeAxisScale(scale, centerX);
         }
 

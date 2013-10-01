@@ -58,7 +58,7 @@
         
         <!-- Row 1 -->
         <Border Grid.Row="1" Background="#E5E5E5" BorderBrush="#282828" BorderThickness="0, 0, 0, 0" Margin="0, 4, 0, 0">
-                <TabControl x:Name="TabCtrl" Background="#F9F9F9" BorderBrush="#007ACC" BorderThickness="0,2,0, 0">
+            <TabControl x:Name="TabCtrl" Background="#F9F9F9" BorderBrush="#007ACC" BorderThickness="0,2,0, 0">
             <!-- 实时列表 -->
             <TabItem Header="实时列表" Width="80" Background="#F9F9F9" Style="{StaticResource TabItemKey}">
                 <ContentControl Grid.Row="1" Margin="0, 1, 0, 0" >
@@ -177,43 +177,20 @@
                 <ContentControl Grid.Row="1" x:Name="ControlPanelContainer" Margin="5,5,5,5"/>
             </TabItem>
             <!-- 控制面板 -->
-            <TabItem Header="能谱图" Width="80" x:Name="EnergyPanelTabItem" Visibility="Visible" Style="{StaticResource TabItemKey}">
+            <TabItem Header="能谱图" Width="80" x:Name="EnergyPanelTabItem" Visibility="Hidden" Style="{StaticResource TabItemKey}">
                 <ContentControl Grid.Row="1" Margin="0">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="35"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
-                            <!--
-                            <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top">
-
-                                <Border>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBox x:Name="FromDateText2" Width="120"  Height="22"></TextBox>
-                                        <c:DatePicker x:Name="FromDate2" Margin="5, 0, 5, 0" Height="25" Width="30"
-                                            CalendarClosed="DatePickerCalendarClosed" BorderBrush="Transparent">
-                                        </c:DatePicker>
-                                    </StackPanel>
-
-                                </Border>
-
-                               
-                                <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
-                                Style="{StaticResource ButtonKey}" Click="SearchByDateRange">查询</Button>
-                                <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
-                                Style="{StaticResource ButtonKey}" Click="OnPrevButton">&lt;&lt;</Button>
-                                <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
-                                Style="{StaticResource ButtonKey}" Click="OnNextButton">&gt;&gt;</Button>
-                                <Button Padding="3,3,3,3" Height="25" Margin="5,0,5,0" 
-                                Style="{StaticResource ButtonKey}" Click="ExportSearchDataList">导出</Button>
-                            </StackPanel>
-                            -->
-
-                            <!-- Contains ListView -->
-                            <ContentControl Grid.Row="1" x:Name="EnergyPanelContainer" Margin="-5">
+                            <!-- Energy Container -->
+                        <Border BorderBrush="Yellow" BorderThickness="0" Grid.Row="0" >
+                            <ContentControl x:Name="EnergyPanelContainer" Margin="5,5,5,5"
+                                            VerticalContentAlignment="Top" VerticalAlignment="Top">
                             </ContentControl>
+                        </Border>
 
-                        </Grid>
+                    </Grid>
                     </ContentControl>
                     </TabItem>
             </TabControl>

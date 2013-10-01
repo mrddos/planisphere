@@ -12,7 +12,7 @@ namespace Scada.MainVision
 {
     /**
      * PanelManager
-     * 
+     * Manage all the panel with tables.
      */
     public class PanelManager
 	{
@@ -24,18 +24,10 @@ namespace Scada.MainVision
 
 		private ListViewPanel currentPanel;
 
-        
-
 		public PanelManager(Window window)
 		{
 			this.window = window;
 		}
-
-		~PanelManager()
-		{
-
-		}
-
 
         public ListViewPanel CreateDataViewPanel(DataProvider dataProvider, ConfigEntry entry, bool showList = true)
 		{
@@ -136,7 +128,7 @@ namespace Scada.MainVision
                 // Time would be deal as a Chart.
                 if (columnInfo.BindingName.ToLower() == "time")
                 {
-                    continue;
+                    continue; // Do nothing would be OK.
                 }
 
                 if (columnInfo.DisplayInChart)
@@ -157,7 +149,7 @@ namespace Scada.MainVision
             {
                 graphView.Interval = 60 * 5;
             }
-            // graphView.AddDataListener(dataListener);
+            /// graphView.AddDataListener(dataListener);
 
             var columnInfoList = dataListener.GetColumnsInfo();
             string deviceKey = dataListener.DeviceKey;
@@ -211,7 +203,6 @@ namespace Scada.MainVision
 		public void CloseListViewPanel(ListViewPanel listViewPanel)
 		{
 			listViewPanel.Visibility = Visibility.Hidden;
-			
 		}
 	}
 }

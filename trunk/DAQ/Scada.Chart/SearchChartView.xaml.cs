@@ -76,6 +76,8 @@ namespace Scada.Chart
 
         private DateTime currentBaseTime = default(DateTime);
 
+        private double Graduation { get; set; }
+
         private Dictionary<int, GraduationLine> Graduations
         {
             get;
@@ -104,6 +106,17 @@ namespace Scada.Chart
             this.initialized = true;
 
             this.InitTimeAxis(DateTime.Now);
+        }
+
+        public SearchCurveView AddCurveView(string curveViewName, string displayName, double height = 200.0)
+        {
+            SearchCurveView curveView = new SearchCurveView(this);
+            curveView.CurveViewName = curveViewName;
+            curveView.TimeAxisScale = this.TimeAxisScale;
+            curveView.Height = height + ChartView.ViewGap;
+            this.ChartContainer.Children.Add(curveView);
+            this.AddCurveViewCheckItem(curveViewName, displayName);
+            return curveView;
         }
 
         private DateTime GetBaseTime(DateTime startTime)
@@ -160,16 +173,100 @@ namespace Scada.Chart
             // this.UpdateTimeAxis(newDateTime);
         }
 
-        public void UpdateTimeAxis(DateTime beginTime, DateTime endTime)
+        private void GetTimelineGraduation(DateTime beginTime, DateTime endTime, int countToShow, out double graduation, out int graduationMinutes)
         {
-            DateTime baseTime = this.GetBaseTime(beginTime);
-            if (this.currentBaseTime == baseTime)
-            {
-                return;
-            }
-            this.currentBaseTime = baseTime;
+            const int DayMinutes = 24 * 60; //1440
+            beginTime = this.GetBaseTime(beginTime);
+            endTime = this.GetBaseTime(endTime);
 
-            for (int i = 0; i < 20; i++)
+            long seconds = (endTime.Ticks - beginTime.Ticks) / 10000000;
+            int minutes = (int)seconds / 60;
+            if (minutes > DayMinutes)
+            {
+                minutes = DayMinutes;
+            }
+
+            const double pixelsInScreenWidth = 650;
+
+            double howManyPointsWithinPixel = (double)countToShow / (double)pixelsInScreenWidth;
+            graduation = 1 / howManyPointsWithinPixel;
+
+            graduationMinutes = 60; // As default value.
+            if (minutes > DayMinutes / 2)
+            {
+                graduationMinutes = 60;
+            }
+            else if (minutes > DayMinutes / 4)
+            {
+                graduationMinutes = 120;
+            }
+            else if (minutes > DayMinutes / 8)
+            {
+                graduationMinutes = 240;
+            }
+            else if (minutes > DayMinutes / 16)
+            {
+                // TODO: Nothing now.
+            }
+            
+        }
+
+        delegate bool IsGradution(DateTime time);
+
+        private bool IsGraduation_60(DateTime time)
+        {
+            return (time.Minute == 0 && time.Second == 0);
+        }
+
+        private bool IsGraduation_120(DateTime time)
+        {
+            return (time.Minute == 0 || time.Minute == 30) && time.Second == 0;
+        }
+
+        private bool IsGraduation_240(DateTime time)
+        {
+            return true;
+        }
+
+
+        public void UpdateTimeAxis(DateTime beginTime, DateTime endTime, List<Dictionary<string, object>> dataSource, int countToShow)
+        {
+            double graduation = 0.0;
+            int graduationMinutes = 60;
+            this.GetTimelineGraduation(beginTime, endTime, countToShow, out graduation, out graduationMinutes);
+            this.Graduation = graduation;
+            int countInGraduations = countToShow / 24;
+
+            IsGradution isGradution = IsGraduation_60;
+            if (graduationMinutes == 60)
+            {
+                isGradution = IsGraduation_60;
+            }
+            else if (graduationMinutes == 120)
+            {
+                isGradution = IsGraduation_120;
+            }
+            else if (graduationMinutes == 240)
+            {
+                isGradution = IsGraduation_240;
+            }
+
+            foreach (var e in dataSource)
+            {
+                string time = (string)e["time"];
+                DateTime dateTime = DateTime.Parse(time);
+
+                if (isGradution(dateTime))
+                {
+                }
+                else
+                {
+
+                }
+            }
+
+            
+            for (int i = 0; i < 24; i++)
             {
                 TextBlock timeLabel = null;
                 if (this.GraduationTimes.ContainsKey(i))
@@ -201,20 +298,8 @@ namespace Scada.Chart
                 {
                     timeLabel.Text = displayTime;
                 }
-                
             }
-
-        }
-
-        public SearchCurveView AddCurveView(string curveViewName, string displayName, double height = 200.0)
-        {
-            SearchCurveView curveView = new SearchCurveView(this);
-            curveView.CurveViewName = curveViewName;
-            curveView.TimeAxisScale = this.TimeAxisScale;
-            curveView.Height = height + ChartView.ViewGap;
-            this.ChartContainer.Children.Add(curveView);
-            this.AddCurveViewCheckItem(curveViewName, displayName);
-            return curveView;
+            
         }
 
         public void ClearPoints()
@@ -227,25 +312,26 @@ namespace Scada.Chart
             this.index = 0;
         }
 
-        public void AddCurvesDataPoints(List<Dictionary<string, object>> dataSource)
+        public void SetDataPoints(List<Dictionary<string, object>> dataSource)
         {
+            double g = this.Graduation;
             foreach (var view in this.ChartContainer.Children)
             {
                 SearchCurveView curveView = (SearchCurveView)view;
                 string key = curveView.CurveName.ToLower();
 
+                int index = 0;
                 foreach (var e in dataSource)
                 {
                     if (e.ContainsKey(key))
                     {
                         string valueStr = (string)e[key];
                         double value = string.IsNullOrEmpty(valueStr) ? 0.0 : double.Parse(valueStr);
-                        curveView.AddCurvePoint(new Point(this.index * Grad, value));
+                        curveView.AddCurvePoint(new Point(index * g, value));
                     }
-
+                    index++;
                 }
             }
-
         }
 
         // Abrogated function

@@ -51,21 +51,6 @@ namespace Scada.MainVision
             this.SearchChartView.RealTimeMode = realTime;
         }
 
-        // No need.
-        public void AddDataListener(DataListener listener)
-        {
-            Debug.Assert(false);
-            /*
-            this.dataListener = listener;
-            if (this.dataListener != null)
-            {
-                this.dataListener.OnDataArrivalBegin += this.OnDataArrivalBegin;
-                this.dataListener.OnDataArrival += this.OnDataArrival;
-                this.dataListener.OnDataArrivalEnd += this.OnDataArrivalEnd;
-            }
-            */
-        }
-
         public void SetDataSource(List<Dictionary<string, object>> dataSource)
         {
             if (dataSource == null || dataSource.Count == 0)
@@ -79,8 +64,8 @@ namespace Scada.MainVision
             DateTime beginTime = DateTime.Parse((string)entry0["time"]);
             DateTime finalTime = DateTime.Parse((string)entryf["time"]);
 
-            this.SearchChartView.UpdateTimeAxis(beginTime, finalTime);
-            this.SearchChartView.AddCurvesDataPoints(dataSource);
+            this.SearchChartView.UpdateTimeAxis(beginTime, finalTime, dataSource, dataSource.Count());
+            this.SearchChartView.SetDataPoints(dataSource);
             /*
             foreach (var e in dataSource)
             {
@@ -125,105 +110,6 @@ namespace Scada.MainVision
             this.dataSources.Add(lineName.ToLower(), dataContext);
         }
 
-        /*
-        private void OnDataArrivalBegin(DataArrivalConfig config)
-        {
-            Debug.Assert(false);
-
-            if (config == DataArrivalConfig.TimeRange)
-            {
-                if (!this.realTime)
-                {
-                    // Clear
-                    foreach (string key in dataSources.Keys)
-                    {
-                        CurveDataContext dataContext = dataSources[key];
-                        i = 0;
-                        dataContext.Clear();
-                        dataContext.UpdateCurves();
-                    }
-
-                    // Reset the Base time.
-                    this.baseTimeSet = false;
-                    
-                    //foreach (string key in dataSources.Keys)
-                    //{
-                    //    CurveDataContext dataContext = dataSources[key];
-                    //    //dataContext.UpdateCurves();
-                    //}
-                }
-            }
-            else if (config == DataArrivalConfig.TimeNew)
-            {
-                if (this.realTime)
-                {
-                    // Do nothing with dataContext
-                }
-            }
-        }
-
-        private void OnDataArrival(DataArrivalConfig config, Dictionary<string, object> entry)
-        {
-            Debug.Assert(false);
-
-            if (!entry.ContainsKey(TimeKey.ToLower()))
-            {
-                return;
-            }
-
-            string dataTime = (string)entry[TimeKey.ToLower()];
-            if (config == DataArrivalConfig.TimeNew)
-            {
-                if (this.realTime)
-                {
-                    if (this.lastEntry != null)
-                    {
-                        string a = (string)this.lastEntry["time"];
-                        if (a == dataTime)
-                        {
-                            return;
-                        }
-                    }
-
-                    if (!this.baseTimeSet)
-                    {
-                        DateTime baseTime = DateTime.Parse(dataTime);
-                        // this.SearchChartView.UpdateTimeAxis(baseTime);
-                        this.baseTimeSet = true;
-                    }
-
-                    this.AddTimePoint(i, entry);
-                    this.lastEntry = entry;
-                    i++;
-                }
-            }
-            else if (config == DataArrivalConfig.TimeRange)
-            {
-                if (!this.realTime)
-                {
-                    if (!this.baseTimeSet)
-                    {
-                        DateTime baseTime = DateTime.Parse(dataTime);
-                        // this.SearchChartView.UpdateTimeAxis(baseTime);
-                        this.baseTimeSet = true;
-                    }
-
-                    this.AddTimePoint(i, entry);
-                    i++;
-                }
-            }
-
-        }
-
-        private void OnDataArrivalEnd(DataArrivalConfig config)
-        {
-            Debug.Assert(false);
-            if (config == DataArrivalConfig.TimeRange)
-            {
-            }
-        }
-        */
-
         private void AddTimePoint(int index, Dictionary<string, object> entry)
         {
             UpdateResult result = UpdateResult.None;
@@ -252,7 +138,6 @@ namespace Scada.MainVision
                 this.SearchChartView.UpdateTimeAxis(1);
             }
         }
-
 
         private void ChartView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

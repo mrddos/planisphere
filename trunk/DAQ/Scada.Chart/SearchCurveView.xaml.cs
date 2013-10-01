@@ -82,6 +82,12 @@ namespace Scada.Chart
 
         private SearchChartView chartView;
 
+        private double CanvasHeight
+        {
+            get;
+            set;
+        }
+
         // const int MaxVisibleCount = 300;
 
         // private double finalOffsetPos = 0.0;
@@ -128,12 +134,14 @@ namespace Scada.Chart
             }
         }
 
+        private const double ZeroOffset = 5;
+
         private void Initialize()
         {
             this.CanvasView.Height = this.Height - ChartView.ViewGap;
             this.Graduation.Height = this.Height - ChartView.ViewGap;
             // Grid Line |||
-            double canvasHeight = this.CanvasView.Height;
+            this.CanvasHeight = this.CanvasView.Height;
             Color gridLineColor = Color.FromRgb(150, 150, 150);
             SolidColorBrush gridLineBrush = new SolidColorBrush(gridLineColor);
 
@@ -153,7 +161,7 @@ namespace Scada.Chart
             for (int i = 0; i < 20; i++)
             {
                 Line l = new Line();
-                l.Y1 = l.Y2 = canvasHeight - i * Width;
+                l.Y1 = l.Y2 = this.CanvasHeight - ZeroOffset - i * Width;
                 l.X1 = 0;
                 l.X2 = 1900;
                 l.StrokeThickness = 0.3;
@@ -163,7 +171,7 @@ namespace Scada.Chart
             }
 
             // Scale line
-            double height = this.CanvasView.Height;
+            double height = this.CanvasHeight;
 
             double scaleWidth = 30;
             this.Graduation.ClipToBounds = true;
@@ -177,7 +185,7 @@ namespace Scada.Chart
 
             for (int i = 0; i < 50; i++)
             {
-                double y = height - i * 10;
+                double y = height - ZeroOffset - i * 10;
 
                 if (y < 0)
                 {
@@ -244,7 +252,7 @@ namespace Scada.Chart
         private void AddCurveLine()
         {
             this.curve = new Polyline();
-
+            this.curve.StrokeThickness = 1;
             Color curveColor = Color.FromRgb(00, 0x7A, 0xCC);
             this.curve.Stroke = new SolidColorBrush(curveColor);
             this.CanvasView.Children.Add(this.curve);
@@ -304,9 +312,7 @@ namespace Scada.Chart
 
             Point p;
             this.Convert(point, out p);
-
             this.curve.Points.Add(p);
-
         }
 
         internal void ClearPoints()
@@ -385,7 +391,7 @@ namespace Scada.Chart
         }
 
         private bool beginMoved = false;
-        private PolyLineSegment polyLineSegment;
+
 
         internal void MoveCurveLine(bool beginMoved)
         {
@@ -425,7 +431,6 @@ namespace Scada.Chart
                 v = ConvertDouble(v, 4);
 
                 this.valueBorder.Visibility = Visibility.Visible;
-                string t;
                 this.valueLabel.Text = string.Format("[{0}]     {1}", timeLabel, v);
             }
             else
@@ -451,6 +456,7 @@ namespace Scada.Chart
 
         private double Convert(double v)
         {
+            double h = this.CanvasHeight;
             double range = this.Max - this.Min;
             double pa = 0.0;
             double pb = 0.0;
@@ -464,8 +470,8 @@ namespace Scada.Chart
                 return 0.0;
             }
 
-            double pos = this.Height / (pa / pb + 1);
-            double y = this.Height - pos;
+            double pos = h / (pa / pb + 1);
+            double y = h - pos - ZeroOffset;
             return y;
         }
 
@@ -506,7 +512,8 @@ namespace Scada.Chart
 
         private double GetValue(double y)
         {
-            double v = this.Max - (this.Max - this.Min) * y / this.Height;
+            y += ZeroOffset;
+            double v = this.Max - (this.Max - this.Min) * y / this.CanvasHeight;
             return v;
         }
 
