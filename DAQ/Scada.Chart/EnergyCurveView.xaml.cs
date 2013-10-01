@@ -82,7 +82,7 @@ namespace Scada.Chart
 
         private double finalOffsetPos = 0.0;
 
-        private int totalCount = 0;
+        private double ZeroOffset = 10.0;
 
 
         private List<KeyValuePair<DateTime, double>> dataList = new List<KeyValuePair<DateTime, double>>();
@@ -107,7 +107,7 @@ namespace Scada.Chart
             set;
         }
 
-        public EnergyCurveView(EnergyChartView chartView)
+        public EnergyCurveView()
         {
             InitializeComponent();
             
@@ -115,25 +115,42 @@ namespace Scada.Chart
             this.GraduationTexts = new Dictionary<int, GraduationText>();
         }
 
+        public EnergyCurveView(EnergyChartView chartView)
+        {
+            InitializeComponent();
+
+            this.Graduations = new Dictionary<int, GraduationLine>();
+            this.GraduationTexts = new Dictionary<int, GraduationText>();
+        }
+
         private void CurveViewLoaded(object sender, RoutedEventArgs e)
         {
-            if (!init)
-            {
-                //this.Initialize();
-                init = true;
-            }
+            this.Initialize();
+        }
+
+        private void CanvasView_Loaded_1(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private double CanvasHeight
+        {
+            get;
+            set;
         }
 
         private void Initialize()
         {
-            // this.CanvasView.Height = this.Height - ChartView.ViewGap;
-            // this.Graduation.Height = this.Height - ChartView.ViewGap;
-            // Grid Line |||
-            double canvasHeight = this.CanvasView.Height;
+            if (this.init)
+                return;
+            
+            this.init = true;
+
+            this.CanvasView.Height  = this.CanvasHeight = this.Height - 10;
+
             Color gridLineColor = Color.FromRgb(192, 192, 192);
             SolidColorBrush gridLineBrush = new SolidColorBrush(gridLineColor);
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 25; i++)
             {
                 Line l = new Line();
                 l.X1 = l.X2 = i * 40;
@@ -149,81 +166,15 @@ namespace Scada.Chart
             for (int i = 0; i < 20; i++)
             {
                 Line l = new Line();
-                l.Y1 = l.Y2 = canvasHeight - i * 40;
+                l.Y1 = l.Y2 = this.CanvasHeight - ZeroOffset - i * 40;
                 l.X1 = 0;
                 l.X2 = 1900;
                 l.StrokeThickness = 0.5;
-
+                
                 l.Stroke = gridLineBrush;
                 this.CanvasView.Children.Add(l);
             }
 
-            // Scale line
-            double height = this.CanvasView.Height;
-
-            double scaleWidth = 30;
-            this.Graduation.ClipToBounds = true;
-            int textCount = 0;
-
-            double d = height / (this.Max - this.Min);
-            // How many graduation?
-            int dc = (int)height / 10;
-            // What's the value aach graduation 
-            double ev = (this.Max - this.Min) / dc;
-
-            for (int i = 0; i < 60; i++)
-            {
-                double y = height - i * 10;
-
-                if (y < 0)
-                {
-                    break;
-                }
-                
-                Line l = new Line();
-                this.Graduations.Add(i, new GraduationLine() { Line = l, Pos = y});
-                l.Y1 = l.Y2 = y;
-                l.X1 = (i % 5 != 0) ? scaleWidth - Charts.ScaleLength : scaleWidth - Charts.MainScaleLength;
-                l.X2 = scaleWidth;
-
-                l.Stroke = new SolidColorBrush(Colors.Gray);
-                this.Graduation.Children.Add(l);
-
-                double value = this.Min + i * ev;
-
-                if (i % 5 == 0)
-                {
-                    TextBlock t = new TextBlock();
-                    t.Foreground = Brushes.Black;
-                    t.FontSize = 9;
-                    double pos = (double)y - 10;
-                    this.GraduationTexts.Add(textCount, new GraduationText()
-                    {
-                        Text = t, Pos = pos
-                    });
-
-                    if (this.Max > 10)
-                    {
-                        t.Text = string.Format("{0}", (int)value);
-                    }
-                    else if (this.Max > 1)
-                    {
-                        double dv = ConvertDouble(value, 1);
-                        t.Text = string.Format("{0:f1}", (double)dv);
-                    }
-                    else
-                    {
-                        double dv = ConvertDouble(value, 2);
-                        t.Text = string.Format("{0:f2}", (double)dv);
-                    }
-
-                    t.SetValue(Canvas.RightProperty, (double)10.0);
-                    t.SetValue(Canvas.TopProperty, (double)pos);
-                    this.Graduation.Children.Add(t);
-
-                    textCount++;
-                }
-            }
 
             timeLine.Y1 = 0;
             timeLine.Y2 = GridViewHeight / 2;
@@ -246,17 +197,10 @@ namespace Scada.Chart
             this.CanvasView.Children.Add(this.curve);
         }
 
-        public CurveDataContext CreateDataContext(string curveName, string displayName)
+        public string DisplayName
         {
-            this.dataContext = new CurveDataContext(curveName);
-            // Delegates
-            this.dataContext.UpdateView += this.UpdateViewHandler;
-            this.dataContext.AddCurvePoint += this.AddCurvePointHandler;
-            this.dataContext.UpdateCurve += this.UpdateCurveHandler;
-            this.dataContext.ClearCurve += this.ClearCurveHandler;
-
-            this.DisplayName = displayName;
-            return this.dataContext;
+            get;
+            set;
         }
 
         public string CurveViewName
@@ -265,80 +209,7 @@ namespace Scada.Chart
             set;
         }
 
-        public string DisplayName
-        {
-            get;
-            set;
-        }
-
-        public long TimeScale
-        {
-            get;
-            internal set;
-        }
-
-        private void UpdateViewHandler()
-        {
-            TranslateTransform tt = new TranslateTransform(this.finalOffsetPos, 0);
-            curve.RenderTransform = tt;
-        }
-
-        private void AddCurvePointHandler(DateTime time, double value)
-        {
-            dataList.Add(new KeyValuePair<DateTime, double>(time, value));
-
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="point"></param>
-        private UpdateResult UpdateCurveHandler(Point point)
-        {
-            this.totalCount += 1;
-
-
-            if (this.totalCount <= MaxVisibleCount) 
-            {
-                Point p;
-                this.Convert(point, out p);
-                
-                curve.Points.Add(p);
-
-                return UpdateResult.None;
-            }
-            else
-            {
-                // 结束缩放
-                this.timeLine.X1 = this.timeLine.X2 = 0;
-                this.UpdateCurveScale(1.0);
-
-                double offsetPos = (MaxVisibleCount - this.totalCount) * ChartView.Graduation * 5;
-                this.finalOffsetPos = offsetPos;
-                TranslateTransform tt = new TranslateTransform(offsetPos, 0);
-                curve.RenderTransform = tt;
-                // curve.Stroke = (this.totalCount % 2 == 0) ? Brushes.Black : Brushes.Green;
-                Point p;
-                this.Convert(point, out p);
-                curve.Points.Add(p);
-
-                // TODO: 
-                return UpdateResult.Overflow;
-            }
-
-        }
-
-        private void ClearCurveHandler()
-        {
-            if (this.curve != null)
-            {
-                this.totalCount = 0;
-                this.curve.Points.Clear();
-                // Do not need Remove the object. 
-                // this.CanvasView.Children.Remove(this.curve);
-            }
-        }
-
+        const double Grad = 0.45;
         /// <summary>
         /// Scale [1.0, 3.0]
         /// </summary>
@@ -389,6 +260,95 @@ namespace Scada.Chart
             }
         }
 
+        private void UpdateValueAxis(double max, double min)
+        {
+            double scaleWidth = 30;
+            this.Graduation.ClipToBounds = true;
+            int textCount = 0;
+
+            double d = this.CanvasHeight / (max - min);
+            // How many graduation?
+            int dc = (int)CanvasHeight / 10;
+            // What's the value aach graduation 
+            double ev = (max - min) / dc;
+
+            for (int i = 0; i < 60; i++)
+            {
+                double y = this.CanvasHeight - (ZeroOffset - 2) - i * 10;
+
+                if (y < 0)
+                {
+                    break;
+                }
+
+                Line l = new Line();
+                this.Graduations.Add(i, new GraduationLine() { Line = l, Pos = y });
+                l.Y1 = l.Y2 = y;
+                l.X1 = (i % 5 != 0) ? scaleWidth - Charts.ScaleLength : scaleWidth - Charts.MainScaleLength;
+                l.X2 = scaleWidth;
+
+                l.Stroke = new SolidColorBrush(Colors.Gray);
+                this.Graduation.Children.Add(l);
+
+                double value = min + i * ev;
+
+                if (i % 5 == 0)
+                {
+                    TextBlock t = new TextBlock();
+                    t.Foreground = Brushes.Black;
+                    t.FontSize = 9;
+                    double pos = (double)y - 10;
+                    this.GraduationTexts.Add(textCount, new GraduationText()
+                    {
+                        Text = t,
+                        Pos = pos
+                    });
+
+                    if (max > 10)
+                    {
+                        t.Text = string.Format("{0}", (int)value);
+                    }
+                    else if (this.Max > 1)
+                    {
+                        double dv = ConvertDouble(value, 1);
+                        t.Text = string.Format("{0:f1}", (double)dv);
+                    }
+                    else
+                    {
+                        double dv = ConvertDouble(value, 2);
+                        t.Text = string.Format("{0:f2}", (double)dv);
+                    }
+
+                    t.SetValue(Canvas.RightProperty, (double)10.0);
+                    t.SetValue(Canvas.TopProperty, (double)pos);
+                    this.Graduation.Children.Add(t);
+
+                    textCount++;
+                }
+            }
+
+        }
+
+        public void SetPoints(int[] data)
+        {
+            this.Initialize();
+
+            this.Max = data.Max() * 1.4;
+            this.Min = data.Min();
+            this.UpdateValueAxis(this.Max, this.Min);
+
+            int count = data.Length;
+
+            for (int i = 0; i < count; ++i)
+            {
+                Point point = new Point(i * Grad, data[i]);
+                Point p;
+                this.Convert(point, out p);
+                curve.Points.Add(p);
+            }
+        }
+
+
         public void TrackTimeLine(Point point, string timeLabel)
         {
             timeLine.X1 = timeLine.X2 = point.X;
@@ -433,16 +393,16 @@ namespace Scada.Chart
             double y = double.NaN;
             if (this.GetY(xo, out y))
             {
-                double v = this.GetValue(y);
+                double v = this.GetValue(y + ZeroOffset);
                 v = ConvertDouble(v, 4);
 
                 this.valueBorder.Visibility = Visibility.Visible;
-                string t;
-                this.valueLabel.Text = string.Format("[{0}]     {1}", timeLabel, v);
+                int i = (int)(xo / Grad);
+                this.valueLabel.Text = string.Format("[{0}, {1}]", i, v);
             }
             else
             {
-                this.valueBorder.Visibility = Visibility.Collapsed;
+                this.valueBorder.Visibility = Visibility.Hidden;
             }
         }
 
@@ -463,6 +423,7 @@ namespace Scada.Chart
 
         private double Convert(double v)
         {
+            double canvasHeight = this.CanvasHeight;
             double range = this.Max - this.Min;
             double pa = 0.0;
             double pb = 0.0;
@@ -473,11 +434,11 @@ namespace Scada.Chart
             }
             else
             {
-                return 0.0;
+                return ZeroOffset;
             }
 
-            double pos = this.Height / (pa / pb + 1);
-            double y = this.Height - pos;
+            double pos = canvasHeight / (pa / pb + 1);
+            double y = canvasHeight - pos - ZeroOffset;
             return y;
         }
 
@@ -518,7 +479,7 @@ namespace Scada.Chart
 
         private double GetValue(double y)
         {
-            double v = this.Max - (this.Max - this.Min) * y / this.Height;
+            double v = this.Max - (this.Max - this.Min) * y / this.CanvasHeight;
             return v;
         }
 
@@ -562,33 +523,17 @@ namespace Scada.Chart
         {
             const double Top = 12.0;
             SolidColorBrush labelBrush = new SolidColorBrush(Color.FromRgb(219, 219, 219));
-            /*
-            Border labelBorder = new Border();
-            labelBorder.CornerRadius = new CornerRadius(1.0);
-            //labelBorder.Background = labelBrush;
-            labelBorder.BorderBrush = labelBrush;
-            labelBorder.Padding = new Thickness(4.0, 3.0, 4.0, 3.0);
-            labelBorder.BorderThickness = new Thickness(1);
-            // No need effect. 
-            // labelBorder.Effect = new DropShadowEffect() { Direction = 320.0, Opacity= 0.5};
-
-            labelBorder.SetValue(Canvas.RightProperty, 12.0);
-            labelBorder.SetValue(Canvas.TopProperty, 12.0);
-            */
+            
             TextBlock displayLabel = new TextBlock();
             displayLabel.Text = displayName;
-            // displayLabel.Background = labelBrush;
             
             displayLabel.Foreground = Brushes.Black;
             displayLabel.SetValue(Canvas.RightProperty, 12.0);
             displayLabel.SetValue(Canvas.TopProperty, Top);
             this.CanvasView.Children.Add(displayLabel);
-            
-
-
             // Value text Label.
             this.valueBorder = new Border();
-            // valueBorder.Background = labelBrush;
+
             valueBorder.CornerRadius = new CornerRadius(1.0);
             valueBorder.BorderBrush = labelBrush;
             valueBorder.Padding = new Thickness(4.0, 0.0, 4.0, 3.0);
@@ -597,10 +542,15 @@ namespace Scada.Chart
             valueBorder.SetValue(Canvas.TopProperty, Top);
             this.valueLabel = new TextBlock();
             this.valueLabel.Foreground = Brushes.Black;
-
+            this.valueLabel.TextAlignment = TextAlignment.Left;
+            this.valueLabel.Width = 100;
             valueBorder.Child = valueLabel;
             this.CanvasView.Children.Add(valueBorder);
         }
 
+        internal void ClearPoints()
+        {
+            this.curve.Points.Clear();
+        }
     }
 }

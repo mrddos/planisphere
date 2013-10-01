@@ -154,7 +154,10 @@ namespace Scada.Chart
                 l.Y1 = l.Y2 = canvasHeight - i * 40;
                 l.X1 = 0;
                 l.X2 = 1900;
-                l.StrokeThickness = 0.5;
+                if (i == 0)
+                    l.StrokeThickness = 0.1;
+                else
+                    l.StrokeThickness = 0.5;
 
                 l.Stroke = gridLineBrush;
                 this.CanvasView.Children.Add(l);

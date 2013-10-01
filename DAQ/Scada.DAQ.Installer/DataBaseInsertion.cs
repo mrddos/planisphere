@@ -96,11 +96,14 @@ namespace Scada.DAQ.Installer
                 cmd.Parameters.AddWithValue("@1", t);
 
                 v = (v + 1) % 5;
-                double d = double.Parse("1." + v);
+                long tick = DateTime.Now.Ticks;
+                Random ran = new Random((int)(tick & 0xffffffffL) | (int)(tick >> 32));
+                v = ran.Next(80, 120);
+                double d = v;
                 cmd.Parameters.AddWithValue("@2", d);
 
-                double h = double.Parse("410." + v);
-                cmd.Parameters.AddWithValue("@3", h);
+                v = ran.Next(100, 103);
+                cmd.Parameters.AddWithValue("@3", v * 4);
 
 
                 cmd.ExecuteNonQuery();

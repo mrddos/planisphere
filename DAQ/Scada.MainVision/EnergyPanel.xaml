@@ -5,17 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:chart="clr-namespace:Scada.Chart;assembly=Scada.Chart"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300" Loaded="UserControlLoaded">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0"/>
-            <RowDefinition Height="200"/>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="400"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBlock Margin="20,10,0,0" FontSize="15" FontWeight="Bold"/>
-        </StackPanel>
-
-        <chart:EnergyChartView x:Name="EnergyView" Grid.Row="1" VerticalAlignment="Top">
+        
+        <TextBlock Text="能谱图" Grid.Row="0" Margin="20,4,0,0" FontSize="15" FontWeight="Bold"/>
+        
+        <chart:EnergyChartView x:Name="EnergyView" Grid.Row="1" VerticalAlignment="Top"
+                               VerticalContentAlignment="Stretch">
         </chart:EnergyChartView>
 
     </Grid>

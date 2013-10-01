@@ -31,6 +31,7 @@ namespace Scada.MainVision
         public EnergyPanel()
         {
             InitializeComponent();
+            var p = this.Height;
             /*
             this.deviceNaIFilesPath = GetDeviceNaiPath();
             this.entry = DeviceEntry.GetDeviceEntry("Scada.NaIDevice", deviceNaIFilesPath + "\\device.cfg");
@@ -103,6 +104,7 @@ namespace Scada.MainVision
             int[] data = this.GetNaICannelData(time);
             if (data.Length > 0)
             {
+                this.EnergyView.SetDataPoints(data);
                 // TODO: show the energy data in chart.
                 // TODO: Chart...
             }
@@ -110,6 +112,11 @@ namespace Scada.MainVision
             {
                 // TODO: 文件不存在; But maybe data exists in DB.
             }
+        }
+
+        private void UserControlLoaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
     }
