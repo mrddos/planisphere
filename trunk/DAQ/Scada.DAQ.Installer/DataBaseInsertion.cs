@@ -127,7 +127,6 @@ namespace Scada.DAQ.Installer
             }
             else if (this.device.ToLower() == "shelter")
             {
-                // Debug.Assert(false);
                 cmd.CommandText = "insert into environment_rec(time, Temperature, Humidity, IfMainPowerOff, BatteryHours, IfSmoke, IfWater, IfDoorOpen, Alarm)" 
                                     + " values(@1, @2, @3, 0, 4, 0, 0, 0, 0)";
                 cmd.Parameters.AddWithValue("@1", t);
@@ -144,7 +143,6 @@ namespace Scada.DAQ.Installer
             }
             else if (this.device.ToLower() == "nai")
             {
-                // TODO: 
                 t = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
                 cmd.CommandText = "insert into nai_rec(time, StartTime, EndTime, Coefficients, ChannelData, DoseRate, Temperature,HighVoltage,NuclideFound,EnergyFromPosition) values(@1, @2, @3, @4, @5, @6, 24, 400.1, 1, 1460.83)";
                 cmd.Parameters.AddWithValue("@1", t);
@@ -168,7 +166,26 @@ namespace Scada.DAQ.Installer
             }
             else if (this.device.ToLower() == "dwd")
             {
+                /*
+                 Time, IfRain, Barrel, Alarm, IsLidOpen, CurrentRainTime      
+                 */
+                t = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
+                cmd.CommandText = 
+                    "insert into rdsampler_rec(Time, IfRain, Barrel, Alarm, IsLidOpen, CurrentRainTime) " + 
+                    "values(@1, @2, @3, @4, @5, @6)";
+                cmd.Parameters.AddWithValue("@1", t);
+                cmd.Parameters.AddWithValue("@2", "1");
+                cmd.Parameters.AddWithValue("@3", "0");
 
+                v += 5;
+                int a = v / 10 * 10;
+
+                cmd.Parameters.AddWithValue("@4", 0);
+                cmd.Parameters.AddWithValue("@5", "0");
+                cmd.Parameters.AddWithValue("@6", a.ToString());
+
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
             }
 
         }
