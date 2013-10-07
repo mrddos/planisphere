@@ -39,6 +39,7 @@ namespace Scada.Watch
 
         private void AddWatch()
         {
+            /*
             string stateFile = string.Format("{0}\\devices.stt", GetInstallPath());
             if (File.Exists(stateFile))
             {
@@ -71,7 +72,7 @@ namespace Scada.Watch
                     while (line != null);
                 }
             }
-           
+           */
         }
 
 
@@ -88,7 +89,7 @@ namespace Scada.Watch
 
 		void timerTick(object sender, EventArgs e)
 		{
-            DateTime now = DateTime.Now; 
+            DateTime now = DateTime.Now;
             if (now.Day != this.theDate.Day)
             {
                 // A new day comes!

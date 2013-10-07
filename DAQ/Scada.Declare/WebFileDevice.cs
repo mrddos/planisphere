@@ -388,7 +388,6 @@ namespace Scada.Declare
             return set;
         }
 
-        
         private void DoFolderPolicy(string folderName)
         {
             if (!Directory.Exists(folderName))
