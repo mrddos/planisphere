@@ -151,7 +151,12 @@ namespace Scada.DAQ.Installer
 
                 cmd.Parameters.AddWithValue("@4", "-4.94022E+00 1.37924E+00 9.68201E-05");
                 cmd.Parameters.AddWithValue("@5", channcelData);
-                cmd.Parameters.AddWithValue("@6", "0.151");
+
+                long tick = DateTime.Now.Ticks;
+                Random ran = new Random((int)(tick & 0xffffffffL) | (int)(tick >> 32));
+
+                v = ran.Next(130, 155);
+                cmd.Parameters.AddWithValue("@6", v);
 
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
