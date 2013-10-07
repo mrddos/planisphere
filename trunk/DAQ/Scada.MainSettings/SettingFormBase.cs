@@ -12,7 +12,7 @@ namespace Scada.MainSettings
     {
         public const string SerialPortCOM1 = "COM1";
 
-
+        // PropertyGrid~
         private PropertyGrid propertyGrid = null;
 
         public SettingFormBase()

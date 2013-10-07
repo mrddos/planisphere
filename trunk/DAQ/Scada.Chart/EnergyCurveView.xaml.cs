@@ -271,7 +271,8 @@ namespace Scada.Chart
             int dc = (int)CanvasHeight / 10;
             // What's the value aach graduation 
             double ev = (max - min) / dc;
-
+            this.Graduations.Clear();
+            this.GraduationTexts.Clear();
             for (int i = 0; i < 60; i++)
             {
                 double y = this.CanvasHeight - (ZeroOffset - 2) - i * 10;
