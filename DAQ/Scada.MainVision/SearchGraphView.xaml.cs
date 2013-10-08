@@ -143,12 +143,6 @@ namespace Scada.MainVision
         {
             if ((bool)e.NewValue) // Shown
             {
-                /*
-                foreach (string key in dataSources.Keys)
-                {
-
-                }
-                */
             }
 
         }

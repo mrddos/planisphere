@@ -155,11 +155,21 @@ namespace Scada.DAQ.Installer
                 long tick = DateTime.Now.Ticks;
                 Random ran = new Random((int)(tick & 0xffffffffL) | (int)(tick >> 32));
 
-                v = ran.Next(130, 155);
+                v = ran.Next(60, 80);
                 cmd.Parameters.AddWithValue("@6", v);
 
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
+
+                string indication = "100";
+                if (v < 65)
+                    indication = "75";
+                string channel = "993";
+                int d = ran.Next(118, 140);
+                string doserate = ((double)d / 10.0).ToString();
+                string energy = "1460.74";
+                this.AddNuclideData(cmd, t, "K-40", "1.11E+01 4.00E+00", indication, doserate, channel, energy);
+
             }
             else if (this.device.ToLower() == "mds")
             {
@@ -192,6 +202,27 @@ namespace Scada.DAQ.Installer
                 cmd.ExecuteNonQuery();
                 cmd.Parameters.Clear();
             }
+
+        }
+
+        private void AddNuclideData(MySqlCommand cmd, DateTime t, string name, string activity, string indication, string doserate, string channel, string energy)
+        {
+            cmd.CommandText = "insert into nainuclide_rec(time, Name, Activity, indication, doserate, channel, energy)"+
+                " values(@1, @2, @3, @4, @5, @6, @7)";
+            cmd.Parameters.AddWithValue("@1", t);
+            cmd.Parameters.AddWithValue("@2", name);
+            cmd.Parameters.AddWithValue("@3", activity);
+
+            cmd.Parameters.AddWithValue("@4", indication);
+            cmd.Parameters.AddWithValue("@5", doserate);
+            cmd.Parameters.AddWithValue("@6", channel);
+            cmd.Parameters.AddWithValue("@7", energy);
+
+            cmd.ExecuteNonQuery();
+            cmd.Parameters.Clear();
+
+
+
 
         }
 
