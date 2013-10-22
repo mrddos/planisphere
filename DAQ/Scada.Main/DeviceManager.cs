@@ -359,6 +359,13 @@ namespace Scada.Main
 
         private void CheckVirtualDevice(DeviceEntry entry, string configFile)
         {
+            DirectoryInfo di = Directory.GetParent(configFile);
+            string virtualDeviceFlagFile = string.Format("{0}\\virtual-device", di.FullName);
+            if (!File.Exists(virtualDeviceFlagFile))
+            {
+                return;
+            }
+
             string deviceDisplayName = (StringValue)entry[DeviceEntry.Name];
             string caption = "连接虚拟设备提示";
             string message = string.Format("是否要连接 '{0}' 的虚拟设备，连接虚拟设备点击‘是’，\n连接真实设备点击‘否’", deviceDisplayName);
@@ -375,9 +382,6 @@ namespace Scada.Main
                 DialogResult del = MessageBox.Show(deleteVirtualFileMsg, caption, MessageBoxButtons.YesNo);
                 if (del == DialogResult.Yes)
                 {
-                    DirectoryInfo di = Directory.GetParent(configFile);
-                    string virtualDeviceFlagFile = string.Format("{0}\\virtual-device", di.FullName);
-
                     File.Delete(virtualDeviceFlagFile);
                 }
             }

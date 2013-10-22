@@ -84,6 +84,11 @@ namespace Scada.Declare
         private DateTime currentActionTime = default(DateTime);
 
 
+        private byte[] lastLine;
+
+        private bool calcDataWithLastData = false;
+
+
 		public StandardDevice(DeviceEntry entry)
 		{
             this.entry = entry;
@@ -150,6 +155,9 @@ namespace Scada.Declare
 
             var sensitive = this.GetValue(entry, DeviceEntry.Sensitive, "false");
             this.sensitive = (sensitive.ToLower() == "true");
+
+            this.calcDataWithLastData = this.GetValue(entry, "CalcLast", 0) == 1;
+
             
 			// Set DataParser & factors
             string dataParserClz = (StringValue)entry[DeviceEntry.DataParser];
@@ -437,8 +445,17 @@ namespace Scada.Declare
             {
                 time = DateTime.Now;
             }
+            string[] data = null;
+            try
+            {
+                data = this.dataParser.Search(line, lastLine);
+                this.lastLine = line;
+            }
+            catch (Exception e)
+            {
+                RecordManager.DoSystemEventRecord(this, "Parse data failure");
+            }
 
-			string[] data = this.dataParser.Search(line);
 			dd = default(DeviceData);
 			if (data == null || data.Length == 0)
 			{

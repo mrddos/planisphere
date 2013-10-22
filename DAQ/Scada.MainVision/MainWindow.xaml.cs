@@ -366,7 +366,7 @@ namespace Scada.MainVision
             }
             string windspeed = (string)d["windspeed"];
             string direction = (string)d["direction"];
-            string raingauge = (string)d["raingauge"];
+            string raingauge = (string)d["rainspeed"];
 
             string windspeedMsg = string.Format("风速: {0}m/s", windspeed);
             string directionMsg = string.Format("风向: {0}°", direction);
@@ -374,7 +374,7 @@ namespace Scada.MainVision
 
             this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "windspeed", 0, windspeed);
             this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "direction", 1, direction);
-            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "raingauge", 2, raingauge);
+            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "rainspeed", 2, raingauge);
 
             this.DisplayPanelData(panel, windspeedMsg, directionMsg, raingaugeMsg);
    
