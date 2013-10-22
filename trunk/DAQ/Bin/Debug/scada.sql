@@ -15,6 +15,7 @@ CREATE TABLE `weather` (
   `Humidity` varchar(8) DEFAULT NULL,
   `Pressure` varchar(8) DEFAULT NULL,
   `Raingauge` varchar(8) DEFAULT NULL,
+  `Rainspeed` varchar(8) DEFAULT NULL,
   `Dewpoint` varchar(8) DEFAULT NULL,
   `IfRain` bit(1) DEFAULT NULL,
   `Alarm` bit(1) DEFAULT NULL,

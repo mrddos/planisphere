@@ -12,7 +12,7 @@ namespace Scada.Declare
 			this.lineParser = new DWD485ASCIILineParser();
 		}
 
-		public override string[] Search(byte[] bytes)
+        public override string[] Search(byte[] bytes, byte[] lastData)
 		{
 			// 00 
 			// 32 CD A0 
