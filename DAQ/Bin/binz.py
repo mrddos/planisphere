@@ -11,7 +11,7 @@ def add_zipfile(zf, filename, root):
 	print path
 	zf.write(filename, path)
 
-otherfilelist = ["agent.settings", "local.ip", "password", "start_vdata.bat", "stop_vdata.bat", "startup.bat"]
+otherfilelist = ["agent.settings", "local.ip", "password", "scada.sql", "start_vdata.bat", "stop_vdata.bat", "startup.bat"]
 
 def make_bin_zip(filepath, type):
 	root = filepath
