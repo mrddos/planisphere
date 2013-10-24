@@ -1,5 +1,4 @@
-﻿
-#
+﻿# Version = 1.0.0.1
 # ReadMe: Run Scada.DAQ.Installer.exe --init-database
 # To Create Database and tables.
 #
