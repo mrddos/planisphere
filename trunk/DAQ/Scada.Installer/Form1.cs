@@ -228,17 +228,36 @@ namespace Scada.Installer
 
         private bool UnzipProgramFiles()
         {
-            string programZipFile = string.Format("{0}\\{1}", GetInstallPath(), "\\bin.zip");
+            string programZipFile = string.Format("{0}\\{1}", GetInstallPath(), "bin.zip");
             string destPath = this.installPath.Text;
             if (!File.Exists(programZipFile))
             {
                 this.AddLog("Error: 未找到文件: bin.zip!");
                 return false;
             }
+
             this.AddLog("解压缩程序中... (请关闭相关进程，否则解压会失败!)");
             string errorMessage;
+            Zip zip = new Zip();
 
-            bool ret = Zip.UnZipFile(programZipFile, destPath, out errorMessage);
+            bool ret = zip.UnZipFile(programZipFile, destPath, 
+                (filePath, fileContent)=>
+                {
+                    if (filePath.EndsWith(".cfg") ||
+                        filePath.EndsWith("local.ip") ||
+                        filePath.EndsWith("password") ||
+                        filePath.EndsWith(".bat") ||
+                        filePath.EndsWith(".settings"))
+                    {
+                        if (fileContent != null)
+                        {
+                            WriteFile(fileContent, destPath + "\\" + filePath);
+                        }
+                        return true;
+                    }
+                    return false;
+                },
+                out errorMessage);
             if (ret)
             {
                 this.AddLog("解压缩程序成功!");
@@ -248,6 +267,47 @@ namespace Scada.Installer
                 this.AddLog("解压缩程序失败!");
             }
             return ret;
+        }
+
+        private void WriteFile(Stream stream, string fileName)
+        {
+            string nzFileName = fileName + ".n!";
+            using (FileStream streamWriter = File.Create(nzFileName))
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                byte[] buffer = new byte[stream.Length];
+                while (true)
+                {
+                    int r = stream.Read(buffer, 0, buffer.Length);
+                    if (r > 0)
+                    {
+                        streamWriter.Write(buffer, 0, r);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            System.Security.Cryptography.HashAlgorithm hash = System.Security.Cryptography.HashAlgorithm.Create();
+            
+            FileStream stream1 = new FileStream(fileName, FileMode.Open);
+            FileStream stream2 = new FileStream(nzFileName, FileMode.Open);
+            byte[] hashbyte1 = hash.ComputeHash(stream1);
+            byte[] hashbyte2 = hash.ComputeHash(stream2);
+            stream1.Close();
+            stream2.Close();
+
+            if (BitConverter.ToString(hashbyte1) == BitConverter.ToString(hashbyte2))
+            {
+                File.Delete(nzFileName);
+            }
+            else
+            {
+                MessageBox.Show(string.Format("文件 '{0}' 与 {1} 存在差异，请在安装(更新)后手工合并。", fileName, nzFileName), "配置文件差异");
+            }
+  
         }
 
         private bool PrepareMySQLConfigFile()

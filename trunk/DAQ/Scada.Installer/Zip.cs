@@ -9,7 +9,9 @@ namespace Scada.Installer
 {
     class Zip
     {
-        public static bool UnZipFile(string zipFilePath, string unZipDir, out string errorMessage)
+        private byte[] buffer = new byte[1024 * 5];
+
+        public bool UnZipFile(string zipFilePath, string unZipDir, Func<string, Stream, bool> cb, out string errorMessage)
         {
             errorMessage = string.Empty;
             if (zipFilePath == string.Empty)
@@ -33,31 +35,51 @@ namespace Scada.Installer
             {
                 using (ZipInputStream s = new ZipInputStream(File.OpenRead(zipFilePath)))
                 {
-
                     ZipEntry theEntry;
                     while ((theEntry = s.GetNextEntry()) != null)
                     {
                         string directoryName = Path.GetDirectoryName(theEntry.Name);
                         string fileName = Path.GetFileName(theEntry.Name);
+                        string relFileName = directoryName + "\\" + fileName;
+                        bool compare = cb(relFileName, null);
                         if (directoryName.Length > 0)
                         {
                             Directory.CreateDirectory(unZipDir + directoryName);
                         }
+
                         if (!directoryName.EndsWith("\\"))
                             directoryName += "\\";
                         if (fileName != String.Empty)
                         {
+                            MemoryStream ms = new MemoryStream();
+                            while (true)
+                            {
+                                int r = s.Read(buffer, 0, buffer.Length);
+                                if (r > 0)
+                                {
+                                    ms.Write(buffer, 0, r);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (compare)
+                            {
+                                ms.Seek(0, SeekOrigin.Begin);
+                                cb(relFileName, ms);
+                            }
+
                             using (FileStream streamWriter = File.Create(unZipDir + theEntry.Name))
                             {
-
-                                const int size = 2048 * 5;
-                                byte[] data = new byte[size];
+                                ms.Seek(0, SeekOrigin.Begin);
                                 while (true)
                                 {
-                                    int r = s.Read(data, 0, data.Length);
+                                    int r = ms.Read(buffer, 0, buffer.Length);
                                     if (r > 0)
                                     {
-                                        streamWriter.Write(data, 0, r);
+                                        streamWriter.Write(buffer, 0, r);
                                     }
                                     else
                                     {
