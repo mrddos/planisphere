@@ -110,7 +110,7 @@ CREATE TABLE `NaI_Rec` (
 `Time` datetime, 
 `StartTime` datetime, 
 `EndTime` datetime, 
-`Coefficients` varchar(16), 
+`Coefficients` varchar(48), 
 `ChannelData` varchar(10000), 
 `DoseRate` varchar(16), 
 `Temperature` varchar(16), 
