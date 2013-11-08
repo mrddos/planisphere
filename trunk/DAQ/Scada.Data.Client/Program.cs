@@ -1,6 +1,9 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Scada.Data.Client
@@ -15,16 +18,32 @@ namespace Scada.Data.Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form form = null;
-            if (args.Length > 0 && string.Compare(args[0], "--f", true) == 0)
-            {
-                form = new Form1();
-            }
-            else
-            {
-                form = new MainForm();
-            }
+            Form form = new RealTimeForm(/* CLose ACtion */() => { });
             Application.Run(form);
         }
+
+        public static string GetInstallPath()
+        {
+            string p = Assembly.GetExecutingAssembly().Location;
+            return Path.GetDirectoryName(p);
+        }
+
+        public static string GetDatePath(DateTime time)
+        {
+            return string.Format("{0}-{1:D2}", time.Year, time.Month);
+        }
+
+        public static string GetLogPath(string deviceKey)
+        {
+            string p = string.Format("{0}\\logs\\{1}\\{2}", GetInstallPath(), deviceKey, GetDatePath(DateTime.Now));
+            if (!Directory.Exists(p))
+            {
+                Directory.CreateDirectory(p);
+            }
+            return p;
+        }
+
+        public const string System = "system";
+
     }
 }
