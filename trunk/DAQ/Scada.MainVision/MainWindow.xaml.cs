@@ -366,17 +366,17 @@ namespace Scada.MainVision
             }
             string windspeed = (string)d["windspeed"];
             string direction = (string)d["direction"];
-            string raingauge = (string)d["rainspeed"];
+            string rainspeed = (string)d["rainspeed"];
 
             string windspeedMsg = string.Format("风速: {0}m/s", windspeed);
             string directionMsg = string.Format("风向: {0}°", direction);
-            string raingaugeMsg = string.Format("雨量: {0}mm/min", raingauge);
+            string rainspeedMsg = string.Format("雨量: {0}mm/min", rainspeed);
 
             this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "windspeed", 0, windspeed);
             this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "direction", 1, direction);
-            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "rainspeed", 2, raingauge);
+            this.CheckAlarm(panel, DBDataProvider.DeviceKey_Weather, "rainspeed", 2, rainspeed);
 
-            this.DisplayPanelData(panel, windspeedMsg, directionMsg, raingaugeMsg);
+            this.DisplayPanelData(panel, windspeedMsg, directionMsg, rainspeedMsg);
    
         }
         // 4 采样状态（可用颜色表示）、累计采样体积（重要）、累计采样时间、瞬时采样流量、三种故障报警
