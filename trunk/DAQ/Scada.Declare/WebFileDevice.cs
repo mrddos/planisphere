@@ -169,6 +169,7 @@ namespace Scada.Declare
                     }
                     catch (Exception e)
                     {
+                        RecordManager.DoSystemEventRecord(this, address);
                         RecordManager.DoSystemEventRecord(this, e.Message);
                     }
                 }
