@@ -159,7 +159,8 @@ namespace Scada.Declare
                     try
                     {
                         client.Credentials = new NetworkCredential("root", "root");
-                        client.UseDefaultCredentials = true;
+                        // DO NOT USE the FOLLOWING LINE
+                        // client.UseDefaultCredentials = true;
                         if (File.Exists(tempFile))
                         {
                             File.Delete(tempFile);
