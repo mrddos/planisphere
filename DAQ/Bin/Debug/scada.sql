@@ -1,4 +1,5 @@
-﻿# Version = 1.0.0.1
+﻿
+#
 # ReadMe: Run Scada.DAQ.Installer.exe --init-database
 # To Create Database and tables.
 #
@@ -14,7 +15,6 @@ CREATE TABLE `weather` (
   `Humidity` varchar(8) DEFAULT NULL,
   `Pressure` varchar(8) DEFAULT NULL,
   `Raingauge` varchar(8) DEFAULT NULL,
-  `Rainspeed` varchar(8) DEFAULT NULL,
   `Dewpoint` varchar(8) DEFAULT NULL,
   `IfRain` bit(1) DEFAULT NULL,
   `Alarm` bit(1) DEFAULT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE `NaI_Rec` (
 `Time` datetime, 
 `StartTime` datetime, 
 `EndTime` datetime, 
-`Coefficients` varchar(48), 
+`Coefficients` varchar(16), 
 `ChannelData` varchar(10000), 
 `DoseRate` varchar(16), 
 `Temperature` varchar(16), 

@@ -12,6 +12,7 @@ namespace Scada.Update
     public enum UnzipCode
     {
         None,
+        Ignore,
         Compare
     }
 
@@ -75,6 +76,10 @@ namespace Scada.Update
                             {
                                 ms.Seek(0, SeekOrigin.Begin);
                                 unzipHandler(relFileName, ms);
+                            }
+                            else if (code == UnzipCode.Ignore)
+                            {
+                                continue;
                             }
 
                             using (FileStream streamWriter = File.Create(unZipDir + theEntry.Name))
