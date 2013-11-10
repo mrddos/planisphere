@@ -5,29 +5,35 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Scada.Installer
+namespace Scada.Update
 {
+    public delegate UnzipCode UnzipHandler(string fileName, Stream stream);
+
+    public enum UnzipCode
+    {
+        None,
+        Compare
+    }
+
     class Zip
     {
         private byte[] buffer = new byte[1024 * 5];
 
-        public bool UnZipFile(string zipFilePath, string unZipDir, Func<string, Stream, bool> cb, out string errorMessage)
+        public bool UnZipFile(string zipFilePath, string unZipDir, UnzipHandler unzipHandler, out string errorMessage)
         {
             errorMessage = string.Empty;
-            if (zipFilePath == string.Empty)
+            if (zipFilePath == string.Empty || !File.Exists(zipFilePath))
             {
-                errorMessage = "压缩文件不能为空！";
+                errorMessage = "Zip File Not Found";
                 return false;
             }
-            if (!File.Exists(zipFilePath))
-            {
-                errorMessage = "压缩文件不存在！";
-                return false;
-            }
+
             if (unZipDir == string.Empty)
                 unZipDir = zipFilePath.Replace(Path.GetFileName(zipFilePath), Path.GetFileNameWithoutExtension(zipFilePath));
+
             if (!unZipDir.EndsWith("\\"))
                 unZipDir += "\\";
+
             if (!Directory.Exists(unZipDir))
                 Directory.CreateDirectory(unZipDir);
 
@@ -41,7 +47,7 @@ namespace Scada.Installer
                         string directoryName = Path.GetDirectoryName(theEntry.Name);
                         string fileName = Path.GetFileName(theEntry.Name);
                         string relFileName = directoryName + "\\" + fileName;
-                        bool compare = cb(relFileName, null);
+                        UnzipCode code = unzipHandler(relFileName, null);
                         if (directoryName.Length > 0)
                         {
                             Directory.CreateDirectory(unZipDir + directoryName);
@@ -54,10 +60,10 @@ namespace Scada.Installer
                             MemoryStream ms = new MemoryStream();
                             while (true)
                             {
-                                int r = s.Read(buffer, 0, buffer.Length);
+                                int r = s.Read(this.buffer, 0, this.buffer.Length);
                                 if (r > 0)
                                 {
-                                    ms.Write(buffer, 0, r);
+                                    ms.Write(this.buffer, 0, r);
                                 }
                                 else
                                 {
@@ -65,10 +71,10 @@ namespace Scada.Installer
                                 }
                             }
 
-                            if (compare)
+                            if (code == UnzipCode.Compare)
                             {
                                 ms.Seek(0, SeekOrigin.Begin);
-                                cb(relFileName, ms);
+                                unzipHandler(relFileName, ms);
                             }
 
                             using (FileStream streamWriter = File.Create(unZipDir + theEntry.Name))
@@ -76,10 +82,10 @@ namespace Scada.Installer
                                 ms.Seek(0, SeekOrigin.Begin);
                                 while (true)
                                 {
-                                    int r = ms.Read(buffer, 0, buffer.Length);
+                                    int r = ms.Read(this.buffer, 0, this.buffer.Length);
                                     if (r > 0)
                                     {
-                                        streamWriter.Write(buffer, 0, r);
+                                        streamWriter.Write(this.buffer, 0, r);
                                     }
                                     else
                                     {

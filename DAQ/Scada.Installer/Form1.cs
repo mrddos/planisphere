@@ -11,6 +11,7 @@ using ICSharpCode.SharpZipLib.Zip;
 using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
+using Scada.Update;
 
 // using IWshRuntimeLibrary;
 
@@ -66,7 +67,11 @@ namespace Scada.Installer
                 return false;
             }
 
-            if (!UnzipProgramFiles())
+            Updater u = new Updater();
+            // If Put the bin.zip @ Install Path, the Installer would unzip it into InstallPath.
+            // If Put the bin.zip @ Update Path, The Update Program would update using this zip file.
+            string binZipFilePath = this.GetInstallerPath() + "\\bin.zip";
+            if (!u.UnzipProgramFiles(binZipFilePath, this.installPath.Text))
             {
                 return false;
             }
@@ -226,49 +231,6 @@ namespace Scada.Installer
             }
         }
 
-        private bool UnzipProgramFiles()
-        {
-            string programZipFile = string.Format("{0}\\{1}", GetInstallPath(), "bin.zip");
-            string destPath = this.installPath.Text;
-            if (!File.Exists(programZipFile))
-            {
-                this.AddLog("Error: 未找到文件: bin.zip!");
-                return false;
-            }
-
-            this.AddLog("解压缩程序中... (请关闭相关进程，否则解压会失败!)");
-            string errorMessage;
-            Zip zip = new Zip();
-
-            bool ret = zip.UnZipFile(programZipFile, destPath, 
-                (filePath, fileContent)=>
-                {
-                    if (filePath.EndsWith(".cfg") ||
-                        filePath.EndsWith("local.ip") ||
-                        filePath.EndsWith("password") ||
-                        filePath.EndsWith(".bat") ||
-                        filePath.EndsWith(".settings"))
-                    {
-                        if (fileContent != null)
-                        {
-                            WriteFile(fileContent, destPath + "\\" + filePath);
-                        }
-                        return true;
-                    }
-                    return false;
-                },
-                out errorMessage);
-            if (ret)
-            {
-                this.AddLog("解压缩程序成功!");
-            }
-            else
-            {
-                this.AddLog("解压缩程序失败!");
-            }
-            return ret;
-        }
-
         private void WriteFile(Stream stream, string fileName)
         {
             string nzFileName = fileName + ".n!";
@@ -395,7 +357,7 @@ namespace Scada.Installer
         private bool installMode = true;
 
 
-        private string GetInstallPath()
+        private string GetInstallerPath()
         {
             string p = Assembly.GetExecutingAssembly().Location;
             return Path.GetDirectoryName(p);
