@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,14 @@ namespace Scada.MainVision
     {
         private bool init = false;
 
-        private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
-
-        private MySqlConnection conn = new MySqlConnection(ConnectionString);
+        private MySqlConnection conn = null;
 
         private MySqlCommand cmd = null;
 
         private void Initialize()
         {
+            string connectionString = new DBConnectionString().ToString();
+            this.conn = new MySqlConnection(connectionString);
             this.conn.Open();
             this.cmd = this.conn.CreateCommand();
         }

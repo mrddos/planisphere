@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,7 @@ namespace Scada.Data.Tools
 
         private MySqlConnection conn = null;
 
-        private string connectionString = "datasource=127.0.0.1;username=root;database=scada";
+        private string connectionString = string.Empty;
 
         public DataBaseCreator(string dataBaseFile)
         {
@@ -88,8 +89,10 @@ namespace Scada.Data.Tools
 
         internal void CreateDAQDB()
         {
-            string connectionString = "datasource=127.0.0.1;username=root;database=mysql";
-            using (var connToMySql = new MySqlConnection(connectionString))
+            var s = new DBConnectionString();
+            s.Database = "mysql";
+            this.connectionString = new DBConnectionString().ToString();
+            using (var connToMySql = new MySqlConnection(this.connectionString))
             {
                 connToMySql.Open();
 

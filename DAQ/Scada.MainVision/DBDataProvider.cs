@@ -11,6 +11,7 @@ namespace Scada.MainVision
     using System.Data.SqlTypes;
     using System.IO;
     using System.Reflection;
+    using Scada.Config;
 
     /// <summary>
     /// Each Device has a Listener.
@@ -18,8 +19,6 @@ namespace Scada.MainVision
     internal class DBDataProvider : DataProvider
     {
         private string ConnectionString;
-
-        private const string ConnectionStringFormat = "datasource={0};username=root;database=scada";
 
         private const int MaxCountFetchRecent = 10;
 
@@ -85,6 +84,8 @@ namespace Scada.MainVision
             // 192.168.1.24
             string installPath = Assembly.GetExecutingAssembly().Location;
             string fileName = string.Format("{0}\\..\\local.ip", installPath);
+            var s = new DBConnectionString();
+            s.Address = "127.0.0.1";
             if (File.Exists(fileName))
             {
                 using (StreamReader sr = new StreamReader(fileName))
@@ -92,15 +93,13 @@ namespace Scada.MainVision
                     string ip = sr.ReadLine();
                     if (ip != null && ip.Length > 0)
                     {
-                        this.ConnectionString = string.Format(ConnectionStringFormat, ip);
+                        s.Address = ip;
                     }
                 }
             }
-            else
-            {
-                this.ConnectionString = string.Format(ConnectionStringFormat, "127.0.0.1");
-            }
-            this.conn = new MySqlConnection(ConnectionString);
+
+            this.ConnectionString = s.ToString();
+            this.conn = new MySqlConnection(this.ConnectionString);
 
             if (this.conn != null)
             {

@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,10 +11,7 @@ namespace Scada.Data.Tools
 {
     class DataBaseInsertion
     {
-
-        private MySqlConnection conn = null;
-
-        private string connectionString = "datasource=127.0.0.1;username=root;database=scada";
+        private string connectionString = null;
 
         private int v = 0;
 
@@ -40,6 +38,7 @@ namespace Scada.Data.Tools
 
         internal void Execute()
         {
+            this.connectionString = new DBConnectionString().ToString();
             using (var connToMySql = new MySqlConnection(connectionString))
             {
                 connToMySql.Open();
