@@ -39,6 +39,7 @@ namespace Scada.Update
 
         private UnzipCode UnzipFileHandler(string fileName, Stream fileStream)
         {
+            fileName = fileName.ToLower();
             if (fileName.EndsWith(".cfg") ||
                 fileName.EndsWith("local.ip") ||
                 fileName.EndsWith("password") ||
@@ -51,6 +52,13 @@ namespace Scada.Update
                 }
                 return UnzipCode.Compare;
             }
+
+            if (fileName.EndsWith("scada.update.exe") || fileName.EndsWith("icsharpcode.sharpziplib.dll"))
+            {
+                Console.WriteLine("File <" + fileName + "> In use:!");
+                return UnzipCode.Ignore;
+            }
+
             return UnzipCode.None;
             
         }
