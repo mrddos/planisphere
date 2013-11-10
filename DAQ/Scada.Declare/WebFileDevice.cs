@@ -164,7 +164,7 @@ namespace Scada.Declare
                         if (File.Exists(tempFile))
                         {
                             File.Delete(tempFile);
-                        }
+                        } 
                         client.DownloadFile(address, tempFile);
                     }
                     catch (Exception e)

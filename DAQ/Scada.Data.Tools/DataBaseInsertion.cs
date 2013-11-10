@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Scada.DAQ.Installer
+namespace Scada.Data.Tools
 {
     class DataBaseInsertion
     {
