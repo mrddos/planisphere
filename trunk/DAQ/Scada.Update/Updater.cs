@@ -57,7 +57,12 @@ namespace Scada.Update
 
         private WriteFileResult WriteFile(Stream stream, string fileName)
         {
-            string nzFileName = fileName + ".n!";
+            string nzFileName = fileName;
+            if (File.Exists(fileName))
+            {
+                nzFileName += ".n!";
+            }
+            
             using (FileStream streamWriter = File.Create(nzFileName))
             {
                 stream.Seek(0, SeekOrigin.Begin);
@@ -74,6 +79,11 @@ namespace Scada.Update
                         break;
                     }
                 }
+            }
+
+            if (fileName == nzFileName)
+            {
+                return WriteFileResult.SameFile;
             }
 
             HashAlgorithm hash = HashAlgorithm.Create();

@@ -9,14 +9,13 @@ namespace Scada.DataCenterAgent
     using System.Data.SqlTypes;
     using System.IO;
     using System.Threading;
+    using Scada.Config;
     
     /// <summary>
     /// Each Device has a Listener.
     /// </summary>
     internal class DBDataSource
     {
-        private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
-
         private const int MaxCountFetchRecent = 10;
 
         private const string Id = "Id";
@@ -44,10 +43,10 @@ namespace Scada.DataCenterAgent
         /// </summary>
         private DBDataSource()
         {
-            this.conn = new MySqlConnection(ConnectionString);
-
             try
             {
+                string connectionString = new DBConnectionString().ToString();
+                this.conn = new MySqlConnection(connectionString);
                 this.conn.Open();
                 this.cmd = this.conn.CreateCommand();
             }

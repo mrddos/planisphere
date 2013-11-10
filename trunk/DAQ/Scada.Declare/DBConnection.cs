@@ -6,6 +6,7 @@ using MySql.Data.MySqlClient;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using MySql.Data.Types;
+using Scada.Config;
 
 namespace Scada.Declare
 {
@@ -15,9 +16,8 @@ namespace Scada.Declare
         /// No Need Port 3306.
         /// 
         /// </summary>
-        private const string ConnectionString = "datasource=127.0.0.1;username=root;database=scada";
 
-        private MySqlConnection conn = new MySqlConnection(ConnectionString);
+        private MySqlConnection conn = null;
 
 		private MySqlCommand cmd = null;
 
@@ -39,8 +39,10 @@ namespace Scada.Declare
         {
 			try
 			{
-				conn.Open();
-				this.cmd = conn.CreateCommand();
+                string connectionString = new DBConnectionString().ToString();
+                this.conn = new MySqlConnection(connectionString);
+				this.conn.Open();
+				this.cmd = this.conn.CreateCommand();
 
 				// AddHPICRecordData("243.5", "2.3", "5.88", "24.0000", 2);
 				// AddHPICRecordData("243.5", "2.3", "5.88", "24.0000", 2);
