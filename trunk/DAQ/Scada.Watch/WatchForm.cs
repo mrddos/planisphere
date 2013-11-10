@@ -79,6 +79,7 @@ namespace Scada.Watch
 		private void WatchForm_Load(object sender, EventArgs e)
 		{
             AddWatch();
+            this.AddBinZipWatcher();
 
 			this.timer = new Timer();
             this.timer.Interval = 60 * 1000;    // Defines.KeepAliveInterval;
@@ -108,5 +109,25 @@ namespace Scada.Watch
             string p = Assembly.GetExecutingAssembly().Location;
             return Path.GetDirectoryName(p);
         }
+
+
+
+        private void AddBinZipWatcher()
+        {
+            string updatePath = @"C:\Users\HealerKx\Projects\DAQ-Proj\DAQ\Bin\Debug\update";
+            FileSystemWatcher fsw = new FileSystemWatcher(updatePath);
+            fsw.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite;
+            fsw.Changed += new FileSystemEventHandler(this.OnBinZipChanged);
+            fsw.EnableRaisingEvents = true;
+        }
+
+        private void OnBinZipChanged(object sender, FileSystemEventArgs e)
+        {
+            if (e.ChangeType == WatcherChangeTypes.Changed)
+            {
+                // TODO: Invoke Installer to update bin.zip
+            }
+        }
+
 	}
 }

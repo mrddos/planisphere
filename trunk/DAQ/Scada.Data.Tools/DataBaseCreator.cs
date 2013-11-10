@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Scada.DAQ.Installer
+namespace Scada.Data.Tools
 {
     internal class DataBaseCreator
     {
