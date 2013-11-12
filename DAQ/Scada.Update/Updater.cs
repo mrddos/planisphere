@@ -16,7 +16,7 @@ namespace Scada.Update
 
     public class Updater
     {
-
+        // ~
         private string destPath;
 
         public Updater()
