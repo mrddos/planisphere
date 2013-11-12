@@ -163,7 +163,7 @@ namespace Scada.Installer
                 this.AddLog("启动组快捷方式创建成功");
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -188,7 +188,7 @@ namespace Scada.Installer
                 this.AddLog("桌面快捷方式创建成功");
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
@@ -288,7 +288,7 @@ namespace Scada.Installer
                 this.AddLog("目录创建成功");
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 return false;
