@@ -135,7 +135,7 @@ namespace Scada.Data.Client
             // AddNewIpAddress("", "", "", "", true);
 
             // Data Center
-            var datacenters = doc.SelectNodes("//datacenter");
+            var datacenters = doc.SelectNodes("//datacenter2");
             foreach (XmlNode dcn in datacenters)
             {
                 DataCenter dc = new DataCenter();

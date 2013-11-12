@@ -7,5 +7,19 @@ namespace Scada.Data.Client
 {
     public class PacketBuilder
     {
+        internal List<Packet> GetPackets(string deviceKey, DateTime time, string content)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Packet GetFlowPacket(string deviceKey, Dictionary<string, object> d, bool p)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Packet GetPacket(string deviceKey, Dictionary<string, object> d, bool p)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
