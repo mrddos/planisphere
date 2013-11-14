@@ -75,6 +75,8 @@ namespace Scada.Main
 
 	class DeviceManager
 	{
+        private const string DevicePath = @"devices";
+
         private const string DeviceConfigFile = @"device.cfg";
 
         private Dictionary<string, DevicesInfo> dict = new Dictionary<string, DevicesInfo>();
@@ -155,8 +157,8 @@ namespace Scada.Main
 		
         private void LoadDevicesInfo(string installPath)
         {
-            string[] devicePaths = Directory.GetDirectories(MainApplication.DevicesRootPath);
-            foreach (string devicePath in devicePaths)
+            string[] deviceConfigPaths = Directory.GetDirectories(ConfigPath.GetConfigFilePath(DevicePath));
+            foreach (string devicePath in deviceConfigPaths)
             {
                 string deviceName = DirectoryName(devicePath);
 				if (deviceName.StartsWith("!") || deviceName.StartsWith("."))
@@ -176,7 +178,7 @@ namespace Scada.Main
                 {
                     di = dict[deviceKey];
                 }
-
+                
                 string displayConfig = devicePath + "\\display.cfg";
                 if (File.Exists(displayConfig))
                 {
@@ -201,7 +203,7 @@ namespace Scada.Main
                         }
                     }
                 }
-
+                
                 string[] versionPaths = Directory.GetDirectories(devicePath);
                 foreach (string versionPath in versionPaths)
                 {
@@ -209,40 +211,12 @@ namespace Scada.Main
                     di.Versions.Add(version);
                 }
             }
-
-            /*
-            string d2dFile = MainApplication.InstallPath + "\\" + DeviceMappingFile;
-            if (File.Exists(d2dFile))
-            {
-                using (StreamReader sr = new StreamReader(d2dFile))
-                {
-                    string line = string.Empty;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        line = line.Trim();
-                        string[] kv = line.Split(':');
-                        if (kv.Length == 2)
-                        {
-                            string device = kv[0].Trim();
-                            string address = kv[1].Trim();
-                            this.d2d.Add(device.ToLower(), address);
-                        }
-                    }
-                }
-
-            }
-            */ 
         }
 
-
-        public static string GetDevicePath(string deviceName)
+        public static string GetDeviceConfigPath(string deviceName, string version)
         {
-            return string.Format("{0}\\{1}", MainApplication.DevicesRootPath, deviceName);
-        }
-
-        public static string GetDevicePath(string deviceName, string version)
-        {
-            return string.Format("{0}\\{1}\\{2}", MainApplication.DevicesRootPath, deviceName, version);
+            string deviceConfigPath = ConfigPath.GetConfigFilePath(DevicePath);
+            return string.Format("{0}\\{1}\\{2}", deviceConfigPath, deviceName, version);
         }
 
 		public bool RegisterRecordModule(string module, FileRecord fileRecord)
@@ -323,7 +297,7 @@ namespace Scada.Main
 
         private bool RunDevice(DeviceRunContext context)
         {
-            string path = GetDevicePath(context.DeviceName, context.Version);
+            string path = GetDeviceConfigPath(context.DeviceName, context.Version);
             if (Directory.Exists(path))
             {
                 string deviceCfgFile = string.Format("{0}\\{1}", path, DeviceConfigFile);
@@ -342,9 +316,7 @@ namespace Scada.Main
                         // Set data-received callback
                         device.DataReceived += context.Callback;
 
-                        // Load the address from the d2d.m
                         string address = this.GetCOMPort(entry);
-
                         string deviceLoadedStr = string.Format("Device: '{0}' Loaded @ '{1}'", entry[DeviceEntry.Identity], address);
                         RecordManager.DoSystemEventRecord(device, deviceLoadedStr);
 

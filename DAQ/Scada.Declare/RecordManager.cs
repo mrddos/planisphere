@@ -1,4 +1,5 @@
 ﻿using Scada.Common;
+using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -180,11 +181,8 @@ namespace Scada.Declare
             StreamHolder newHolder = new StreamHolder() { FilePath = path };
             if (!File.Exists(path))
             {
-                string logPath = device.Path + "\\log";
-                if (!Directory.Exists(logPath))
-                {
-                    Directory.CreateDirectory(logPath);
-                }
+                // TODO: TO TEST!
+                // string logPath = GetDeviceLogPath(device, DateTime.Now);
                 FileStream fs = File.Create(path);
                 newHolder.FileStream = fs;
                 streams[deviceName] = newHolder;
@@ -199,10 +197,22 @@ namespace Scada.Declare
             }
         }
 
+        private static Dictionary<string, bool> existPaths = new Dictionary<string, bool>();
+
         private static string GetDeviceLogPath(Device device, DateTime now)
         {
-            string fileName = string.Format("{0}-{1}-{2}.log", now.Year, now.Month, now.Day);
-            string path = string.Format("{0}\\log\\{1}", device.Path, fileName);
+            string deviceLogPath = LogPath.GetDeviceLogFilePath(device.Id, now);
+            if (!existPaths.ContainsKey(deviceLogPath.ToLower()))
+            {
+                if (!Directory.Exists(deviceLogPath))
+                {
+                    Directory.CreateDirectory(deviceLogPath);
+                }
+                existPaths.Add(deviceLogPath.ToLower(), true);
+            }
+            string fileName = string.Format("{0}-{1}-{2}.daq.log", now.Year, now.Month, now.Day);
+            
+            string path = string.Format("{0}\\{1}", deviceLogPath, fileName);
             return path;
         }
 

@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Scada.Common;
+using Scada.Config;
 
 namespace Scada.Main
 {
@@ -92,38 +93,17 @@ namespace Scada.Main
         {
             Program.DeviceManager.Args = args;
 
-            /*
-            string p = @"D:\Projects\SVN\DAQ\Bin\Debug\devices\Scada.VirtualAgent\0.9\Scada.VirtualAgent.dll";
-            Assembly asm = Assembly.LoadFile(p);
-            Device o = asm.CreateInstance("Scada.VirtualAgent") as Device;
-            string s = o.ToString();
-            */
+            string path = ConfigPath.GetConfigFilePath("device/scada.w/cfg");
 
             if (!IsWatchRunning())
 			{
 				StartWatchProcess();
 			}
 
-            // StandardDevice sd = new StandardDevice("Device1");
-            
-            /*
-			if (sd.Connect("COM4"))
-			{
-				sd.ReadData();
-			}
-            */
-
-            // Add WinForm Windows Message Based Timer.
             MainApplication.TimerCreator = new WinFormTimerCreator();
 
 
             deviceManager.Initialize();
-
-            // deviceManager.SelectDevice("Scada.HPIC", "0.9", true);
-            // deviceManager.SelectDevice("Scada.Weather", "0.9", true);
-            // deviceManager.Run();
-
-            //Thread.Sleep(1000);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
