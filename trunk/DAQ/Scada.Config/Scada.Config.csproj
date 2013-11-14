@@ -40,8 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
+    <Compile Include="ConfigPath.cs" />
     <Compile Include="DBConnString.cs" />
     <Compile Include="DeviceEntry.cs" />
+    <Compile Include="LogPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAttributes.cs" />
     <Compile Include="ScadaReader.cs" />

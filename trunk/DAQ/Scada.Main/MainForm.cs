@@ -110,10 +110,10 @@ namespace Scada.Main
         {
             const string Version = "0.9";
             string path;
-            path = DeviceManager.GetDevicePath("Scada.HVSampler", Version);
+            path = DeviceManager.GetDeviceConfigPath("Scada.HVSampler", Version);
             FormProxyDevice.PressConnectToCPU("MDS.exe", path);
 
-            path = DeviceManager.GetDevicePath("Scada.ISampler", Version);
+            path = DeviceManager.GetDeviceConfigPath("Scada.ISampler", Version);
             FormProxyDevice.PressConnectToCPU("AIS.exe", path);
         }
 
