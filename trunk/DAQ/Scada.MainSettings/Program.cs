@@ -2,6 +2,7 @@
 using Scada.Main;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -32,8 +33,9 @@ namespace Scada.MainSettings
 
         public static string GetDeviceConfigFile(string deviceKey)
         {
+            Debug.Assert(false);
             return ConfigPath.GetDeviceConfigFilePath(deviceKey, "0.9");
-            }
+        }
 
 	}
 }
