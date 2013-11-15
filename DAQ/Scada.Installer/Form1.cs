@@ -26,6 +26,8 @@ namespace Scada.Installer
 
         private bool finished = false;
 
+        private string binPath = "Release";
+
         private void SelectPath()
         {
             FolderBrowserDialog fbd = new FolderBrowserDialog();
@@ -75,6 +77,17 @@ namespace Scada.Installer
             {
                 return false;
             }
+
+
+            if (Directory.Exists(this.installPath.Text + "\\Debug"))
+            {
+                this.binPath = "Debug";
+            }
+            else if (Directory.Exists(this.installPath.Text + "\\Release"))
+            {
+                this.binPath = "Release";
+            }
+
 
             if (!CheckVersions())
 
@@ -129,7 +142,7 @@ namespace Scada.Installer
         private void LaunchMainSettings()
         {
             string fileName = "Scada.MainSettings.exe";
-            string filePath = string.Format("{0}\\{1}", this.installPath.Text, fileName);
+            string filePath = string.Format("{0}\\{1}\\{2}", this.installPath.Text, this.binPath, fileName);
             using (Process process = new Process())
             {
                 process.StartInfo.CreateNoWindow = false;           //设定不显示窗口
