@@ -30,21 +30,10 @@ namespace Scada.MainSettings
 			Application.Run(new SettingsForm());
 		}
 
-        public static string GetDevicesPath()
-        {
-            string aep = Application.ExecutablePath;
-            return Directory.GetParent(aep).FullName + "\\devices";
-        }
-
-        public static string GetDevicePath(string deviceKey)
-        {
-            return string.Format("{0}\\{1}\\{2}", GetDevicesPath(), deviceKey, "0.9");
-        }
-
         public static string GetDeviceConfigFile(string deviceKey)
         {
-            return string.Format("{0}\\{1}", GetDevicePath(deviceKey), "device.cfg");
-        }
+            return ConfigPath.GetDeviceConfigFilePath(deviceKey, "0.9");
+            }
 
 	}
 }

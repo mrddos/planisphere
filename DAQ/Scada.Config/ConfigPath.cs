@@ -47,5 +47,11 @@ namespace Scada.Config
             string configFilePath = Path.Combine(CurrentConfigPath, relativePath);
             return configFilePath;
         }
+
+        public static string GetDeviceConfigFilePath(string deviceKey, string version)
+        {
+            string relateDeviceConfigFilePath = string.Format("devices\\{0}\\{1}\\device.cfg", deviceKey, version);
+            return GetConfigFilePath(relateDeviceConfigFilePath);
+        }
     }
 }

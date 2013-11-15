@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scada.Config;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace Scada.Data.Tools
         {
             Type type = typeof(Program);
             string fn = type.Assembly.Location;
-            string sqlFileName = string.Format("{0}\\..\\scada.sql", fn);
+            string sqlFileName = ConfigPath.GetConfigFilePath("scada.sql");
             return sqlFileName;
         }
 

@@ -1,4 +1,5 @@
-﻿using Scada.Controls;
+﻿using Scada.Config;
+using Scada.Controls;
 using Scada.Controls.Data;
 using System;
 using System.Collections.Generic;
@@ -113,8 +114,7 @@ namespace Scada.MainVision
 
 		private void LoadConfig()
 		{
-            string installPath = Assembly.GetExecutingAssembly().Location;
-            string fileName = string.Format("{0}\\..\\dsm.cfg", installPath);
+            string fileName = ConfigPath.GetConfigFilePath("dsm.cfg");
             Config.Instance().Load(fileName);
 		}
 
