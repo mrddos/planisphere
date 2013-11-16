@@ -34,6 +34,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.splitter1 = new System.Windows.Forms.Splitter();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkBoxUpdateNaI = new System.Windows.Forms.CheckBox();
             this.keepAliveCheckBox = new System.Windows.Forms.CheckBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -43,7 +44,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.detailsButton = new System.Windows.Forms.ToolStripButton();
             this.sysNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.checkBoxUpdateNaI = new System.Windows.Forms.CheckBox();
             this.toolStripContainer1.BottomToolStripPanel.SuspendLayout();
             this.toolStripContainer1.ContentPanel.SuspendLayout();
             this.toolStripContainer1.TopToolStripPanel.SuspendLayout();
@@ -107,6 +107,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(561, 410);
             this.panel1.TabIndex = 1;
+            // 
+            // checkBoxUpdateNaI
+            // 
+            this.checkBoxUpdateNaI.AutoSize = true;
+            this.checkBoxUpdateNaI.Location = new System.Drawing.Point(122, 380);
+            this.checkBoxUpdateNaI.Name = "checkBoxUpdateNaI";
+            this.checkBoxUpdateNaI.Size = new System.Drawing.Size(91, 17);
+            this.checkBoxUpdateNaI.TabIndex = 3;
+            this.checkBoxUpdateNaI.Text = "上传NaI数据";
+            this.checkBoxUpdateNaI.UseVisualStyleBackColor = true;
             // 
             // keepAliveCheckBox
             // 
@@ -186,16 +196,6 @@
             this.sysNotifyIcon.Text = "数据上传";
             this.sysNotifyIcon.Visible = true;
             // 
-            // checkBoxUpdateNaI
-            // 
-            this.checkBoxUpdateNaI.AutoSize = true;
-            this.checkBoxUpdateNaI.Location = new System.Drawing.Point(122, 380);
-            this.checkBoxUpdateNaI.Name = "checkBoxUpdateNaI";
-            this.checkBoxUpdateNaI.Size = new System.Drawing.Size(91, 17);
-            this.checkBoxUpdateNaI.TabIndex = 3;
-            this.checkBoxUpdateNaI.Text = "上传NaI数据";
-            this.checkBoxUpdateNaI.UseVisualStyleBackColor = true;
-            // 
             // AgentWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -206,7 +206,7 @@
             this.MaximizeBox = false;
             this.Name = "AgentWindow";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "数据中心代理";
+            this.Text = "数据中心代理 v2.0";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AgentWindow_FormClosing);
             this.Load += new System.EventHandler(this.AgentWindow_Load);
             this.SizeChanged += new System.EventHandler(this.AgentWindow_SizeChanged);
