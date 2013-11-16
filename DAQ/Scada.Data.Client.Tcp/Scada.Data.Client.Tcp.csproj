@@ -58,7 +58,6 @@
     <Compile Include="DataHandler.cs" />
     <Compile Include="DataPacket.cs" />
     <Compile Include="DataPacketBuilder.cs" />
-    <Compile Include="DeviceEntry.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="RealTimeForm.cs">
