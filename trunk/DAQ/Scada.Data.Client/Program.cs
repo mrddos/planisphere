@@ -18,7 +18,7 @@ namespace Scada.Data.Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form form = new RealTimeForm(/* CLose ACtion */() => { });
+            Form form = new AgentWindow();
             Application.Run(form);
         }
 

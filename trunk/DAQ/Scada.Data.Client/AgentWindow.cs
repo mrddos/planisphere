@@ -65,7 +65,7 @@ namespace Scada.Data.Client
         {
             // Notify Icon
             sysNotifyIcon.Text = "系统设备管理器";
-            // sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
+            sysNotifyIcon.Icon = new Icon(Resources.AppIcon, new Size(16, 16));
             sysNotifyIcon.Visible = true;
             this.WindowState = FormWindowState.Minimized;
             this.Hide();
