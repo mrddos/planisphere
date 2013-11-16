@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Auth", "Scada.Auth\Sc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Update", "Scada.Update\Scada.Update.csproj", "{DCF628C5-21A1-4D2D-B8F9-ED314F2CAC1F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scada.Device.Siemens", "Scada.Device.Siemens\Scada.Device.Siemens.csproj", "{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -203,6 +205,16 @@ Global
 		{DCF628C5-21A1-4D2D-B8F9-ED314F2CAC1F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DCF628C5-21A1-4D2D-B8F9-ED314F2CAC1F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DCF628C5-21A1-4D2D-B8F9-ED314F2CAC1F}.Release|Win32.ActiveCfg = Release|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1870F7FB-08AF-4CEB-9C33-CE0E36EC1CAF}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

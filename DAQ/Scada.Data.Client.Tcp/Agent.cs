@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     /// <summary>
     /// 

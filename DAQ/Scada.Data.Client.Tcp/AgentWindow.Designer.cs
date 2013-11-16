@@ -1,4 +1,4 @@
-﻿namespace Scada.DataCenterAgent
+﻿namespace Scada.Data.Client.Tcp
 {
     partial class AgentWindow
     {

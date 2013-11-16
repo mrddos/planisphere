@@ -1,4 +1,4 @@
-﻿using Scada.Declare;
+﻿using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     /// <summary>
     /// 
@@ -124,7 +124,7 @@ namespace Scada.DataCenterAgent
         public Settings()
         {
             // "Agent.Settings"
-            string settingFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "agent.settings");
+            string settingFileName = ConfigPath.GetConfigFilePath("agent.settings"); 
             if (File.Exists(settingFileName))
             {
                 doc.Load(settingFileName);

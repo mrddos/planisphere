@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     class SamplerController
     {

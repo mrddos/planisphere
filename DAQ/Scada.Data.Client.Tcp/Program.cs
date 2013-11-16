@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     static class Program
     {

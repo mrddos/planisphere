@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     public partial class AgentWindow : Form
     {

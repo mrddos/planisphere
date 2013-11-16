@@ -1,5 +1,5 @@
 ﻿
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     using System;
     using System.Collections.Generic;

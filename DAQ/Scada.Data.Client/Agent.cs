@@ -97,6 +97,11 @@ namespace Scada.Data.Client
             // this.Send(Encoding.ASCII.GetBytes(s));
         }
 
+        // Connect means first HTTP packet to the data Center.
+        internal void Connect()
+        {
+            // TODO: Send Packet of init.
 
+        }
     }
 }

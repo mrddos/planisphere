@@ -52,7 +52,7 @@ namespace Scada.Data.Client
         /// <summary>
         /// 
         /// </summary>
-        public class DataCenter
+        public class DataCenter2
         {
             public string Ip { get; set; }
             public string WirelessIp { get; set; }
@@ -118,33 +118,27 @@ namespace Scada.Data.Client
         /// </summary>
         private XmlDocument doc = new XmlDocument();
 
-        private List<DataCenter> dataCenters = new List<DataCenter>();
+        private List<DataCenter2> dataCenters = new List<DataCenter2>();
 
         private List<Device> devices = new List<Device>();
 
         public Settings()
         {
-            // "Agent.Settings"
-            string settingFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "agent.settings");
+            string settingFileName = ConfigPath.GetConfigFilePath("agent.settings");
             if (File.Exists(settingFileName))
             {
                 doc.Load(settingFileName);
             }
 
-            // Code for quick test.
-            // AddNewIpAddress("", "", "", "", true);
-
-            // Data Center
             var datacenters = doc.SelectNodes("//datacenter2");
             foreach (XmlNode dcn in datacenters)
             {
-                DataCenter dc = new DataCenter();
+                DataCenter2 dc = new DataCenter2();
                 
                 dc.Ip = this.GetAttribute(dcn, "ip");
                 dc.Port = int.Parse(this.GetAttribute(dcn, "port", "0"));
-                dc.WirelessIp = this.GetAttribute(dcn, "wirelessip");
-                dc.WirelessPort = int.Parse(this.GetAttribute(dcn, "wirelessport", "0"));
-                dc.CountryCenter = this.GetAttribute(dcn, "type", "1") == "2"; 
+                // dc.WirelessIp = this.GetAttribute(dcn, "wirelessip");
+                // dc.WirelessPort = int.Parse(this.GetAttribute(dcn, "wirelessport", "0"));
                 dataCenters.Add(dc);
             }
 
@@ -177,12 +171,10 @@ namespace Scada.Data.Client
 
 
             // Load NaI device config.
-            // TODO:
+            // TODO: 
+            string configNaIPath = ConfigPath.GetDeviceConfigFilePath("scada.naidevice", "0.9");
 
-            this.NaIFilePath = string.Format("{0}\\..\\devices\\Scada.NaIDevice\\0.9", Application.ExecutablePath);
-            string path = string.Format("{0}\\device.cfg", this.NaIFilePath);
-
-            DeviceEntry entry = LoadFromConfig("Scada.NaIDevice", path);
+            DeviceEntry entry = LoadFromConfig("Scada.NaIDevice", configNaIPath);
 
             this.NaIDeviceSn = (StringValue)entry["DeviceSn"];
             this.MinuteAdjust = (StringValue)entry["MinuteAdjust"];
@@ -218,7 +210,7 @@ namespace Scada.Data.Client
             return device;
         }
 
-        public List<DataCenter> DataCenters
+        public List<DataCenter2> DataCenters
         {
             get
             {
@@ -301,7 +293,7 @@ namespace Scada.Data.Client
 
         private string GetPasswordFile()
         {
-            string pwFileName = string.Format("{0}\\..\\{1}", Application.ExecutablePath, "password");
+            string pwFileName = ConfigPath.GetConfigFilePath("password");
             return pwFileName;
         }
 

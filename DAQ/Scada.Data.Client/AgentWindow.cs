@@ -20,13 +20,13 @@ namespace Scada.Data.Client
 
         private List<Agent> agents = new List<Agent>();
 
-        private Agent countryCenterAgent;
-
         private PacketBuilder builder = new PacketBuilder();
 
         private Dictionary<string, DateTime> lastDeviceSendData = new Dictionary<string, DateTime>();
 
         private RealTimeForm detailForm;
+
+        private const int TimerInterval = 4000; 
 
         public bool StartState
         {
@@ -75,8 +75,7 @@ namespace Scada.Data.Client
         private void OnSysNotifyIconContextMenu(object sender, EventArgs e)
         {
             this.Show();
-            this.WindowState = FormWindowState.Normal;
-            
+            this.WindowState = FormWindowState.Normal;   
         }
 
         private void Start()
@@ -95,27 +94,40 @@ namespace Scada.Data.Client
         {
             Settings s = Settings.Instance;
             // TODO: Create Agent for DataCenter2
-            this.statusStrip1.Items[0].Text = string.Format("状态: 开始 ({0})", DateTime.Now);
+            if (s.DataCenters.Count() > 0)
+            {
+                foreach (var dc in s.DataCenters)
+                {
+                    Agent agent = this.CreateAgent(dc);
+                    agent.Connect();
+                    this.agents.Add(agent);
+                }
+                this.statusStrip1.Items[0].Text = string.Format("状态: 开始 ({0})", DateTime.Now);
+            }
         }
 
-        // 先连接有线的线路
-        private Agent CreateAgent(string serverAddress, int serverPort, bool wireless)
+        private Agent CreateAgent(Settings.DataCenter2 dataCenter)
         {
-            Agent agent = new Agent(serverAddress, serverPort);
+            Agent agent = new Agent(dataCenter.Ip, dataCenter.Port);
             return agent;
         }
 
         private void InitializeTimer()
         {
             this.timer = new Timer();
-            this.timer.Interval = 4000;
-            this.timer.Tick += this.SendDataTick;
+            this.timer.Interval = TimerInterval;
+            this.timer.Tick += this.HttpConnectTick;
             this.timer.Start();
         }
 
-        private void SendDataTick(object sender, EventArgs e)
+        private void HttpConnectTick(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
+
+            if (IsFetchCommandsTimeOK(now))
+            {
+
+            }
 
             foreach (var deviceKey in Settings.Instance.DeviceKeys)
             {
@@ -140,6 +152,12 @@ namespace Scada.Data.Client
             }
         }
 
+        private bool IsFetchCommandsTimeOK(DateTime now)
+        {
+            // per TimerInterval
+            return true;
+        }
+
         public void SendPackets(DateTime time, string deviceKey)
         {
             bool willSend = false;
@@ -150,7 +168,7 @@ namespace Scada.Data.Client
 
             if (!willSend) //// TODO: !
             {
-                return;
+                // return;
             }
 
             if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
@@ -277,11 +295,6 @@ namespace Scada.Data.Client
 
         private void OnReceiveMessage(Agent agent, string msg)
         {
-            if (!this.keepAliveCheckBox.Checked/* && ("6031" == Value.Parse(msg, "CN"))*/)
-            {
-                return;
-            }
-
             this.SafeInvoke(() => {
                 string line = string.Format("{0}: {1}", "Agent.ToString()", msg);
                 this.listBox1.Items.Add(line);
@@ -305,13 +318,13 @@ namespace Scada.Data.Client
                 }
                 else if (NotifyEvent.ConnectToCountryCenter == ne)
                 {
-                    this.StartConnectCountryCenter();
+                    // this.StartConnectCountryCenter();
                     this.listBox1.Items.Add(msg);
                     Log.GetLogFile(Program.System).Log(msg);
                 }
                 else if (NotifyEvent.DisconnectToCountryCenter == ne)
                 {
-                    this.StopConnectCountryCenter();
+                    // this.StopConnectCountryCenter();
                     this.listBox1.Items.Add(msg);
                     Log.GetLogFile(Program.System).Log(msg);
                 }
@@ -329,34 +342,6 @@ namespace Scada.Data.Client
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
 
-        }
-
-        private void StartConnectCountryCenter()
-        {
-            if (this.countryCenterAgent != null)
-            {
-                // this.countryCenterAgent.Connect();
-                this.agents.Add(this.countryCenterAgent);
-            }
-            else
-            {
-                this.SafeInvoke(() =>
-                {
-                    string line = string.Format("请检查国家数据中心的配置");
-                    this.listBox1.Items.Add(line);
-
-                    Log.GetLogFile(Program.System).Log("Error: StartConnectCountryCenter(); Check the config.");
-                });
-            }
-        }
-
-        private void StopConnectCountryCenter()
-        {
-            if (this.countryCenterAgent != null)
-            {
-                // this.countryCenterAgent.Disconnect();
-                // this.agents.Remove(this.countryCenterAgent);
-            }
         }
 
         private void detailsButton_Click(object sender, EventArgs e)

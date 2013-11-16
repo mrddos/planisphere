@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     // Command for received.
     public enum ReceivedCommand
