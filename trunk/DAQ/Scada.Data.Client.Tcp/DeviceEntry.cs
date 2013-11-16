@@ -1,10 +1,10 @@
-﻿using Scada.Declare;
+﻿using Scada.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     /// <summary>
     /// 

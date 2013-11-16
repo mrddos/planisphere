@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Scada.DataCenterAgent
+namespace Scada.Data.Client.Tcp
 {
     class Logger
     {
