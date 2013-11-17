@@ -68,6 +68,7 @@ namespace Scada.Data.Client
             int errorCode = 0;
             Packet packet = this.GetPacket(sendTime, deviceKey, out errorCode);
             string msg = packet.ToString();
+            this.agents[0].SendPacket(packet);
         }
 
         private void InitSysNotifyIcon()
@@ -152,32 +153,39 @@ namespace Scada.Data.Client
 
                     if (sendTime == this.lastDeviceSendData[deviceKey])
                     {
-                        return;
+                        continue;
                     }
 
                     this.lastDeviceSendData[deviceKey] = sendTime;
 
                     int errorCode = 0;
-                    packets.Add(GetPacket(sendTime, deviceKey, out errorCode));
+                    Packet packet = GetPacket(sendTime, deviceKey, out errorCode);
+                    if (packet != null)
+                    {
+                        packets.Add(packet);
+                    }
                 }
             }
 
             packets = this.CombinePackets(packets);
-
-            foreach (var packet in packets)
-            {
-                this.SendPacket(packet);
-            }
+            this.SendPackets(packets);
         }
 
-        private void SendPacket(Packet packet)
+        private void SendPackets(List<Packet> packets)
         {
-            throw new NotImplementedException();
+            foreach (var agent in this.agents)
+            {
+                foreach (var packet in packets)
+                {
+                    agent.SendPacket(packet);
+                }
+            }
         }
 
         private List<Packet> CombinePackets(List<Packet> packets)
         {
-            throw new NotImplementedException();
+            // TODO: Combine same type packets to reduce HTTP connection count.
+            return packets;
         }
 
         private bool IsFetchCommandsTimeOK(DateTime now)

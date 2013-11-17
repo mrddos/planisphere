@@ -18,12 +18,12 @@ namespace Scada.Data.Client
             throw new NotImplementedException();
         }
 
-        internal Packet GetPacket(string deviceKey, Dictionary<string, object> d, bool p)
+        internal Packet GetPacket(string deviceKey, Dictionary<string, object> data, bool p)
         {
             Packet packet = new Packet();
             packet.Station = "A";
             packet.Token = "";
-            packet.AddData(d);
+            packet.AddData(deviceKey, data);
             return packet;
         }
     }
