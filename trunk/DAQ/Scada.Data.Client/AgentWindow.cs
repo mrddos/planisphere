@@ -15,9 +15,7 @@ namespace Scada.Data.Client
     {
         private Timer timer;
 
-        private Timer keepAliveTimer;
-        //private DataHandler handler;
-
+ 
         private List<Agent> agents = new List<Agent>();
 
         private PacketBuilder builder = new PacketBuilder();
@@ -58,7 +56,18 @@ namespace Scada.Data.Client
             if (this.StartState)
             {
                 Start();
+
+                TestSendPacket();
             }
+        }
+
+        private void TestSendPacket()
+        {
+            string deviceKey = "scada.hpic";
+            DateTime sendTime = DateTime.Parse("2013-11-17 12:17:30");
+            int errorCode = 0;
+            Packet packet = this.GetPacket(sendTime, deviceKey, out errorCode);
+            string msg = packet.ToString();
         }
 
         private void InitSysNotifyIcon()
@@ -129,6 +138,7 @@ namespace Scada.Data.Client
 
             }
 
+            List<Packet> packets = new List<Packet>();
             foreach (var deviceKey in Settings.Instance.DeviceKeys)
             {
                 if (IsDeviceSendTimeOK(now, deviceKey))
@@ -147,9 +157,27 @@ namespace Scada.Data.Client
 
                     this.lastDeviceSendData[deviceKey] = sendTime;
 
-                    SendPackets(sendTime, deviceKey);
+                    int errorCode = 0;
+                    packets.Add(GetPacket(sendTime, deviceKey, out errorCode));
                 }
             }
+
+            packets = this.CombinePackets(packets);
+
+            foreach (var packet in packets)
+            {
+                this.SendPacket(packet);
+            }
+        }
+
+        private void SendPacket(Packet packet)
+        {
+            throw new NotImplementedException();
+        }
+
+        private List<Packet> CombinePackets(List<Packet> packets)
+        {
+            throw new NotImplementedException();
         }
 
         private bool IsFetchCommandsTimeOK(DateTime now)
@@ -158,29 +186,31 @@ namespace Scada.Data.Client
             return true;
         }
 
-        public void SendPackets(DateTime time, string deviceKey)
+        private Packet GetPacket(DateTime time, string deviceKey, out int errorCode)
         {
-            bool willSend = false;
+            errorCode = 0;
+            bool couldSend = false;
             foreach (var agent in this.agents)
             {
-                willSend |= agent.SendDataStarted;
+                couldSend |= agent.SendDataStarted;
             }
 
-            if (!willSend) //// TODO: !
+            if (!couldSend) //// TODO: !
             {
-                // return;
+                // return null;
             }
 
             if (deviceKey.Equals("Scada.NaIDevice", StringComparison.OrdinalIgnoreCase))
             {
                 if (!this.checkBoxUpdateNaI.Checked)
                 {
-                    return;
+                    return null;
                 }
                 // 分包
                 string content = DBDataSource.Instance.GetNaIDeviceData(time);
                 if (!string.IsNullOrEmpty(content))
                 {
+                    /*
                     List<Packet> pks = builder.GetPackets(deviceKey, time, content);
                     foreach (var p in pks)
                     {
@@ -191,24 +221,10 @@ namespace Scada.Data.Client
                         }
                     }
 
-                    if (pks.Count > 0)
-                    {
-                        Logger logger = Log.GetLogFile(deviceKey);
-                        logger.Log("---- A Group of NaI file-content ----");
-                        foreach (var p in pks)
-                        {
-                            string msg = p.ToString();
-                            logger.Log(msg);
-                        }
-                        logger.Log("---- ---- ---- ---- ---- ---- ---- ----");
-
-                        this.SendDetails(deviceKey, pks[0].ToString());
-                    }
+                    */
                 }
-                else
-                {
-                    Log.GetLogFile(deviceKey).Log("<Real-Time> NaI file Content is empty!");
-                }
+                // TODO:
+                return null;
             }
             else
             {
@@ -227,25 +243,11 @@ namespace Scada.Data.Client
                     {
                         p = builder.GetPacket(deviceKey, d, true);
                     }
-
-                    // Sent by each agent.s
-                    foreach (var agent in this.agents)
-                    {
-                        agent.SendPacket(p, time);
-                    }
-
-                    string msg = string.Format("{0}: {1}", DateTime.Now, p.ToString());
-                    Log.GetLogFile(deviceKey).Log(msg);
-                    this.SendDetails(deviceKey, msg);
+                    return p;
                 }
-                else
-                {
-                    string logger = string.Format("{0}: No data found from the table", DateTime.Now);
-                    Log.GetLogFile(deviceKey).Log(logger);
-
-                }
+                errorCode = 100;
+                return null;
             }
-            
         }
 
 
