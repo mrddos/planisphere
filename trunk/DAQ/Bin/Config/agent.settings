@@ -9,7 +9,7 @@
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 		<datacenter ip="" port="6000" wirelessip="" wirelessport="7000"/>
 		-->
-		<datacenter2 ip="192.168.1.203" port="80" wirelessip="" wirelessport="7000" type="1"/>
+		<datacenter2 ip="127.0.0.1" port="80" wirelessip="" wirelessport="7000" />
 	</datacenters>
 
 

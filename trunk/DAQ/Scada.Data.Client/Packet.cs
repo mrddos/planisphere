@@ -87,7 +87,7 @@ namespace Scada.Data.Client
             return this.jobject.ToString();
         }
 
-        internal void AddData(Dictionary<string, object> d)
+        internal void AddData(string deviceKey, Dictionary<string, object> data)
         {
             JArray entries = (JArray)this.jobject[EntryKey];
             if (entries == null)
@@ -96,24 +96,49 @@ namespace Scada.Data.Client
                 this.jobject[EntryKey] = entries;
             }
 
-            entries.Add(this.GetObject(d));
-
-            entries.Add(this.GetObject(d));
+            entries.Add(this.GetObject(deviceKey, data));
+            // TEST multi-entry
+            // entries.Add(this.GetObject(data));
         }
 
-        private JObject GetObject(Dictionary<string, object> d)
+        private JObject GetObject(string deviceKey, Dictionary<string, object> data)
         {
             JObject json = new JObject();
-            foreach (var kv in d)
+            json["device"] = deviceKey.Replace("scada.", "");
+            foreach (var kv in data)
             {
                 if (kv.Key.ToLower() == "id")
                     continue;
+                string value = (string)kv.Value;
+                if (kv.Key.ToLower() == "time")
+                {
+                    if (kv.Value is string)
+                    {
+                        json["time"] = (string)kv.Value;//this.GetUnixTime((string)kv.Value);
+                        continue;
+                    }
+                }
                 if (kv.Value is string)
                 {
-                    json[kv.Key] = (string)kv.Value;
+                    double v;
+                    if (double.TryParse(value, out v))
+                    {
+                        json[kv.Key] = v;
+                    }
+                    
                 }
             }
             return json;
+        }
+
+        private static DateTime StartTime = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1, 0, 0, 0, 0));
+
+        private long GetUnixTime(string time)
+        {
+            DateTime nowTime = DateTime.Now;
+            DateTime dateTime = DateTime.Parse(time);
+            long unixTime = (long)Math.Round((dateTime - StartTime).TotalMilliseconds, MidpointRounding.AwayFromZero);
+            return unixTime;
         }
     }
 }

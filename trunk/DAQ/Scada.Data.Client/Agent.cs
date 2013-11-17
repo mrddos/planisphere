@@ -61,7 +61,15 @@ namespace Scada.Data.Client
         {
             this.ServerAddress = serverAddress;
             this.ServerPort = serverPort;
+            // this.wc.UploadDataCompleted += UploadDataCompleted;
         }
+
+        /*
+        private void UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
+        {
+           
+        }
+        */
 
         public string ServerAddress
         {
@@ -80,10 +88,30 @@ namespace Scada.Data.Client
             return "";
            
         }
+
+        private string GetUrl(string api)
+        {
+            return string.Format("http://{0}:{1}/{2}", this.ServerAddress, this.ServerPort, api);
+        }
+
         internal void SendPacket(Packet p, DateTime time)
         {
             string s = p.ToString();
-            // this.Send(Encoding.ASCII.GetBytes(s));
+            this.Send("data/commit", Encoding.ASCII.GetBytes(s));
+        }
+
+        private void Send(string api, byte[] data)
+        {
+            Uri uri = new Uri(this.GetUrl(api));
+            try
+            {
+                byte[] resultData = this.wc.UploadData(uri, data);
+                string result = Encoding.ASCII.GetString(resultData);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         internal void SendPacket(Packet p)
