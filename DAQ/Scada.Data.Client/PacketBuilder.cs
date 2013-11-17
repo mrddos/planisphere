@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,11 @@ namespace Scada.Data.Client
 
         internal Packet GetPacket(string deviceKey, Dictionary<string, object> d, bool p)
         {
-            throw new NotImplementedException();
+            Packet packet = new Packet();
+            packet.Station = "A";
+            packet.Token = "";
+            packet.AddData(d);
+            return packet;
         }
     }
 }
