@@ -17,13 +17,18 @@ namespace Scada.Update
 
         static void Main(string[] args)
         {
-            Updater u = new Updater();
+            bool force = false;
+            if (args.Length > 0 && args[0] == "-f")
+            {
+                force = true;
+            }
+            Updater u = new Updater(force);
             string binZipPath = GetCurrentPath() + "\\update\\bin.zip";
             KillProcesses();
             bool r = u.UnzipProgramFiles(binZipPath, GetCurrentPath());
             if (!r)
             {
-                Console.WriteLine("Failed.");
+                Console.WriteLine("Failed to update!");
             }
             RestoreProcesses();
         }

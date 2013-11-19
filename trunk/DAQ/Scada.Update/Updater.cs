@@ -19,8 +19,11 @@ namespace Scada.Update
         // ~
         private string destPath;
 
-        public Updater()
+        private bool force;
+
+        public Updater(bool force)
         {
+            this.force = force;
         }
 
         public bool UnzipProgramFiles(string programZipFile, string destPath)
@@ -60,13 +63,12 @@ namespace Scada.Update
             }
 
             return UnzipCode.None;
-            
         }
 
         private WriteFileResult WriteFile(Stream stream, string fileName)
         {
             string nzFileName = fileName;
-            if (File.Exists(fileName))
+            if (File.Exists(fileName) && !this.force)
             {
                 nzFileName += ".n!";
             }
