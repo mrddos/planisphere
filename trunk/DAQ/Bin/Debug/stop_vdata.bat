@@ -1,1 +1,1 @@
-taskkill /F /IM Scada.DAQ.Installer.exe
+taskkill /F /IM Scada.Data.Tools.exe

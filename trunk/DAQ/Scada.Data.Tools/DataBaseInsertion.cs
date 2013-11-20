@@ -110,8 +110,8 @@ namespace Scada.Data.Tools
             }
             else if (this.device.ToLower() == "weather")
             {
-                cmd.CommandText = "insert into weather(time, Windspeed, Direction, Temperature, Humidity, Pressure, Raingauge,Dewpoint,IfRain) " 
-                                    + "values(@1, 0, 360, @2, @3, 1000.1, 1, 1, 0)";
+                cmd.CommandText = "insert into weather(time, Windspeed, Direction, Temperature, Humidity, Pressure, Raingauge, Rainspeed, Dewpoint, IfRain, alarm) " 
+                                    + "values(@1, 0, 360, @2, @3, 1000.1, 1, 1, 0, 1, 0)";
                 cmd.Parameters.AddWithValue("@1", t);
 
                 v = (v + 1) % 5;
@@ -185,17 +185,17 @@ namespace Scada.Data.Tools
                  */
                 t = new DateTime(t.Year, t.Month, t.Day, t.Hour, t.Minute, 0);
                 cmd.CommandText = 
-                    "insert into rdsampler_rec(Time, IfRain, Barrel, Alarm, IsLidOpen, CurrentRainTime) " + 
+                    "insert into rdsampler_rec(time, IfRain, Barrel, Alarm, IsLidOpen, CurrentRainTime) " + 
                     "values(@1, @2, @3, @4, @5, @6)";
                 cmd.Parameters.AddWithValue("@1", t);
-                cmd.Parameters.AddWithValue("@2", "1");
+                cmd.Parameters.AddWithValue("@2", 1);
                 cmd.Parameters.AddWithValue("@3", "0");
 
                 v += 5;
                 int a = v / 10 * 10;
 
                 cmd.Parameters.AddWithValue("@4", 0);
-                cmd.Parameters.AddWithValue("@5", "0");
+                cmd.Parameters.AddWithValue("@5", 0);
                 cmd.Parameters.AddWithValue("@6", a.ToString());
 
                 cmd.ExecuteNonQuery();
@@ -260,13 +260,13 @@ namespace Scada.Data.Tools
             cmd.Parameters.AddWithValue("@3", "200");
             cmd.Parameters.AddWithValue("@4", "42");
             cmd.Parameters.AddWithValue("@5", "4");
-            cmd.Parameters.AddWithValue("@6", "1");
+            cmd.Parameters.AddWithValue("@6", 1);
 
             cmd.Parameters.AddWithValue("@7", beginTime);
-            cmd.Parameters.AddWithValue("@8", "");
-            cmd.Parameters.AddWithValue("@9",  "0");
-            cmd.Parameters.AddWithValue("@10", "0");
-            cmd.Parameters.AddWithValue("@11", "0");
+            cmd.Parameters.AddWithValue("@8", "0000-00-00 00:00:00");
+            cmd.Parameters.AddWithValue("@9",  0);
+            cmd.Parameters.AddWithValue("@10", 0);
+            cmd.Parameters.AddWithValue("@11", 0);
 
             cmd.ExecuteNonQuery();
             cmd.Parameters.Clear();
