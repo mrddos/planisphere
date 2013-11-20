@@ -127,7 +127,7 @@ CREATE TABLE `NaINuclide_Rec` (
 `Id` int(11) NOT NULL AUTO_INCREMENT, /*采样ID,唯一号*/
 `Time` datetime,
 `Name` varchar(16),
-`Activity` varchar(16),
+`Activity` varchar(32),
 `Indication` varchar(16),
 `DoseRate` varchar(16),
 `Channel` varchar(16), 
