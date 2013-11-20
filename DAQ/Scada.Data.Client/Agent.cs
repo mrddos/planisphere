@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -61,8 +62,11 @@ namespace Scada.Data.Client
         {
             this.ServerAddress = serverAddress;
             this.ServerPort = serverPort;
+            this.wc.DownloadStringCompleted += DownloadStringCompleted;
+            this.wc.UploadFileCompleted += UploadFileCompleted;
             // this.wc.UploadDataCompleted += UploadDataCompleted;
         }
+
 
         /*
         private void UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
@@ -114,10 +118,65 @@ namespace Scada.Data.Client
             }
         }
 
+        internal void FetchCommands()
+        {
+            Uri uri = new Uri(this.GetUrl("cmd/query"));
+            try
+            {
+                this.wc.DownloadStringAsync(uri);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                this.ParseCommand(e.Result);
+            }
+        }
+
+        private void ParseCommand(string cmd)
+        {
+            try
+            {
+                JObject json = JObject.Parse(cmd);
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         internal void SendPacket(Packet p)
         {
             this.SendPacket(p, default(DateTime));
         }
+
+        internal void SendFilePacket(Packet p)
+        {
+            Uri uri = new Uri(this.GetUrl("data/upload"));
+            try
+            {
+                this.wc.UploadFileAsync(uri, p.Path);
+            }
+            catch (WebException)
+            {
+             
+            }
+        }
+
+        private void UploadFileCompleted(object sender, UploadFileCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+
+            }
+        }
+
+
         
         internal void SendReplyPacket(Packet p, DateTime time)
         {

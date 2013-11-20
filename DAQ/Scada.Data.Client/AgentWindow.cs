@@ -13,9 +13,10 @@ namespace Scada.Data.Client
 {
     public partial class AgentWindow : Form
     {
-        private Timer timer;
+        private Timer sendDataTimer;
 
- 
+        private Timer recvDataTimer;
+
         private List<Agent> agents = new List<Agent>();
 
         private PacketBuilder builder = new PacketBuilder();
@@ -67,9 +68,27 @@ namespace Scada.Data.Client
             DateTime sendTime = DateTime.Parse("2013-11-17 12:17:30");
             int errorCode = 0;
             Packet packet = this.GetPacket(sendTime, deviceKey, out errorCode);
-            string msg = packet.ToString();
-            this.agents[0].SendPacket(packet);
+            if (packet != null)
+            {
+                string msg = packet.ToString();
+                this.agents[0].SendPacket(packet);
+            }
         }
+
+        private void TestSendFilePacket()
+        {
+            // TODO: FIND A n42 file
+            string deviceKey = "scada.naidevice";
+            DateTime sendTime = DateTime.Parse("2013-11-17 12:17:30");
+            int errorCode = 0;
+            Packet packet = this.GetPacket(sendTime, deviceKey, out errorCode);
+            if (packet != null)
+            {
+                string msg = packet.ToString();
+                this.agents[0].SendFilePacket(packet);
+            }
+        }
+
 
         private void InitSysNotifyIcon()
         {
@@ -124,21 +143,29 @@ namespace Scada.Data.Client
 
         private void InitializeTimer()
         {
-            this.timer = new Timer();
-            this.timer.Interval = TimerInterval;
-            this.timer.Tick += this.HttpConnectTick;
-            this.timer.Start();
+            this.sendDataTimer = new Timer();
+            this.sendDataTimer.Interval = TimerInterval;
+            this.sendDataTimer.Tick += this.HttpSendDataTick;
+            this.sendDataTimer.Start();
+
+            this.recvDataTimer = new Timer();
+            this.recvDataTimer.Interval = 20 * 1000;
+            this.recvDataTimer.Tick += this.HttpRecvDataTick;
+            this.recvDataTimer.Start();
         }
 
-        private void HttpConnectTick(object sender, EventArgs e)
+        private void HttpRecvDataTick(object sender, EventArgs e)
+        {
+            
+            foreach (var agent in this.agents)
+            {
+                agent.FetchCommands();
+            }
+        }
+
+        private void HttpSendDataTick(object sender, EventArgs e)
         {
             DateTime now = DateTime.Now;
-
-            if (IsFetchCommandsTimeOK(now))
-            {
-
-            }
-
             List<Packet> packets = new List<Packet>();
             foreach (var deviceKey in Settings.Instance.DeviceKeys)
             {
@@ -188,12 +215,6 @@ namespace Scada.Data.Client
             return packets;
         }
 
-        private bool IsFetchCommandsTimeOK(DateTime now)
-        {
-            // per TimerInterval
-            return true;
-        }
-
         private Packet GetPacket(DateTime time, string deviceKey, out int errorCode)
         {
             errorCode = 0;
@@ -214,24 +235,12 @@ namespace Scada.Data.Client
                 {
                     return null;
                 }
-                // 分包
-                string content = DBDataSource.Instance.GetNaIDeviceData(time);
-                if (!string.IsNullOrEmpty(content))
-                {
-                    /*
-                    List<Packet> pks = builder.GetPackets(deviceKey, time, content);
-                    foreach (var p in pks)
-                    {
-                        // Sent by each agent.s
-                        foreach (var agent in this.agents)
-                        {
-                            agent.SendPacket(p, time);
-                        }
-                    }
 
-                    */
+                string fileName = DBDataSource.Instance.GetNaIDeviceFile(time);
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    return builder.GetFilePacket(fileName);
                 }
-                // TODO:
                 return null;
             }
             else
