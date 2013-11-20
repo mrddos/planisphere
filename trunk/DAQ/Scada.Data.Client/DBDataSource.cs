@@ -167,7 +167,7 @@ namespace Scada.Data.Client
             return string.Format("{0}-{1:D2}", date.Year, date.Month);
         }
 
-        public string GetNaIDeviceData(DateTime time)
+        public string GetNaIDeviceFile(DateTime time)
         {
             string fileName = this.GetFileName(time);
             string datePath = this.GetDatePath(time);
@@ -175,11 +175,20 @@ namespace Scada.Data.Client
             string content = string.Empty;
             if (File.Exists(filePath))
             {
-                StreamReader fs = new StreamReader(filePath);
-                content = fs.ReadToEnd();
+                return filePath;
             }
-            
-            return content;
+            return string.Empty;
+        }
+
+        // TODO: Maybe no use
+        public string GetNaIDeviceData(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                StreamReader fs = new StreamReader(fileName);
+                return fs.ReadToEnd();
+            }
+            return null;
         }
 
         private string GetFileName(DateTime time)

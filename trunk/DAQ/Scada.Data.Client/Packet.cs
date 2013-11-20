@@ -20,9 +20,17 @@ namespace Scada.Data.Client
 
         private bool hasResult = false;
 
+        private bool filePacket = false;
+
         public Packet()
         {
 
+        }
+
+        public Packet(string station, string token)
+        {
+            this.Station = station;
+            this.Token = token;
         }
 
         private int Result
@@ -139,6 +147,21 @@ namespace Scada.Data.Client
             DateTime dateTime = DateTime.Parse(time);
             long unixTime = (long)Math.Round((dateTime - StartTime).TotalMilliseconds, MidpointRounding.AwayFromZero);
             return unixTime;
+        }
+
+        private string path;
+
+        public string Path
+        {
+            get
+            {
+                return this.path;
+            }
+            set
+            {
+                this.path = value;
+                this.filePacket = true;
+            }
         }
     }
 }
