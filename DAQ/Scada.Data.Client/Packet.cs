@@ -95,7 +95,7 @@ namespace Scada.Data.Client
             return this.jobject.ToString();
         }
 
-        internal void AddData(string deviceKey, Dictionary<string, object> data)
+        private JArray GetEntries()
         {
             JArray entries = (JArray)this.jobject[EntryKey];
             if (entries == null)
@@ -103,10 +103,22 @@ namespace Scada.Data.Client
                 entries = new JArray();
                 this.jobject[EntryKey] = entries;
             }
+            return (JArray)entries;
+        }
 
-            entries.Add(this.GetObject(deviceKey, data));
-            // TEST multi-entry
-            // entries.Add(this.GetObject(data));
+        internal void AddData(string deviceKey, Dictionary<string, object> data)
+        {
+            this.GetEntries().Add(this.GetObject(deviceKey, data));
+        }
+
+        internal JObject GetEntry(int index = 0)
+        {
+            return (JObject)this.GetEntries()[index];
+        }
+
+        internal void AppendEntry(JObject entry)
+        {
+            this.GetEntries().Add(entry);
         }
 
         private JObject GetObject(string deviceKey, Dictionary<string, object> data)

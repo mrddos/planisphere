@@ -109,6 +109,8 @@
             // checkBoxUpdateNaI
             // 
             this.checkBoxUpdateNaI.AutoSize = true;
+            this.checkBoxUpdateNaI.Checked = true;
+            this.checkBoxUpdateNaI.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxUpdateNaI.Location = new System.Drawing.Point(9, 381);
             this.checkBoxUpdateNaI.Name = "checkBoxUpdateNaI";
             this.checkBoxUpdateNaI.Size = new System.Drawing.Size(91, 17);
