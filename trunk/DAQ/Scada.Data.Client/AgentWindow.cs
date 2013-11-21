@@ -58,7 +58,8 @@ namespace Scada.Data.Client
             {
                 Start();
 
-                TestSendPacket();
+                //TestSendPacket();
+                TestSendFilePacket();
             }
         }
 
@@ -79,7 +80,7 @@ namespace Scada.Data.Client
         {
             // TODO: FIND A n42 file
             string deviceKey = "scada.naidevice";
-            DateTime sendTime = DateTime.Parse("2013-11-17 12:17:30");
+            DateTime sendTime = DateTime.Parse("2012-09-01 11:50:00");
             int errorCode = 0;
             Packet packet = this.GetPacket(sendTime, deviceKey, out errorCode);
             if (packet != null)
@@ -211,7 +212,28 @@ namespace Scada.Data.Client
 
         private List<Packet> CombinePackets(List<Packet> packets)
         {
-            // TODO: Combine same type packets to reduce HTTP connection count.
+            if (packets.Count > 1)
+            {
+                List<Packet> ret = new List<Packet>();
+                Packet pn = null;
+                foreach (var p in packets)
+                {
+                    if (string.IsNullOrEmpty(p.Path))
+                    {
+                        // 目前认为Path为空的Packet是Data Packet
+                        pn = this.builder.CombinePacket(pn, p);
+                    }
+                    else
+                    {
+                        ret.Add(p); // p is file packet
+                    }
+                }
+                if (pn != null)
+                {
+                    ret.Add(pn);
+                }
+                return ret;
+            }
             return packets;
         }
 

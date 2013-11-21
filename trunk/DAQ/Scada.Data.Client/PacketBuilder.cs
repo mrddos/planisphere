@@ -39,5 +39,16 @@ namespace Scada.Data.Client
             packet.Path = fileName;
             return packet;
         }
+
+        internal Packet CombinePacket(Packet packet1, Packet packet2)
+        {
+            if (packet1 != null)
+            {
+                packet1.AppendEntry(packet2.GetEntry());
+                return packet1;
+            }
+            return packet2;
+            
+        }
     }
 }

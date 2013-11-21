@@ -36,7 +36,7 @@ namespace Scada.Data.Client
     /// </summary>
     public class Agent
     {
-        private WebClient wc = new WebClient();
+        private const string Post = @"POST";
 
         private const int Timeout = 5000;
         
@@ -62,17 +62,15 @@ namespace Scada.Data.Client
         {
             this.ServerAddress = serverAddress;
             this.ServerPort = serverPort;
+            /*
             this.wc.DownloadStringCompleted += DownloadStringCompleted;
             this.wc.UploadFileCompleted += UploadFileCompleted;
-            // this.wc.UploadDataCompleted += UploadDataCompleted;
+            this.wc.UploadDataCompleted += UploadDataCompleted;
+            */
         }
 
 
         /*
-        private void UploadDataCompleted(object sender, UploadDataCompletedEventArgs e)
-        {
-           
-        }
         */
 
         public string ServerAddress
@@ -98,19 +96,34 @@ namespace Scada.Data.Client
             return string.Format("http://{0}:{1}/{2}", this.ServerAddress, this.ServerPort, api);
         }
 
-        internal void SendPacket(Packet p, DateTime time)
+        internal void SendDataPacket(Packet packet, DateTime time)
         {
-            string s = p.ToString();
-            this.Send("data/commit", Encoding.ASCII.GetBytes(s));
+            this.Send("data/commit", packet, time);
         }
 
-        private void Send(string api, byte[] data)
+        private void Send(string api, Packet packet, DateTime time)
         {
-            Uri uri = new Uri(this.GetUrl(api));
             try
             {
-                byte[] resultData = this.wc.UploadData(uri, data);
-                string result = Encoding.ASCII.GetString(resultData);
+                Uri uri = new Uri(this.GetUrl(api));
+                byte[] data = Encoding.ASCII.GetBytes(packet.ToString());
+                WebClient wc = new WebClient();
+                wc.UploadDataCompleted += (object sender, UploadDataCompletedEventArgs e) => 
+                    {
+                        if (e.Error != null)
+                        {
+                            return;
+                        }
+                        Packet p = (Packet)e.UserState;
+                        if (p != null)
+                        {
+                            string result = Encoding.ASCII.GetString(e.Result);
+                            // TODO: with result
+                        }
+
+                    };
+                wc.UploadDataAsync(uri, Post, data, packet);
+                
             }
             catch (Exception e)
             {
@@ -123,18 +136,19 @@ namespace Scada.Data.Client
             Uri uri = new Uri(this.GetUrl("cmd/query"));
             try
             {
-                this.wc.DownloadStringAsync(uri);
+                WebClient wc = new WebClient();
+                wc.DownloadStringCompleted += (object sender, DownloadStringCompletedEventArgs e) =>
+                    {
+                        if (e.Error == null)
+                        {
+                            this.ParseCommand(e.Result);
+                        }
+
+                    };
+                wc.DownloadStringAsync(uri);
             }
             catch (Exception)
             {
-            }
-        }
-
-        private void DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                this.ParseCommand(e.Result);
             }
         }
 
@@ -152,32 +166,37 @@ namespace Scada.Data.Client
 
         internal void SendPacket(Packet p)
         {
-            this.SendPacket(p, default(DateTime));
+            this.SendDataPacket(p, default(DateTime));
         }
 
-        internal void SendFilePacket(Packet p)
+        internal void SendFilePacket(Packet packet)
         {
             Uri uri = new Uri(this.GetUrl("data/upload"));
             try
             {
-                this.wc.UploadFileAsync(uri, p.Path);
+                using (WebClient wc = new WebClient())
+                {
+                    wc.UploadFileCompleted += (object sender, UploadFileCompletedEventArgs e) =>
+                        {
+                            if (e.Error != null)
+                            {
+                                return;
+                            }
+                            Packet p = (Packet)e.UserState;
+                            if (p != null)
+                            {
+                                // TODO: with p.Path
+                            }
+                        };
+                    wc.UploadFileAsync(uri, Post, packet.Path, packet);
+                }
             }
             catch (WebException)
             {
              
             }
         }
-
-        private void UploadFileCompleted(object sender, UploadFileCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
-
-            }
-        }
-
-
-        
+      
         internal void SendReplyPacket(Packet p, DateTime time)
         {
             string s = p.ToString();
