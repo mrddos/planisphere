@@ -33,7 +33,6 @@ namespace Scada.MainSettings
 
         public static string GetDeviceConfigFile(string deviceKey)
         {
-            Debug.Assert(false);
             return ConfigPath.GetDeviceConfigFilePath(deviceKey, "0.9");
         }
 
