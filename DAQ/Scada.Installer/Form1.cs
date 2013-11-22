@@ -88,9 +88,6 @@ namespace Scada.Installer
                 this.binPath = "Release";
             }
 
-
-            if (!CheckVersions())
-
             if (!CreateTables())
             {
                 return false;
@@ -194,7 +191,7 @@ namespace Scada.Installer
                 shortcut.TargetPath = s;
                 shortcut.Arguments = "";
                 shortcut.Description = fileName;
-                shortcut.WorkingDirectory = this.installPath.Text;
+                shortcut.WorkingDirectory = Path.Combine(this.installPath.Text, this.binPath);
                 shortcut.IconLocation = string.Format("{0},0", s);
                 shortcut.Save();
 
@@ -209,7 +206,7 @@ namespace Scada.Installer
 
         private string GetBinFile(string fileName)
         {
-            return string.Format("{0}\\{1}", this.installPath.Text, fileName);
+            return string.Format("{0}\\{1}", Path.Combine(this.installPath.Text, this.binPath), fileName);
         }
 
         private bool CreateTables()
@@ -219,8 +216,8 @@ namespace Scada.Installer
                 // Or use this.installMode to check.
                 return true;
             }
-            string fileName = "Scada.DAQ.Installer.exe";
-            string filePath = string.Format("{0}\\{1}", this.installPath.Text, fileName);
+            string fileName = "Scada.Data.Tools.exe";
+            string filePath = string.Format("{0}\\{1}", Path.Combine(this.installPath.Text, this.binPath), fileName);
             using (Process process = new Process())
             {
                 process.StartInfo.CreateNoWindow = true;    //设定不显示窗口
@@ -310,7 +307,7 @@ namespace Scada.Installer
 
         private string CreateStartupBatFile()
         {
-            string p = string.Format("{0}\\startup.bat", this.installPath.Text);
+            string p = string.Format("{0}\\startup.bat", Path.Combine(this.installPath.Text, this.binPath));
             if (File.Exists(p))
             {
                 File.Delete(p);
@@ -318,25 +315,25 @@ namespace Scada.Installer
             FileStream fs = File.Create(p);
             using (StreamWriter sw = new StreamWriter(fs))
             {
-                string binPath = this.installPath.Text;
+                string fullBinPath = Path.Combine(this.installPath.Text, this.binPath);
                 // Run MDS.exe
-                string startMDSScript = string.Format("start {0}\\mds.exe", binPath);
+                string startMDSScript = string.Format("start {0}\\mds.exe", fullBinPath);
                 sw.WriteLine(startMDSScript);
                 sw.WriteLine("ping -n 5 127.0.0.1");
 
                 // Run AIS.exe
-                string startAISScript = string.Format("start {0}\\ais.exe", binPath);
+                string startAISScript = string.Format("start {0}\\ais.exe", fullBinPath);
                 sw.WriteLine(startAISScript);
                 sw.WriteLine("ping -n 5 127.0.0.1");
 
                 // Run Scada.Main.exe
-                string startMainScript = string.Format("start {0}\\Scada.Main.exe /ALL", binPath);
+                string startMainScript = string.Format("start {0}\\Scada.Main.exe /ALL", fullBinPath);
                 sw.WriteLine(startMainScript);
                 sw.WriteLine("ping -n 30 127.0.0.1");
                 sw.WriteLine();
 
                 // Run Scada.DataCenterAgent.exe
-                string startAgentScript = string.Format("start {0}\\Scada.DataCenterAgent.exe --start", binPath);
+                string startAgentScript = string.Format("start {0}\\Scada.DataCenterAgent.exe --start", fullBinPath);
                 sw.WriteLine(startAgentScript);
                 sw.WriteLine();
             }
